@@ -1,0 +1,86 @@
+{
+    "name": "cakephp/app",
+    "description": "CakePHP skeleton app",
+    "homepage": "http://cakephp.org",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.5.9",
+        "cakephp/cakephp": "~3.2",
+        "mobiledetect/mobiledetectlib": "2.*",
+        "cakephp/migrations": "~1.0",
+        "cakephp/plugin-installer": "*",
+        "phpunit/phpunit": "^5.3",
+        "cakephp/cakephp-codesniffer": "^2.0",
+        "symfony/event-dispatcher": "^3.1",
+        "alaxos/cakephp3-bootstrap-theme": "^0.9.3",
+        "ircmaxell/random-lib": "^1.1",
+        "Cewi/Excel": "dev-master",
+        "davidyell/proffer": "~0.6",
+        "cakemanager/cakephp-utils": "dev-master",
+        "cakemanager/cakephp-settings": "dev-master",
+        "CakeDC/Users": "^6.0",
+        "muffin/FootPrint": "^1.1"
+    },
+    "require-dev": {
+        "psy/psysh": "@stable",
+        "cakephp/debug_kit": "~3.2",
+        "cakephp/bake": "~1.1"
+    },
+    "suggest": {
+        "phpunit/phpunit": "Allows automated tests to be run without system-wide install.",
+        "cakephp/cakephp-codesniffer": "Allows to check the code against the coding standards used in CakePHP."
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src",
+            "SavioboscoSubscription\\": "./plugins/SavioboscoSubscription/src",
+            "SkillsGradingSystem\\": "./plugins/SkillsGradingSystem/src",
+            "ResultSystem\\": "./plugins/ResultSystem/src",
+            "Teacher\\": "./plugins/Teacher/src",
+            "FeesManager\\": "./plugins/FeesManager/src",
+            "SeanTheme\\": "./plugins/SeanTheme/src",
+            "FrontEnd\\": "./plugins/FrontEnd/src",
+            "GradingSystem\\": "./plugins/GradingSystem/src",
+            "Saviobosco\\Excel\\": "./plugins/Saviobosco/Excel/src",
+            "StudentsManager\\": "./plugins/StudentsManager/src",
+            "SubjectsManager\\": "./plugins/SubjectsManager/src",
+            "ClassManager\\": "./plugins/ClassManager/src",
+            "UsersManager\\": "./plugins/UsersManager/src",
+            "FinanceManager\\": "./plugins/FinanceManager/src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
+            "SavioboscoSubscription\\Test\\": "./plugins/SavioboscoSubscription/tests",
+            "SkillsGradingSystem\\Test\\": "./plugins/SkillsGradingSystem/tests",
+            "ResultSystem\\Test\\": "./plugins/ResultSystem/tests",
+            "Teacher\\Test\\": "./plugins/Teacher/tests",
+            "FeesManager\\Test\\": "./plugins/FeesManager/tests",
+            "SeanTheme\\Test\\": "./plugins/SeanTheme/tests",
+            "FrontEnd\\Test\\": "./plugins/FrontEnd/tests",
+            "GradingSystem\\Test\\": "./plugins/GradingSystem/tests",
+            "Saviobosco\\Excel\\Test\\": "./plugins/Saviobosco/Excel/tests",
+            "StudentsManager\\Test\\": "./plugins/StudentsManager/tests",
+            "SubjectsManager\\Test\\": "./plugins/SubjectsManager/tests",
+            "ClassManager\\Test\\": "./plugins/ClassManager/tests",
+            "UsersManager\\Test\\": "./plugins/UsersManager/tests",
+            "FinanceManager\\Test\\": "./plugins/FinanceManager/tests"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": "App\\Console\\Installer::postInstall",
+        "post-create-project-cmd": "App\\Console\\Installer::postInstall",
+        "post-autoload-dump": "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/cewi/excel"
+        }
+    ]
+}
