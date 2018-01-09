@@ -1,0 +1,1 @@
+<div class="alert alert-info" > <span class="glyphicon glyphicon-exclamation-sign"> </span> <?= h($message) ?></div>

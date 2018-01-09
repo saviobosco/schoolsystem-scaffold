@@ -1,0 +1,1 @@
+<div class="alert alert-success" onclick="this.classList.add('hidden')"> <span class="glyphicon glyphicon-ok"> </span> <?= h($message) ?></div>

@@ -1,0 +1,31 @@
+{
+    "name": "saviobosco/studentsmanager",
+    "description": "StudentsManager plugin for School Management System",
+    "type": "cakephp-plugin",
+    "authors": [
+        {
+            "name": "Omebe Johnbosco",
+            "email": "Johnboscoomebe@yahoo.com",
+            "homepage": "http://www.upsitech.com/saviobosco",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.16",
+        "cakephp/cakephp": "~3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "StudentsManager\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "StudentsManager\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}

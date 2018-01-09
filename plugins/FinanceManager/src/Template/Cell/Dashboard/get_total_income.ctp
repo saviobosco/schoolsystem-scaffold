@@ -1,0 +1,1 @@
+<?= $this->Currency->displayCurrency($totalIncome) ?>

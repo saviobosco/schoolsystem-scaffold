@@ -1,0 +1,23 @@
+{
+    "name": "Saviobosco/SkillsGradingSystem",
+    "description": "SkillsGradingSystem plugin for School System CakePHP",
+    "type": "cakephp-plugin",
+    "require": {
+        "php": ">=5.4.16",
+        "cakephp/cakephp": "~3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "SkillsGradingSystem\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SkillsGradingSystem\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}

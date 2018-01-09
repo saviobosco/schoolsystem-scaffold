@@ -1,0 +1,42 @@
+{
+    "name": "Saviobosco/Excel",
+    "description": "Saviobosco/Excel plugin for CakePHP",
+    "type": "cakephp-plugin",
+    "keywords": [
+        "cakephp",
+        "excel"
+    ],
+    "homepage": "https://github.com/saviobosco/excel",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Johnbosco Omebe",
+            "role": "Author"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/saviobosco/excel/issues",
+        "source": "https://github.com/saviobosco/excel"
+    },
+    "require": {
+        "php": ">=5.4.16",
+        "cakephp/plugin-installer": "*",
+        "cakephp/cakephp": "~3.0",
+        "cewi/excel":"*",
+        "phpoffice/phpexcel": "1.8.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Saviobosco\\Excel\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Saviobosco\\Excel\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}

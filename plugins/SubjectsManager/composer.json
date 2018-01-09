@@ -1,0 +1,24 @@
+{
+    "name": "saviobosco/SubjectsManager",
+    "description": "SubjectsManager plugin for School Management System",
+    "type": "school_management_system_subject_manager-plugin",
+    "require": {
+        "php": ">=5.4.16",
+        "cakephp/cakephp": "~3.0",
+        "saviobosco/StudentsManager":"master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "SubjectsManager\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SubjectsManager\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}
