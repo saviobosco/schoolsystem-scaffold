@@ -897,7 +897,7 @@ class Initial extends AbstractMigration
                     'limit' => 10,
                     'null' => true,
                 ])
-                ->addColumn('promoted', 'tinyinteger', [
+                ->addColumn('promoted', 'boolean', [
                     'default' => null,
                     'limit' => 2,
                     'null' => true,
