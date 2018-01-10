@@ -62,7 +62,7 @@ class StudentsTable extends Table
         $this->belongsTo('Classes', [
             'foreignKey' => 'class_id',
             'joinType' => 'INNER',
-            'className' => 'App.Classes'
+            'className' => 'ResultSystem.Classes'
         ]);
         $this->belongsTo('ClassDemarcations', [
             'foreignKey' => 'class_demarcation_id',

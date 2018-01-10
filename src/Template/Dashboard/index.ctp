@@ -7,10 +7,6 @@
             <div class="stats-number">
                 <?= $this->cell('Dashboard::getNumberOfStudents'); ?>
             </div>
-            <div class="stats-progress progress">
-                <div class="progress-bar" style="width: 70.1%;"></div>
-            </div>
-            <div class="stats-desc">Better than last week (70.1%)</div>
         </div>
     </div>
     <!-- end col-3 -->
@@ -22,10 +18,6 @@
             <div class="stats-number">
                 <?= $this->cell('Dashboard::getNumberOfSubjects'); ?>
             </div>
-            <div class="stats-progress progress">
-                <div class="progress-bar" style="width: 40.5%;"></div>
-            </div>
-            <div class="stats-desc">Better than last week (40.5%)</div>
         </div>
     </div>
     <!-- end col-3 -->
@@ -37,10 +29,6 @@
             <div class="stats-number">
                 <?= $this->cell('Dashboard::getNumberOfAdmins'); ?>
             </div>
-            <div class="stats-progress progress">
-                <div class="progress-bar" style="width: 76.3%;"></div>
-            </div>
-            <div class="stats-desc">Better than last week (76.3%)</div>
         </div>
     </div>
     <!-- end col-3 -->
@@ -52,10 +40,6 @@
             <div class="stats-number">
                 <?= $this->cell('Dashboard::getNumberOfSessions'); ?>
             </div>
-            <div class="stats-progress progress">
-                <div class="progress-bar" style="width: 54.9%;"></div>
-            </div>
-            <div class="stats-desc">Better than last week (54.9%)</div>
         </div>
     </div>
     <!-- end col-3 -->
