@@ -456,11 +456,9 @@ class StudentsController extends AppController
                 $subjects = $this->Subjects->find('list')->toArray();
                 $terms = $this->Terms->find('list')->toArray();
                 $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs();
-                $resultRemarkDetails = $this->ResultRemarks->getResultRemarkFullNameWithPassedDetails($queryData['session_id'],$queryData['class_id']);
                 $this->set(compact('student',
                     'remarkInputs',
                     'studentRemark',
-                    'resultRemarkDetails',
                     'fees',
                     'sessions',
                     'classes',
@@ -526,7 +524,7 @@ class StudentsController extends AppController
                 $subjectClassAverages = $this->Subjects->getSubjectClassAverages($queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
 
                 // loads additional table classes ..
-                $this->loadModel('Terms');
+                $this->loadModel('ResultSystem.Terms');
 
                 //$fees = $this->_getSchoolFees($this->request->query['session_id'],$this->request->query['term_id']);
                 // Next Term
@@ -538,12 +536,10 @@ class StudentsController extends AppController
                 $classes = $this->Students->Classes->find('list')->toArray();
                 $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs();
                 $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs();
-                $resultRemarkDetails = $this->ResultRemarks->getResultRemarkFullNameWithPassedDetails($queryData['session_id'],$queryData['class_id']);
                 $gradeInputsForTableHead = $this->ResultGradeInputs->getValidGradeInputsWithAllData();
                 $this->set(compact('student',
                     'gradeInputs',
                     'remarkInputs',
-                    'resultRemarkDetails',
                     'gradeInputsForTableHead',
                     'sessions',
                     'subjects',

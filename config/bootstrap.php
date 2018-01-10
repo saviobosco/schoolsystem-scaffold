@@ -82,7 +82,7 @@ try {
 // Load an environment local configuration file.
 // You can use a file like app_local.php to provide local overrides to your
 // shared configuration.
-Configure::load('app_local', 'default');
+//Configure::load('app_local', 'default');
 
 // When debug = false the metadata cache should last
 // for a very very long time, as we don't want
@@ -255,8 +255,6 @@ Plugin::load('CakeDC/Users', ['routes' => true, 'bootstrap' => true]);
 Plugin::load('FrontEnd', ['bootstrap' => false, 'routes' => true]);
 
 Plugin::load('SeanTheme', ['bootstrap' => false, 'routes' => true]);
-
-//Plugin::load('Teacher', ['bootstrap' => false, 'routes' => true]);
 
 Plugin::load('FeesManager', ['bootstrap' => false, 'routes' => true]);
 

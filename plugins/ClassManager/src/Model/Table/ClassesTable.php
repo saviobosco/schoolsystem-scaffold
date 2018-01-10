@@ -37,7 +37,6 @@ class ClassesTable extends Table
         parent::initialize($config);
 
         $this->setTable('classes');
-        $this->setEntityClass('App\Model\Entity\Classe');
         $this->setDisplayField('class');
         $this->setPrimaryKey('id');
 

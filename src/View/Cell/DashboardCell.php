@@ -20,36 +20,29 @@ class DashboardCell extends Cell
 
     public function getNumberOfStudents()
     {
-        $this->loadModel('Students');
+        $this->loadModel('StudentsManager.Students');
         $schools = $this->Students->find('all');
         $this->set('schools', $schools->count());
     }
 
     public function getNumberOfAdmins()
     {
-        $this->loadModel('MyUsers');
-        $students = $this->MyUsers->find('all');
+        $this->loadModel('UsersManager.Accounts');
+        $students = $this->Accounts->find('all');
         $this->set('admins', $students->count());
     }
 
     public function getNumberOfSubjects()
     {
-        $this->loadModel('Subjects');
+        $this->loadModel('SubjectsManager.Subjects');
         $courses = $this->Subjects->find();
         $this->set('courses', $courses->count());
     }
 
     public function getNumberOfSessions()
     {
-        $this->loadModel('Sessions');
+        $this->loadModel('ResultSystem.Sessions');
         $sessions = $this->Sessions->find();
         $this->set('sessions', $sessions->count());
-    }
-
-    public function getNumberOfEntrancePins()
-    {
-        $this->loadModel('EntranceResultPins');
-        $pins = $this->EntranceResultPins->find()->where(['applicant_id IS NOT NULL ']);
-        $this->set('pins',$pins->count());
     }
 }

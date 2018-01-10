@@ -103,7 +103,6 @@ $this->assign('title',$sessions[$this->request->query['session_id']].' '.$terms[
 
     <div class="row ">
         <div class="col-sm-9">
-
             <div class="row">
                 <div class="col-sm-12">
                     <?php if (!empty($student->student_annual_results)): ?>
@@ -140,7 +139,7 @@ $this->assign('title',$sessions[$this->request->query['session_id']].' '.$terms[
                     <?php endif; ?>
 
                     <div class="row" style="margin-left: 0px;">
-                        <div class="col-sm-9 m-b-20" style="border: 1px solid #000000;">
+                        <div class="col-sm-12 m-b-20" style="border: 1px solid #000000;">
                             <p class="text-center" style="margin: 10px"> REMARKS</p>
                             <?php foreach($remarkInputs as $remarkKey => $remarkValue) : ?>
                                 <div class="remarks">
@@ -148,7 +147,7 @@ $this->assign('title',$sessions[$this->request->query['session_id']].' '.$terms[
                                         <p> <?= strtoupper($remarkValue) ?>: <?= $studentRemark[$remarkKey] ?> </p>
                                     </div>
                                     <div class="comment-name">
-                                        <p>NAME:<?= (isset($resultRemarkDetails[$remarkKey])) ? '&nbsp;'.strtoupper($resultRemarkDetails[$remarkKey]).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'  ?>
+                                        <p>NAME:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </p> <p style="display: inline"> SIGNATURE </p>
                                     </div>
                                 </div>
@@ -159,24 +158,17 @@ $this->assign('title',$sessions[$this->request->query['session_id']].' '.$terms[
                             </div>
 
                         </div>
-                        <div class="col-sm-3 col-xs-3">
-                            <?= $this->Result->displayFees($fees) ?>
-                        </div>
+                        <!--<div class="col-sm-3 col-xs-3">
+                            <?php /* $this->Result->displayFees($fees)*/ ?>
+                        </div>-->
 
                     </div>
 
-
-
-
                 </div>
             </div>
-
-
         </div>
-
         <div class="col-sm-3">
             <div class="row">
-
                 <!-- affective skills col -->
                 <div class="col-sm-12">
                     <?php if (!empty($studentAffectiveDispositions)): ?>
