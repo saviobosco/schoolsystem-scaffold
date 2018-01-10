@@ -197,7 +197,37 @@ Plugin::load('Migrations');
 if (Configure::read('debug')) {
     Plugin::load('DebugKit', ['bootstrap' => true]);
 }
+// loading database environment for SaaS like heroku
+$dsn = env('CLEARDB_DATABASE_URL');
+if ( $dsn !== null ){
+    $dsn = parse_url($dsn);
+    $dataSource = [
+        'default' => [
+            'className' => 'Cake\Database\Connection',
+            'driver' => 'Cake\Database\Driver\Mysql',
+            'persistent' => false,
+            'host' => $dsn['host'],
 
+            //'port' => 'non_standard_port_number',
+            'username' => $dsn['user'],
+            'password' => $dsn['pass'],
+            'database' => substr($dsn['path'],1),
+            'encoding' => 'utf8',
+            'timezone' => 'UTC',
+            'flags' => [],
+            'cacheMetadata' => true,
+            'log' => false,
+
+            'quoteIdentifiers' => false,
+
+            'url' => env('DATABASE_URL', null),
+        ]
+    ];
+
+    // Redefine database connection
+    ConnectionManager::drop('default');
+    ConnectionManager::setConfig($dataSource);
+}
 /**
  * Connect middleware/dispatcher filters.
  */
