@@ -15,7 +15,7 @@ use Cake\Routing\Router;
 $config = [
     'Users' => [
         // Table used to manage users
-        'table' => 'MyUsers',
+        'table' => 'UsersManager.Accounts',
         // Controller used to manage users plugin features & actions
         'controller' => 'MyUsers',
         // configure Auth component
