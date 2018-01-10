@@ -642,7 +642,7 @@ class Initial extends AbstractMigration
                 'limit' => 50,
                 'null' => false,
             ])
-            ->addColumn('cal_order', 'tinyinteger', [
+            ->addColumn('cal_order', 'integer', [
                 'comment' => 'This specifies the order in which the are to to called',
                 'default' => null,
                 'limit' => 4,
