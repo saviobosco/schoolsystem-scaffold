@@ -322,7 +322,6 @@ class StudentsController extends AppController
                     ]
                 ]);
             } catch ( \Exception $e ) {
-                debug($e->getTraceAsString()); exit;
                 $this->Flash->error('The following error occurred '.$e->getMessage()) ;
                 return $this->redirect($this->referer());
             }

@@ -10,7 +10,7 @@
 <li class="has-sub">
     <?= $this->html->link('<i class="fa fa-home"></i> Home',[
         'plugin'=>'FinanceManager',
-        'controller'=>'Accounts',
+        'controller'=>'Dashboard',
         'action' => 'home'
     ],[
         'escape' => false
@@ -208,6 +208,34 @@
 <li class="has-sub">
     <a href="javascript:;">
         <b class="caret pull-right"></b>
+        <i class="fa fa-money"></i><span>Payment Types </span>
+    </a>
+    <ul class="sub-menu">
+        <li>
+            <?= $this->Html->link('List',[
+                'plugin'=>'FinanceManager',
+                'controller'=>'PaymentTypes',
+                'action'=>'index'
+            ],
+                [
+                    'escape' => false
+                ])  ?>
+        </li>
+        <li>
+            <?= $this->Html->link('Add New',[
+                'plugin'=>'FinanceManager',
+                'controller'=>'PaymentTypes',
+                'action'=>'add'
+            ],
+                [
+                    'escape' => false
+                ])  ?>
+        </li>
+    </ul>
+</li>
+<li class="has-sub">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
         <i class="fa fa-users"></i><span>Students </span>
     </a>
     <ul class="sub-menu">
@@ -223,28 +251,6 @@
                 [
                     'escape' => false
                 ])  ?>
-        </li>
-        <li>
-            <?= $this->Html->link('Change Students Class',[
-                'plugin'=>'FinanceManager',
-                'controller'=>'Students',
-                'action'=>'changeClass'
-            ],
-                [
-                    'escape' => false
-                ]
-            )  ?>
-        </li>
-        <li>
-            <?= $this->Html->link('UnActive Students',[
-                'plugin'=>'FinanceManager',
-                'controller'=>'Students',
-                'action'=>'unActiveStudents'
-            ],
-                [
-                    'escape' => false
-                ]
-            )  ?>
         </li>
     </ul>
 </li>

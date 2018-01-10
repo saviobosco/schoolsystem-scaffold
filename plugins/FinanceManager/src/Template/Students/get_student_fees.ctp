@@ -152,7 +152,7 @@ $this->Form->templates($formTemplates);
                         </div>
                         <div class="col-sm-4">
                             <label> Payment Type </label>
-                            <?= $this->Form->control('payment.payment_type_id',['value'=>$paymentTypes ]) ?>
+                            <?= $this->Form->control('payment.payment_type_id',['options'=>$paymentTypes,'required'=>true]) ?>
                         </div>
                     </div>
                     <div class="row">

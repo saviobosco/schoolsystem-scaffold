@@ -79,10 +79,6 @@ class FeesTable extends Table
             'className' => 'FinanceManager.StudentFees'
         ]);
 
-        /*$this->hasOne('IncomeByFees', [
-            'foreignKey' => 'fee_id'
-        ]);*/
-
         $this->belongsTo('CreatedByUser',[
             'className' => 'Accounts',
             'foreignKey' => 'created_by'

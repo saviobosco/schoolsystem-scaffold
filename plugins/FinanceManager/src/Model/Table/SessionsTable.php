@@ -43,7 +43,7 @@ class SessionsTable extends Table
 
         $this->hasMany('Fees', [
             'foreignKey' => 'session_id',
-            'className' => 'FinanceManager.StudentFees'
+            'className' => 'FinanceManager.Fees'
         ]);
         $this->hasMany('Students', [
             'foreignKey' => 'session_id',
