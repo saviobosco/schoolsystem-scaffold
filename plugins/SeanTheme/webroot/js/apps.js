@@ -651,30 +651,6 @@ var handleDatePicker = function() {
     });
 };
 
-var handleResultUpload = function() {
-    $('#result-form-upload').submit(function(event) {
-        event.preventDefault();
-        $.ajax({
-            type: "POST",
-            url: 'http://localhost/SchoolSystem2/result-system/student-termly-results/upload-result',
-            contentType:false,
-            cache:false,
-            processData:false,
-            data:/* $(this).serialize()*/ new FormData(this),
-            beforeSend:function(){
-                $('#ajax-request-feedback').html('<div class="alert alert-info"> <i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> Uploading result, Please be patient this might take a while ... </div>');
-            },
-            success: function(data,status){
-                //$( ".result" ).html( data );
-                //$('#ajax-request-feedback').empty();
-                $('#ajax-request-feedback').html(data);
-                //document.getElementById("result-form-upload").reset();
-            },
-            dataType: 'text'
-        });
-    })
-};
-
 
 /* Application Controller
 ------------------------------------------------ */
@@ -688,7 +664,6 @@ var App = function () {
 		    this.initTopMenu();
 		    this.initPageLoad();
 		    this.initComponent();
-            handleResultUpload();
             handleDatePicker();
 		},
 		initSidebar: function() {

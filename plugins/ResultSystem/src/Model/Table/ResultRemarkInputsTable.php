@@ -55,6 +55,14 @@ class ResultRemarkInputsTable extends Table
         return $validator;
     }
 
+    /**
+     * @return array
+     * This method return the remarks with vissibility => 1 in this format
+     * $array = [
+     *  'remark_1' => 'Teacher 1',
+     *  'remark_2' => 'Teacher 2'
+     * ]
+     */
     public function getValidRemarkInputs()
     {
         $data = $this->find('all')

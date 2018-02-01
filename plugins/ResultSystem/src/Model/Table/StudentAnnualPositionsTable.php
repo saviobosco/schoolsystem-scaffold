@@ -88,8 +88,4 @@ class StudentAnnualPositionsTable extends Table
 
         return $rules;
     }
-
-    public function beforeMarshal(Event $event, $data)
-    {
-    }
 }

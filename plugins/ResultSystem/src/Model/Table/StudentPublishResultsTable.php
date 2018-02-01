@@ -98,10 +98,10 @@ class StudentPublishResultsTable extends Table
         return $this->find('all')
             ->where([
                 'student_id' => $student_id ,
-                'session_id' => @$session,
-                'class_id' => @$class,
-                'term_id' => @$term
-            ])->first();
+                'session_id' => $session,
+                'class_id' => $class,
+                'term_id' => $term
+            ])->enableHydration(false)->first();
     }
 
     /**
@@ -112,30 +112,15 @@ class StudentPublishResultsTable extends Table
      */
     public function publishResults($postData,$queryData)
     {
-        $publishedCount = 0;
-        if(isset($postData['student_ids']) AND is_array($postData['student_ids'])) {
-            $studentsCount = count($postData['student_ids']);
-            for ($num =0;  $num < $studentsCount; $num++ ) {
-                // for each request in this save with the default class, term and session
-                $publishResultStatus = $this->findorCreate([
-                    'student_id'=>$postData['student_ids'][$num],
-                    'term_id' => $queryData['term_id'],
-                    'class_id' => $queryData['class_id'],
-                    'session_id' => $queryData['session_id'],
-                ]);
-                $newData = [
-                    'status' => 1,
-                    'term_id' => $queryData['term_id'],
-                    'class_id' => $queryData['class_id'],
-                    'session_id' => $queryData['session_id'],
-                ];
-                $publishResultStatus = $this->patchEntity($publishResultStatus,$newData);
-                if ($this->save($publishResultStatus)) {
-                    $publishedCount+= 1;
-                }
-            }
+        $resultPublishes = $this->find('all')->where([
+            'term_id' => $queryData['term_id'],
+            'class_id' => $queryData['class_id'],
+            'session_id' => $queryData['session_id'],
+        ])->toArray();
+        $resultPublishes = $this->patchEntities($resultPublishes,$postData);
+        if ( $this->saveMany($resultPublishes)) {
+            return true;
         }
-        return $publishedCount;
+        return false;
     }
-
 }

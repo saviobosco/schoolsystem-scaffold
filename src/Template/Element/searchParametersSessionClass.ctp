@@ -3,7 +3,7 @@ $edittemplates = [
     'submitContainer' => '{{content}}'
 ];
 $this->Form->templates($edittemplates);
-$queryData = $this->request->getData();
+$queryData = $this->request->getQuery();
 ?>
 <div class="row">
     <div class="col-sm-12">

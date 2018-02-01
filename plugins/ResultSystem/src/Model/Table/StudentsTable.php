@@ -169,9 +169,9 @@ class StudentsTable extends Table
         return $this->StudentGeneralRemarks->find('all')
             ->where([
                 'student_id' => $student_id,
-                'session_id' => @$session,
-                'class_id'    => @$class,
-                'term_id'    => @$term,
+                'session_id' => $session,
+                'class_id'    =>$class,
+                'term_id'    => $term,
             ])->enableHydration(false)->first();
     }
 
@@ -182,7 +182,7 @@ class StudentsTable extends Table
                 'session_id' => @$session,
                 'class_id' => @$class,
                 'term_id'    => @$term
-            ])->first();
+            ])->enableHydration(false)->first();
     }
 
     public function getStudentTermlySubjectPositions($student_id,$session,$class,$term)
@@ -197,6 +197,128 @@ class StudentsTable extends Table
 
     public function getStudentsWithIdAndNameByClassId($class_id)
     {
-        return $this->find('all')->select(['id','first_name','last_name'])->where(['class_id'=>$class_id])->toArray();
+        return $this->find('all')->select(['id','first_name','last_name'])->where(['class_id'=>$class_id,'status'=>1])->enableHydration(false)->toArray();
+    }
+
+    public function getStudentAnnualResult($id,$queryData)
+    {
+        return $this->get($id, [
+            'contain' => [
+                'Classes',
+                'StudentAnnualResults' => ['conditions' => [
+                    'StudentAnnualResults.session_id' => ($queryData['session_id']) ? $queryData['session_id'] : 1,
+                    'StudentAnnualResults.class_id' => ($queryData['class_id']) ? $queryData['class_id'] : 1 ,
+                ]
+                ],
+                'StudentGeneralRemarks' => [
+                    'conditions' => [
+                        'StudentGeneralRemarks.session_id' => ($queryData['session_id']) ? $queryData['session_id'] : 1,
+                        'StudentGeneralRemarks.class_id' => ($queryData['class_id']) ? $queryData['class_id'] : 1,
+                        'StudentGeneralRemarks.term_id' => ($queryData['term_id']) ? $queryData['term_id'] : 1
+                    ]
+                ],
+                'StudentAnnualPositions' =>  [
+                    'conditions' => [
+                        'StudentAnnualPositions.session_id' => ($queryData['session_id']) ? $queryData['session_id'] : 1,
+                        'StudentAnnualPositions.class_id' => ($queryData['class_id']) ? $queryData['class_id'] : 1
+                    ]
+                ],
+                'StudentPublishResults' => [
+                    'conditions' => [
+                        'StudentPublishResults.term_id' => ($queryData['term_id']) ? $queryData['term_id'] : 1,
+                        'StudentPublishResults.class_id' => ($queryData['class_id']) ? $queryData['class_id'] : 1,
+                        'StudentPublishResults.session_id' => ($queryData['session_id']) ? $queryData['session_id'] : 1
+                    ]
+                ]
+            ]
+        ]);
+    }
+
+    public function getStudentTermlyResult($id,$queryData)
+    {
+        return $this->get($id, [
+            'contain' => [
+                'Classes',
+                'StudentTermlyResults' => [
+                    'conditions' => [
+                        'StudentTermlyResults.session_id' => ($queryData['session_id']) ? $queryData['session_id'] : 1,
+                        'StudentTermlyResults.class_id' => ($queryData['class_id']) ? $queryData['class_id'] : 1,
+                        'StudentTermlyResults.term_id' => ($queryData['term_id']) ? $queryData['term_id'] : 1
+                    ]
+                ],
+                'StudentGeneralRemarks' => [
+                    'conditions' => [
+                        'StudentGeneralRemarks.session_id' => ($queryData['session_id']) ? $queryData['session_id'] : 1,
+                        'StudentGeneralRemarks.class_id' => ($queryData['class_id']) ? $queryData['class_id'] : 1,
+                        'StudentGeneralRemarks.term_id' => ($queryData['term_id']) ? $queryData['term_id'] : 1,
+                    ]
+                ],
+                'StudentTermlyPositions' =>  [
+                    'conditions' => [
+                        'StudentTermlyPositions.session_id' => ($queryData['session_id']) ? $queryData['session_id'] : 1,
+                        'StudentTermlyPositions.class_id' => ($queryData['class_id']) ? $queryData['class_id'] : 1,
+                        'StudentTermlyPositions.term_id' => ($queryData['term_id']) ? $queryData['term_id'] : 1
+                    ]
+                ],
+                'StudentPublishResults' => [
+                    'conditions' => [
+                        'StudentPublishResults.term_id' => ($queryData['term_id']) ? $queryData['term_id'] : 1,
+                        'StudentPublishResults.class_id' => ($queryData['class_id']) ? $queryData['class_id'] : 1,
+                        'StudentPublishResults.session_id' => ($queryData['session_id']) ? $queryData['session_id'] : 1,
+                    ]
+                ]
+            ]
+        ]);
+    }
+
+    public function getStudentTermlyResultOnly($id,$queryData)
+    {
+        return $this->get($id, [
+            'contain' => [
+                'StudentTermlyResults' => [
+                    'conditions' => [
+                        'StudentTermlyResults.session_id' => @$queryData['session_id'],
+                        'StudentTermlyResults.class_id' => @$queryData['class_id'],
+                        'StudentTermlyResults.term_id' => @$queryData['term_id']
+                    ]
+                ],
+            ]
+        ]);
+    }
+
+    public function getStudentAnnualResultOnly($id, $queryData)
+    {
+        return $this->get($id, [
+            'contain' => [
+                'StudentAnnualResults' => [
+                    'conditions' => [
+                        'StudentAnnualResults.session_id' => @$queryData['session_id'],
+                        'StudentAnnualResults.class_id' => @$queryData['class_id'],
+                    ]
+                ]
+            ]
+        ]);
+    }
+
+    public function getStudentAnnualPosition($id,$queryData)
+    {
+        return $this->StudentAnnualPositions->find('all')
+            ->where(['student_id' => $id,
+                'session_id' => @$queryData['session_id'],
+                'class_id' => @$queryData['class_id'],
+            ])->enableHydration(false)->first();
+    }
+
+    public function getStudentAnnualPromotions($queryData)
+    {
+        return $this->find('all')
+            ->select(['Students.id','Students.first_name','Students.last_name'])
+            ->contain([
+                'StudentAnnualPositions' => function($q) use ($queryData) {
+                    return $q->where(['StudentAnnualPositions.session_id'=>$queryData['session_id'],'StudentAnnualPositions.class_id'=>$queryData['class_id']]);
+                }
+            ])
+            ->where(['Students.status'=>1,'Students.class_id'=>$queryData['class_id']])
+            ->enableHydration(false)->toArray();
     }
 }

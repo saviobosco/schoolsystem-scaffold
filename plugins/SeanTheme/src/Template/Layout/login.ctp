@@ -26,7 +26,7 @@ $serverName = $this->request->env('SERVER_NAME');
     <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
     <meta name="description" content="">
     <meta name="keywords" content=" ">
-    <meta name="author" content="blogwp.com">
+    <meta name="author" content="saviobosco">
     <title>
         <?= $this->fetch('title') ?> |
         <?= $serverName ?>
@@ -42,45 +42,28 @@ $serverName = $this->request->env('SERVER_NAME');
     <?= $this->Plugins->css('bootstrap/css/bootstrap.min.css') ?>
     <?= $this->Plugins->css('font-awesome/css/font-awesome.min.css') ?>
     <?= $this->FrontEnd->css('animate.min.css') ?>
-    <?= $this->FrontEnd->css('style-login.css') ?>
-    <?= $this->FrontEnd->css('style-responsive-login.css') ?>
-    <?= $this->FrontEnd->css('theme/default-login.css') ?>
+    <?= $this->Html->css('style.css') ?>
+    <?= $this->Html->css('style-responsive.css') ?>
+    <?= $this->Html->css('theme/default.css') ?>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
 </head>
-<body class="pace-top bg-white">
+<body class="">
 
-<div class="login-cover">
-    <div class="login-cover-image"><img src="https://images.unsplash.com/photo-1473649085228-583485e6e4d7?dpr=1&auto=format&fit=crop&w=1500&h=844&q=80&cs=tinysrgb&crop=&bg=" alt="Student-photo" /></div>
-    <div class="login-cover-bg"></div>
-</div>
-<div id="page-container" >
-    <?= $this->Flash->render() ?>
+<!-- begin #page-container -->
+<div id="page-container">
     <?= $this->fetch('content') ?>
-
 </div>
-<a id="scroll-top"></a>
+<!-- end page container -->
 
 <!-- footer script -->
 <!-- ================== BEGIN BASE JS ================== -->
 <?= $this->Plugins->script('jquery/jquery-1.9.1.min.js') ?>
 <?= $this->Plugins->script('jquery/jquery-migrate-1.1.0.min.js') ?>
-<?= $this->Plugins->script('jquery-ui/ui/minified/jquery-ui.min.js') ?>
-<?= $this->Plugins->script('bootstrap/js/bootstrap.min.js') ?>
-<?= $this->Plugins->script('scrollMonitor/scrollMonitor.js') ?>
-
 <?= $this->fetch('script') ?>
 
-<?= $this->FrontEnd->script('apps.js') ?>
-
 <!-- ================== END BASE JS ================== -->
-
-<script>
-    $(document).ready(function() {
-        App.init();
-    });
-</script>
 
 
 </body>

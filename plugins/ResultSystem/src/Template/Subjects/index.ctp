@@ -19,10 +19,9 @@
                             <td><?= h($subject->name) ?></td>
                             <td><?= $subject->block->name ?></td>
                             <td class="actions">
+                                <?= $this->Html->link(__('<i class="fa fa-plus"></i> Add Result'), ['action' => 'add', $subject->id],['escape'=>false,'class'=>'btn btn-success btn-sm']) ?>
                                 <?= $this->Html->link(__('<i class="fa fa-folder-o"> </i> View Results'), ['action' => 'view', $subject->id],['escape'=>false,'class'=>'btn btn-primary btn-sm']) ?>
-                                <?= $this->Html->link(__('<i class="fa fa-edit"></i> Edit Results'), ['action' => 'edit_result', $subject->id],['escape'=>false,'class'=>'btn btn-info btn-sm']) ?>
-                                <?= $this->Html->link(__('<i class="fa fa-plus"></i> Add Result'), ['action' => 'addResult', $subject->id],['escape'=>false,'class'=>'btn btn-success btn-sm']) ?>
-
+                                <?= $this->Html->link(__('<i class="fa fa-edit"></i> Edit Results'), ['action' => 'edit', $subject->id],['escape'=>false,'class'=>'btn btn-info btn-sm']) ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

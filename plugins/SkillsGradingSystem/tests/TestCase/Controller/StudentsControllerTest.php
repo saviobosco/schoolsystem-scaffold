@@ -17,9 +17,9 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public $fixtures = [
         'plugin.skills_grading_system.students',
-        'app.sessions',
-        'plugin.result_system.terms',
-        'app.classes',
+        'plugin.skills_grading_system.sessions',
+        'plugin.skills_grading_system.terms',
+        'plugin.skills_grading_system.classes',
         'plugin.skills_grading_system.psychomotor_skills',
         'plugin.skills_grading_system.affective_dispositions',
         'plugin.skills_grading_system.students_affective_disposition_scores',
@@ -62,9 +62,9 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public function testView()
     {
-        $this->get('/skills-grading-system/view-student-skill/SMS/2017/003');
+        $this->get('/skills-grading-system/view-student-skill/001');
         $this->assertResponseOk();
-        $this->assertResponseContains('SMS/2017/003');
+        $this->assertResponseContains('001');
     }
 
     /**
@@ -78,7 +78,7 @@ class StudentsControllerTest extends IntegrationTestCase
             0 => [
                 'score' => '4',
                 'affective_id' => '1',
-                'student_id' => 'SMS/2017/002',
+                'student_id' => '001',
                 'class_id' => '1',
                 'term_id' => '1',
                 'session_id' => '1'
@@ -86,13 +86,13 @@ class StudentsControllerTest extends IntegrationTestCase
             1 => [
                 'score' => '4',
                 'affective_id' => '2',
-                'student_id' => 'SMS/2017/002',
+                'student_id' => '001',
                 'class_id' => '1',
                 'term_id' => '1',
                 'session_id' => '1'
             ],
         ];
-        $this->post('/skills-grading-system/add-student-skill/SMS/2017/002',$data);
+        $this->post('/skills-grading-system/add-student-skill/001',$data);
         $this->assertResponseSuccess();
     }
 
@@ -103,15 +103,11 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public function testEdit()
     {
-        $this->get('/skills-grading-system/edit-student-skill/SMS/2017/001');
-        $this->assertResponseOk();
-        $this->assertResponseContains('Hand Writing');
-
         $data = [
             0 => [
                 'score' => '4',
                 'affective_id' => '1',
-                'student_id' => 'SMS/2017/001',
+                'student_id' => '001',
                 'class_id' => '1',
                 'term_id' => '1',
                 'session_id' => '1'
@@ -119,14 +115,14 @@ class StudentsControllerTest extends IntegrationTestCase
             1 => [
                 'score' => '4',
                 'affective_id' => '2',
-                'student_id' => 'SMS/2017/001',
+                'student_id' => '001',
                 'class_id' => '1',
                 'term_id' => '1',
                 'session_id' => '1'
             ],
         ];
 
-        $this->post('/skills-grading-system/edit-student-skill/SMS/2017/001',$data);
+        $this->post('/skills-grading-system/edit-student-skill/001',$data);
         $this->assertResponseSuccess();
     }
 
@@ -137,7 +133,7 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public function testDelete()
     {
-        $this->delete('/skills-grading-system/delete-student-skill/SMS/2017/001');
+        $this->delete('/skills-grading-system/delete-student-skill/001');
         $this->assertResponseSuccess();
         $this->assertRedirect();
     }

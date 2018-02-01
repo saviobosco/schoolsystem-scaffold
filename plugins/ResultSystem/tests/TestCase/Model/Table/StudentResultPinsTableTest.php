@@ -1,6 +1,8 @@
 <?php
 namespace ResultSystem\Test\TestCase\Model\Table;
 
+use Cake\Event\EventList;
+use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use ResultSystem\Model\Table\StudentResultPinsTable;
@@ -28,23 +30,7 @@ class StudentResultPinsTableTest extends TestCase
         'plugin.result_system.students',
         'plugin.result_system.sessions',
         'plugin.result_system.classes',
-        'plugin.result_system.blocks',
-        'plugin.result_system.class_demarcations',
-        'plugin.result_system.student_annual_results',
-        'plugin.result_system.student_termly_results',
-        'plugin.result_system.student_annual_position_on_class_demarcations',
-        'plugin.result_system.student_annual_positions',
-        'plugin.result_system.student_annual_subject_position_on_class_demarcations',
-        'plugin.result_system.subjects',
-        'plugin.result_system.student_annual_subject_position_on_class_demarcations',
-        'plugin.result_system.student_annual_subject_positions',
-        'plugin.result_system.student_termly_subject_position_on_class_demarcations',
-        'plugin.result_system.student_termly_subject_positions',
         'plugin.result_system.terms',
-        'plugin.result_system.student_termly_position_on_class_demarcations',
-        'plugin.result_system.student_termly_positions',
-        'plugin.result_system.student_termly_subject_position_on_class_demarcations',
-        'plugin.result_system.student_general_remarks'
     ];
 
     /**
@@ -57,6 +43,7 @@ class StudentResultPinsTableTest extends TestCase
         parent::setUp();
         $config = TableRegistry::exists('StudentResultPins') ? [] : ['className' => 'ResultSystem\Model\Table\StudentResultPinsTable'];
         $this->StudentResultPins = TableRegistry::get('StudentResultPins', $config);
+        $this->StudentResultPins->eventManager()->setEventList(new EventList());
     }
 
     /**
@@ -72,43 +59,18 @@ class StudentResultPinsTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    public function testInitialize()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test validationDefault method
-     *
-     * @return void
-     */
-    public function testValidationDefault()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    public function testBuildRules()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
      * Test savePin method
      *
      * @return void
      */
     public function testSavePin()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $postData = [
+            'number_to_generate' => 1,
+            'save_to_database' => 1
+        ];
+        $this->assertEquals(1,$this->StudentResultPins->savePins($postData));
+        $this->assertEventFired('Model.afterSave', $this->StudentResultPins->getEventManager());
     }
 
     /**
@@ -118,7 +80,7 @@ class StudentResultPinsTableTest extends TestCase
      */
     public function testCheckPin()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertInstanceOf(Entity::class,$this->StudentResultPins->checkPin(123456));
     }
 
     /**
@@ -128,6 +90,7 @@ class StudentResultPinsTableTest extends TestCase
      */
     public function testUpdateStudentPin()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $pin = $this->StudentResultPins->get(123456);
+        $this->assertEquals(true,$this->StudentResultPins->updateStudentPin($pin,'001',1,1,1));
     }
 }

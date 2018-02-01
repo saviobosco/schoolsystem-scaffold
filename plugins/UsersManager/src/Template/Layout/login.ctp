@@ -64,15 +64,7 @@ $serverName = $this->request->env('SERVER_NAME');
 <?= $this->Plugins->script('jquery-ui/ui/minified/jquery-ui.min.js') ?>
 <?= $this->fetch('script') ?>
 
-<?= $this->FrontEnd->script('apps.js') ?>
-
 <!-- ================== END BASE JS ================== -->
-
-<script>
-    $(document).ready(function() {
-        App.init();
-    });
-</script>
 
 
 </body>

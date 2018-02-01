@@ -11,5 +11,6 @@ class AppController extends BaseController
         parent::initialize();
         $this->loadComponent('Saviobosco/Excel.ImportExcel');
         $this->loadComponent('ResultSystem.ResultSystem');
+        $this->loadComponent('Csrf');
     }
 }

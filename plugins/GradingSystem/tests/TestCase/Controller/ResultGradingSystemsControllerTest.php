@@ -76,7 +76,7 @@ class ResultGradingSystemsControllerTest extends IntegrationTestCase
             'created' => '2017-07-13 14:09:37',
             'modified' => '2017-07-13 14:09:37'
         ];
-        $this->post('students/add',$data);
+        $this->post('/grading-system/result-grading-systems/add',$data);
         $this->assertResponseSuccess();
     }
 
@@ -87,21 +87,16 @@ class ResultGradingSystemsControllerTest extends IntegrationTestCase
      */
     public function testEdit()
     {
-        $this->get('/grading-system/result-grading-systems/edit/1');
-        $this->assertResponseOk();
-        $this->assertResponseContains('Distinction');
-
         $data = [
             'id' => 1,
             'grade' => 'A',
             'score' => '75 - above',
             'remark' => 'Distinction',
             'cal_order' => 6,
-            'created' => '2017-07-13 14:09:37',
-            'modified' => '2017-07-13 14:09:37'
         ];
 
         $this->post('/grading-system/result-grading-systems/edit/1',$data);
+        $this->assertRedirect();
         $this->assertResponseSuccess();
     }
 

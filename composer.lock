@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "152148b85fff908da2526df33ba14d94",
+    "content-hash": "c179a49e097636eaad9ec8c9c73e4f41",
     "packages": [
         {
             "name": "Cewi/Excel",
@@ -727,6 +727,66 @@
                 "upload"
             ],
             "time": "2017-04-03T15:36:18+00:00"
+        },
+        {
+            "name": "dereuromark/cakephp-databaselog",
+            "version": "2.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dereuromark/CakePHP-DatabaseLog.git",
+                "reference": "10eb5393b6f9c3d18d3e1685a81772dec6c57c65"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dereuromark/CakePHP-DatabaseLog/zipball/10eb5393b6f9c3d18d3e1685a81772dec6c57c65",
+                "reference": "10eb5393b6f9c3d18d3e1685a81772dec6c57c65",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "^3.2",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "dereuromark/cakephp-tools": "dev-master",
+                "fig-r/psr2r-sniffer": "dev-master"
+            },
+            "type": "cakephp-plugin",
+            "autoload": {
+                "psr-4": {
+                    "DatabaseLog\\": "src/",
+                    "DatabaseLog\\Test\\Fixture\\": "tests/Fixture/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Scherer",
+                    "homepage": "http://www.dereuromark.de",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Nick Baker",
+                    "homepage": "http://www.webtechnick.com",
+                    "role": "Original author"
+                },
+                {
+                    "name": "Other contributors",
+                    "homepage": "https://github.com/dereuromark/CakePHP-DatabaseLog/graphs/contributors"
+                }
+            ],
+            "description": "CakePHP DatabaseLog Plugin",
+            "homepage": "https://github.com/dereuromark/CakePHP-DatabaseLog/",
+            "keywords": [
+                "cakephp",
+                "database",
+                "logging",
+                "logs",
+                "plugin"
+            ],
+            "time": "2018-01-03T15:10:23+00:00"
         },
         {
             "name": "doctrine/instantiator",

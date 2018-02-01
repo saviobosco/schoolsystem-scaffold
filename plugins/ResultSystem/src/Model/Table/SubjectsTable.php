@@ -39,9 +39,9 @@ class SubjectsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('subjects');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('subjects');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->belongsTo('Blocks', [
             'foreignKey' => 'block_id',
@@ -119,5 +119,86 @@ class SubjectsTable extends Table
                 'class_id'    => @$class,
                 'term_id'    => @$term
             ])->combine('subject_id','class_average')->toArray();
+    }
+
+    public function getAnnualResults($id,$queryData)
+    {
+        return $this->StudentAnnualResults
+            ->find('all')
+            ->where(['subject_id' => $id,
+                'StudentAnnualResults.session_id' => $queryData['session_id'],
+                'StudentAnnualResults.class_id'   => $queryData['class_id'],
+            ])
+            ->contain([
+                'Students' => function ($q){
+                    return $q->select(['Students.id','Students.first_name','Students.last_name']);
+                }
+            ])
+            ->enableHydration(false)
+            ->toArray();
+    }
+
+    public function getAnnualSubjectPositions($id,$queryData)
+    {
+        return $this->StudentAnnualSubjectPositions->find('all')
+            ->where(['subject_id' => $id,
+                'session_id' => $queryData['session_id'],
+                'class_id'   => $queryData['class_id'],
+            ])->combine('student_id','position')->toArray();
+    }
+
+    public function getTermlyResults($id,$queryData)
+    {
+        return $this->StudentTermlyResults->find('all')
+            ->where([
+                'StudentTermlyResults.subject_id' => $id,
+                'StudentTermlyResults.session_id' => $queryData['session_id'],
+                'StudentTermlyResults.class_id'   => $queryData['class_id'],
+                'StudentTermlyResults.term_id'   => $queryData['term_id'],
+            ])
+            ->contain([
+                'Students' => function ($q){
+                    return $q->select(['Students.id','Students.first_name','Students.last_name']);
+                }
+            ])
+            ->enableHydration(false)
+            ->toArray();
+    }
+
+    public function getTermlySubjectPositions($id,$queryData)
+    {
+        return $this->StudentTermlySubjectPositions->find('all')
+            ->where(['subject_id' => $id,
+                'session_id' => $queryData['session_id'],
+                'class_id'   => $queryData['class_id'],
+                'term_id'   => $queryData['term_id'],
+            ])->combine('student_id','position')->toArray();
+    }
+
+    public function getTermlyResultWithHydration($id,$queryData)
+    {
+        return $this->get($id, [
+            'contain' => [
+                'StudentTermlyResults' => ['conditions' => [
+                    'StudentTermlyResults.session_id' => $queryData['session_id'],
+                    'StudentTermlyResults.class_id' => $queryData['class_id'],
+                    'StudentTermlyResults.term_id' => $queryData['term_id'],
+                ]
+                ]
+            ]
+        ]);
+    }
+
+    public function getAnnualResultWithHydration($id,$queryData)
+    {
+        return $this->get($id, [
+            'contain' => [
+                'StudentAnnualResults' => ['conditions' => [
+                    'StudentAnnualResults.session_id' => $queryData['session_id'],
+                    'StudentAnnualResults.class_id' => $queryData['class_id']
+                ]
+                ]
+            ]
+        ]);
     }
 }

@@ -30,22 +30,19 @@ class StudentResultPinsController extends AppController
         } else {
             $this->Flash->error(__('The student result pin could not be deleted. Please, try again.'));
         }
-
         return $this->redirect(['action' => 'index']);
     }
 
     public function generatePin()
     {
-        $factory = new Factory();
-        $generator = $factory->getGenerator(new Strength(Strength::MEDIUM));
+        $postData = $this->request->getData();
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $number = $this->request->getData('number_to_generate');
-            for ($num = 0; $num < $number ; $num++ ){
-                $pin =  $generator->generateInt(1000000000,2000000000);
-                if($this->request->data['save_to_database']){
-                    $this->StudentResultPins->savePin($pin); }
+            if ( !empty($postData)) {
+                $num = $this->StudentResultPins->savePins($postData);
+                $this->Flash->success(__('{0} pins were successfully generated',$num));
+            } else {
+                $this->Flash->error('Could not generate pin');
             }
-            $this->Flash->success(__('{0} pins were sucessfully generated',$num));
         }
         $title = 'Generate New Pins';
         $this->set(compact('pins','title'));
@@ -55,7 +52,6 @@ class StudentResultPinsController extends AppController
     public function printPin()
     {
         $pins = $this->StudentResultPins->find('all')->contain(['Terms','Sessions','Classes']);
-
         $title = 'Result Checking Pins';
         $this->set(compact('pins','title'));
         $this->set('_serialize', ['pins']);
@@ -64,10 +60,18 @@ class StudentResultPinsController extends AppController
     public function excelFormat()
     {
         if ( $this->request->is(['post']) ) {
-
-            $applicationPins = $this->StudentResultPins->find('all')->select(['serial_number','pin'])->where(['student_id IS NULL',['DATE(created)'=>(new Time($this->request->getData('created')))->i18nFormat('yyyy-MM-dd')]])->enableHydration(false)/*->toArray()*/;
-            //debug($applicationPins); exit;
-
+            $applicationPins = $this->StudentResultPins->find('all')
+                ->select(['serial_number','pin'])
+                ->where([
+                    'student_id IS NULL',
+                    [
+                        'DATE(created)'=>(new Time($this->request->getData('created')))->i18nFormat('yyyy-MM-dd')
+                    ]
+                ])->enableHydration(false)->toArray();
+            if ( empty($applicationPins)) {
+                $this->Flash->error('No pin found');
+                return $this->redirect($this->referer());
+            }
             $this->set(compact('applicationPins'));
             $this->set('_serialize', ['applicationPins']);
         }

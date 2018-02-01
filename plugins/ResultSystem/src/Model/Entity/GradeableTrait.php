@@ -11,10 +11,8 @@ namespace ResultSystem\Model\Entity;
 
 trait GradeableTrait
 {
-
     public function calculateGrade($total , Array $grades)
     {
-
         if (is_int( (int) $total) || is_float( (float) $total)) {
 
 

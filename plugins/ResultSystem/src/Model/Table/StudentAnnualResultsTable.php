@@ -38,9 +38,9 @@ class StudentAnnualResultsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('student_annual_results');
-        $this->displayField('id');
-        $this->primaryKey(['student_id','subject_id','class_id','session_id']);
+        $this->setTable('student_annual_results');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey(['student_id','subject_id','class_id','session_id']);
 
         $this->belongsTo('Students', [
             'foreignKey' => 'student_id',
@@ -113,10 +113,4 @@ class StudentAnnualResultsTable extends Table
 
         return $rules;
     }
-
-    public function beforeSave( Event $event , Entity $entity )
-    {
-
-    }
-
 }

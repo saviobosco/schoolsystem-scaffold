@@ -22,12 +22,11 @@ class ResultProcessingControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.students',
-        'app.sessions',
-        'app.classes',
-        'app.states',
-        'app.class_demarcations',
-        'app.subjects',
+        'plugin.result_system.students',
+        'plugin.result_system.sessions',
+        'plugin.result_system.classes',
+        'plugin.result_system.class_demarcations',
+        'plugin.result_system.subjects',
         'plugin.grading_system.result_grading_systems',
         'plugin.result_system.student_annual_results',
         'plugin.result_system.terms',
@@ -55,6 +54,8 @@ class ResultProcessingControllerTest extends IntegrationTestCase
                 ]
             ]
         ]);
+        $this->enableRetainFlashMessages();
+        $this->enableCsrfToken();
     }
 
     /**
@@ -68,7 +69,7 @@ class ResultProcessingControllerTest extends IntegrationTestCase
             'session_id' => 1,
             'class_id' => 1,
             'term_id' => 1,
-            'no_of_subjects' => true
+            'no_of_subjects' => 3
         ];
         $this->post('result-system/result-processing',$data);
         $this->assertResponseOk();
@@ -86,7 +87,7 @@ class ResultProcessingControllerTest extends IntegrationTestCase
             'session_id' => 1,
             'class_id' => 1,
             'term_id' => 1,
-            'no_of_subjects' => true,
+            'no_of_subjects' => 3,
             'cal_student_position' => true
         ];
         $this->post('result-system/result-processing',$data);
@@ -105,12 +106,12 @@ class ResultProcessingControllerTest extends IntegrationTestCase
             'session_id' => 1,
             'class_id' => 1,
             'term_id' => 1,
-            'no_of_subjects' => true,
+            'no_of_subjects' => 3,
             'cal_subject_position' => true
         ];
         $this->post('result-system/result-processing',$data);
         $this->assertResponseOk();
-        $this->assertResponseContains('Successfully Calculated the students termly results');
+        $this->assertResponseContains('Successfully calculated the students subject position');
     }
 
     /**
@@ -124,7 +125,7 @@ class ResultProcessingControllerTest extends IntegrationTestCase
             'session_id' => 1,
             'class_id' => 1,
             'term_id' => 1,
-            'no_of_subjects' => true,
+            'no_of_subjects' => 3,
             'cal_class_average' => true
         ];
         $this->post('result-system/result-processing',$data);

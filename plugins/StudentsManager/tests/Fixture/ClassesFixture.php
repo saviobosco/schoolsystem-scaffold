@@ -29,8 +29,6 @@ class ClassesFixture extends TestFixture
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
             'classes_ibfk_1' => ['type' => 'foreign', 'columns' => ['block_id'], 'references' => ['blocks', 'id'], 'update' => 'cascade', 'delete' => 'noAction', 'length' => []],
-            'classes_ibfk_2' => ['type' => 'foreign', 'columns' => ['block_id'], 'references' => ['blocks', 'id'], 'update' => 'cascade', 'delete' => 'noAction', 'length' => []],
-            'classes_ibfk_3' => ['type' => 'foreign', 'columns' => ['block_id'], 'references' => ['blocks', 'id'], 'update' => 'cascade', 'delete' => 'noAction', 'length' => []],
         ],
         '_options' => [
             'engine' => 'InnoDB',
@@ -47,6 +45,30 @@ class ClassesFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
+            'class' => 'Lorem ipsum dolor sit amet',
+            'block_id' => 1,
+            'created' => '2018-01-07 13:59:49',
+            'modified' => '2018-01-07 13:59:49',
+            'no_of_subjects' => 1
+        ],
+        [
+            'id' => 2,
+            'class' => 'Lorem ipsum dolor sit amet',
+            'block_id' => 1,
+            'created' => '2018-01-07 13:59:49',
+            'modified' => '2018-01-07 13:59:49',
+            'no_of_subjects' => 1
+        ],
+        [
+            'id' => 3,
+            'class' => 'Lorem ipsum dolor sit amet',
+            'block_id' => 1,
+            'created' => '2018-01-07 13:59:49',
+            'modified' => '2018-01-07 13:59:49',
+            'no_of_subjects' => 1
+        ],
+        [
+            'id' => 4,
             'class' => 'Lorem ipsum dolor sit amet',
             'block_id' => 1,
             'created' => '2018-01-07 13:59:49',

@@ -42,9 +42,9 @@ class StudentAnnualPositionsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'student_id' => 'Lorem ipsum dolor sit amet',
-            'total' => 'Lorem ip',
-            'average' => 1,
+            'student_id' => '001',
+            'total' => '85',
+            'average' => 3,
             'position' => 1,
             'class_id' => 1,
             'session_id' => 1

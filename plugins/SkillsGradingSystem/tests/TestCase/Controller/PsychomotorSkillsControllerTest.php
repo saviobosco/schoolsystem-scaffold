@@ -84,10 +84,6 @@ class PsychomotorSkillsControllerTest extends IntegrationTestCase
      */
     public function testEdit()
     {
-        $this->get('/skills-grading-system/psychomotor-skills/edit/1');
-        $this->assertResponseOk();
-        $this->assertResponseContains('Hand Writing');
-
         $data = [
             'id' => 1,
             'name' => 'Painting',

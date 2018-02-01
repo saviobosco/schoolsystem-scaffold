@@ -59,7 +59,7 @@
                         echo $this->Form->input('religion');
                         echo $this->Form->input('home_residence');
                         echo $this->Form->input('session_id', ['options' => $sessions,'empty'=>true,'label'=>'Session']);
-                        echo $this->Form->input('class_id', ['options' => $classes,'empty'=>true]);
+                        echo $this->Form->input('class_id', ['options' => $classes,'empty'=>'Select Class','required'=>true]);
                         echo $this->Form->input('class_demarcation_id', ['options' => $classDemarcations,'empty'=>true]);
 
                         echo '<h2>Guardian Information </h2>';
@@ -68,7 +68,9 @@
                         echo $this->Form->input('relationship_to_guardian');
                         echo $this->Form->input('occupation_of_guardian');
                         echo $this->Form->input('guardian_phone_number');
-                        echo $this->Form->input('add_student_fee',['type'=>'checkbox','label'=>'Add the student Fees Automatically','checked'=>true]);
+                        //if (\Cake\Core\Plugin::loaded('FinanceManager')){
+                            echo $this->Form->input('add_student_fee',['type'=>'checkbox','label'=>'Add the student Fees Automatically','checked'=>true]);
+                        //}
                         echo $this->Form->input('return_here',['type'=>'checkbox','checked'=>true])
                         ?>
                     </fieldset>

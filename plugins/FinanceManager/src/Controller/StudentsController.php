@@ -32,30 +32,24 @@ class StudentsController extends AppController
      */
     public function index()
     {
-        if ( empty($this->request->getQuery('class_id'))) {
-            $this->paginate = [
-                'limit' => 1000,
-                'maxLimit' => 1000,
-                'contain' => ['Classes'],
+        $this->paginate = [
+            'limit' => 1000,
+            'maxLimit' => 1000,
+            'contain' => ['Classes'],
+            'conditions' => [
+                'Students.status'   => 1,
+            ],
+            // Place the result in ascending order according to the class.
+            'order' => [
+                'class_id' => 'asc'
+            ]
+        ];
+        if ( !empty($this->request->getQuery('class_id'))) {
+            $this->paginate = array_merge_recursive($this->paginate,[
                 'conditions' => [
-                    'Students.status'   => 1,
-                ],
-                // Place the result in ascending order according to the class.
-                'order' => [
-                    'class_id' => 'asc'
-                ]
-            ];
-        }
-        else {
-            $this->paginate = [
-                'limit' => 1000,
-                'maxLimit' => 1000,
-                'contain' => ['Classes'],
-                'conditions' => [
-                    'Students.status'   => 1,
                     'Students.class_id' => $this->request->getQuery('class_id')
                 ]
-            ];
+            ]);
         }
         $students = $this->paginate($this->Students);
         $classes = $this->Students->Classes->find('list',['limit' => 200]);
@@ -65,30 +59,24 @@ class StudentsController extends AppController
 
     public function unActiveStudents()
     {
-        if ( empty($this->request->getQuery('class_id'))) {
-            $this->paginate = [
-                'limit' => 1000,
-                'maxLimit' => 1000,
-                'contain' => ['Classes'],
+        $this->paginate = [
+            'limit' => 1000,
+            'maxLimit' => 1000,
+            'contain' => ['Classes'],
+            'conditions' => [
+                'Students.status'   => 0,
+            ],
+            // Place the result in ascending order according to the class.
+            'order' => [
+                'class_id' => 'asc'
+            ]
+        ];
+        if ( !empty($this->request->getQuery('class_id'))) {
+            $this->paginate = array_merge_recursive($this->paginate,[
                 'conditions' => [
-                    'Students.status'   => 0,
-                ],
-                // Place the result in ascending order according to the class.
-                'order' => [
-                    'class_id' => 'asc'
-                ]
-            ];
-        }
-        else {
-            $this->paginate = [
-                'limit' => 1000,
-                'maxLimit' => 1000,
-                'contain' => ['Classes'],
-                'conditions' => [
-                    'Students.status'   => 0,
                     'Students.class_id' => $this->request->getQuery('class_id')
                 ]
-            ];
+            ]);
         }
         $students = $this->paginate($this->Students);
         $classes = $this->Students->Classes->find('list',['limit' => 200]);
@@ -111,8 +99,6 @@ class StudentsController extends AppController
                 ->contain(['Classes','StudentFees.Fees.FeeCategories','StudentFees.StudentFeePayments'])
                 ->where(['Students.id'=>$getData['student_id']])
                 ->first();
-
-
             $sessions = $this->Sessions->find('list', ['limit' => 200])->toArray();
             $classes = $this->Students->Classes->find('list', ['limit' => 200])->toArray();
             $this->loadModel('Terms');
@@ -124,117 +110,6 @@ class StudentsController extends AppController
             $this->render('/Element/noRecordFound');
         }
 
-    }
-
-    /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
-     */
-    public function add()
-    {
-        $student = $this->Students->newEntity();
-        if ($this->request->is('post')) {
-            $student = $this->Students->patchEntity($student, $this->request->getData());
-            if ($this->Students->save($student)) {
-                $this->Flash->success(__('The student has been saved.'));
-
-                if ( $this->request->getData('return_here')) {
-                    return $this->redirect(['action' => 'add']);
-                }
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The student could not be saved. Please, try again.'));
-        }
-        $religions = $this->Students->Religions->find('list');
-        $classes = $this->Students->Classes->find('list', ['limit' => 200]);
-        $sessions = $this->Students->StudentFees->Fees->Sessions->find('list');
-        $this->set(compact('student', 'states', 'sessions', 'classes','religions'));
-        $this->set('_serialize', ['student']);
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Student id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        try {
-            /**
-             * if no argument is specified redirect to the index action
-             */
-            if (empty($id)) {
-                $this->redirect(['action' => 'index']);
-            }
-            $student = $this->Students->get($id, [
-                'contain' => []
-            ]);
-
-            if ($this->request->is(['patch', 'post', 'put'])) {
-                $student = $this->Students->patchEntity($student, $this->request->getData());
-                if ( $this->Students->save($student) ) {
-                    $this->Flash->success(__('The student has been saved.'));
-
-                    //return $this->redirect(['action' => 'index']);
-                } else {
-                    $this->Flash->error(__('The student could not be saved. Please, try again.'));
-                }
-            }
-            $religions = $this->Students->Religions->find('list');
-            $classes = $this->Students->Classes->find('list', ['limit' => 200]);
-            $this->set(compact('student', 'religions', 'classes', 'classDemarcations','states'));
-            $this->set('_serialize', ['student']);
-
-        } catch ( RecordNotFoundException $e ) {
-            $this->render('/Element/recordNotFound');
-        }
-    }
-
-    /**
-     * Delete method
-     *
-     * @param string|null $id Student id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function delete($id = null)
-    {
-        $this->request->allowMethod(['post', 'delete']);
-        try {
-            $student = $this->Students->get($id);
-            if ($this->Students->deleteStudent($student)) {
-                $this->Flash->success(__('The student has been deleted.'));
-            } else {
-                $this->Flash->error(__('The student could not be deleted. Please, try again.'));
-            }
-
-            return $this->redirect(['action' => 'index']);
-        } catch ( \PDOException $e ) {
-            $this->Flash->error(__('Please you cannot delete a student with fees. First delete the student fees and try again'));
-            return $this->redirect(['action' => 'index']);
-        }
-    }
-
-    /**
-     * @param null $id
-     * @return \Cake\Http\Response|null
-     * The student deactivation action handler
-     */
-    public function deactivate($id = null)
-    {
-        $this->request->allowMethod(['post', 'patch','put']);
-        $student = $this->Students->get($id);
-        $student->status= 0;
-        if ($this->Students->save($student)) {
-            $this->Flash->success(__('The student has been deactivated.'));
-        } else {
-            $this->Flash->error(__('The student could not be deactivated. Please, try again.'));
-        }
-
-        return $this->redirect($this->request->referer());
     }
 
     /**

@@ -14,8 +14,6 @@
                 <?php if($pins): ?>
                     <h3></h3>
                     <a class="pull-right" data-toggle="modal" data-target="#myModal"  title="Generate an Excel Sheet">Generate excel record <i class="fa fa-info-circle text-primary" data-toggle="tooltip" title="Generate The students Excel Sheet"></i></a>
-
-                    <?php /* $this->Html->link('Excel File',['controller'=>'StudentResultPins','action'=>'excel_format','_ext' => 'xlsx'],[])*/ ?>
                     <table id="data-table" class="table table-bordered table-striped">
                         <thead>
                         <tr>

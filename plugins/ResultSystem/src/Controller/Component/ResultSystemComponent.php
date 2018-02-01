@@ -39,8 +39,8 @@ class ResultSystemComponent extends Component
             }
 
             $subjectList = $this->_findSubjectIdUsingClassBlockId($class_id);
-
-            for ($num = 1; $num < count($arrayDataKeys); $num++ ) {
+            $passedSubjectCount = count($arrayDataKeys);
+            for ($num = 1; $num < $passedSubjectCount; $num++ ) {
                 $this->_findSubjectIdUsingSubmittedKey($arrayDataKeys[$num],$subjectList,$result);
             }
             if (isset($result['error'])) {
@@ -78,8 +78,8 @@ class ResultSystemComponent extends Component
      */
     protected function _findSubjectIdUsingClassBlockId($class_id)
     {
-        $subjectTable = TableRegistry::get('App.Subjects');
-        $classTable = TableRegistry::get('App.Classes');
+        $subjectTable = TableRegistry::get('ResultSystem.Subjects');
+        $classTable = TableRegistry::get('ResultSystem.Classes');
 
         // get the block id of the subject using the class id. This is to
         // differentiate between a subject belonging to a Junior and a Senior
@@ -99,6 +99,9 @@ class ResultSystemComponent extends Component
      */
     protected function _findSubjectIdUsingSubmittedKey($key,$subjectArray,&$resultArray = null)
     {
+        if (empty($key)) {
+            return ;
+        }
         if (array_key_exists($key,$subjectArray)) {
             return $subjectArray[$key];
         }

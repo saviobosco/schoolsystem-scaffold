@@ -30,23 +30,6 @@ class ClassDemarcationsController extends AppController
     }
 
     /**
-     * View method
-     *
-     * @param string|null $id Class Demacation id.
-     * @return \Cake\Network\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $classDemarcation = $this->ClassDemarcations->get($id, [
-            'contain' => ['Classes']
-        ]);
-
-        $this->set('classDemarcation', $classDemarcation);
-        $this->set('_serialize', ['classDemarcation']);
-    }
-
-    /**
      * Add method
      *
      * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.

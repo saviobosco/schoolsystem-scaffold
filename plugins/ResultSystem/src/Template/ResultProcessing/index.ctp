@@ -14,6 +14,7 @@
                     echo $this->Form->input('class_id', ['options' => $classes,'empty'=>'select class']);
                     echo $this->Form->input('term_id', ['options' => $terms]);
                     echo $this->Form->input('no_of_subjects', ['required'=>true,'type'=>'number','data-toggle' =>'tooltip','trigger' =>'focus','title'=>'This is used to calculate the student\'s average']);
+                    echo $this->Form->input('cal_class_count', ['type'=>'checkbox','label'=>'Count the students under the class','data-toggle' =>'tooltip','trigger' =>'focus','title'=>'This is used to calculate the students  number in a class.']);
                     echo $this->Form->input('cal_student_position',['type'=>'checkbox','label'=>['text'=>'Calculate the student\'s positions ','data-toggle' =>'tooltip','trigger' =>'hover','title'=>'Calculate the student\'s positions for the selected class']]);
                     echo $this->Form->input('cal_subject_position',['type'=>'checkbox','label'=>['text'=>'Calculate the student\'s subject positions ','data-toggle' =>'tooltip','trigger' =>'hover','title'=>'Calculate the student\'s subject positions for the selected class']]);
                     echo $this->Form->input('cal_class_average',['type'=>'checkbox','label'=>['text'=>'Calculate the subjects Average ','data-toggle' =>'tooltip','trigger' =>'hover','title'=>'Calculate the subjects average for the selected class']]);

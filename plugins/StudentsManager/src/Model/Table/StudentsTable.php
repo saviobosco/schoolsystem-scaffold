@@ -4,8 +4,6 @@ namespace StudentsManager\Model\Table;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\I18n\Date;
-use Cake\ORM\Entity;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -17,8 +15,6 @@ use StudentsManager\Model\Entity\Student;
  * @property \Cake\ORM\Association\BelongsTo $Sessions
  * @property \Cake\ORM\Association\BelongsTo $Classes
  * @property \Cake\ORM\Association\BelongsTo $ClassDemarcations
- * @property \Cake\ORM\Association\BelongsTo $SessionAdmitteds
- * @property \Cake\ORM\Association\BelongsTo $GraduatedSessions
  * @property \Cake\ORM\Association\BelongsTo $States
 
  *
@@ -52,6 +48,14 @@ class StudentsTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        // loads the Proffer behaviour for picture upload .
+        $this->addBehavior('Proffer.Proffer', [
+            'photo' => [    // The name of your upload field
+                'root' => WWW_ROOT .'img/student-pictures', // Customise the root upload folder here, or omit to use the default
+                'dir' => 'photo_dir',   // The name of the field to store the folder
+            ]
+        ]);
 
         $this->belongsTo('Classes', [
             'foreignKey' => 'class_id',
@@ -89,6 +93,10 @@ class StudentsTable extends Table
         $validator
             ->requirePresence('last_name', 'create')
             ->notEmpty('last_name');
+
+        $validator
+            ->requirePresence('class_id', 'create')
+            ->notEmpty('class_id');
 
         $validator
             ->allowEmpty('date_of_birth');
@@ -149,30 +157,27 @@ class StudentsTable extends Table
         // save student and dispatch add
         $savedStudent = $this->save($student);
         if ( $savedStudent) {
-            // dispatch added student event
-            if ( $student['add_student_fee'] ) {
-                $event = new Event(self::EVENT_ADDED_STUDENT,$this,['student'=>$student]);
-                $this->getEventManager()->dispatch($event);
-            }
+            $event = new Event(self::EVENT_ADDED_STUDENT,$this,['student'=>$student]);
+            $this->getEventManager()->dispatch($event);
             return true;
         }
         return false;
     }
 
-    public function findGraduatedStudents()
-    {
-        return $this->find('all')
-            ->where(['graduated' => 1])
-            ->contain(['Sessions','SessionGraduated'])
-            ->orderDesc('graduated_session_id');
-    }
 
+    /**
+     * @return array
+     * This method is used to get all un active student accounts.
+     */
     public function findUnActiveStudents()
     {
         return $this->find('all')
+            ->select(['id','first_name','last_name','gender','class_id'])
             ->where(['status' => 0])
-            ->contain(['Sessions','ClassDemarcations']);
-        //->orderAsc('class_id');
+            ->contain(['Classes'])
+            ->orderAsc('class_id')
+            ->enableHydration(false)
+            ->toArray();
     }
 
     /***

@@ -43,7 +43,25 @@ class StudentAnnualSubjectPositionsFixture extends TestFixture
         [
             'id' => 1,
             'subject_id' => 1,
-            'student_id' => 'Lorem ipsum dolor sit amet',
+            'student_id' => '001',
+            'total' => 1,
+            'position' => 1,
+            'class_id' => 1,
+            'session_id' => 1
+        ],
+        [
+            'id' => 2,
+            'subject_id' => 2,
+            'student_id' => '001',
+            'total' => 1,
+            'position' => 1,
+            'class_id' => 1,
+            'session_id' => 1
+        ],
+        [
+            'id' => 3,
+            'subject_id' => 3,
+            'student_id' => '001',
             'total' => 1,
             'position' => 1,
             'class_id' => 1,

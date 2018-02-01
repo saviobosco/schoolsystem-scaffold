@@ -37,7 +37,7 @@ $cakeDescription = Setting::read('Application.school_name')
     echo $this->Html->css('http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700');
     echo $this->Plugins->css('jquery-ui/themes/base/minified/jquery-ui.min.css');
     echo $this->Plugins->css('bootstrap/css/bootstrap.min.css');
-    echo $this->Plugins->css('font-awesome/css/font-awesome.min.css');
+    echo $this->Plugins->css('font-awesome/css/font-awesome.css');
     echo $this->Html->css('animate.css');
     echo $this->Html->css('style.css');
     echo $this->Html->css('style-responsive.min.css');
@@ -59,8 +59,8 @@ $cakeDescription = Setting::read('Application.school_name')
     <!-- ================== BEGIN BASE JS ================== -->
     <?= $this->Site->script('pace/pace.min.js')  ?>
     <?php
-    echo $this->Site->script('jquery/jquery-1.9.1.min.js');
-    echo $this->Site->script('jquery/jquery-migrate-1.1.0.min.js');
+    echo $this->Plugins->script('jquery/jquery-1.9.1.min.js');
+    echo $this->Plugins->script('jquery/jquery-migrate-1.1.0.min.js');
 
     ?>
     <!-- ================== END BASE JS ================== -->
@@ -127,8 +127,6 @@ $cakeDescription = Setting::read('Application.school_name')
 
 <!-- ================== BEGIN BASE JS ================== -->
 <?php
-echo $this->Site->script('jquery/jquery-1.9.1.min.js');
-echo $this->Site->script('jquery/jquery-migrate-1.1.0.min.js');
 echo $this->Site->script('jquery-ui/ui/minified/jquery-ui.min.js');
 echo $this->Site->script('bootstrap/js/bootstrap.min.js');
 ?>

@@ -46,46 +46,41 @@ class ResultGradeInputsTable extends Table
         $validator
             ->integer('id')
             ->allowEmpty('id', 'create');
-
-        /*$validator
-            ->scalar('main_value')
-            ->requirePresence('main_value', 'create')
-            ->notEmpty('main_value');
-
-        $validator
-            ->scalar('replacement')
-            ->allowEmpty('replacement');
-
-        $validator
-            ->scalar('percentage')
-            ->allowEmpty('percentage');
-
-        $validator
-            ->integer('order')
-            ->allowEmpty('order');
-
-        $validator
-            ->boolean('visibility')
-            ->allowEmpty('visibility');*/
-
         return $validator;
     }
 
+    /**
+     * @return array
+     * This method returns only the grades inputs with visibility => 1 in this format
+     * $array = [
+     *  'first_test' => 'First Test (10%)',
+     *  'second_test' => 'Second Test (10%)',
+     *  'third_test' => 'Third Test (10%)',
+     *  ...
+     *  'exam' => 'Examination (70%)',
+     * ]
+     *
+     */
     public function getValidGradeInputs()
     {
         $data = $this->find('all')
             ->where(['visibility'=>1])
+            ->orderAsc('output_order')
             ->map(function($row){ $row->details = $row->replacement.' ('.$row->percentage.'%)'; return $row;})
             ->combine('main_value','details')->toArray();
         return $data;
     }
 
+    /**
+     * @return array
+     * This method return all grade inputs with visibility => 1;
+     */
     public function getValidGradeInputsWithAllData()
     {
         $data = $this->find('all')
             ->where(['visibility'=>1])
+            ->orderAsc('output_order')
             ->enableHydration(false)
-            //->map(function($row){ $row->details = $row->replacement.' ('.$row->percentage.'%)'; return $row;})
             ->toArray();
         return $data;
     }

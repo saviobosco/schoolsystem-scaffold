@@ -18,14 +18,28 @@ class StudentsControllerTest extends IntegrationTestCase
     public $fixtures = [
         'plugin.students_manager.students',
         'plugin.students_manager.sessions',
-        'plugin.students_manager.session_admitted',
         'plugin.students_manager.classes',
-        'plugin.students_manager.blocks',
         'plugin.students_manager.class_demarcations',
-        'plugin.students_manager.student_annual_results',
-        'plugin.students_manager.student_termly_results',
-        'plugin.students_manager.session_graduated'
+        'plugin.students_manager.states',
     ];
+
+    public function setUp()
+    {
+        parent::setUp();
+        // Set session data
+        $this->session([
+            'Auth' => [
+                'User' => [
+                    'id' => 1,
+                    'username' => 'testing',
+                    'role' => 'admin',
+                    'super_user' => 1
+                    // other keys.
+                ]
+            ]
+        ]);
+        $this->enableRetainFlashMessages();
+    }
 
     /**
      * Test index method
@@ -34,7 +48,9 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public function testIndex()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/students');
+        $this->assertResponseOk();
+        $this->assertResponseContains('Students');
     }
 
     /**
@@ -44,7 +60,9 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public function testView()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/students/view/1000');
+        $this->assertResponseOk();
+        $this->assertResponseContains('Omebe');
     }
 
     /**
@@ -54,7 +72,31 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public function testAdd()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $data = [
+            'id' => 1001,
+            'first_name' => 'Iwueze',
+            'last_name' => 'Ifeoma',
+            'class_id' => 1,
+            'gender' => 'male'
+        ];
+        $this->post('/students/add',$data);
+        $this->assertRedirect(['action'=>'index']);
+        $this->assertSession('The student has been saved.', 'Flash.flash.0.message');
+    }
+
+    public function testAddWithRedirect()
+    {
+        $data = [
+            'id' => 1002,
+            'first_name' => 'Iwueze',
+            'last_name' => 'Ifeoma',
+            'class_id' => 1,
+            'return_here' => 1,
+            'gender' => 'male'
+        ];
+        $this->post('/students/add',$data);
+        $this->assertRedirect(['action'=>'add']);
+        $this->assertSession('The student has been saved.', 'Flash.flash.0.message');
     }
 
     /**
@@ -64,7 +106,14 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public function testEdit()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $data = [
+            'first_name' => 'Omebe',
+            'last_name' => 'Ebuka',
+            'class_id' => 1,
+        ];
+        $this->post('/students/edit/1000',$data);
+        $this->assertResponseOk();
+        $this->assertSession('The student has been saved.', 'Flash.flash.0.message');
     }
 
     /**
@@ -74,6 +123,8 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public function testDelete()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->delete('/students/delete/1000');
+        $this->assertRedirect();
+        $this->assertSession('The student has been deleted.', 'Flash.flash.0.message');
     }
 }

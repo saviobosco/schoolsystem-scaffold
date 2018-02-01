@@ -17,11 +17,11 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public $fixtures = [
         'plugin.result_system.students',
-        'app.sessions',
-        'app.classes',
-        'app.subjects',
-        'app.blocks',
-        'app.class_demarcations',
+        'plugin.result_system.sessions',
+        'plugin.result_system.classes',
+        'plugin.result_system.subjects',
+        'plugin.result_system.terms',
+        'plugin.result_system.class_demarcations',
         'plugin.result_system.student_annual_results',
         'plugin.result_system.student_termly_results',
         'plugin.result_system.student_result_pins',
@@ -39,6 +39,12 @@ class StudentsControllerTest extends IntegrationTestCase
         'plugin.result_system.student_class_counts',
         'plugin.result_system.subject_class_averages',
         'plugin.result_system.student_general_remarks',
+        'plugin.result_system.result_grade_inputs',
+        'plugin.result_system.result_remark_inputs',
+        'plugin.grading_system.result_grading_systems',
+        'plugin.result_system.student_publish_results',
+        'plugin.skills_grading_system.affective_dispositions',
+        'plugin.skills_grading_system.psychomotor_skills'
     ];
 
     public function setUp()
@@ -56,6 +62,8 @@ class StudentsControllerTest extends IntegrationTestCase
                 ]
             ]
         ]);
+        $this->enableRetainFlashMessages();
+        $this->enableCsrfToken();
     }
 
     /**
@@ -77,9 +85,9 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public function testView()
     {
-        $this->get('/result-system/view-student-result/SMS/2017/001?session_id=1&class_id=1');
+        $this->get('/result-system/view-student-result/001?session_id=1&class_id=1&term_id=1');
         $this->assertResponseOk();
-        //$this->assertResponseContains('SMS/2017/001');
+        $this->assertResponseContains('Omebe Johnbosco');
     }
 
     /**
@@ -90,31 +98,60 @@ class StudentsControllerTest extends IntegrationTestCase
     public function testAdd()
     {
         $data = [
-            0 => [
-                'first_test' => '6',
-                'second_test' => '6.5',
-                'third_test' => '3',
-                'exam' => '23',
-                'student_id' => 'SMS/2017/003',
-                'subject_id' => '5',
-                'class_id' => '1',
-                'term_id' => '1',
-                'session_id' => '1'
+            'student_termly_results' => [
+                1 => [
+                    'first_test' => '9',
+                    'second_test' => '9',
+                    'third_test' => '9',
+                    'fourth_test' => '9',
+                    'exam' => '60',
+                    'student_id' => '001',
+                    'subject_id' => '1',
+                    'class_id' => '1',
+                    'term_id' => '2',
+                    'session_id' => '1'
+                ],
+                2 => [
+                    'first_test' => '9',
+                    'second_test' => '9',
+                    'third_test' => '9',
+                    'fourth_test' => '9',
+                    'exam' => '49',
+                    'student_id' => '001',
+                    'subject_id' => '2',
+                    'class_id' => '1',
+                    'term_id' => '2',
+                    'session_id' => '1'
+                ],
+                3 => [
+                    'first_test' => '5',
+                    'second_test' => '7',
+                    'third_test' => '8',
+                    'fourth_test' => '9',
+                    'exam' => '40',
+                    'student_id' => '001',
+                    'subject_id' => '3',
+                    'class_id' => '1',
+                    'term_id' => '2',
+                    'session_id' => '1'
+                ],
             ],
-            1 => [
-                'first_test' => '5',
-                'second_test' => '8',
-                'third_test' => '9',
-                'exam' => '10',
-                'student_id' => 'SMS/2017/003',
-                'subject_id' => '6',
-                'class_id' => '1',
-                'term_id' => '1',
-                'session_id' => '1'
-            ],
+            'student_general_remarks' => [
+                0 => [
+                    'student_id' => '001',
+                    'class_id' => '1',
+                    'term_id' => '2',
+                    'session_id' => '1',
+                    'remark_1' => 'A good student',
+                    'remark_2' => 'Keep it up',
+                    'remark_3' => 'Try harder'
+                ]
+            ]
         ];
-        $this->post('/result-system/add-student-result/SMS/2017/003',$data);
-        $this->assertResponseSuccess();
+        $this->put('/result-system/add-student-result/001?session_id=1&class_id=1&term_id=2',$data);
+        //$this->assertResponseContains('');
+        $this->assertRedirect();
+        $this->assertSession('The student results and remarks has been saved.', 'Flash.flash.0.message');
     }
 
     /**
@@ -124,156 +161,67 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public function testEdit()
     {
-        $this->get('/result-system/edit-student-result/SMS/2017/001?session_id=1&class_id=1');
-        $this->assertResponseOk();
-        $this->assertResponseContains('SMS/2017/001');
-
         $data = [
-            0 => [
-                'first_test' => '6',
-                'second_test' => '6.5',
-                'third_test' => '3',
-                'exam' => '23',
-                'student_id' => 'SMS/2017/001',
-                'subject_id' => '5',
-                'class_id' => '1',
-                'term_id' => '1',
-                'session_id' => '1'
+            'student_termly_results' => [
+                1 => [
+                    'first_test' => '9',
+                    'second_test' => '9',
+                    'third_test' => '9',
+                    'fourth_test' => '9',
+                    'exam' => '60',
+                    'student_id' => '001',
+                    'subject_id' => '1',
+                    'class_id' => '1',
+                    'term_id' => '1',
+                    'session_id' => '1'
+                ],
+                2 => [
+                    'first_test' => '9',
+                    'second_test' => '9',
+                    'third_test' => '9',
+                    'fourth_test' => '9',
+                    'exam' => '49',
+                    'student_id' => '001',
+                    'subject_id' => '2',
+                    'class_id' => '1',
+                    'term_id' => '1',
+                    'session_id' => '1'
+                ],
+                3 => [
+                    'first_test' => '5',
+                    'second_test' => '7',
+                    'third_test' => '8',
+                    'fourth_test' => '9',
+                    'exam' => '40',
+                    'student_id' => '001',
+                    'subject_id' => '3',
+                    'class_id' => '1',
+                    'term_id' => '1',
+                    'session_id' => '1'
+                ],
             ],
-            1 => [
-                'first_test' => '5',
-                'second_test' => '8',
-                'third_test' => '9',
-                'exam' => '10',
-                'student_id' => 'SMS/2017/001',
-                'subject_id' => '6',
-                'class_id' => '1',
-                'term_id' => '1',
-                'session_id' => '1'
-            ],
-        ];
-        $this->post('/result-system/edit-student-result/SMS/2017/001?session_id=1&class_id=1',$data);
-        $this->assertResponseSuccess();
-    }
-
-    public function testViewStudentResult()
-    {
-        $this->session([
-            'Student' => [
-                'id' => 'SMS/2017/002',
-                'session_id' => 1,
-                'class_id' => 1,
-                'term_id' => 1
+            'student_general_remarks' => [
+                0 => [
+                    'student_id' => '001',
+                    'class_id' => '1',
+                    'term_id' => '1',
+                    'session_id' => '1',
+                    'remark_1' => 'A good student',
+                    'remark_2' => 'Keep it up',
+                    'remark_3' => 'Try harder'
+                ]
             ]
-        ]);
-        $this->get('/result-system/student-result');
+        ];
+        $this->put('/result-system/edit-student-result/001?session_id=1&class_id=1&term_id=1',$data);
+        $this->assertRedirect();
+        //$this->assertResponseContains('Edit Termly Results');
+        $this->assertSession('The student has been saved.', 'Flash.flash.0.message');
+    }
+
+    public function testViewStudentResultForAdmin()
+    {
+        $this->get('/result-system/student-result-format/001?session_id=1&class_id=1&term_id=1');
         $this->assertResponseOk();
-    }
-
-    public function testCheckResult()
-    {
-        $data = [
-            'reg_number' => 'SMS/2017/002',
-            'pin' => 123456,
-            'session_id' => 1,
-            'class_id' => 1,
-            'term_id' => 1
-        ];
-        $this->post('/result-system/check-student-result',$data);
-        $this->assertRedirect(['action' => 'viewStudentResult']);
-        $sessions = [
-            'id' => 'SMS/2017/002',
-            'session_id' => 1,
-            'class_id' => 1,
-            'term_id' => 1
-        ];
-        $this->assertSession($sessions, 'Student');
-        //$this->assertResponseContains('Incorrect registration number or Invalid pin');
-    }
-
-    public function testCheckResultWithExistingData()
-    {
-        $data = [
-            'reg_number' => 'SMS/2017/001',
-            'pin' => 123457,
-            'session_id' => 1,
-            'class_id' => 1,
-            'term_id' => 1
-        ];
-        $this->post('/result-system/check-student-result',$data);
-        $this->assertRedirect(['action' => 'viewStudentResult']);
-        $sessions = [
-            'id' => 'SMS/2017/001',
-            'session_id' => 1,
-            'class_id' => 1,
-            'term_id' => 1
-        ];
-        $this->assertSession($sessions, 'Student');
-    }
-
-    public function testCheckResultFailedTermWithExistingData()
-    {
-        $data = [
-            'reg_number' => 'SMS/2017/001',
-            'pin' => 123457,
-            'session_id' => 1,
-            'class_id' => 1,
-            'term_id' => 2
-        ];
-        $this->post('/result-system/check-student-result',$data);
-        $this->assertResponseContains('This pin belongs to you but the term is incorrect. Check and try again');
-    }
-
-    public function testCheckResultFailedClassWithExistingData()
-    {
-        $data = [
-            'reg_number' => 'SMS/2017/001',
-            'pin' => 123457,
-            'session_id' => 1,
-            'class_id' => 2,
-            'term_id' => 1
-        ];
-        $this->post('/result-system/check-student-result',$data);
-        $this->assertResponseContains('This pin belongs to you but the class is incorrect. Check and try again');
-    }
-
-    public function testCheckResultFailedSessionWithExistingData()
-    {
-        $data = [
-            'reg_number' => 'SMS/2017/001',
-            'pin' => 123457,
-            'session_id' => 2,
-            'class_id' => 1,
-            'term_id' => 1
-        ];
-        $this->post('/result-system/check-student-result',$data);
-        $this->assertResponseContains('This pin belongs to you but the session is incorrect. Check and try again');
-    }
-
-    public function testCheckResultFailedRegistrationNumberWithExistingData()
-    {
-        $data = [
-            'reg_number' => 'SMS/2017/002',
-            'pin' => 123457,
-            'session_id' => 2,
-            'class_id' => 1,
-            'term_id' => 1
-        ];
-        $this->post('/result-system/check-student-result',$data);
-        $this->assertResponseContains('Incorrect registration number or Invalid pin');
-    }
-
-    public function testCheckResultFailedRegistrationNumberWithPostData()
-    {
-        $data = [
-            'reg_number' => 'SMS/2017/015',
-            'pin' => 123456,
-            'session_id' => 1,
-            'class_id' => 1,
-            'term_id' => 1
-        ];
-        $this->post('/result-system/check-student-result',$data);
-        $this->assertResponseContains('Incorrect registration number or Invalid pin');
     }
 
 }

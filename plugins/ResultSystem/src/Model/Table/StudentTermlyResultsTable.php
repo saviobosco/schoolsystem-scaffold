@@ -7,6 +7,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
+use ResultSystem\Exception\MissingGradesException;
 use ResultSystem\Model\Entity\GradeableTrait;
 
 /**
@@ -58,7 +59,7 @@ class StudentTermlyResultsTable extends Table
         $this->belongsTo('Classes', [
             'foreignKey' => 'class_id',
             'joinType' => 'INNER',
-            'className' => 'App.Classes'
+            'className' => 'ResultSystem.Classes'
         ]);
         $this->belongsTo('Terms', [
             'foreignKey' => 'term_id',
@@ -86,37 +87,26 @@ class StudentTermlyResultsTable extends Table
 
         $validator
             ->allowEmpty('first_test');
-
         $validator
             ->allowEmpty('second_test');
-
         $validator
             ->allowEmpty('third_test');
-
         $validator
             ->allowEmpty('fourth_test');
-
         $validator
             ->allowEmpty('fifth_test');
-
         $validator
             ->allowEmpty('exam');
-
         $validator
             ->allowEmpty('total');
-
         $validator
             ->allowEmpty('grade');
-
         $validator
             ->allowEmpty('remark');
-
         $validator
             ->allowEmpty('principal_comment');
-
         $validator
             ->allowEmpty('head_teacher_comment');
-
         return $validator;
     }
 
@@ -138,12 +128,12 @@ class StudentTermlyResultsTable extends Table
         return $rules;
     }
 
+
     public function beforeSave(Event $event , Entity $entity )
     {
         // getting the gradeInput to process the total
         $resultGradeInputsTable = TableRegistry::get('ResultSystem.ResultGradeInputs');
         $gradeInputs = $resultGradeInputsTable->getValidGradeInputs();
-
         $total = 0;
         foreach($gradeInputs as $gradeKey => $gradeValue){
             $total += $entity->{$gradeKey};
@@ -157,15 +147,18 @@ class StudentTermlyResultsTable extends Table
         $resultGradingTableQuery = $resultGradingTable->find('all');
 
         $grades = $resultGradingTableQuery->combine('score','grade')->toArray();
-
+        if ( empty($grades)) { // if no grades found stop event and emit error
+            throw new MissingGradesException('Result could not be added because no Grading was found. Please Add grading and try again later');
+            $event->stopPropagation();
+        }
+        // check if grade is empty , if empty throw up an exception
+        // stop event
         // calculates the grade
         $entity->grade = $this->calculateGrade($entity->total,$grades);
-
         // gets the remark from the table.
         $remarks = $resultGradingTableQuery->combine('grade','remark')->toArray();
-
         // create the remark property
-        $entity->remark = $remarks[$entity->grade];
+        $entity->remark = @$remarks[$entity->grade];
     }
 
     /**
@@ -255,8 +248,21 @@ class StudentTermlyResultsTable extends Table
         }
     }
 
-    public function beforeMarshal(Event $event, $data)
+    /**
+     * @param $id
+     * @param $queryData
+     * This method returns the student result if found
+     * @return array
+     */
+    public function getStudentResults($id,$queryData)
     {
-
+        return $this->find('all')
+            ->select(['student_id','subject_id'])
+            ->where([
+                'StudentTermlyResults.student_id' =>$id,
+                'StudentTermlyResults.session_id' =>$queryData['session_id'],
+                'StudentTermlyResults.class_id' => $queryData['class_id'],
+                'StudentTermlyResults.term_id' => $queryData['term_id']
+            ])->enableHydration(false);
     }
 }

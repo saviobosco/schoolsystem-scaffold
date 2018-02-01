@@ -33,12 +33,9 @@ use Cake\Utility\Inflector ;
                             <td><?= h($student->id) ?></td>
                             <td><?= h($student->full_name) ?></td>
                             <td><?= h($student->gender) ?></td>
-                            <td><?= $student->class->class ?></td>
+                            <td><?= @$classes[$student->class_id] ?></td>
                             <td class="actions">
-                                <?= $this->Html->link(''.__('Activate'), ['action' => 'activate', $student->id],['class'=>'text-primary','escape'=>false]) ?>
-                                <?= $this->Html->link(__('View'), ['action' => 'view', $student->id]) ?>
-                                <?= $this->Html->link(__('Edit'), ['action' => 'edit', $student->id]) ?>
-                                <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $student->id], ['confirm' => __('Are you sure you want to delete # {0}?', $student->id)]) ?>
+                                <?= $this->Html->link(__('Activate'), ['action' => 'activate', $student->id],['class'=>'text-primary','escape'=>false]) ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

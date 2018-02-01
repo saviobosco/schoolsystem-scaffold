@@ -1,6 +1,8 @@
 <?php
 namespace StudentsManager\Test\TestCase\Model\Table;
 
+use Cake\I18n\Time;
+use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use StudentsManager\Model\Table\StudentsTable;
@@ -28,24 +30,7 @@ class StudentsTableTest extends TestCase
         'plugin.students_manager.sessions',
         'plugin.students_manager.classes',
         'plugin.students_manager.class_demarcations',
-        'plugin.students_manager.session_admitteds',
-        'plugin.students_manager.graduated_sessions',
         'plugin.students_manager.states',
-        'plugin.students_manager.student_annual_position_on_class_demarcations',
-        'plugin.students_manager.student_annual_positions',
-        'plugin.students_manager.student_annual_results',
-        'plugin.students_manager.student_annual_subject_position_on_class_demarcations',
-        'plugin.students_manager.student_annual_subject_positions',
-        'plugin.students_manager.student_general_remarks',
-        'plugin.students_manager.student_publish_results',
-        'plugin.students_manager.student_result_pins',
-        'plugin.students_manager.student_termly_position_on_class_demarcations',
-        'plugin.students_manager.student_termly_positions',
-        'plugin.students_manager.student_termly_results',
-        'plugin.students_manager.student_termly_subject_position_on_class_demarcations',
-        'plugin.students_manager.student_termly_subject_positions',
-        'plugin.students_manager.students_affective_disposition_scores',
-        'plugin.students_manager.students_psychomotor_skill_scores'
     ];
 
     /**
@@ -72,33 +57,58 @@ class StudentsTableTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    public function testInitialize()
+    public function testAddStudent()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        // test hte addStudent function
+        $student = new Entity([
+            'id'=>1000,
+            'first_name' => 'Omebe',
+            'last_name' => 'Johnbosco',
+            'class_id' => 1,
+            'created' => Time::now(),
+            'modified' => Time::now()
+        ]);
+        $this->assertEquals(true,$this->Students->addStudent($student));
     }
 
-    /**
-     * Test validationDefault method
-     *
-     * @return void
-     */
-    public function testValidationDefault()
+    public function testFindUnActiveStudents()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $result = [
+            [
+                'id' => 1000,
+                'first_name' => 'Omebe',
+                'last_name' => 'Johnbosco',
+                'gender' => null,
+                'class_id' => 1,
+            ]
+        ];
+        $this->assertEquals($result,$this->Students->findUnActiveStudents());
+        //$this->assertArraySubset($result,$this->Students->findUnActiveStudents());
     }
 
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    public function testBuildRules()
+    public function testDeactivateStudent()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $student = $this->Students->get(1000);
+        $this->assertEquals(true,$this->Students->deactivateStudent($student));
+    }
+
+    public function testActivateStudent()
+    {
+        $student = $this->Students->get(1000);
+        $this->assertEquals(true,$this->Students->deactivateStudent($student));
+    }
+
+    public function testChangeStudentsClass()
+    {
+        $student_ids = [1000];
+        $class = 2;
+        $this->assertEquals(['success'=>1],$this->Students->changeStudentsClass($class,$student_ids));
+    }
+
+    public function testChangeStudentsClassFailed()
+    {
+        $student_ids = [1000];
+        $class = 1;
+        $this->assertEquals(['success'=>0],$this->Students->changeStudentsClass($class,$student_ids));
     }
 }

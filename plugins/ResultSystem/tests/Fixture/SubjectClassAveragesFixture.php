@@ -43,8 +43,8 @@ class SubjectClassAveragesFixture extends TestFixture
         [
             'id' => 1,
             'subject_id' => 1,
-            'student_count' => 1,
-            'class_average' => 1,
+            'student_count' => 3,
+            'class_average' => 50,
             'class_id' => 1,
             'term_id' => 1,
             'session_id' => 1

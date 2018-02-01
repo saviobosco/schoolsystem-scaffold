@@ -1,6 +1,7 @@
 <?php
 namespace ResultSystem\Test\TestCase\Model\Table;
 
+use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use ResultSystem\Model\Table\StudentTermlyResultsTable;
@@ -26,10 +27,27 @@ class StudentTermlyResultsTableTest extends TestCase
     public $fixtures = [
         'plugin.result_system.student_termly_results',
         'plugin.result_system.students',
-        'plugin.result_system.subjects',
+        'plugin.result_system.sessions',
         'plugin.result_system.classes',
+        'plugin.result_system.class_demarcations',
+        'plugin.result_system.student_annual_position_on_class_demarcations',
+        'plugin.result_system.student_annual_subject_position_on_class_demarcations',
+        'plugin.result_system.subjects',
+        'plugin.result_system.student_annual_results',
+        'plugin.result_system.student_annual_subject_positions',
+        'plugin.result_system.student_termly_subject_position_on_class_demarcations',
         'plugin.result_system.terms',
-        'plugin.result_system.sessions'
+        'plugin.result_system.student_termly_subject_positions',
+        'plugin.result_system.subject_class_averages',
+        'plugin.result_system.student_termly_position_on_class_demarcations',
+        'plugin.result_system.student_annual_positions',
+        'plugin.result_system.student_class_counts',
+        'plugin.result_system.student_general_remarks',
+        'plugin.result_system.student_publish_results',
+        'plugin.result_system.student_result_pins',
+        'plugin.result_system.student_termly_positions',
+        'plugin.result_system.result_grade_inputs',
+        'plugin.grading_system.result_grading_systems'
     ];
 
     /**
@@ -40,7 +58,7 @@ class StudentTermlyResultsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('StudentTermlyResults') ? [] : ['className' => 'ResultSystem\Model\Table\StudentTermlyResultsTable'];
+        $config = TableRegistry::exists('StudentTermlyResults') ? [] : ['className' => StudentTermlyResultsTable::class];
         $this->StudentTermlyResults = TableRegistry::get('StudentTermlyResults', $config);
     }
 
@@ -57,32 +75,34 @@ class StudentTermlyResultsTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
+     * Test saveResult method
      *
      * @return void
      */
-    public function testInitialize()
+    public function testSaveResult()
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test validationDefault method
-     *
-     * @return void
-     */
-    public function testValidationDefault()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    public function testBuildRules()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        $passData = [];
+        $passData[] = new Entity(['id' => 10,
+            'student_id' => '001',
+            'subject_id' => 1,
+            'first_test' => 9,
+            'second_test' => 8,
+            'third_test' => 10,
+            'exam' => 65,
+            'class_id' => 1,
+            'term_id' => 1,
+            'session_id' => 1]);
+        $passData[] = new Entity(['id' => 11,
+            'student_id' => '005',
+            'subject_id' => 1,
+            'first_test' => 9,
+            'second_test' => 8,
+            'third_test' => 10,
+            'exam' => 65,
+            'class_id' => 1,
+            'term_id' => 1,
+            'session_id' => 1]);
+        $expected = ['error'=>[0=>'005']];
+        $this->assertEquals($expected,$this->StudentTermlyResults->saveResult($passData));
     }
 }

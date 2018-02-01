@@ -99,7 +99,7 @@ echo $this->element('searchParametersSessionClassTerm');
                                     <td><?= h($student->student_termly_results[$num]['grade']) ?></td>
                                     <td><?= h($student->student_termly_results[$num]['remark']) ?></td>
                                     <td><?= @$this->Position->formatPositionOutput($studentSubjectPositions[$student->student_termly_results[$num]['subject_id']])?></td>
-                                    <td><?= $this->Form->postLink(__('Delete'), ['action' => 'deleteStudentResultRow', $student->student_termly_results[$num]['id'],'?'=>$this->request->getQuery()], ['confirm' => __('Are you sure you want to delete this subject score ?')]) ?> </td>
+                                    <td><?= $this->Form->postLink(__('Delete'), ['controller'=>'StudentTermlyResults','action' => 'delete', $student->student_termly_results[$num]['id']], ['confirm' => __('Are you sure you want to delete this subject score ?')]) ?> </td>
                                 </tr>
                             <?php endfor; ?>
                         </table>

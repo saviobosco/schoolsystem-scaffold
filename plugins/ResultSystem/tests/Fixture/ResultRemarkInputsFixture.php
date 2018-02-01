@@ -40,10 +40,24 @@ class ResultRemarkInputsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'main_value' => 'Lorem ipsum dolor ',
-            'replacement' => 'Lorem ipsum dolor sit amet',
+            'main_value' => 'remark_1',
+            'replacement' => 'Teacher 1',
             'output_order' => 1,
             'visibility' => 1
+        ],
+        [
+            'id' => 2,
+            'main_value' => 'remark_2',
+            'replacement' => 'Teacher 2',
+            'output_order' => 2,
+            'visibility' => 1
+        ],
+        [
+            'id' => 3,
+            'main_value' => 'remark_3',
+            'replacement' => 'Teacher 3',
+            'output_order' => 2,
+            'visibility' => 0
         ],
     ];
 }

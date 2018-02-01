@@ -47,5 +47,13 @@ class ClassesFixture extends TestFixture
             'modified' => '2017-10-05 12:16:39',
             'no_of_subjects' => 1
         ],
+        [
+            'id' => 2,
+            'class' => 'Lorem ipsum dolor sit amet',
+            'block_id' => 1,
+            'created' => '2017-10-05 12:16:39',
+            'modified' => '2017-10-05 12:16:39',
+            'no_of_subjects' => 2
+        ],
     ];
 }

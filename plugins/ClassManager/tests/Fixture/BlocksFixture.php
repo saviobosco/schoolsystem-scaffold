@@ -20,7 +20,7 @@ class BlocksFixture extends TestFixture
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
         'name' => ['type' => 'string', 'length' => 20, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
-        'modified' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
+        'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
         ],
@@ -39,9 +39,15 @@ class BlocksFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'name' => 'Lorem ipsum dolor ',
+            'name' => 'Junior ',
             'created' => '2017-10-05 12:43:42',
-            'modified' => 'Lorem ipsum dolor sit amet'
+            'modified' => '2017-10-05 12:43:42',
+        ],
+        [
+            'id' => 2,
+            'name' => 'Senior',
+            'created' => '2017-10-05 12:43:42',
+            'modified' => '2017-10-05 12:43:42',
         ],
     ];
 }

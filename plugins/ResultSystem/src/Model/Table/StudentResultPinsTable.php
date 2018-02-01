@@ -6,6 +6,8 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use ResultSystem\Model\Entity\StudentResultPin;
+use RandomLib\Factory;
+use SecurityLib\Strength;
 
 /**
  * StudentResultPins Model
@@ -69,10 +71,7 @@ class StudentResultPinsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('serial_key')
-            ->requirePresence('serial_key', 'create')
-            ->notEmpty('serial_key');
-
+            ->integer('serial_key');
         $validator
             ->integer('pin')
             ->requirePresence('pin', 'create')
@@ -90,6 +89,7 @@ class StudentResultPinsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        // Todo : pin must be unique
         /*$rules->add($rules->existsIn(['student_id'], 'Students'));
         $rules->add($rules->existsIn(['term_id'], 'Terms'));
         $rules->add($rules->existsIn(['session_id'], 'Sessions'));
@@ -98,13 +98,18 @@ class StudentResultPinsTable extends Table
         return $rules;
     }
 
-    public function savePin($pin){
-        $saved = $this->newEntity();
-        $saved->pin = $pin;
-        if($this->save($saved)){
-            return true;
+    public function savePins($postData){
+        $factory = new Factory();
+        $generator = $factory->getGenerator(new Strength(Strength::MEDIUM));
+        $pins = [];
+        for ($num = 0; $num < $postData['number_to_generate'] ; $num++ ){
+            $pins[]['pin'] =  $generator->generateInt(1000000000,2000000000);
         }
-        return false;
+        if($postData['save_to_database']){
+            $pinEntities = $this->newEntities($pins);
+            $this->saveMany($pinEntities);
+        }
+        return count($pins);
     }
 
     public function checkPin($pin)

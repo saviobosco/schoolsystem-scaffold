@@ -38,7 +38,17 @@ class SubjectsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'name' => 'Lorem ipsum dolor sit amet',
+            'name' => 'English',
+            'block_id' => 1
+        ],
+        [
+            'id' => 2,
+            'name' => 'Mathematics',
+            'block_id' => 1
+        ],
+        [
+            'id' => 3,
+            'name' => 'French',
             'block_id' => 1
         ],
     ];

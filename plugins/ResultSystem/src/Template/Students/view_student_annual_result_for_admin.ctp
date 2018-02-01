@@ -11,7 +11,7 @@ $this->assign('title',$sessions[$this->request->query['session_id']].' '.$terms[
 <div class="container-fluid m-t-20">
 
     <?php
-    if ( is_null($studentResultPublishStatus) || $studentResultPublishStatus->status === 0 ) {
+    if ( is_null($studentResultPublishStatus) || $studentResultPublishStatus['status'] === 0 ) {
 
     // end the execution here and return
     echo '<h2 class="text-center"> This Result has not yet been published  </h2>';
@@ -69,20 +69,20 @@ $this->assign('title',$sessions[$this->request->query['session_id']].' '.$terms[
                 <?php if (!empty( $studentPosition )): ?>
                     <tr>
                         <th> <?= __('Position') ?> </th>
-                        <td><?= $this->Position->formatPositionOutput($studentPosition->position)?> </td>
+                        <td><?= $this->Position->formatPositionOutput($studentPosition['position'])?> </td>
                         <th><?= __('Out of') ?></th>
                         <td><?= h(@$studentsCount->student_count) ?></td>
                     </tr>
                     <tr>
                         <th> <?= __('Total') ?></th>
-                        <td> <?= $studentPosition->total ?></td>
+                        <td> <?= $studentPosition['total'] ?></td>
                         <th><?= __('average') ?></th>
-                        <td><?= h($studentPosition->average) ?></td>
+                        <td><?= h($studentPosition['average']) ?></td>
                     </tr>
 
                     <tr>
                         <th> <?= __('Grade') ?></th>
-                        <td> <?= $studentPosition->grade ?></td>
+                        <td> <?= $studentPosition['grade'] ?></td>
                         <th><?= __('Next term begins') ?></th>
                         <td><?= $this->Result->nextTermDate(@$nextTerm->start_date) ?></td>
                     </tr>
@@ -91,7 +91,7 @@ $this->assign('title',$sessions[$this->request->query['session_id']].' '.$terms[
                             Promoted
                         </th>
                         <td>
-                            <?= ($studentPosition->promoted === null OR $studentPosition->promoted == 0 ) ? 'No' : 'Yes' ?>
+                            <?= ($studentPosition['promoted'] === null OR $studentPosition['promoted'] == 0 ) ? 'No' : 'Yes' ?>
                         </td>
                     </tr>
                 <?php endif; ?>

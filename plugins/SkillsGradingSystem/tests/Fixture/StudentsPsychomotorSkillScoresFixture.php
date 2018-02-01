@@ -44,7 +44,7 @@ class StudentsPsychomotorSkillScoresFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'student_id' => 'SMS/2017/001',
+            'student_id' => '001',
             'psychomotor_id' => 1,
             'score' => 5,
             'class_id' => 1,
@@ -55,7 +55,7 @@ class StudentsPsychomotorSkillScoresFixture extends TestFixture
         ],
         [
             'id' => 2,
-            'student_id' => 'SMS/2017/002',
+            'student_id' => '002',
             'psychomotor_id' => 1,
             'score' => 5,
             'class_id' => 1,

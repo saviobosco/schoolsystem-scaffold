@@ -36,9 +36,9 @@ class StudentTermlySubjectPositionsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('student_termly_subject_positions');
-        $this->displayField('id');
-        $this->primaryKey(['student_id','subject_id','term_id','class_id','session_id']);
+        $this->setTable('student_termly_subject_positions');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey(['student_id','subject_id','term_id','class_id','session_id']);
 
         $this->belongsTo('Subjects', [
             'foreignKey' => 'subject_id',
@@ -79,16 +79,9 @@ class StudentTermlySubjectPositionsTable extends Table
             ->integer('id')
             ->allowEmpty('id', 'create');
 
-        $validator
-            ->integer('total')
-            ->requirePresence('total', 'create')
-            ->notEmpty('total');
 
         $validator
-            ->integer('position')
-            ->requirePresence('position', 'create')
-            ->notEmpty('position');
-
+            ->integer('position');
         return $validator;
     }
 

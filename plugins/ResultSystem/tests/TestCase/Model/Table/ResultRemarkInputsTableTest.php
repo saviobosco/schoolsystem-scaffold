@@ -51,23 +51,13 @@ class ResultRemarkInputsTableTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    public function testInitialize()
+    public function testGetValidRemarkInputs()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $expected = [
+          'remark_1' => 'Teacher 1',
+          'remark_2' => 'Teacher 2',
+        ];
+        $this->assertEquals($expected,$this->ResultRemarkInputs->getValidRemarkInputs());
     }
 
-    /**
-     * Test validationDefault method
-     *
-     * @return void
-     */
-    public function testValidationDefault()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
 }

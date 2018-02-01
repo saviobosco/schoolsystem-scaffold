@@ -10,6 +10,11 @@ $editTemplates = [
 $this->Form->templates($editTemplates);
 // get QueryData
 $queryData = $this->request->getQuery();
+if ( isset($subjectContainsResult) AND !empty($subjectContainsResult)) {
+    foreach( $subjectContainsResult as $student_id ) {
+        unset($students[$student_id]);
+    }
+}
 ?>
 <div class="row m-t-20">
     <div class="col-sm-12">
@@ -46,21 +51,20 @@ $queryData = $this->request->getQuery();
                             </tr>
                             </thead>
                             <tbody>
-                            <?php $studentsCount = count($students);
-                            for ($num = 0; $num < $studentsCount; $num++ ): ?>
+                            <?php foreach ($students as $num => $name ): ?>
                                 <tr>
-                                    <td><?= h($students[$num]['id']) ?></td>
-                                    <td><?= h($students[$num]['first_name'].' '.$students[$num]['last_name']) ?></td>
+                                    <td><?= h($num) ?></td>
+                                    <td><?= h($name) ?></td>
                                     <?php foreach( $gradeInputs as $key => $value ) : ?>
                                         <td><?= $this->Form->input('student_termly_results.'.$num.".$key") ?></td>
                                     <?php endforeach; ?>
-                                    <td class="hidden"><?= $this->Form->hidden('student_termly_results.'.$num.'.student_id',['value'=>$students[$num]['id']]) ?></td>
+                                    <td class="hidden"><?= $this->Form->hidden('student_termly_results.'.$num.'.student_id',['value'=>$num]) ?></td>
                                     <td class="hidden"><?= $this->Form->hidden('student_termly_results.'.$num.'.subject_id',['value'=>$subject->id]) ?></td>
                                     <td class="hidden"><?= $this->Form->hidden('student_termly_results.'.$num.'.class_id',['value'=>$queryData['class_id']]) ?></td>
                                     <td class="hidden"><?= $this->Form->hidden('student_termly_results.'.$num.'.term_id',['value'=>$queryData['term_id']]) ?></td>
                                     <td class="hidden"><?= $this->Form->hidden('student_termly_results.'.$num.'.session_id',['value'=>$queryData['session_id']]) ?></td>
                                 </tr>
-                            <?php endfor; ?>
+                            <?php endforeach; ?>
                             </tbody>
                         </table>
                         <?= $this->Form->submit('Submit',['class'=>'btn btn-primary']) ?>

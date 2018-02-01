@@ -15,16 +15,40 @@ class SubjectsControllerTest extends IntegrationTestCase
      *
      * @var array
      */
-    /*public $fixtures = [
-        'app.subjects',
-        'app.blocks',
-        'app.classes',
-        'app.class_demarcations',
+    public $fixtures = [
+        'plugin.result_system.subjects',
+        'plugin.result_system.classes',
+        'plugin.class_manager.blocks',
+        'plugin.result_system.terms',
+        'plugin.result_system.class_demarcations',
         'plugin.result_system.student_annual_results',
         'plugin.result_system.student_termly_results',
-        'app.students',
-        'app.sessions'
-    ]; */
+        'plugin.result_system.students',
+        'plugin.result_system.sessions',
+        'plugin.result_system.result_grade_inputs',
+        'plugin.grading_system.result_grading_systems',
+        'plugin.result_system.student_annual_subject_positions',
+        'plugin.result_system.student_termly_subject_positions',
+    ];
+
+    public function setUp()
+    {
+        parent::setUp();
+        // Set session data
+        $this->session([
+            'Auth' => [
+                'User' => [
+                    'id' => 1,
+                    'username' => 'testing',
+                    'role' => 'admin',
+                    'super_user' => 1
+                    // other keys.
+                ]
+            ]
+        ]);
+        $this->enableRetainFlashMessages();
+        $this->enableCsrfToken();
+    }
 
     /**
      * Test index method
@@ -33,7 +57,9 @@ class SubjectsControllerTest extends IntegrationTestCase
      */
     public function testIndex()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/result-system/subjects');
+        $this->assertResponseOk();
+        $this->assertResponseContains('English');
     }
 
     /**
@@ -43,7 +69,9 @@ class SubjectsControllerTest extends IntegrationTestCase
      */
     public function testView()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/result-system/view-subject-result/1?session_id=1&class_id=1&term_id=1');
+        $this->assertResponseOk();
+        $this->assertResponseContains('001');
     }
 
     /**
@@ -53,7 +81,25 @@ class SubjectsControllerTest extends IntegrationTestCase
      */
     public function testAdd()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $data = [
+            'student_termly_results' => [
+                '001' => [
+                    'first_test' => '4',
+                    'second_test' => '5',
+                    'third_test' => '4',
+                    'fourth_test' => '4',
+                    'exam' => '34',
+                    'student_id' => '001',
+                    'subject_id' => '1',
+                    'class_id' => '1',
+                    'term_id' => '2',
+                    'session_id' => '1'
+                ]
+            ]
+        ];
+        $this->post('/result-system/add-subject-result/1?session_id=1&class_id=1&term_id=2',$data);
+        $this->assertRedirect();
+        $this->assertSession('The results were successfully added!', 'Flash.flash.0.message');
     }
 
     /**
@@ -63,16 +109,26 @@ class SubjectsControllerTest extends IntegrationTestCase
      */
     public function testEdit()
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+        $data = [
+            'student_termly_results' => [
+                0 => [
+                    'first_test' => '9',
+                    'second_test' => '10',
+                    'third_test' => '9',
+                    'fourth_test' => '9',
+                    'exam' => '9',
+                    'total' => '46',
+                    'student_id' => '001',
+                    'subject_id' => '1',
+                    'class_id' => '1',
+                    'term_id' => '1',
+                    'session_id' => '1'
+                ],
+            ]
+        ];
+        $this->put('/result-system/edit-subject-result/1?session_id=1&class_id=1&term_id=1',$data);
+        $this->assertRedirect();
+        $this->assertSession('The subject result was successfully updated.', 'Flash.flash.0.message');
 
-    /**
-     * Test delete method
-     *
-     * @return void
-     */
-    public function testDelete()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
     }
 }

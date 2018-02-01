@@ -9,7 +9,6 @@ use Cake\Validation\Validator;
 /**
  * Sessions Model
  *
- * @property \ResultSystem\Model\Table\ResultRemarksTable|\Cake\ORM\Association\HasMany $ResultRemarks
  * @property \ResultSystem\Model\Table\StudentAnnualPositionOnClassDemarcationsTable|\Cake\ORM\Association\HasMany $StudentAnnualPositionOnClassDemarcations
  * @property \ResultSystem\Model\Table\StudentAnnualPositionsTable|\Cake\ORM\Association\HasMany $StudentAnnualPositions
  * @property \ResultSystem\Model\Table\StudentAnnualResultsTable|\Cake\ORM\Association\HasMany $StudentAnnualResults

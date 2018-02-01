@@ -19,13 +19,25 @@ class ClassesControllerTest extends IntegrationTestCase
         'plugin.class_manager.classes',
         'plugin.class_manager.blocks',
         'plugin.class_manager.class_demarcations',
-        'plugin.class_manager.student_annual_results',
-        'plugin.class_manager.student_termly_results',
-        'plugin.class_manager.students',
-        'plugin.class_manager.sessions',
-        'plugin.class_manager.session_admitted',
-        'plugin.class_manager.session_graduated'
     ];
+
+    public function setUp()
+    {
+        parent::setUp();
+        // Set session data
+        $this->session([
+            'Auth' => [
+                'User' => [
+                    'id' => 1,
+                    'username' => 'testing',
+                    'role' => 'admin',
+                    'super_user' => 1
+                    // other keys.
+                ]
+            ]
+        ]);
+        $this->enableRetainFlashMessages();
+    }
 
     /**
      * Test index method
@@ -34,7 +46,8 @@ class ClassesControllerTest extends IntegrationTestCase
      */
     public function testIndex()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/classes');
+        $this->assertResponseOk();
     }
 
     /**
@@ -44,7 +57,8 @@ class ClassesControllerTest extends IntegrationTestCase
      */
     public function testView()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/classes/view/1');
+        $this->assertResponseOk();
     }
 
     /**
@@ -54,7 +68,14 @@ class ClassesControllerTest extends IntegrationTestCase
      */
     public function testAdd()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $data = [
+            'id' => 3,
+            'class' => 'Jss 2',
+            'block_id' => 1,
+            'no_of_subjects' => 1
+        ];
+        $this->post('/classes/add',$data);
+        $this->assertRedirect();
     }
 
     /**
@@ -64,7 +85,14 @@ class ClassesControllerTest extends IntegrationTestCase
      */
     public function testEdit()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $data = [
+            'id' => 1,
+            'class' => 'Jss 1',
+            'block_id' => 1,
+            'no_of_subjects' => 1
+        ];
+        $this->post('/classes/edit/1',$data);
+        $this->assertRedirect();
     }
 
     /**
@@ -74,6 +102,8 @@ class ClassesControllerTest extends IntegrationTestCase
      */
     public function testDelete()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->delete('/classes/delete/1');
+        $this->assertSession('The class has been deleted.', 'Flash.flash.0.message');
+        $this->assertRedirect();
     }
 }

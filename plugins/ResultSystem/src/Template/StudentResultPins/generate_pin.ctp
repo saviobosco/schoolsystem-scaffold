@@ -6,7 +6,7 @@
                 <h4 class="panel-title"><?= __('Generate Application pins') ?> </h4>
             </div>
             <div class="panel-body">
-                <?= $this->Form->create(null,['url'=>['']]) ?>
+                <?= $this->Form->create() ?>
                 <fieldset>
                     <legend></legend>
                     <?php

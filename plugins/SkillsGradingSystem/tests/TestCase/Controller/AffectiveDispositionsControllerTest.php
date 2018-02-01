@@ -85,10 +85,6 @@ class AffectiveDispositionsControllerTest extends IntegrationTestCase
      */
     public function testEdit()
     {
-        $this->get('/skills-grading-system/affective-dispositions/edit/1');
-        $this->assertResponseOk();
-        $this->assertResponseContains('Punctuality');
-
         $data = [
             'id' => 1,
             'name' => 'Attentiveness',

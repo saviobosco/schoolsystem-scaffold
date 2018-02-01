@@ -34,9 +34,9 @@ class ResultGradingSystemsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('result_grading_systems');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('result_grading_systems');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
     }

@@ -51,23 +51,36 @@ class ResultGradeInputsTableTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    public function testInitialize()
+    public function testGetValidGradeInputs()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $expected = [
+            'first_test' => 'First Test (10%)',
+            'exam' => 'Examination (70%)'
+        ];
+        $this->assertEquals($expected,$this->ResultGradeInputs->getValidGradeInputs());
     }
 
-    /**
-     * Test validationDefault method
-     *
-     * @return void
-     */
-    public function testValidationDefault()
+    public function testGetValidGradeInputsWithAllData()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        //
+        $expected = [
+            [
+                'id' => 1,
+                'main_value' => 'first_test',
+                'replacement' => 'First Test',
+                'percentage' => '10',
+                'output_order' => 1,
+                'visibility' => 1
+            ],
+            [
+                'id' => 4,
+                'main_value' => 'exam',
+                'replacement' => 'Examination',
+                'percentage' => '70',
+                'output_order' => 4,
+                'visibility' => 1
+            ]
+        ];
+        $this->assertEquals($expected,$this->ResultGradeInputs->getValidGradeInputsWithAllData());
     }
 }

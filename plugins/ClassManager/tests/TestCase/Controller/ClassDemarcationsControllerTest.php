@@ -18,15 +18,25 @@ class ClassDemarcationsControllerTest extends IntegrationTestCase
     public $fixtures = [
         'plugin.class_manager.class_demarcations',
         'plugin.class_manager.classes',
-        'plugin.class_manager.blocks',
-        'plugin.class_manager.student_annual_results',
-        'plugin.class_manager.student_termly_results',
-        'plugin.class_manager.students',
-        'plugin.class_manager.sessions',
-        'plugin.class_manager.session_admitted',
-        'plugin.class_manager.session_graduated'
     ];
 
+    public function setUp()
+    {
+        parent::setUp();
+        // Set session data
+        $this->session([
+            'Auth' => [
+                'User' => [
+                    'id' => 1,
+                    'username' => 'testing',
+                    'role' => 'admin',
+                    'super_user' => 1
+                    // other keys.
+                ]
+            ]
+        ]);
+        $this->enableRetainFlashMessages();
+    }
     /**
      * Test index method
      *
@@ -34,17 +44,8 @@ class ClassDemarcationsControllerTest extends IntegrationTestCase
      */
     public function testIndex()
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test view method
-     *
-     * @return void
-     */
-    public function testView()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/class-demarcations');
+        $this->assertResponseOk();
     }
 
     /**
@@ -54,7 +55,16 @@ class ClassDemarcationsControllerTest extends IntegrationTestCase
      */
     public function testAdd()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $data = [
+            'id' => 3,
+            'name' => 'Jss 1A',
+            'class_id' => 1,
+            'capacity' => 1,
+        ];
+        $this->post('/class-demarcations/add',$data);
+        $this->assertRedirect();
+        $this->assertSession('The class demarcation has been saved.', 'Flash.flash.0.message');
+
     }
 
     /**
@@ -64,7 +74,14 @@ class ClassDemarcationsControllerTest extends IntegrationTestCase
      */
     public function testEdit()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $data = [
+            'id' => 1,
+            'name' => 'Jss 1A',
+            'class_id' => 1,
+            'capacity' => 1,
+        ];
+        $this->post('/class-demarcations/edit/1',$data);
+        $this->assertRedirect(); // meaning it passed
     }
 
     /**
@@ -74,6 +91,8 @@ class ClassDemarcationsControllerTest extends IntegrationTestCase
      */
     public function testDelete()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->delete('/class-demarcations/delete/1');
+        $this->assertRedirect();
+        $this->assertSession('The class demarcation has been deleted.', 'Flash.flash.0.message');
     }
 }

@@ -5,24 +5,18 @@ $edittemplates = [
     'submitContainer' => '{{content}}'
 ];
 $this->Form->templates($edittemplates);
-$this->assign('title',$sessions[$this->request->query['session_id']].' > '.$classes[$this->request->query['class_id']].' > '.$terms[$this->request->query['term_id']].' Result');
+$this->assign('title', ( !empty($this->request->getQuery()) ) ? $sessions[$this->request->query['session_id']].' > '.$classes[$this->request->query['class_id']].' > '.$terms[$this->request->query['term_id']].' Result' : 'Please select a parameter');
 ?>
 <div class="container-fluid m-t-20">
-
+    <?= $this->element('searchParametersSessionClassTerm') ?>
+    <?php if ( isset($student) ) : ?>
     <?php
-    if ( is_null($studentResultPublishStatus) || $studentResultPublishStatus->status === 0 ) {
+    if ( is_null($studentResultPublishStatus) || $studentResultPublishStatus['status'] === 0 ) {
 
         // end the execution here and return
         echo '<h2 class="text-center"> This Result has not yet been published  </h2>';
     }
     ?>
-
-    <?php
-    // including the search parameter element if the Student.term_id session is 3
-    echo $this->element('searchParametersSessionClassTerm');
-    ?>
-
-
     <div class="row banner-image m-b-15 m-t-20 ">
         <div class="col-sm-10">
             <?php /* $this->Html->image('result-banner.png')*/ ?>
@@ -63,34 +57,32 @@ $this->assign('title',$sessions[$this->request->query['session_id']].' > '.$clas
                 </table>
             </div>
         </div>
-
         <div class="col-sm-6">
             <table class="table result-details-table ">
 
                 <?php if (!empty( $studentPosition )): ?>
                     <tr>
                         <th> <?= __('Position') ?> </th>
-                        <td><?= $this->Position->formatPositionOutput($studentPosition->position)?> </td>
+                        <td><?= $this->Position->formatPositionOutput($studentPosition['position'])?> </td>
                         <th><?= __('Out of') ?></th>
                         <td><?= h(@$studentsCount->student_count) ?></td>
                     </tr>
                     <tr>
                         <th> <?= __('Total') ?></th>
-                        <td> <?= $studentPosition->total ?></td>
+                        <td> <?= $studentPosition['total'] ?></td>
                         <th><?= __('Average') ?></th>
-                        <td><?= h($studentPosition->average) ?></td>
+                        <td><?= h($studentPosition['average']) ?></td>
                     </tr>
 
                     <tr>
                         <th> <?= __('Grade') ?></th>
-                        <td> <?= $studentPosition->grade ?></td>
+                        <td> <?= @$studentPosition['grade'] ?></td>
                         <th><?= __('Next term begins') ?></th>
                         <td><?= $this->Result->nextTermDate(@$nextTerm->start_date) ?></td>
                     </tr>
                 <?php endif; ?>
             </table>
         </div>
-
     </div>
     <div class="row ">
         <div class="col-sm-9">
@@ -158,7 +150,7 @@ $this->assign('title',$sessions[$this->request->query['session_id']].' > '.$clas
             </div>
 
             <!-- <div class="col-sm-3 col-xs-3">
-                    <?php $this->Result->displayFees($fees) ?>
+                    <?php //$this->Result->displayFees($fees) ?>
                 </div> -->
         </div>
         <div class="col-sm-3">
@@ -235,7 +227,10 @@ $this->assign('title',$sessions[$this->request->query['session_id']].' > '.$clas
                 <!-- end of affective col -->
             </div>
         </div>
-
     </div>
+    <?php endif; ?>
 
+    <?php if ( empty($this->request->getQuery())) : ?>
+        <div class="alert alert-danger"> <p> Please select the Term , Class and Session </p> </div>
+    <?php endif; ?>
 </div>

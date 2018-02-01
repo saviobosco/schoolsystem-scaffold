@@ -64,7 +64,6 @@
                     echo $this->Form->input('state_id',['options'=>$states]);
                     echo $this->Form->input('religion');
                     echo $this->Form->input('home_residence');
-                    echo $this->Form->input('session_id', ['options' => $sessions]);
                     echo $this->Form->input('class_id', ['options' => $classes]);
                     echo $this->Form->input('class_demarcation_id', ['options' => $classDemarcations]);
 

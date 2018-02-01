@@ -39,7 +39,13 @@ class SessionsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'session' => 'Lorem ipsum dolor sit amet',
+            'session' => '2017/2018',
+            'created' => '2018-01-07 13:55:32',
+            'modified' => '2018-01-07 13:55:32'
+        ],
+        [
+            'id' => 2,
+            'session' => '2018/2019',
             'created' => '2018-01-07 13:55:32',
             'modified' => '2018-01-07 13:55:32'
         ],
