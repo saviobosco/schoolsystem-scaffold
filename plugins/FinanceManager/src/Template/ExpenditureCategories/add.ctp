@@ -14,7 +14,7 @@
                 <fieldset>
                     <?php
                     echo $this->Form->control('type');
-                    echo $this->Form->control('description');
+                    echo $this->Form->control('description',['class'=>'form-control']);
                     ?>
                 </fieldset>
                 <?= $this->Form->button(__('Submit')) ?>

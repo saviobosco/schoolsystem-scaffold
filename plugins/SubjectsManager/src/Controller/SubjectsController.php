@@ -72,7 +72,7 @@ class SubjectsController extends AppController
             if ($this->Subjects->save($subject)) {
                 $this->Flash->success(__('The subject has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect($this->referer());
             } else {
                 $this->Flash->error(__('The subject could not be saved. Please, try again.'));
             }

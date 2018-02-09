@@ -76,16 +76,22 @@ class FeesTable extends Table
         ]);
         $this->hasMany('StudentFees', [
             'foreignKey' => 'fee_id',
-            'className' => 'FinanceManager.StudentFees'
+            'className' => 'FinanceManager.StudentFees',
+        ]);
+
+        $this->belongsTo('FeeCategories',[
+            'foreignKey' => 'fee_category_id',
+            'className' => 'FinanceManager.FeeCategories',
+            'joinType' => 'INNER'
         ]);
 
         $this->belongsTo('CreatedByUser',[
-            'className' => 'Accounts',
+            'className' => 'FinanceManager.Accounts',
             'foreignKey' => 'created_by'
         ]);
 
         $this->belongsTo('ModifiedByUser',[
-            'className' => 'Accounts',
+            'className' => 'FinanceManager.Accounts',
             'foreignKey' => 'modified_by'
         ]);
     }
@@ -138,43 +144,88 @@ class FeesTable extends Table
         return $this->save($fee);
     }
 
-    public function checkIfFeeExistingForTermClassSession(EntityInterface $fee)
+    public function checkIfFeeExists(EntityInterface $fee)
     {
-        $query = $this->find('all')->where([
+        $query = $this->find('all')
+            ->where([
             'fee_category_id'=>$fee->fee_category_id,
             'class_id'=>$fee->class_id,
             'session_id' => $fee->session_id,
-            ($fee->term_id ) ? 'term_id = '.$fee->term_id : 'term_id IS NULL' // checks if the $fee->term_id is set else return the else statement.
-        ])->toArray();
-        //debug($query); exit;
+            ]);
+            if ($fee->term_id) {
+                $query->andWhere(['term_id'=>$fee->term_id]);
+            } else {
+                $query->andWhere(['term_id IS NULL']);
+            }
+            $query = $query->toArray();
         if (!empty($query)) {
             return true ;
         }
         return false;
     }
 
+    public function addFee($postData)
+    {
+        if ( 0 === (int)$postData['class_id']){
+            $studentsTable = TableRegistry::get('FinanceManager.Students')->find();
+            $classes = $this->Classes->find('all');
+            foreach($classes as $class) {
+                $studentCounts = $studentsTable->where(['class_id'=>$class->id,'status'=>1])->count();
+                $fee = $this->newEntity([
+                    'fee_category_id'=>$postData['fee_category_id'],
+                    'compulsory' => $postData['compulsory'],
+                    'amount' => $postData['amount'],
+                    'term_id' => $postData['term_id'],
+                    'class_id' => $class->id,
+                    'session_id' => $postData['session_id'],
+                    'income_amount_expected' => $studentCounts * $postData['amount'],
+                    'number_of_students' => $studentCounts,
+                ]);
+                $fee = $this->saveFee($fee);
+                if ( $fee && 1 === (int)$postData['create_students_records']) {
+                    $this->createStudentsFeeRecordByClass($fee->id,$fee->class_id);
+                }
+                unset($studentCounts);
+            }
+            return true;
+        } else {
+            $fee = $this->newEntity($postData);
+            $fee = $this->saveFee($fee);
+            if ( $fee && 1 === (int)$postData['create_students_records']) {
+                $this->createStudentsFeeRecordByClass($fee->id,$fee->class_id);
+            }
+            return true;
+        }
+        return false;
+    }
 
+    public function saveFee(EntityInterface $fee)
+    {
+        // check if fee exists
+        if ( $this->checkIfFeeExists($fee)) {
+            return false;
+        }
+        $fee = $this->save($fee);
+        return $fee;
+    }
 
     /**
      * @param $fee_id
      * @param $class_id
      * @return bool
-     * This function is suspended for now
-     * Todo : Come back and complete
+     * This function is creates the student fees.
      */
     public function createStudentsFeeRecordByClass($fee_id,$class_id)
     {
-        $studentsTable = TableRegistry::get('Students');
-
+        $studentsTable = TableRegistry::get('FinanceManager.Students');
         // find all student under that fees class and session
         $students = $studentsTable->find('all')
             ->select(['id','class_id','status'])
             ->where(['class_id'=>$class_id,'status' =>1])->enableHydration(false);
-
         // iterate through the result set and create their respective fees
         if ( $students ) {
             //Initialize the student fees table
-            $studentFeesTable = TableRegistry::get('StudentFees');
+            $studentFeesTable = TableRegistry::get('FinanceManager.StudentFees');
             foreach ( $students as $student ) {
                 $newStudentFees = $studentFeesTable->newEntity([
                     'student_id' => $student['id'],
@@ -407,21 +458,16 @@ class FeesTable extends Table
                     return $q->where(['StudentFees.paid'=>0]);
                 },
             ])->enableHydration(false);
-
         if ( !empty($data['session_id'])){ // chain this query if session_id is set
             $query->andWhere(['Fees.session_id'=>$data['session_id']]);
         }
-
         if ( !empty($data['class_id'])){ // chain this query if class_id is set
             $query->andWhere(['Fees.class_id'=>$data['class_id']]);
         }
-
         if ( !empty($data['term_id'])){ // chain this query if session_id is set
             $query->andWhere(['Fees.term_id'=>$data['term_id']]);
         }
-
         return $query->groupBy('fee_category_id')->toArray();
-
     }
 
     public function getFeeCategoriesData()

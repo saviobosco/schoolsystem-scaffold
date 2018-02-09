@@ -1,0 +1,6 @@
+.table-bordered {
+    border: 1px solid #000;
+}
+.table > tbody > tr > td,.table > tbody > tr > th {
+    padding: 3px;
+}

@@ -114,4 +114,29 @@ class ReceiptsTable extends Table
         $this->delete($receipt);
         return true;
     }
+
+    public function getReceiptDetails($receipt_id)
+    {
+        $receipt = $this->find('all')->contain([
+            'StudentFeePayments.StudentFees.Fees.FeeCategories' => function($q) {
+                $q->select(['FeeCategories.id','FeeCategories.type']);
+                $q->orderDesc('Fees.created');
+                return $q;
+            }
+        ])
+            ->select(['Receipts.id'])
+            ->where(['Receipts.id'=>$receipt_id])
+            ->enableHydration(false)
+            ->first();
+        // getting the student special fees
+        //dd($receipt['student_fee_payments']);
+        $specialFees = $this->find('all')->contain([
+            'StudentFeePayments.StudentFees'=>function($q){
+                $q->where(['StudentFees.fee_id IS NULL']);
+                return $q;
+            }
+        ])->enableHydration(false)->where(['Receipts.id'=>$receipt_id])->first();
+        $collection = collection($receipt['student_fee_payments'])->append($specialFees['student_fee_payments']);
+        return $collection->toList();
+    }
 }

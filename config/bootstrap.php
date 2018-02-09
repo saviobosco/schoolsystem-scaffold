@@ -261,43 +261,23 @@ try {
     Log::alert('user_roles configuration file could not be loaded');
 }
 Configure::write('Users.config', ['users']);
-
 Plugin::load('Alaxos', ['bootstrap' => true]);
 Plugin::load('Alaxos/BootstrapTheme');
-
 Plugin::load('UsersManager', ['bootstrap' => false, 'routes' => true]);
-
-Plugin::load('Cewi/Excel', ['bootstrap' => true, 'routes'=>true]);
-
 Plugin::load('Settings', ['bootstrap' => true, 'routes' => true]);
-
-
 Plugin::load('SkillsGradingSystem', ['bootstrap' => false, 'routes' => true]);
-
 Plugin::load('ResultSystem', ['bootstrap' => false, 'routes' => true]);
-
 Plugin::load('Proffer');
-
-Plugin::load('Settings', ['bootstrap' => true, 'routes' => true]);
-
 Plugin::load('CakeDC/Users', ['routes' => true, 'bootstrap' => true]);
-
 Plugin::load('FrontEnd', ['bootstrap' => false, 'routes' => true]);
-
 Plugin::load('SeanTheme', ['bootstrap' => false, 'routes' => true]);
-
-Plugin::load('FeesManager', ['bootstrap' => false, 'routes' => true]);
-
 Plugin::load('GradingSystem', ['bootstrap' => false, 'routes' => true]);
-
-Plugin::load('Saviobosco/Excel', ['bootstrap' => false, 'routes' => true]);
-
+Plugin::load('Saviobosco/Excel', ['bootstrap' => true, 'routes' => true]);
 Plugin::load('StudentsManager', ['bootstrap' => false, 'routes' => true]);
-
 Plugin::load('SubjectsManager', ['bootstrap' => false, 'routes' => true]);
-
 Plugin::load('ClassManager', ['bootstrap' => false, 'routes' => true]);
-
 Plugin::load('FinanceManager', ['bootstrap' => true, 'routes' => true]);
-
 Plugin::load('Muffin/Footprint');
+Plugin::load('BankSystem', ['bootstrap' => false, 'routes' => true]);
+Plugin::load('Saviobosco/Core', ['bootstrap' => false, 'routes' => true]);
+Plugin::load('Dashboard', ['bootstrap' => false, 'routes' => true]);

@@ -1,3 +1,7 @@
+<?php
+$this->extend('/Common/view');
+$this->assign('title','Psychomotor Skills');
+?>
 <div class="row">
     <div class="col-sm-12">
         <h3><?= __('Psychomotor Skills') ?></h3>

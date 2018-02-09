@@ -100,7 +100,6 @@ class IncomesTable extends Table
             ->where(function ($exp,$q) use ($startDate,$endDate) {
                 return $exp ->addCase(
                     [
-                        // todo : refactor this particular section
                         $q->newExpr()->between('created',$startDate,$endDate)
                     ]
                 );

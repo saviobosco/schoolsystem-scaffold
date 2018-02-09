@@ -62,12 +62,12 @@ class StudentsTable extends Table
         $this->belongsTo('Classes', [
             'foreignKey' => 'class_id',
             'joinType' => 'INNER',
-            'className' => 'App.Classes'
+            'className' => 'ClassManager.Classes'
         ]);
         $this->belongsTo('ClassDemarcations', [
             'foreignKey' => 'class_demarcation_id',
             'joinType' => 'INNER',
-            'className' => 'App.ClassDemarcations'
+            'className' => 'ClassManager.ClassDemarcations'
         ]);
 
         $this->hasMany('StudentsAffectiveDispositionScores', [

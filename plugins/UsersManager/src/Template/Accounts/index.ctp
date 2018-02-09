@@ -34,8 +34,8 @@ $this->assign('title','All Users');
                                 'accuracy' => ['month' => 'month'],
                                 'end' => '1 year'])?></td> -->
                             <td class="actions">
-                                <?= $this->Html->link('<i class="-eye"></i>'.__('view'), ['action' => 'view' ,$user->id],['escape'=>false,'class'=>'text-primary']) ?>
-                                <?= $this->Html->link('<span class="glyphicon glyphicon-edit"></span>', ['action' => 'edit', $user->id],['escape'=>false,'class'=>'text-info']) ?>
+                                <?= $this->Html->link('<i class="fa fa-eye"></i>'.__('view'), ['action' => 'view' ,$user->id],['escape'=>false,'class'=>'text-primary']) ?>
+                                <?= $this->Html->link('<span class="glyphicon glyphicon-edit"></span> Edit ', ['action' => 'edit', $user->id],['escape'=>false,'class'=>'text-info']) ?>
                                 <?= $this->Form->postLink('<i class="fa fa-trash-o"></i>'.__('delete'), ['action' => 'delete', $user->id], ['confirm' => __('Are you sure you want to delete # {0}?', $user->id),'escape'=>false,'class'=>'text-danger']) ?>
                             </td>
                         </tr>

@@ -13,7 +13,7 @@
             <div class="panel-body">
 
                 <h3><?= __('Fee Categories') ?></h3>
-                <?= $this->Html->link('Add New Category',['plugin'=>null,'Controller'=>'FeeCategories','action'=>'add'],['class'=>'pull-right']) ?>
+                <?= $this->Html->link('Add New Category',['plugin'=>'FinanceManager','Controller'=>'FeeCategories','action'=>'add'],['class'=>'pull-right']) ?>
                 <table class="table table-responsive table-bordered">
                     <thead>
                     <tr>

@@ -84,8 +84,9 @@ class StudentsController extends AppController
         $student = $this->Students->newEntity();
         if ($this->request->is('post')) {
             $student = $this->Students->patchEntity($student, $this->request->getData());
-
-            if ($this->Students->addStudent($student)) {
+            $savedStudent = $this->Students->addStudent($student);
+            if ($savedStudent) {
+                $this->Flash->set('Last student id:'.$savedStudent->id);
                 $this->Flash->success(__('The student has been saved.'));
                 if ( $this->request->getData('return_here')) {
                     return $this->redirect(['action' => 'add']);
@@ -154,14 +155,17 @@ class StudentsController extends AppController
             $this->Flash->error('Please Specify the student id and try again.');
 
         } else {
-            $this->request->allowMethod(['post', 'delete']);
-            $student = $this->Students->get($id);
-            if ($this->Students->delete($student)) {
-                $this->Flash->success(__('The student has been deleted.'));
-            } else {
-                $this->Flash->error(__('The student could not be deleted. Please, try again.'));
+            try {
+                $this->request->allowMethod(['post', 'delete']);
+                $student = $this->Students->get($id);
+                if ($this->Students->delete($student)) {
+                    $this->Flash->success(__('The student has been deleted.'));
+                } else {
+                    $this->Flash->error(__('The student could not be deleted. Please, try again.'));
+                }
+            } catch ( \Exception $e ){
+                $this->Flash->error($e->getMessage());
             }
-
             return $this->redirect(['action' => 'index']);
         }
     }

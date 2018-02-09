@@ -22,41 +22,25 @@ $cakeDescription = 'Finance Manager';
 <!--<![endif]-->
 <head>
     <meta charset="utf-8" />
-    <title> Finance Manager </title>
+    <title> Finance Manager :</title>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <meta content="" name="description" />
     <meta content="" name="author" />
-
-    <!-- ================== BEGIN BASE CSS STYLE ================== -->
-
-    <!-- ================== END BASE CSS STYLE ================== -->
-
-    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
-
-    <!-- ================== END PAGE LEVEL STYLE ================== -->
-
-    <!-- ================== BEGIN BASE JS ================== -->
-
+    <?php
+    echo $this->Plugins->css('bootstrap/css/bootstrap.min.css');
+    ?>
     <?= $this->Html->css('print.css') ?>
+    <?= $this->Html->css('receipt.css') ?>
+    <?= $this->Plugins->script('jquery/jquery-1.9.1.min.js'); ?>
     <?= $this->fetch('topScripts') ?>
     <!-- ================== END BASE JS ================== -->
 </head>
 <body>
-<!-- begin #page-loader -->
-<!--<div id="page-loader" class=""><span class="spinner"></span></div> -->
-<!-- end #page-loader -->
-
-<!-- begin #page-container -->
-<div id="page-container" class="page-sidebar-fixed page-header-fixed">
-
-    <!-- begin #content -->
-    <div class="container">
-        <?= $this->fetch('content') ?>
-    </div>
-    <!-- end #content -->
+<!-- begin #content -->
+<div class="container">
+    <?= $this->fetch('content') ?>
 </div>
-<!-- end page container -->
-
+<!-- end #content -->
 </body>
 <script>
     $(document).ready(function() {

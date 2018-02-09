@@ -63,7 +63,8 @@ class StudentsTable extends Table
         ]);
         $this->hasMany('StudentFees', [
             'foreignKey' => 'student_id',
-            'className' => 'FinanceManager.StudentFees'
+            'className' => 'FinanceManager.StudentFees',
+            'joinType' => 'LEFT'
         ]);
 
         $this->hasMany('Receipts', [
@@ -170,62 +171,82 @@ class StudentsTable extends Table
         return true;
     }
 
-
-    public function getStudentFees($student_id)
+    /**
+     * @param $student_id
+     * @param array $queryData
+     * @return array
+     * Get the student fees with session class and term.
+     */
+    public function getStudentFees($student_id,$queryData = [])
     {
-        /*return $this->StudentFees->Fees->find('all')
-            ->contain([
-                'FeeCategories' => function ($q) {
-                    return $q->select(['FeeCategories.id','FeeCategories.type']);
-                },
-                'StudentFees' => function ($q) use ($student_id){
-                    return $q->where(['student_id'=>$student_id,'paid'=>0]);
-                }
-            ])->groupBy('session_id')->toArray();*/
-
         $studentFees = $this->StudentFees->find('all')
-            ->contain(['Fees.FeeCategories' => function ($q) {
-                return
+            ->contain(['Fees.FeeCategories'=> function ($q) use ($queryData) {
                     $q->select(['FeeCategories.id','FeeCategories.type']);
-                $q->orderDesc('Fees.created');
-            }])->where(['student_id'=>$student_id,'paid'=>0]);
-
-        return $studentFees/*->groupBy('fee.session_id')*/->toArray();
+                    if ( isset($queryData['session_id']) && !empty($queryData['session_id'])) {
+                        $q->where(['Fees.session_id'=>$queryData['session_id']]);
+                    }
+                    if ( isset($queryData['class_id']) && !empty($queryData['class_id'])) {
+                        $q->where(['Fees.class_id'=>$queryData['class_id']]);
+                    }
+                    if ( isset($queryData['term_id']) && !empty($queryData['term_id'])) {
+                        $q->where(['Fees.term_id'=>$queryData['term_id']]);
+                    }
+                    $q->orderDesc('Fees.created');
+                return $q;
+            }])->where(['student_id'=>$student_id,'paid'=>0])->enableHydration(false);
+            $collection = collection($studentFees->toArray()); // make fee a collection
+            $mergedFees = $collection->append($this->getStudentSpecialFees($student_id)); // gets student special fee if any.
+        return $mergedFees->toList();
     }
 
-    public function getStudentFeesWithTermClassSession($student_id,$term_id,$class_id,$session_id)
+    /**
+     * @param $student_id
+     * @return array
+     * This function is used to get the student special fees.
+     */
+    public function getStudentSpecialFees($student_id)
     {
         $studentFees = $this->StudentFees->find('all')
-            ->contain(['Fees.FeeCategories' => function ($q) use ($term_id,$class_id,$session_id) {
-                if ( empty($term_id) ) {
-                    return
-                        $q->select(['FeeCategories.id','FeeCategories.type'])
-                            ->where(['Fees.class_id' => $class_id,'Fees.session_id' => $session_id])
-                            ->orderDesc('Fees.created');
-                } else {
-                    return
-                        $q->select(['FeeCategories.id','FeeCategories.type'])
-                            ->where(['Fees.class_id' => $class_id,'Fees.session_id' => $session_id,'Fees.term_id' => $term_id ])
-                            ->orderDesc('Fees.created');
-                }
-
-            }])->where(['student_id'=>$student_id,'paid'=>0]);
-
+            ->enableHydration(false)
+            ->where(['fee_id IS NULL'])
+            ->andWhere(['student_id'=>$student_id,'paid'=>0]);
         return $studentFees->toArray();
     }
 
-
+    /**
+     * @param $receipt_id
+     * @return array|EntityInterface|null
+     * THis function is used to get the student receipts
+     */
     public function getReceiptDetails($receipt_id)
     {
-        $receiptsTable = TableRegistry::get('FinanceManager.Receipts');
-        return $receiptDetails = $receiptsTable->find('all')->contain([
+        $receipt = $this->Receipts->find('all')->contain([
+            'Students' => function ($q){
+                $q->select(['id','first_name','last_name','class_id']);
+                return $q;
+            },
+            'Students.Classes'=> function ($q){
+                $q->select(['id','class']);
+                return $q;
+            },
             'Payments',
             'StudentFeePayments.StudentFees.Fees.FeeCategories' => function($q) {
-                return
                     $q->select(['FeeCategories.id','FeeCategories.type']);
-                $q->orderDesc('Fees.created');
+                    $q->orderDesc('Fees.created');
+                return $q;
             }
-        ])->where(['Receipts.id'=>$receipt_id])->first();
+        ])->where(['Receipts.id'=>$receipt_id])->enableHydration(false)->first();
+        // getting the student special fees
+        //dd($receipt['student_fee_payments']);
+        $specialFees = $this->Receipts->find('all')->contain([
+            'StudentFeePayments.StudentFees'=>function($q){
+                $q->where(['StudentFees.fee_id IS NULL']);
+                return $q;
+            }
+        ])->enableHydration(false)->where(['Receipts.id'=>$receipt_id])->first();
+        $collection = collection($receipt['student_fee_payments'])->append($specialFees['student_fee_payments']);
+        $receipt['student_fee_payments'] = $collection->toList();
+        return $receipt;
     }
 
     public function getStudentsWithId( $id )
@@ -236,38 +257,14 @@ class StudentsTable extends Table
     public function getStudentArrears($student_id)
     {
         return $studentFees = $this->StudentFees->find('all')
-            ->contain(['Fees.FeeCategories' => function ($q) {
-                return
-                    $q->select(['FeeCategories.id','FeeCategories.type']);
+            ->contain(['Fees' => function ($q) {
+                $q->select(['id','amount']);
                 $q->orderDesc('Fees.created');
+                return $q;
             }
-            ])->where(['student_id'=>$student_id,'paid'=>0])->toArray();
+            ])->where(['student_id'=>$student_id,'paid'=>0])->enableHydration(false)->toArray();
     }
 
-    public function getStudentPaymentReceipts()
-    {
-
-    }
-
-    public function changeStudentsClass($class_id,$student_ids)
-    {
-        $returnData['success'] = 1;
-        // get the students one by one
-        foreach ( $student_ids as $student_id) {
-            $student = $this->find()->select(['id','class_id'])->where(['id'=>$student_id])->first();
-            // change the class
-            if ( !$student ) {
-                continue;
-            }
-            if ( $student->class_id == $class_id ) {
-                $returnData['success'] = 0;
-                break;
-            }
-            $student->class_id = $class_id;
-            $this->save($student);
-        }
-        return $returnData;
-    }
 
     public function getStudentsDataList()
     {
@@ -279,16 +276,6 @@ class StudentsTable extends Table
             ->combine('id','full_name')
             ->toArray();
         return $students;
-    }
-
-    public function afterSave(Event $event,Entity $entity)
-    {
-        if ($event->isStopped() === false){
-            // create the student fees
-            if ( $entity->isNew()){
-                $this->createStudentFeesByClassIdAndSessionId($entity->id,$entity->class_id,$entity->session_id);
-            }
-        }
     }
 
     /**

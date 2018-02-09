@@ -2,24 +2,15 @@
 /**
  * @var \App\View\AppView $this
  */
+$this->extend('/Common/view');
+$this->assign('title','Add Payment Type');
 ?>
-<div class="row">
-    <div class="col-sm-12">
-        <div class="panel panel-inverse">
-            <div class="panel-heading">
-                <h4 class="panel-title"> Add Payment Type </h4>
-            </div>
-            <div class="panel-body">
-                <?= $this->Form->create($paymentType) ?>
-                <fieldset>
-                    <legend><?= __('Add Payment Type') ?></legend>
-                    <?php
-                    echo $this->Form->control('type');
-                    ?>
-                </fieldset>
-                <?= $this->Form->button(__('Submit')) ?>
-                <?= $this->Form->end() ?>
-            </div>
-        </div>
-    </div>
-</div>
+<?= $this->Form->create($paymentType) ?>
+    <fieldset>
+        <legend><?= __('Add Payment Type') ?></legend>
+        <?php
+        echo $this->Form->control('type');
+        ?>
+    </fieldset>
+<?= $this->Form->button(__('Submit')) ?>
+<?= $this->Form->end() ?>

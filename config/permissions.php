@@ -18,6 +18,12 @@ return [
             'action' => '*',
         ],
         [
+            'role' => '*',
+            'plugin' => 'UsersManager',
+            'controller' => 'Accounts',
+            'action' => ['desktop','profile']
+        ],
+        [
             'role' => ['admin','bursar','user'],
             'plugin' => ['ResultSystem'],
             'controller' => ['StudentResultPins'],

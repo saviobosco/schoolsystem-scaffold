@@ -7,12 +7,21 @@ use FinanceManager\Controller\AppController;
  * Receipts Controller
  *
  * @property \FinanceManager\Model\Table\ReceiptsTable $Receipts
+ * @property \FinanceManager\Model\Table\SessionsTable $Sessions
+ * @property \FinanceManager\Model\Table\ClassesTable $Classes
+ * @property \FinanceManager\Model\Table\TermsTable $Terms
  *
  * @method \FinanceManager\Model\Entity\Receipt[] paginate($object = null, array $settings = [])
  */
 class ReceiptsController extends AppController
 {
 
+    public function initialize()
+    {
+        $this->loadModel('FinanceManager.Classes');
+        $this->loadModel('FinanceManager.Sessions');
+        $this->loadModel('FinanceManager.Terms');
+    }
     /**
      * Index method
      *
@@ -43,7 +52,6 @@ class ReceiptsController extends AppController
             ]
         ];
         $receipts = $this->paginate($this->Receipts);
-
         $this->set(compact('receipts'));
         $this->set('_serialize', ['receipts']);
     }
@@ -60,7 +68,6 @@ class ReceiptsController extends AppController
         $receipt = $this->Receipts->get($id, [
             'contain' => [
                 'Students',
-                'StudentFeePayments.StudentFees.Fees.FeeCategories',
                 'Payments.PaymentTypes',
                 'CreatedByUser'=>[
                     'fields'=>[
@@ -78,8 +85,11 @@ class ReceiptsController extends AppController
                 ]
             ]
         ]);
-
-        $this->set('receipt', $receipt);
+        $classes = $this->Classes->find('list')->toArray();
+        $sessions = $this->Sessions->find('list')->toArray();
+        $terms = $this->Terms->find('list')->toArray();
+        $receiptDetails = $this->Receipts->getReceiptDetails($id);
+        $this->set(compact('receipt','receiptDetails','sessions','classes','terms'));
         $this->set('_serialize', ['receipt']);
     }
 
@@ -88,7 +98,6 @@ class ReceiptsController extends AppController
         $receipt = $this->Receipts->get($id, [
             'contain' => [
                 'Students.Classes',
-                'StudentFeePayments.StudentFees.Fees.FeeCategories',
                 'Payments.PaymentTypes',
                 'CreatedByUser'=>[
                     'fields'=>[
@@ -106,36 +115,11 @@ class ReceiptsController extends AppController
                 ]
             ]
         ]);
-        $this->loadModel('Sessions');
-        $this->loadModel('Classes');
-        $this->loadModel('Terms');
+        $receiptDetails = $this->Receipts->getReceiptDetails($id);
         $terms = $this->Terms->find('list')->toArray();
         $classes = $this->Classes->find('list')->toArray();
         $sessions = $this->Sessions->find('list')->toArray();
-
-        $this->set(compact('receipt','terms','classes','sessions'));
-        $this->set('_serialize', ['receipt']);
-    }
-
-    /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
-     */
-    public function add()
-    {
-        $receipt = $this->Receipts->newEntity();
-        if ($this->request->is('post')) {
-            $receipt = $this->Receipts->patchEntity($receipt, $this->request->getData());
-            if ($this->Receipts->save($receipt)) {
-                $this->Flash->success(__('The receipt has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The receipt could not be saved. Please, try again.'));
-        }
-        $students = $this->Receipts->Students->find('list', ['limit' => 200]);
-        $this->set(compact('receipt', 'students'));
+        $this->set(compact('receipt','terms','classes','sessions','receiptDetails'));
         $this->set('_serialize', ['receipt']);
     }
 
@@ -185,7 +169,6 @@ class ReceiptsController extends AppController
                 $this->Flash->error(__('The receipt could not be deleted. Please, try again.'));
             }
             return $this->redirect(['action' => 'index']);
-
         } catch ( \PDOException $e ) {
             $this->Flash->error(__('This receipt cannot be deleted!!!'));
             return $this->redirect(['action' => 'index']);

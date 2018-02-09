@@ -99,6 +99,10 @@ class StudentsTable extends Table
             ->notEmpty('class_id');
 
         $validator
+            ->requirePresence('session_id', 'create')
+            ->notEmpty('session_id');
+
+        $validator
             ->allowEmpty('date_of_birth');
 
         $validator
@@ -159,7 +163,7 @@ class StudentsTable extends Table
         if ( $savedStudent) {
             $event = new Event(self::EVENT_ADDED_STUDENT,$this,['student'=>$student]);
             $this->getEventManager()->dispatch($event);
-            return true;
+            return $savedStudent;
         }
         return false;
     }

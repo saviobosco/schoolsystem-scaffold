@@ -23,8 +23,8 @@ $this->Form->templates($edittemplates);
     <!-- begin brand -->
     <div class="login-header">
         <div class="brand">
-            <span class="text-center"> Finance Manager </span>
-            <small>A simple Application to Manager fees and Expenditures </small>
+            <span class="text-center"> School Administration System </span>
+            <small>A simple School Administrative System </small>
         </div>
     </div>
     <!-- end brand -->

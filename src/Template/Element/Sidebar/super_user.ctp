@@ -1,12 +1,5 @@
 <li class="has-sub">
-    <a href="javascript:;">
-        <b class="caret pull-right"></b>
-        <i class="fa fa-laptop"></i>
-        <span>Dashboard</span>
-    </a>
-    <ul class="sub-menu">
-        <li><?= $this->Html->link(__('Dashboard'),['plugin'=>null,'controller'=>'Dashboard','action'=>'index'],['escape'=>false]) ?></li>
-    </ul>
+    <?= $this->Html->link('<i class="fa fa-laptop"></i> <span>'.__('Dashboard').'</span>',['plugin'=>'Dashboard','controller'=>'Dashboard','action'=>'index'],['escape'=>false]) ?>
 </li>
 <li class="has-sub">
     <a href="javascript:;">
@@ -15,6 +8,51 @@
         <span>Configuration</span>
     </a>
     <ul class="sub-menu">
+        <li>
+            <?= $this->html->link('Settings',[
+                'plugin'=>'Dashboard',
+                'controller'=>'Settings',
+                'action' => 'index'
+            ],[
+                'escape' => false
+            ]) ?>
+        </li>
+        <li>
+            <?= $this->html->link('Upload Banner',[
+                'plugin'=>'Dashboard',
+                'controller'=>'Settings',
+                'action' => 'uploadBannerImage'
+            ],[
+                'escape' => false
+            ]) ?>
+        </li>
+        <li>
+            <?= $this->html->link('Update App',[
+                'plugin'=>'Dashboard',
+                'controller'=>'Updater',
+                'action' => 'index'
+            ],[
+                'escape' => false
+            ]) ?>
+        </li>
+        <li>
+            <?= $this->html->link('About',[
+                'plugin'=>null,
+                'controller'=>'Dashboard',
+                'action' => 'about'
+            ],[
+                'escape' => false
+            ]) ?>
+        </li>
+        <li>
+            <?= $this->html->link('Help',[
+                'plugin'=>null,
+                'controller'=>'Dashboard',
+                'action' => 'help'
+            ],[
+                'escape' => false
+            ]) ?>
+        </li>
     </ul>
 </li>
 <li class="has-sub">

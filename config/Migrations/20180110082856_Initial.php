@@ -39,9 +39,9 @@ class Initial extends AbstractMigration
                     'limit' => null,
                     'null' => false,
                 ])
-                ->addColumn('modified', 'string', [
+                ->addColumn('modified', 'datetime', [
                     'default' => null,
-                    'limit' => 255,
+                    'limit' => null,
                     'null' => false,
                 ])
                 ->create();
@@ -109,20 +109,10 @@ class Initial extends AbstractMigration
                         'block_id',
                     ]
                 )
-                ->addIndex(
-                    [
-                        'block_id',
-                    ]
-                )
-                ->addIndex(
-                    [
-                        'block_id',
-                    ]
-                )
                 ->create();
         }
 
-        if ( $this->table('expenditure_categories') === false ) {
+        if ( $this->table('expenditure_categories')->exists() === false ) {
             $this->table('expenditure_categories')
                 ->addColumn('type', 'string', [
                     'default' => null,
@@ -196,16 +186,6 @@ class Initial extends AbstractMigration
                         'expenditure_category_id',
                     ]
                 )
-                ->addIndex(
-                    [
-                        'expenditure_category_id',
-                    ]
-                )
-                ->addIndex(
-                    [
-                        'expenditure_category_id',
-                    ]
-                )
                 ->create();
         }
 
@@ -265,7 +245,7 @@ class Initial extends AbstractMigration
                 ->addColumn('amount_earned', 'decimal', [
                     'default' => '0',
                     'limit' => 10,
-                    'null' => false,
+                    'null' => true,
                 ])
                 ->addColumn('number_of_students', 'integer', [
                     'default' => null,
@@ -314,52 +294,12 @@ class Initial extends AbstractMigration
                 )
                 ->addIndex(
                     [
-                        'class_id',
-                    ]
-                )
-                ->addIndex(
-                    [
-                        'class_id',
-                    ]
-                )
-                ->addIndex(
-                    [
-                        'fee_category_id',
-                    ]
-                )
-                ->addIndex(
-                    [
-                        'fee_category_id',
-                    ]
-                )
-                ->addIndex(
-                    [
                         'fee_category_id',
                     ]
                 )
                 ->addIndex(
                     [
                         'session_id',
-                    ]
-                )
-                ->addIndex(
-                    [
-                        'session_id',
-                    ]
-                )
-                ->addIndex(
-                    [
-                        'session_id',
-                    ]
-                )
-                ->addIndex(
-                    [
-                        'term_id',
-                    ]
-                )
-                ->addIndex(
-                    [
-                        'term_id',
                     ]
                 )
                 ->addIndex(
@@ -725,96 +665,6 @@ class Initial extends AbstractMigration
                 ->create();
         }
 
-        if ( $this->table('social_accounts')->exists() === false ) {
-            $this->table('social_accounts', ['id' => false, 'primary_key' => ['id']])
-                ->addColumn('id', 'uuid', [
-                    'default' => null,
-                    'limit' => null,
-                    'null' => false,
-                ])
-                ->addColumn('user_id', 'uuid', [
-                    'default' => null,
-                    'limit' => null,
-                    'null' => false,
-                ])
-                ->addColumn('provider', 'string', [
-                    'default' => null,
-                    'limit' => 255,
-                    'null' => false,
-                ])
-                ->addColumn('username', 'string', [
-                    'default' => null,
-                    'limit' => 255,
-                    'null' => true,
-                ])
-                ->addColumn('reference', 'string', [
-                    'default' => null,
-                    'limit' => 255,
-                    'null' => false,
-                ])
-                ->addColumn('avatar', 'string', [
-                    'default' => null,
-                    'limit' => 255,
-                    'null' => true,
-                ])
-                ->addColumn('description', 'text', [
-                    'default' => null,
-                    'limit' => null,
-                    'null' => true,
-                ])
-                ->addColumn('link', 'string', [
-                    'default' => null,
-                    'limit' => 255,
-                    'null' => false,
-                ])
-                ->addColumn('token', 'string', [
-                    'default' => null,
-                    'limit' => 500,
-                    'null' => false,
-                ])
-                ->addColumn('token_secret', 'string', [
-                    'default' => null,
-                    'limit' => 500,
-                    'null' => true,
-                ])
-                ->addColumn('token_expires', 'datetime', [
-                    'default' => null,
-                    'limit' => null,
-                    'null' => true,
-                ])
-                ->addColumn('active', 'boolean', [
-                    'default' => true,
-                    'limit' => null,
-                    'null' => false,
-                ])
-                ->addColumn('data', 'text', [
-                    'default' => null,
-                    'limit' => null,
-                    'null' => false,
-                ])
-                ->addColumn('created', 'datetime', [
-                    'default' => null,
-                    'limit' => null,
-                    'null' => false,
-                ])
-                ->addColumn('modified', 'datetime', [
-                    'default' => null,
-                    'limit' => null,
-                    'null' => false,
-                ])
-                ->addIndex(
-                    [
-                        'user_id',
-                    ]
-                )
-                ->addIndex(
-                    [
-                        'user_id',
-                    ]
-                )
-                ->create();
-        }
-
         if ( $this->table('states')->exists() === false) {
             $this->table('states')
                 ->addColumn('state', 'string', [
@@ -1101,13 +951,13 @@ class Initial extends AbstractMigration
                     'comment' => 'Fee id is need to know fee income',
                     'default' => null,
                     'limit' => 11,
-                    'null' => false,
+                    'null' => true,
                 ])
                 ->addColumn('fee_category_id', 'integer', [
                     'comment' => 'Fee Category id is need to know fee category income',
                     'default' => null,
                     'limit' => 11,
-                    'null' => false,
+                    'null' => true,
                 ])
                 ->addColumn('created', 'datetime', [
                     'default' => null,
@@ -1152,7 +1002,13 @@ class Initial extends AbstractMigration
                 ->addColumn('fee_id', 'integer', [
                     'default' => null,
                     'limit' => 11,
-                    'null' => false,
+                    'null' => true,
+                ])
+                ->addColumn('fee_category_id', 'integer', [
+                    'comment' => 'This column is used to track special fee',
+                    'default' => null,
+                    'limit' => 11,
+                    'null' => true,
                 ])
                 ->addColumn('amount', 'decimal', [
                     'default' => null,
@@ -1979,45 +1835,9 @@ class Initial extends AbstractMigration
                     'delete' => 'NO_ACTION'
                 ]
             )
-            ->addForeignKey(
-                'block_id',
-                'blocks',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'NO_ACTION'
-                ]
-            )
-            ->addForeignKey(
-                'block_id',
-                'blocks',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'NO_ACTION'
-                ]
-            )
             ->update();
 
         $this->table('expenditures')
-            ->addForeignKey(
-                'expenditure_category_id',
-                'expenditure_categories',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'NO_ACTION'
-                ]
-            )
-            ->addForeignKey(
-                'expenditure_category_id',
-                'expenditure_categories',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'NO_ACTION'
-                ]
-            )
             ->addForeignKey(
                 'expenditure_category_id',
                 'expenditure_categories',
@@ -2040,42 +1860,6 @@ class Initial extends AbstractMigration
                 ]
             )
             ->addForeignKey(
-                'class_id',
-                'classes',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'NO_ACTION'
-                ]
-            )
-            ->addForeignKey(
-                'class_id',
-                'classes',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'NO_ACTION'
-                ]
-            )
-            ->addForeignKey(
-                'fee_category_id',
-                'fee_categories',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'NO_ACTION'
-                ]
-            )
-            ->addForeignKey(
-                'fee_category_id',
-                'fee_categories',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'NO_ACTION'
-                ]
-            )
-            ->addForeignKey(
                 'fee_category_id',
                 'fee_categories',
                 'id',
@@ -2087,42 +1871,6 @@ class Initial extends AbstractMigration
             ->addForeignKey(
                 'session_id',
                 'sessions',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'NO_ACTION'
-                ]
-            )
-            ->addForeignKey(
-                'session_id',
-                'sessions',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'NO_ACTION'
-                ]
-            )
-            ->addForeignKey(
-                'session_id',
-                'sessions',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'NO_ACTION'
-                ]
-            )
-            ->addForeignKey(
-                'term_id',
-                'terms',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'NO_ACTION'
-                ]
-            )
-            ->addForeignKey(
-                'term_id',
-                'terms',
                 'id',
                 [
                     'update' => 'CASCADE',
@@ -2161,6 +1909,7 @@ class Initial extends AbstractMigration
             )
             ->update();
 
+
         $this->table('receipts')
             ->addForeignKey(
                 'student_id',
@@ -2169,27 +1918,6 @@ class Initial extends AbstractMigration
                 [
                     'update' => 'CASCADE',
                     'delete' => 'NO_ACTION'
-                ]
-            )
-            ->update();
-
-        $this->table('social_accounts')
-            ->addForeignKey(
-                'user_id',
-                'users',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'CASCADE'
-                ]
-            )
-            ->addForeignKey(
-                'user_id',
-                'users',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'CASCADE'
                 ]
             )
             ->update();
@@ -2207,6 +1935,24 @@ class Initial extends AbstractMigration
             ->addForeignKey(
                 'student_fee_id',
                 'student_fees',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )
+            ->addForeignKey(
+                'fee_id',
+                'fees',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )
+            ->addForeignKey(
+                'fee_category_id',
+                'fee_categories',
                 'id',
                 [
                     'update' => 'CASCADE',
@@ -2254,21 +2000,9 @@ class Initial extends AbstractMigration
         $this->table('classes')
             ->dropForeignKey(
                 'block_id'
-            )
-            ->dropForeignKey(
-                'block_id'
-            )
-            ->dropForeignKey(
-                'block_id'
             );
 
         $this->table('expenditures')
-            ->dropForeignKey(
-                'expenditure_category_id'
-            )
-            ->dropForeignKey(
-                'expenditure_category_id'
-            )
             ->dropForeignKey(
                 'expenditure_category_id'
             );
@@ -2278,34 +2012,10 @@ class Initial extends AbstractMigration
                 'class_id'
             )
             ->dropForeignKey(
-                'class_id'
-            )
-            ->dropForeignKey(
-                'class_id'
-            )
-            ->dropForeignKey(
-                'fee_category_id'
-            )
-            ->dropForeignKey(
-                'fee_category_id'
-            )
-            ->dropForeignKey(
                 'fee_category_id'
             )
             ->dropForeignKey(
                 'session_id'
-            )
-            ->dropForeignKey(
-                'session_id'
-            )
-            ->dropForeignKey(
-                'session_id'
-            )
-            ->dropForeignKey(
-                'term_id'
-            )
-            ->dropForeignKey(
-                'term_id'
             )
             ->dropForeignKey(
                 'term_id'
@@ -2324,13 +2034,6 @@ class Initial extends AbstractMigration
                 'student_id'
             );
 
-        $this->table('social_accounts')
-            ->dropForeignKey(
-                'user_id'
-            )
-            ->dropForeignKey(
-                'user_id'
-            );
 
         $this->table('student_fee_payments')
             ->dropForeignKey(
@@ -2353,50 +2056,56 @@ class Initial extends AbstractMigration
                 'class_id'
             );
 
-        $this->dropTable('affective_dispositions');
-        $this->dropTable('blocks');
-        $this->dropTable('class_demarcations');
-        $this->dropTable('classes');
-        $this->dropTable('expenditure_categories');
-        $this->dropTable('expenditures');
-        $this->dropTable('fee_categories');
-        $this->dropTable('fees');
-        $this->dropTable('incomes');
-        $this->dropTable('payment_types');
-        $this->dropTable('payments');
-        $this->dropTable('psychomotor_skills');
-        $this->dropTable('queued_tasks');
-        $this->dropTable('receipts');
-        $this->dropTable('religions');
-        $this->dropTable('result_grade_inputs');
-        $this->dropTable('result_grading_systems');
-        $this->dropTable('result_remark_inputs');
-        $this->dropTable('sessions');
-        $this->dropTable('settings_configurations');
-        $this->dropTable('social_accounts');
-        $this->dropTable('states');
-        $this->dropTable('student_annual_position_on_class_demarcations');
-        $this->dropTable('student_annual_positions');
-        $this->dropTable('student_annual_results');
-        $this->dropTable('student_annual_subject_position_on_class_demarcations');
-        $this->dropTable('student_annual_subject_positions');
-        $this->dropTable('student_class_counts');
-        $this->dropTable('student_fee_payments');
-        $this->dropTable('student_fees');
-        $this->dropTable('student_general_remarks');
-        $this->dropTable('student_publish_results');
-        $this->dropTable('student_result_pins');
-        $this->dropTable('student_termly_position_on_class_demarcations');
-        $this->dropTable('student_termly_positions');
-        $this->dropTable('student_termly_results');
-        $this->dropTable('student_termly_subject_position_on_class_demarcations');
-        $this->dropTable('student_termly_subject_positions');
-        $this->dropTable('students');
-        $this->dropTable('students_affective_disposition_scores');
-        $this->dropTable('students_psychomotor_skill_scores');
-        $this->dropTable('subject_class_averages');
-        $this->dropTable('subjects');
-        $this->dropTable('terms');
-        $this->dropTable('users');
+        $tables =[
+            'affective_dispositions',
+            'blocks',
+            'class_demarcations',
+            'classes',
+            'expenditure_categories',
+            'expenditures',
+            'fee_categories',
+            'fees',
+            'incomes',
+            'payment_types',
+            'payments',
+            'psychomotor_skills',
+            'receipts',
+            'religions',
+            'result_grade_inputs',
+            'result_remark_inputs',
+            'result_grading_systems',
+            'sessions',
+            'settings_configurations',
+            'social_accounts',
+            'states',
+            'student_annual_position_on_class_demarcations',
+            'student_annual_positions',
+            'student_annual_results',
+            'student_annual_subject_position_on_class_demarcations',
+            'student_annual_subject_positions',
+            'student_class_counts',
+            'student_fee_payments',
+            'student_fees',
+            'student_general_remarks',
+            'student_publish_results',
+            'student_result_pins',
+            'student_termly_position_on_class_demarcations',
+            'student_termly_positions',
+            'student_termly_results',
+            'student_termly_subject_position_on_class_demarcations',
+            'student_termly_subject_positions',
+            'students',
+            'students_affective_disposition_scores',
+            'students_psychomotor_skill_scores',
+            'subject_class_averages',
+            'subjects',
+            'terms',
+            'users'
+        ];
+        foreach ( $tables as $table ) {
+            if ($this->table($table)->exists()) {
+                $this->dropTable($table);
+            }
+        }
     }
 }

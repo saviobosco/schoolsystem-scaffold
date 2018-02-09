@@ -15,7 +15,7 @@
                     <legend><?= __('Add Fee Category') ?></legend>
                     <?php
                     echo $this->Form->control('type',['label'=>'Name']);
-                    echo $this->Form->control('description',['type'=>'textarea','label'=>'Description']);
+                    echo $this->Form->control('description',['type'=>'textarea','label'=>'Description','class'=>'form-control']);
                     ?>
                 </fieldset>
                 <?= $this->Form->button(__('Create'),['class'=>'btn btn-primary']) ?>

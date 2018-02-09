@@ -104,8 +104,8 @@
         <li>
             <?= $this->Html->link('Fee Statistics',[
                 'plugin'=>'FinanceManager',
-                'controller'=>'Fees',
-                'action'=>'feeStatistics'
+                'controller'=>'FeesStatistics',
+                'action'=>'index'
             ],
                 [
                     'escape' => false
@@ -115,8 +115,8 @@
         <li>
             <?= $this->Html->link('Fee Query',[
                 'plugin'=>'FinanceManager',
-                'controller'=>'Fees',
-                'action'=>'feesQuery'
+                'controller'=>'FeesStatistics',
+                'action'=>'query'
             ],
                 [
                     'escape' => false
@@ -126,8 +126,8 @@
         <li>
             <?= $this->Html->link('Fee Defaulters',[
                 'plugin'=>'FinanceManager',
-                'controller'=>'Fees',
-                'action'=>'feeDefaulters'
+                'controller'=>'FeesDefaulters',
+                'action'=>'index'
             ],
                 [
                     'escape' => false
@@ -137,8 +137,8 @@
         <li>
             <?= $this->Html->link('Fee Complete Students',[
                 'plugin'=>'FinanceManager',
-                'controller'=>'Fees',
-                'action'=>'getStudentsWithCompleteFees'
+                'controller'=>'FeesComplete',
+                'action'=>'index'
             ],
                 [
                     'escape' => false

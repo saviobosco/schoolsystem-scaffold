@@ -25,16 +25,16 @@ class PaymentHelper extends Helper
         }
         $amount = 0;
         foreach ( $payments as $payment ) {
-            $amount += $payment->{$column};
+            $amount += $payment["$column"];
         }
         return $amount;
     }
 
     public function calculateArrearsTotal($arrears)
     {
-        $amount =0;
+        $amount = 0;
         foreach ( $arrears as $arrear ) {
-            $amount += ($arrear->amount_remaining) ? $arrear->amount_remaining : $arrear->fee->amount ;
+            $amount += ($arrear['amount_remaining']) ? $arrear['amount_remaining'] : $arrear['fee']['amount'] ;
         }
         return $amount;
     }
@@ -43,7 +43,7 @@ class PaymentHelper extends Helper
     {
         $balance = 0;
         foreach ( $payments as $payment ) {
-            $balance += $payment->amount_remaining;
+            $balance += $payment['amount_remaining'];
         }
         return $balance;
     }

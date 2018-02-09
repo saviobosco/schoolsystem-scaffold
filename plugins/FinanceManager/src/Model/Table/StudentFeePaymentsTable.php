@@ -133,6 +133,36 @@ class StudentFeePaymentsTable extends Table
         return ['paymentData' => $paymentOutput , 'total' => $total ] ;
     }
 
+    /**
+     * @param $postData
+     * @return null
+     * Pays student fees
+     */
+    public function payFees($postData)
+    {
+        $return = null;
+        $entities = $this->newEntities($postData['student_fees']);
+        // Process data and get total amount paid
+        $studentPaymentDetails = $this->processPaymentData($entities);
+        if ( empty($studentPaymentDetails['paymentData']) ) {
+            $return['error'] = 'No payment amount was entered for payment';
+            return $return;
+        }
+        // generate receipt
+        $receiptDetail = $this->Receipts->generateReceipt($postData['student_id'],$studentPaymentDetails['total']);
+        // generate and save payment records
+        $postData['payment']['receipt_id'] = $receiptDetail->id;
+        if ($this->savePayment($studentPaymentDetails['paymentData'],$receiptDetail,$postData['payment']) === false) {
+            $return['error'] = __('Could not save the payment details please try again.');
+            // revert the receipt generated
+            $this->Receipts->delete($receiptDetail);
+            return $return;
+        }
+        $return['receipt_id'] = $receiptDetail->id;
+        return $return;
+    }
+
+
     public function savePayment(Array $payments,EntityInterface $receipt ,$paymentDetail)
     {
         if ( empty($payments)) {
@@ -148,9 +178,7 @@ class StudentFeePaymentsTable extends Table
             $this->Receipts->delete($receipt);
             return false;
         }
-
         foreach ( $payments as $payment ) {
-
             if ( $payment->amount_paid < $payment->amount_to_pay ) { // if amount paid is less than the amount to pay
                 $payment->amount_remaining = (float)$payment->amount_to_pay - (float)$payment->amount_paid ;
             }

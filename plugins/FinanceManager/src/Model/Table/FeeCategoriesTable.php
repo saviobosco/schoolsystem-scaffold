@@ -45,7 +45,7 @@ class FeeCategoriesTable extends Table
 
         $this->hasMany('Fees', [
             'foreignKey' => 'fee_category_id',
-            'className' => 'FinanceManager.Fees'
+            'className' => 'FinanceManager.Fees',
         ]);
 
         $this->hasMany('StudentFeePayments', [

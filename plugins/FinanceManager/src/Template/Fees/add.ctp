@@ -12,7 +12,7 @@
                 <h4 class="panel-title"> Create New Fee </h4>
             </div>
             <div class="panel-body">
-                <?= $this->Form->create($fee,['id'=>'add-new-fee']) ?>
+                <?= $this->Form->create(null,['id'=>'add-new-fee']) ?>
                     <div class="row">
                         <div class="col-sm-6">
                             <fieldset>
@@ -28,6 +28,7 @@
                                     ]
                                 ]);
                                 echo $this->Form->control('term_id', ['id'=>'term_id','options' => $terms, 'empty' =>'All']);
+                                array_unshift($classes,'All');
                                 echo $this->Form->control('class_id', ['id' => 'class_id','options' => $classes,'empty'=>'Select Class','required'=>true]);
                                 echo $this->Form->control('session_id', ['id'=>'session_id','options' => $sessions,'empty'=>'Select Session','required'=>true]);
                                 echo $this->Form->control('compulsory',['id'=>'compulsory','data-render'=>'switchery','type'=>'checkbox','checked'=>true,'label'=>'Compulsory Fee for All Students(Please Turn this off if fee is for some specify students )']);
@@ -75,8 +76,6 @@
         $('#class_id,#session_id').change();
 
 
-
-
         classIdValue.change(function(){
             if ( classIdValue.length !== 0 ) { //
                 $.ajax({
@@ -104,7 +103,6 @@
                expectedAmount.val(amount.val() * numberOfStudents.val())
            }
         });
-
 
         // todo : work on this later
         $('#add-new-f').submit(function(e){
@@ -152,64 +150,6 @@
                 }
             );
         });
-
-        /*$('#add-new-fee').on('submit',function(event){
-            event.preventDefault();
-            var result ;
-            var thisForm = this ;
-
-            // make an ajax request.
-            $.ajax({
-                type: "POST",
-                url: window.location,
-                contentType:false,
-                cache:false,
-                processData:false,
-                data: thisForm.serialize()/*new FormData(thisForm),
-                success: function(data,status){
-                    result = data;
-                },
-                dataType: 'text'
-            });
-            setTimeout(function(){
-                swal(result);
-            }, 2000);
-
-            swal({
-                    title: "Are you sure ",
-                    text: "This fee will be created this for every student in the specified class",
-                    type: "info",
-                    showCancelButton: true,
-                    closeOnConfirm: false,
-                    showLoaderOnConfirm: true,
-                    closeOnCancel: false,
-                    confirmButtonText: "Yes",
-                    cancelButtonText: "No"
-                },
-                function(isConfirm){
-                    if (isConfirm ) {
-                        // make an ajax request.
-                        $.ajax({
-                            type: "POST",
-                            url: window.location,
-                            contentType:false,
-                            cache:false,
-                            processData:false,
-                            data:new FormData(thisForm) ,
-                        success: function(data,status){
-                            result = data;
-                        },
-                        dataType: 'text'
-                        });
-                        setTimeout(function(){
-                            swal(result);
-                        }, 2000);
-                    } else {
-                        swal("Cancelled", "", "error");
-                    }
-
-                });
-        })*/
     };
     handleAddNewFee();
 </script>

@@ -39,8 +39,6 @@
             "SavioboscoSubscription\\": "./plugins/SavioboscoSubscription/src",
             "SkillsGradingSystem\\": "./plugins/SkillsGradingSystem/src",
             "ResultSystem\\": "./plugins/ResultSystem/src",
-            "Teacher\\": "./plugins/Teacher/src",
-            "FeesManager\\": "./plugins/FeesManager/src",
             "SeanTheme\\": "./plugins/SeanTheme/src",
             "FrontEnd\\": "./plugins/FrontEnd/src",
             "GradingSystem\\": "./plugins/GradingSystem/src",
@@ -49,7 +47,10 @@
             "SubjectsManager\\": "./plugins/SubjectsManager/src",
             "ClassManager\\": "./plugins/ClassManager/src",
             "UsersManager\\": "./plugins/UsersManager/src",
-            "FinanceManager\\": "./plugins/FinanceManager/src"
+            "FinanceManager\\": "./plugins/FinanceManager/src",
+            "BankSystem\\": "./plugins/BankSystem/src",
+            "Saviobosco\\Core\\": "./plugins/Saviobosco/Core/src",
+            "Dashboard\\": "./plugins/Dashboard/src"
         }
     },
     "autoload-dev": {
@@ -59,8 +60,6 @@
             "SavioboscoSubscription\\Test\\": "./plugins/SavioboscoSubscription/tests",
             "SkillsGradingSystem\\Test\\": "./plugins/SkillsGradingSystem/tests",
             "ResultSystem\\Test\\": "./plugins/ResultSystem/tests",
-            "Teacher\\Test\\": "./plugins/Teacher/tests",
-            "FeesManager\\Test\\": "./plugins/FeesManager/tests",
             "SeanTheme\\Test\\": "./plugins/SeanTheme/tests",
             "FrontEnd\\Test\\": "./plugins/FrontEnd/tests",
             "GradingSystem\\Test\\": "./plugins/GradingSystem/tests",
@@ -69,7 +68,10 @@
             "SubjectsManager\\Test\\": "./plugins/SubjectsManager/tests",
             "ClassManager\\Test\\": "./plugins/ClassManager/tests",
             "UsersManager\\Test\\": "./plugins/UsersManager/tests",
-            "FinanceManager\\Test\\": "./plugins/FinanceManager/tests"
+            "FinanceManager\\Test\\": "./plugins/FinanceManager/tests",
+            "BankSystem\\Test\\": "./plugins/BankSystem/tests",
+            "Saviobosco\\Core\\Test\\": "./plugins/Saviobosco/Core/tests",
+            "Dashboard\\Test\\": "./plugins/Dashboard/tests"
         }
     },
     "scripts": {

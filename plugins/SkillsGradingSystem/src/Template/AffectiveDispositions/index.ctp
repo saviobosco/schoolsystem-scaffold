@@ -1,3 +1,7 @@
+<?php
+$this->extend('/Common/view');
+$this->assign('title','Affective Dispositions');
+?>
 <div class="row">
     <div class="col-sm-12">
         <h3><?= __('Affective Dispositions') ?></h3>

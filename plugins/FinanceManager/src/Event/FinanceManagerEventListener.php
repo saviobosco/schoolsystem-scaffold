@@ -40,7 +40,6 @@ class FinanceManagerEventListener implements EventListenerInterface
      */
     public function implementedEvents()
     {
-        // TODO: Implement implementedEvents() method.
         return [
             StudentsTable::EVENT_ADDED_STUDENT => 'createStudentFees',
             StudentFeePaymentsTable::EVENT_AFTER_EACH_FEE_PAYMENT => 'recordIncomeByFeeAndFeeCategories',
@@ -48,6 +47,11 @@ class FinanceManagerEventListener implements EventListenerInterface
         ];
     }
 
+    /**
+     * @param $event
+     * @param $student
+     * Create the student fees record
+     */
     public function createStudentFees($event, $student )
     {
         if ( $event->isStopped() === false ) {
@@ -62,16 +66,20 @@ class FinanceManagerEventListener implements EventListenerInterface
             return false;
         }
         // Recording fee
-        $feesTable = TableRegistry::get('FinanceManager.Fees');
-        $fee = $feesTable->find()->where(['id'=>$paymentDetail->fee_id])->first();
-        $fee->amount_earned += $paymentDetail->amount_paid;
-        $feesTable->save($fee);
+        if ( !empty($paymentDetail->fee_id)) {
+            $feesTable = TableRegistry::get('FinanceManager.Fees');
+            $fee = $feesTable->find()->where(['id'=>$paymentDetail->fee_id])->first();
+            $fee->amount_earned += $paymentDetail->amount_paid;
+            $feesTable->save($fee);
+        }
 
         // Recording Income to Fee Category
-        $feeCategoriesTable = TableRegistry::get('FinanceManager.FeeCategories');
-        $feeCategory = $feeCategoriesTable->find()->where(['id'=>$paymentDetail->fee_category_id])->first();
-        $feeCategory->income_amount += $paymentDetail->amount_paid;
-        $feeCategoriesTable->save($feeCategory);
+        if ( !empty($paymentDetail->fee_category_id)) {
+            $feeCategoriesTable = TableRegistry::get('FinanceManager.FeeCategories');
+            $feeCategory = $feeCategoriesTable->find()->where(['id'=>$paymentDetail->fee_category_id])->first();
+            $feeCategory->income_amount += $paymentDetail->amount_paid;
+            $feeCategoriesTable->save($feeCategory);
+        }
     }
 
     // record Income
@@ -88,7 +96,6 @@ class FinanceManagerEventListener implements EventListenerInterface
             'month' => $dateCreated->month,
             'year' => $dateCreated->year
         ]);
-
         // Record it to database
         $incomeTable->save($income);
     }
