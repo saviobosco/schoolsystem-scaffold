@@ -25,11 +25,6 @@ class ReligionsTableTest extends TestCase
      */
     public $fixtures = [
         'plugin.students_manager.religions',
-        'plugin.students_manager.students',
-        'plugin.students_manager.sessions',
-        'plugin.students_manager.classes',
-        'plugin.students_manager.class_demarcations',
-        'plugin.students_manager.states'
     ];
 
     /**

@@ -83,7 +83,6 @@ class StudentsTableTest extends TestCase
             ]
         ];
         $this->assertEquals($result,$this->Students->findUnActiveStudents());
-        //$this->assertArraySubset($result,$this->Students->findUnActiveStudents());
     }
 
     public function testDeactivateStudent()

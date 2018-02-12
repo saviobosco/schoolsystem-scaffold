@@ -86,8 +86,8 @@ class StudentsController extends AppController
             $student = $this->Students->patchEntity($student, $this->request->getData());
             $savedStudent = $this->Students->addStudent($student);
             if ($savedStudent) {
-                $this->Flash->set('Last student id:'.$savedStudent->id);
                 $this->Flash->success(__('The student has been saved.'));
+                $this->Flash->set('Last student id:'.$savedStudent->id);
                 if ( $this->request->getData('return_here')) {
                     return $this->redirect(['action' => 'add']);
                 }

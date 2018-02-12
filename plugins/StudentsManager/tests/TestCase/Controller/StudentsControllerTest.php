@@ -32,7 +32,7 @@ class StudentsControllerTest extends IntegrationTestCase
                 'User' => [
                     'id' => 1,
                     'username' => 'testing',
-                    'role' => 'admin',
+                    'role' => 'superuser',
                     'super_user' => 1
                     // other keys.
                 ]
@@ -77,6 +77,7 @@ class StudentsControllerTest extends IntegrationTestCase
             'first_name' => 'Iwueze',
             'last_name' => 'Ifeoma',
             'class_id' => 1,
+            'session_id' => 1,
             'gender' => 'male'
         ];
         $this->post('/students/add',$data);
@@ -84,7 +85,7 @@ class StudentsControllerTest extends IntegrationTestCase
         $this->assertSession('The student has been saved.', 'Flash.flash.0.message');
     }
 
-    public function testAddWithRedirect()
+    public function testAddReturnBack()
     {
         $data = [
             'id' => 1002,
@@ -92,7 +93,8 @@ class StudentsControllerTest extends IntegrationTestCase
             'last_name' => 'Ifeoma',
             'class_id' => 1,
             'return_here' => 1,
-            'gender' => 'male'
+            'gender' => 'male',
+            'session_id' => 1,
         ];
         $this->post('/students/add',$data);
         $this->assertRedirect(['action'=>'add']);
