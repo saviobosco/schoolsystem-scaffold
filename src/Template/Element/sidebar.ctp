@@ -1,4 +1,5 @@
 <?php
+use Cake\Core\Configure;
 /**
  * sidebar.ctp
  */
@@ -64,8 +65,12 @@ if ( $is_superUser OR $this->request->session()->read('Auth.User.role') === 'use
                     <a href="javascript:;"><img src="" alt="" /></a>
                 </div>
                 <div class="info">
-                    <?= $this->request->session()->read('Auth.User.username') ?>
-                    <small><?= ($this->request->session()->read('Auth.User.is_superuser')) ?  'superuser' :  $this->request->session()->read('Auth.User.role') ?></small>
+                    <?= $this->request->session()->read('Auth.User.first_name').' '.$this->request->session()->read('Auth.User.last_name') ?>
+                    <small><?php
+                        $role = null;
+                        ($this->request->session()->read('Auth.User.is_superuser')) ?  $role='superuser' :  $role = $this->request->session()->read('Auth.User.role');
+                        echo Configure::read('UserRoles')[$role];
+                        ?></small>
                 </div>
             </li>
         </ul>

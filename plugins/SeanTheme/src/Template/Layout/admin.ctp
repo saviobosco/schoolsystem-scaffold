@@ -34,14 +34,13 @@ $cakeDescription = Setting::read('Application.school_name')
     ?>
     <!-- ================== BEGIN BASE CSS STYLE ================== -->
     <?php
-    echo $this->Html->css('http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700');
     echo $this->Plugins->css('jquery-ui/themes/base/minified/jquery-ui.min.css');
     echo $this->Plugins->css('bootstrap/css/bootstrap.min.css');
     echo $this->Plugins->css('font-awesome/css/font-awesome.css');
     echo $this->Html->css('animate.css');
     echo $this->Html->css('style.css');
     echo $this->Html->css('style-responsive.min.css');
-    echo $this->Html->css('default.css');
+    //echo $this->Html->css('default.css');
     echo $this->Plugins->css('select2/dist/css/select2.min.css');
     echo $this->Plugins->css('switchery/switchery.min.css');
 
@@ -149,6 +148,7 @@ echo $this->Site->script('switchery/switchery.min.js');
 echo $this->Site->script('DataTables/media/js/jquery.dataTables.js');
 echo $this->Site->script('DataTables/media/js/dataTables.bootstrap.min.js');
 echo $this->Site->script('DataTables/extensions/Responsive/js/dataTables.responsive.min.js');
+echo $this->Site->script('bootstrap-datepicker/js/bootstrap-datepicker.js');
 echo $this->Html->script('table-manage-default.demo.js');
 ?>
 <?= $this->fetch('script') ?>
@@ -163,6 +163,8 @@ echo $this->Html->script('table-manage-default.demo.js');
         TableManageDefault.init();
         $('[data-toggle="tooltip"]').tooltip();
         $('select').select2();
+        $("#multiple-select2").select2({ placeholder: "Select a student" });
+
     });
 </script>
 </body>

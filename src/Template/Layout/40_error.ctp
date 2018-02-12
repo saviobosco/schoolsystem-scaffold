@@ -12,8 +12,9 @@
  * @since         0.10.0
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-
-$cakeDescription = 'Mater S.O.N Page not found';
+use Cake\Core\Configure;
+use Settings\Core\Setting;
+$cakeDescription = Setting::read('Application.school_name')
 ?>
 <!DOCTYPE html>
 <html>

@@ -98,7 +98,6 @@ class SubjectsController extends AppController
     {
         $subject = $this->Subjects->get($id,['contain'=>'Blocks']);
         $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs();
-
         $queryData = $this->request->getQuery();
         if ( !empty($queryData)){
             // check if subject has existing value for the records
@@ -127,22 +126,26 @@ class SubjectsController extends AppController
         }
         $sessions = $this->Sessions->find('list',['limit' => 200])->toArray();
         $classes = $this->Classes->find('list',['limit' => 3 ])->where(['block_id' => $subject->block_id]);
-        $terms = $this->Terms->find('list',['limit' => 4])->toArray();
+        $terms = $this->Terms->find('list',['limit' => 3])->toArray();
         $this->set(compact('subject', 'sessions','classes','terms'));
         $this->set('_serialize', ['subject','sessions','classes','terms']);
     }
 
     public function processAdd()
     {
-        $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs();
-        if ( $this->request->is(['put','patch','post'])) {
-            $processedResults = $this->ResultSystem->processSubmittedResults($this->request->getData('student_termly_results'),$gradeInputs);
-            $subjectResults = $this->Subjects->StudentTermlyResults->newEntities($processedResults);
-            if ($this->Subjects->StudentTermlyResults->saveMany($subjectResults)) {
-                $this->Flash->success('The results were successfully added!');
-            }else {
-                $this->Flash->error(__('The results could not be added. Please try again'));
+        try {
+            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs();
+            if ( $this->request->is(['put','patch','post'])) {
+                $processedResults = $this->ResultSystem->processSubmittedResults($this->request->getData('student_termly_results'),$gradeInputs);
+                $subjectResults = $this->Subjects->StudentTermlyResults->newEntities($processedResults);
+                if ($this->Subjects->StudentTermlyResults->saveMany($subjectResults)) {
+                    $this->Flash->success('The results were successfully added!');
+                }else {
+                    $this->Flash->error(__('The results could not be added. Please try again'));
+                }
             }
+        } catch ( \Exception $e) {
+            $this->Flash->error('The following error occurred:'.$e->getMessage());
         }
         $this->redirect($this->referer());
     }

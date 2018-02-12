@@ -70,7 +70,7 @@ if ( $compulsoryFees ) {
                 //debug('total Fees to Pay '.$feesTotal);
                 //debug($studentOwingPercentage);
                 ?>
-                <? if ( $studentOwingPercentage >= $getQuery['percentage'] ) : ?>
+                <?php if ( $studentOwingPercentage >= $getQuery['percentage'] ) : ?>
                     <tr>
                         <td>
                             <?= $defaulter ?>

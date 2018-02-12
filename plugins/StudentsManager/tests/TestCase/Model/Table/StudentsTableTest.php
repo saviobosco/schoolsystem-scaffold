@@ -68,7 +68,7 @@ class StudentsTableTest extends TestCase
             'created' => Time::now(),
             'modified' => Time::now()
         ]);
-        $this->assertEquals(true,$this->Students->addStudent($student));
+        $this->assertInstanceOf(Entity::class,$this->Students->addStudent($student));
     }
 
     public function testFindUnActiveStudents()

@@ -2,7 +2,7 @@
 use Cake\Core\Configure;
 use Cake\Error\Debugger;
 
-$this->layout = 'customerror';
+$this->layout = '40_error';
 
 if (Configure::read('debug')):
     $this->layout = 'dev_error';

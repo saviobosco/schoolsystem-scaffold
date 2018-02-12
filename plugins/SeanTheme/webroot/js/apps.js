@@ -644,13 +644,18 @@ var handleClearSidebarMobileSelection = function() {
 };
 
 /** Review This Later */
-var handleDatePicker = function() {
-    $('#datepicker-autoClose').datepicker({
+var handleDatepicker = function() {
+    $("input[data-type=datepicker-autoClose]").datepicker({
         todayHighlight: true,
         autoclose: true
     });
 };
 
+var handleSelectall = function() {
+    $("#selectall").change(function () {
+        $(".checkbox1").prop('checked', $(this).prop("checked"));
+    });
+};
 
 /* Application Controller
 ------------------------------------------------ */
@@ -664,7 +669,8 @@ var App = function () {
 		    this.initTopMenu();
 		    this.initPageLoad();
 		    this.initComponent();
-            handleDatePicker();
+            handleDatepicker();
+            handleSelectall();
 		},
 		initSidebar: function() {
 			handleSidebarMenu();

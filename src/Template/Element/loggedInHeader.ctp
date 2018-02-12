@@ -32,7 +32,7 @@ use Settings\Core\Setting;
             <li class="dropdown navbar-user">
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                     <!--<img src="assets/img/user-13.jpg" alt="" /> -->
-                    <span class="hidden-xs"><?= $this->request->session()->read('Auth.User.username') ?></span> <b class="caret"></b>
+                    <span class="hidden-xs"><?= $this->request->session()->read('Auth.User.first_name').' '.$this->request->session()->read('Auth.User.last_name') ?></span> <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu animated fadeInLeft">
                     <li class="arrow"></li>

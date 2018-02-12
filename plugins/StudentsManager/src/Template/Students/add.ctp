@@ -38,7 +38,7 @@
                                 echo $this->Form->radio('gender',[
                                     ['value' => 'male', 'text' => 'Male',],
                                     ['value' => 'female', 'text' => 'Female',]
-                                ],['hiddenField'=>false,'label'=>true,'templates'=>['input' => '<input type="{{type}}" name="{{name}}"{{attrs}}/>',]]);
+                                ],['default'=>'female', 'hiddenField'=>false,'label'=>true,'templates'=>['input' => '<input type="{{type}}" name="{{name}}"{{attrs}}/>',]]);
 
 
                                 echo $this->Form->input('date_of_birth',[

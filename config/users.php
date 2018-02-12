@@ -133,6 +133,18 @@ $config = [
             'action' => 'login',
             'prefix' => false
         ],
+        'loginRedirect' => [
+            'plugin' => 'UsersManager',
+            'controller' => 'Accounts',
+            'action' => 'desktop',
+            'prefix' => false
+        ],
+        'unauthorizedRedirect' => [
+            'plugin' => 'UsersManager',
+            'controller' => 'Accounts',
+            'action' => 'desktop',
+            'prefix' => false
+        ],
         'authenticate' => [
             'all' => [
                 'finder' => 'auth',

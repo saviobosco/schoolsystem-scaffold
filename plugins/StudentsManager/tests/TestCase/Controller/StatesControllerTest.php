@@ -28,7 +28,7 @@ class StatesControllerTest extends IntegrationTestCase
                 'User' => [
                     'id' => 1,
                     'username' => 'testing',
-                    'role' => 'admin',
+                    'role' => 'superuser',
                     'super_user' => 1
                     // other keys.
                 ]

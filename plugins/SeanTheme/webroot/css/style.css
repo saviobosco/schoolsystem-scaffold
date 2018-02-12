@@ -6819,3 +6819,10 @@ body .bootstrap-datetimepicker-widget table td {
 .form-group.has-success .fileinput .thumbnail {
     border-color: #b8df92;
 }
+.required > label {
+    font-weight: bold;
+}
+.required > label:after {
+    content: ' *';
+    color: #C3232D;
+}

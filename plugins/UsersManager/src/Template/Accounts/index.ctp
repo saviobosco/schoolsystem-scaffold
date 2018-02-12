@@ -1,5 +1,6 @@
 <?php
 use Cake\I18n\Time;
+use Cake\Core\Configure;
 $this->assign('title','All Users');
 ?>
 <div class="row">
@@ -27,7 +28,7 @@ $this->assign('title','All Users');
                         <tr class="user-checkbox">
                             <td> <?= h($user->username) ?> </td>
                             <td><?= h($user->full_name) ?></td>
-                            <td><?= h($user->role) ?></td>
+                            <td><?= h(Configure::read('UserRoles')[$user->role]) ?></td>
                             <th><?php if ($user->is_superuser) {echo '<i class="text-success">Yes</i>';}else{ echo '<span class="text-danger">No</span>';} ?></th>
                             <th><?php if ($user->active) {echo '<i class="text-success">Yes</i>';}else{ echo '<span class="text-danger">No</span>';} ?></th>
                             <!--<td><?php $time = new Time($user->last_seen); echo $time->timeAgoInWords([

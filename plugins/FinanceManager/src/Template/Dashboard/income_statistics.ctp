@@ -97,8 +97,6 @@ $this->Form->templates($formTemplates);
         });
     });
 </script>
-<?php /*$this->Site->script('bootstrap-daterangepicker/moment.js', 'plugin', ['block' => 'bottomScripts']) ?>
-<?php $this->Site->script('bootstrap-daterangepicker/daterangepicker.js', 'plugin', ['block' => 'bottomScripts']) */?>
 <?php
 $this->Html->scriptStart(['block' => 'bottomScripts']);
 

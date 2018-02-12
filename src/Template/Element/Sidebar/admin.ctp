@@ -15,9 +15,9 @@
         </li>
         <li><?= $this->Html->link(__('Students'),['plugin'=>'ResultSystem','controller'=>'Students','action'=>'index'],['escape'=>false]) ?></li>
         <li><?= $this->Html->link(__('Subjects'),['plugin'=>'ResultSystem','controller'=>'Subjects','action'=>'index'],['escape'=>false]) ?></li>
-        <li><?= $this->Html->link(__('View Positions'),['plugin'=>'ResultSystem','controller'=>'StudentTermlyResults','action'=>'index']) ?></li>
-        <li><?= $this->Html->link(__('Publish Results'),['plugin'=>'ResultSystem','controller'=>'Students','action'=>'publishResults']) ?></li>
-        <li><?= $this->Html->link(__('Upload Result'),['plugin'=>'ResultSystem','controller'=>'StudentTermlyResults','action'=>'uploadResult']) ?></li>
+        <li><?= $this->Html->link(__('View Positions'),['plugin'=>'ResultSystem','controller'=>'StudentsPositions','action'=>'index']) ?></li>
+        <li><?= $this->Html->link(__('Publish Results'),['plugin'=>'ResultSystem','controller'=>'PublishResults','action'=>'index']) ?></li>
+        <li><?= $this->Html->link(__('Upload Result'),['plugin'=>'ResultSystem','controller'=>'UploadResult','action'=>'uploadResult']) ?></li>
         <li><?= $this->Html->link(__('Result Processing'),['plugin'=>'ResultSystem','controller'=>'ResultProcessing','action'=>'index']) ?></li>
     </ul>
 </li>

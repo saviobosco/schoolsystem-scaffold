@@ -18,6 +18,7 @@ class ReceiptsController extends AppController
 
     public function initialize()
     {
+        parent::initialize();
         $this->loadModel('FinanceManager.Classes');
         $this->loadModel('FinanceManager.Sessions');
         $this->loadModel('FinanceManager.Terms');

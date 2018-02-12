@@ -35,24 +35,6 @@
                 'escape' => false
             ]) ?>
         </li>
-        <li>
-            <?= $this->html->link('About',[
-                'plugin'=>null,
-                'controller'=>'Dashboard',
-                'action' => 'about'
-            ],[
-                'escape' => false
-            ]) ?>
-        </li>
-        <li>
-            <?= $this->html->link('Help',[
-                'plugin'=>null,
-                'controller'=>'Dashboard',
-                'action' => 'help'
-            ],[
-                'escape' => false
-            ]) ?>
-        </li>
     </ul>
 </li>
 <li class="has-sub">

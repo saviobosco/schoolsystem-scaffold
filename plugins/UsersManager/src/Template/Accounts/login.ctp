@@ -10,7 +10,7 @@
  */
 //$this->layout = "SeanTheme.login";
 use Cake\Core\Configure;
-
+$this->assign('title','Login');
 $edittemplates = [
     'inputContainer' => '<div class="form-group m-b-20 ">{{content}}</div>',
     'submitContainer' => '<div class="login-buttons"> {{content}} </div>'

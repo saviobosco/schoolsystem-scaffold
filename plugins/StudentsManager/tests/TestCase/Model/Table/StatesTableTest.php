@@ -25,12 +25,6 @@ class StatesTableTest extends TestCase
      */
     public $fixtures = [
         'plugin.students_manager.states',
-        'plugin.students_manager.students',
-        'plugin.students_manager.sessions',
-        'plugin.students_manager.classes',
-        'plugin.students_manager.class_demarcations',
-        'plugin.students_manager.session_admitted',
-        'plugin.students_manager.session_graduated'
     ];
 
     /**

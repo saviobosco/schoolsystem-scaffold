@@ -2,10 +2,10 @@
 
 $userRole = [
     'UserRoles' => [
-        'superuser' => 'Super User',
-        'admin' => 'Admin',
+        'superuser' => 'Principal',
+        'admin' => 'Dean',
         'bursar' => 'Bursar',
-        'user' => 'User',
+        'user' => 'Admission Officer',
     ]
 ];
 

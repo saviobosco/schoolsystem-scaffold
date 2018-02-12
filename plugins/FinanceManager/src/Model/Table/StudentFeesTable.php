@@ -1,6 +1,7 @@
 <?php
 namespace FinanceManager\Model\Table;
 
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -113,16 +114,19 @@ class StudentFeesTable extends Table
         if ( (bool)$this->StudentFeePayments->find()->where(['student_fee_id'=>$studentFee->id])->first()) {
             throw new \PDOException;
         }
-        $studentFeeDeleted = $this->delete($studentFee);
-        if($studentFeeDeleted) {
-            // decrement fees statistics
-            if (!empty($studentFeeDeleted->fee_id)) {
-                $fee = $this->Fees->get($studentFeeDeleted->fee_id);
+        $this->delete($studentFee);
+        return true;
+    }
+
+    public function afterDelete(Event $event,$entity)
+    {
+        if ($event->isStopped() === false) {
+            if (!empty($entity->fee_id)) {
+                $fee = $this->Fees->get($entity->fee_id);
                 $fee->number_of_students = (int)$fee->number_of_students - 1;
                 $fee->income_amount_expected = (float)$fee->income_amount_expected - $fee->amount;
                 $this->Fees->save($fee);
             }
         }
-        return true;
     }
 }
