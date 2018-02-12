@@ -17,8 +17,6 @@ namespace App\Controller;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
-use Muffin\Footprint\Auth\FootprintAwareTrait;
-
 /**
  * Application Controller
  *
@@ -29,8 +27,6 @@ use Muffin\Footprint\Auth\FootprintAwareTrait;
  */
 class AppController extends Controller
 {
-
-    use FootprintAwareTrait;
 
     public $helpers = ['Cewi/Excel.Excel'];
     /**
@@ -52,8 +48,6 @@ class AppController extends Controller
         $this->loadComponent('Flash');
         $this->loadComponent('CakeDC/Users.UsersAuth');
         $this->loadComponent('SavioboscoFlash');
-        // for the footprint
-        $this->_userModel = 'UsersManager.Accounts';
     }
 
     public function beforeFilter(Event $event) {
