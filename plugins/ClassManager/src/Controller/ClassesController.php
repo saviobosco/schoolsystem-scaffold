@@ -112,7 +112,6 @@ class ClassesController extends AppController
         } else {
             $this->Flash->error(__('The class could not be deleted. Please, try again.'));
         }
-
         return $this->redirect(['action' => 'index']);
     }
 }

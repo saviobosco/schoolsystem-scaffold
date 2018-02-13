@@ -25,9 +25,6 @@ class StudentAnnualPositionsTableTest extends TestCase
      */
     public $fixtures = [
         'plugin.result_system.student_annual_positions',
-        'plugin.result_system.students',
-        'plugin.result_system.classes',
-        'plugin.result_system.sessions'
     ];
 
     /**

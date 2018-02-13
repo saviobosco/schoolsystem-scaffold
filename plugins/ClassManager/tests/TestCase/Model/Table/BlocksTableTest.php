@@ -26,28 +26,6 @@ class BlocksTableTest extends TestCase
     public $fixtures = [
         'plugin.class_manager.blocks',
         'plugin.class_manager.classes',
-        'plugin.class_manager.class_demarcations',
-        'plugin.class_manager.students',
-        'plugin.class_manager.sessions',
-        'plugin.class_manager.session_admitteds',
-        'plugin.class_manager.graduated_sessions',
-        'plugin.class_manager.states',
-        'plugin.class_manager.student_annual_position_on_class_demarcations',
-        'plugin.class_manager.student_annual_positions',
-        'plugin.class_manager.student_annual_results',
-        'plugin.class_manager.student_annual_subject_position_on_class_demarcations',
-        'plugin.class_manager.student_annual_subject_positions',
-        'plugin.class_manager.student_general_remarks',
-        'plugin.class_manager.student_publish_results',
-        'plugin.class_manager.student_result_pins',
-        'plugin.class_manager.student_termly_position_on_class_demarcations',
-        'plugin.class_manager.student_termly_positions',
-        'plugin.class_manager.student_termly_results',
-        'plugin.class_manager.student_termly_subject_position_on_class_demarcations',
-        'plugin.class_manager.student_termly_subject_positions',
-        'plugin.class_manager.students_affective_disposition_scores',
-        'plugin.class_manager.students_psychomotor_skill_scores',
-        'plugin.class_manager.subjects'
     ];
 
     /**

@@ -30,7 +30,7 @@ class ClassesControllerTest extends IntegrationTestCase
                 'User' => [
                     'id' => 1,
                     'username' => 'testing',
-                    'role' => 'admin',
+                    'role' => 'superuser',
                     'super_user' => 1
                     // other keys.
                 ]
@@ -103,7 +103,7 @@ class ClassesControllerTest extends IntegrationTestCase
     public function testDelete()
     {
         $this->delete('/classes/delete/1');
-        $this->assertSession('The class has been deleted.', 'Flash.flash.0.message');
         $this->assertRedirect();
+        $this->assertSession('The class has been deleted.', 'Flash.flash.0.message');
     }
 }

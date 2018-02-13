@@ -27,17 +27,6 @@ class StudentsTableTest extends TestCase
         'plugin.skills_grading_system.students',
         'plugin.skills_grading_system.sessions',
         'plugin.skills_grading_system.classes',
-        'plugin.skills_grading_system.class_demacations',
-        'plugin.skills_grading_system.student_annual_position_on_class_demacations',
-        'plugin.skills_grading_system.student_annual_positions',
-        'plugin.skills_grading_system.student_annual_results',
-        'plugin.skills_grading_system.student_annual_subject_position_on_class_demacations',
-        'plugin.skills_grading_system.student_annual_subject_positions',
-        'plugin.skills_grading_system.student_termly_position_on_class_demacations',
-        'plugin.skills_grading_system.student_termly_positions',
-        'plugin.skills_grading_system.student_termly_results',
-        'plugin.skills_grading_system.student_termly_subject_position_on_class_demacations',
-        'plugin.skills_grading_system.student_termly_subject_positions',
         'plugin.skills_grading_system.students_affective_disposition_scores',
         'plugin.skills_grading_system.students_psychomotor_skill_scores'
     ];

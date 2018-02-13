@@ -33,7 +33,7 @@ class StudentResultPinsControllerTest extends IntegrationTestCase
                     'id' => 1,
                     'username' => 'testing',
                     'role' => 'admin',
-                    'super_user' => 1
+                    'is_superuser' => 1
                     // other keys.
                 ]
             ]

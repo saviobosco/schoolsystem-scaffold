@@ -25,14 +25,6 @@ class StudentTermlyPositionsTableTest extends TestCase
      */
     public $fixtures = [
         'plugin.result_system.student_termly_positions',
-        'plugin.result_system.students',
-        'plugin.result_system.classes',
-        'plugin.result_system.terms',
-        'plugin.result_system.student_termly_results',
-        'plugin.result_system.subjects',
-        'plugin.result_system.blocks',
-        'plugin.result_system.student_annual_results',
-        'plugin.result_system.sessions'
     ];
 
     /**

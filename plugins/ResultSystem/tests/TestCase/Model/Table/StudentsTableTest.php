@@ -28,7 +28,6 @@ class StudentsTableTest extends TestCase
         'plugin.result_system.students',
         'plugin.result_system.sessions',
         'plugin.result_system.classes',
-        //'plugin.result_system.blocks',
         'plugin.result_system.class_demarcations',
         'plugin.result_system.student_annual_position_on_class_demarcations',
         'plugin.result_system.student_annual_subject_position_on_class_demarcations',
@@ -41,7 +40,6 @@ class StudentsTableTest extends TestCase
         'plugin.result_system.student_termly_subject_positions',
         'plugin.result_system.subject_class_averages',
         'plugin.result_system.student_termly_position_on_class_demarcations',
-        //'plugin.result_system.fees',
         'plugin.result_system.student_annual_positions',
         'plugin.result_system.student_class_counts',
         'plugin.result_system.student_general_remarks',
@@ -191,7 +189,6 @@ class StudentsTableTest extends TestCase
      */
     public function testGetStudentTermlyResult()
     {
-        $expected = new Entity();
         $this->assertInstanceOf(Entity::class,$this->Students->getStudentTermlyResult('001',['term_id'=>1,'session_id'=>1,'class_id'=>1]));
     }
 
@@ -247,7 +244,6 @@ class StudentsTableTest extends TestCase
             'last_name' => 'Ifeoma',
             'student_annual_positions' => []
         ];
-        //dd($this->Students->getStudentAnnualPromotions(['term_id'=>1,'session_id'=>1,'class_id'=>1]));
-            $this->assertContains($expected,$this->Students->getStudentAnnualPromotions(['term_id'=>1,'session_id'=>1,'class_id'=>1]));
+        $this->assertContains($expected,$this->Students->getStudentAnnualPromotions(['term_id'=>1,'session_id'=>1,'class_id'=>1]));
     }
 }

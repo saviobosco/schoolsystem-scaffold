@@ -18,13 +18,11 @@ class StudentsControllerTest extends IntegrationTestCase
     public $fixtures = [
         'plugin.finance_manager.students',
         'plugin.finance_manager.sessions',
-        'plugin.finance_manager.session_admitted',
         'plugin.finance_manager.classes',
         'plugin.finance_manager.blocks',
         'plugin.finance_manager.class_demarcations',
         'plugin.finance_manager.student_annual_results',
         'plugin.finance_manager.student_termly_results',
-        'plugin.finance_manager.session_graduated'
     ];
 
     /**

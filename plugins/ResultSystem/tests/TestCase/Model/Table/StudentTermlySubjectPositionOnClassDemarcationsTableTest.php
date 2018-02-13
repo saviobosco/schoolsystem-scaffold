@@ -25,17 +25,6 @@ class StudentTermlySubjectPositionOnClassDemarcationsTableTest extends TestCase
      */
     public $fixtures = [
         'plugin.result_system.student_termly_subject_position_on_class_demarcations',
-        'plugin.result_system.subjects',
-        'plugin.result_system.blocks',
-        'plugin.result_system.classes',
-        'plugin.result_system.class_demarcations',
-        'plugin.result_system.student_annual_results',
-        'plugin.result_system.student_termly_results',
-        'plugin.result_system.students',
-        'plugin.result_system.sessions',
-        'plugin.result_system.session_admitted',
-        'plugin.result_system.session_graduated',
-        'plugin.result_system.terms'
     ];
 
     /**

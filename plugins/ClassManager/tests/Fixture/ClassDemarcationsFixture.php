@@ -41,7 +41,7 @@ class ClassDemarcationsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'name' => 'Lorem ip',
+            'name' => 'JSS 1A',
             'class_id' => 1,
             'capacity' => 1,
             'created' => '2017-10-05 12:45:07',

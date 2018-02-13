@@ -28,9 +28,7 @@ class StudentsPsychomotorSkillScoresTableTest extends TestCase
         'plugin.skills_grading_system.students',
         'plugin.skills_grading_system.sessions',
         'plugin.skills_grading_system.classes',
-        'plugin.skills_grading_system.class_demarcations',
         'plugin.skills_grading_system.students_affective_disposition_scores',
-        'plugin.skills_grading_system.psychomotors',
         'plugin.skills_grading_system.terms'
     ];
 
