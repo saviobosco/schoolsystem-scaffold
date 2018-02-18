@@ -42,12 +42,21 @@ class IncomesFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'amount' => 1.5,
+            'amount' => 10000,
             'week' => 1,
             'month' => 1,
             'year' => 1,
             'created' => '2018-01-07 10:21:42',
             'modified' => '2018-01-07 10:21:42'
         ],
+        [
+            'id' => 2,
+            'amount' => 20000,
+            'week' => 1,
+            'month' => 1,
+            'year' => 1,
+            'created' => '2018-01-07 10:21:42',
+            'modified' => '2018-01-07 10:21:42'
+        ]
     ];
 }

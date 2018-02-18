@@ -16,8 +16,30 @@ class PaymentTypesControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.finance_manager.payment_types'
+        'plugin.finance_manager.payment_types',
+        'plugin.finance_manager.users'
     ];
+
+    public function setUp()
+    {
+        parent::setUp();
+        // Set session data
+        $this->session([
+            'Auth' => [
+                'User' => [
+                    'id' => 'f8b668c2-0de6-4561-9018-f0199c9e8525',
+                    'username' => 'testing',
+                    'role' => 'superuser',
+                    'super_user' => 1
+                    // other keys.
+                ]
+            ]
+        ]);
+        $this->enableRetainFlashMessages();
+        $this->disableErrorHandlerMiddleware();
+        $this->enableCsrfToken();
+        $this->enableRetainFlashMessages();
+    }
 
     /**
      * Test index method
@@ -26,7 +48,8 @@ class PaymentTypesControllerTest extends IntegrationTestCase
      */
     public function testIndex()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/finance-manager/payment-types');
+        $this->assertResponseOk();
     }
 
     /**
@@ -36,7 +59,8 @@ class PaymentTypesControllerTest extends IntegrationTestCase
      */
     public function testView()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/finance-manager/payment-types/view/1');
+        $this->assertResponseOk();
     }
 
     /**
@@ -46,7 +70,12 @@ class PaymentTypesControllerTest extends IntegrationTestCase
      */
     public function testAdd()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $postData = [
+            'type' => 'Bank Teller'
+        ];
+        $this->post('/finance-manager/payment-types/add',$postData);
+        $this->assertRedirect(['action'=>'index']);
+        $this->assertSession('The payment type has been saved.', 'Flash.flash.0.message');
     }
 
     /**
@@ -56,7 +85,12 @@ class PaymentTypesControllerTest extends IntegrationTestCase
      */
     public function testEdit()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $postData = [
+            'type' => 'Bank Teller'
+        ];
+        $this->post('/finance-manager/payment-types/edit/1',$postData);
+        $this->assertRedirect(['action'=>'index']);
+        $this->assertSession('The payment type has been saved.', 'Flash.flash.0.message');
     }
 
     /**
@@ -66,6 +100,7 @@ class PaymentTypesControllerTest extends IntegrationTestCase
      */
     public function testDelete()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->delete('/finance-manager/payment-types/delete/1');
+        $this->assertRedirect(['action'=>'index']);
     }
 }

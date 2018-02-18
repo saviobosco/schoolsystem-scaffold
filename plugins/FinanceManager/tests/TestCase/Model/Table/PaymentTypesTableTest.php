@@ -25,8 +25,6 @@ class PaymentTypesTableTest extends TestCase
      */
     public $fixtures = [
         'plugin.finance_manager.payment_types',
-        'plugin.finance_manager.payments',
-        'plugin.finance_manager.receipts'
     ];
 
     /**

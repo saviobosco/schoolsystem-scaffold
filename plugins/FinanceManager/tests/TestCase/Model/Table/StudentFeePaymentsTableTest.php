@@ -1,6 +1,8 @@
 <?php
 namespace FinanceManager\Test\TestCase\Model\Table;
 
+use Cake\Event\EventList;
+use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use FinanceManager\Model\Table\StudentFeePaymentsTable;
@@ -27,33 +29,13 @@ class StudentFeePaymentsTableTest extends TestCase
         'plugin.finance_manager.student_fee_payments',
         'plugin.finance_manager.student_fees',
         'plugin.finance_manager.students',
-        'plugin.finance_manager.classes',
-        'plugin.finance_manager.blocks',
-        'plugin.finance_manager.class_demarcations',
-        'plugin.finance_manager.student_annual_results',
-        'plugin.finance_manager.student_termly_results',
-        'plugin.finance_manager.receipts',
-        'plugin.finance_manager.religions',
         'plugin.finance_manager.fees',
         'plugin.finance_manager.fee_categories',
-        'plugin.finance_manager.terms',
-        'plugin.finance_manager.student_class_counts',
-        'plugin.finance_manager.student_general_remarks',
-        'plugin.finance_manager.student_publish_results',
-        'plugin.finance_manager.student_result_pins',
-        'plugin.finance_manager.student_termly_position_on_class_demarcations',
-        'plugin.finance_manager.student_termly_positions',
-        'plugin.finance_manager.student_termly_subject_position_on_class_demarcations',
-        'plugin.finance_manager.student_termly_subject_positions',
-        'plugin.finance_manager.students_affective_disposition_scores',
-        'plugin.finance_manager.students_psychomotor_skill_scores',
-        'plugin.finance_manager.subject_class_averages',
-        'plugin.finance_manager.sessions',
-        'plugin.finance_manager.result_remarks',
-        'plugin.finance_manager.student_annual_position_on_class_demarcations',
-        'plugin.finance_manager.student_annual_positions',
-        'plugin.finance_manager.student_annual_subject_position_on_class_demarcations',
-        'plugin.finance_manager.student_annual_subject_positions'
+        //'plugin.CakeDC/Users.users',
+        'plugin.finance_manager.receipts',
+        'plugin.finance_manager.payments',
+        'plugin.finance_manager.payment_types',
+        'plugin.finance_manager.incomes'
     ];
 
     /**
@@ -66,6 +48,7 @@ class StudentFeePaymentsTableTest extends TestCase
         parent::setUp();
         $config = TableRegistry::exists('StudentFeePayments') ? [] : ['className' => StudentFeePaymentsTable::class];
         $this->StudentFeePayments = TableRegistry::get('StudentFeePayments', $config);
+        $this->StudentFeePayments->getEventManager()->setEventList(new EventList());
     }
 
     /**
@@ -81,32 +64,193 @@ class StudentFeePaymentsTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
+     * Test processPaymentData method
      *
      * @return void
      */
-    public function testInitialize()
+    public function testProcessPaymentData()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $entities = $this->StudentFeePayments->newEntities(
+            [
+                [
+                    'amount_to_pay' => '25000',
+                    'fee_id' => '1',
+                    'fee_category_id' => '1',
+                    'amount_paid' => '25000',
+                    'student_fee_id' => '1'
+                ],
+                [
+                    'amount_to_pay' => '2000',
+                    'fee_id' => '',
+                    'fee_category_id' => '2',
+                    'amount_paid' => '1000',
+                    'student_fee_id' => '2'
+                ]
+            ]
+        );
+
+        $expected = [
+            'total' => (float)'26000'
+        ];
+        $this->assertArraySubset($expected,$this->StudentFeePayments->processPaymentData($entities));
+    }
+
+    public function testProcessPaymentsRemovedComma()
+    {
+        $entities = $this->StudentFeePayments->newEntities(
+            [
+                [
+                    'amount_to_pay' => '25000',
+                    'fee_id' => '1',
+                    'fee_category_id' => '1',
+                    'amount_paid' => '25,000',
+                    'student_fee_id' => '1'
+                ],
+                [
+                    'amount_to_pay' => '2000',
+                    'fee_id' => '',
+                    'fee_category_id' => '2',
+                    'amount_paid' => '1,000',
+                    'student_fee_id' => '2'
+                ]
+            ]
+        );
+        $return = $this->StudentFeePayments->processPaymentData($entities);
+        $this->assertEquals('25000',$return['paymentData'][0]->amount_paid);
+        $this->assertEquals('1000',$return['paymentData'][1]->amount_paid);
+        $this->assertEquals((float)'26000',$return['total']);
+    }
+
+    public function testProcessPaymentEmpty()
+    {
+        $entities = $this->StudentFeePayments->newEntities(
+            [
+                [
+                    'amount_to_pay' => '25000',
+                    'fee_id' => '1',
+                    'fee_category_id' => '1',
+                    'amount_paid' => '',
+                    'student_fee_id' => '1'
+                ],
+                [
+                    'amount_to_pay' => '2000',
+                    'fee_id' => '',
+                    'fee_category_id' => '2',
+                    'amount_paid' => '',
+                    'student_fee_id' => '2'
+                ]
+            ]
+        );
+        $expected = [
+            'paymentData' =>[],
+            'total' => 0
+        ];
+        $this->assertEquals($expected,$this->StudentFeePayments->processPaymentData($entities));
     }
 
     /**
-     * Test validationDefault method
+     * Test payFees method
      *
      * @return void
      */
-    public function testValidationDefault()
+    public function testPayFees()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $postData = [
+            'student_id' => '1000',
+            'student_fees' => [
+                (int) 0 => [
+                    'amount_to_pay' => '25000',
+                    'fee_id' => '1',
+                    'fee_category_id' => '1',
+                    'amount_paid' => '25000',
+                    'student_fee_id' => '1'
+                ],
+                (int) 1 => [
+                    'amount_to_pay' => '2000',
+                    'fee_id' => '',
+                    'fee_category_id' => '2',
+                    'amount_paid' => '1000',
+                    'student_fee_id' => '2'
+                ]
+            ],
+            'payment' => [
+                'payment_made_by' => 'student',
+                'payment_type_id' => '1',
+                'payment_received_by' => '6ae8971c-e86b-4e8c-9d45-cc6a87010452'
+            ],
+            'generate_receipt' => 'two'
+        ];
+        $expected = [
+            'receipt_id' => 2
+        ];
+        $this->assertEquals($expected,$this->StudentFeePayments->payFees($postData));
+        $this->assertEventFired(StudentFeePaymentsTable::EVENT_AFTER_EACH_FEE_PAYMENT, $this->StudentFeePayments->getEventManager());
+        $this->assertEventFired(StudentFeePaymentsTable::EVENT_AFTER_FEES_PAYMENT, $this->StudentFeePayments->getEventManager());
+    }
+
+    public function testPayFeesFailedNoPaymentAmount()
+    {
+        $postData = [
+            'student_id' => '1000',
+            'student_fees' => [
+                (int) 0 => [
+                    'amount_to_pay' => '25000',
+                    'fee_id' => '1',
+                    'fee_category_id' => '1',
+                    'amount_paid' => '',
+                    'student_fee_id' => '1'
+                ],
+                (int) 1 => [
+                    'amount_to_pay' => '2000',
+                    'fee_id' => '',
+                    'fee_category_id' => '2',
+                    'amount_paid' => '',
+                    'student_fee_id' => '2'
+                ]
+            ],
+            'payment' => [
+                'payment_made_by' => 'student',
+                'payment_type_id' => '1',
+                'payment_received_by' => '6ae8971c-e86b-4e8c-9d45-cc6a87010452'
+            ],
+            'generate_receipt' => 'two'
+        ];
+        $return = $this->StudentFeePayments->payFees($postData);
+        $this->assertEquals('No payment amount was entered for payment',$return['error']);
     }
 
     /**
-     * Test buildRules method
+     * Test savePayment method
      *
      * @return void
      */
-    public function testBuildRules()
+    public function testSavePayment()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $receipt = new Entity(['id'=>1,'total_amount_paid'=>26000,'student_id'=>1000]);
+        $paymentArray = $this->StudentFeePayments->newEntities([
+            [
+                'amount_to_pay' => '25000',
+                'fee_id' => '1',
+                'fee_category_id' => '1',
+                'amount_paid' => '25000',
+                'student_fee_id' => '1'
+            ],
+            [
+                'amount_to_pay' => '2000',
+                'fee_id' => '',
+                'fee_category_id' => '2',
+                'amount_paid' => '1000',
+                'student_fee_id' => '2'
+            ]
+        ]);
+        $paymentDetail = [
+            'payment_made_by' => 'student',
+            'payment_type_id' => '1',
+            'payment_received_by' => '6ae8971c-e86b-4e8c-9d45-cc6a87010452'
+        ];
+        $this->assertTrue($this->StudentFeePayments->savePayment($paymentArray,$receipt,$paymentDetail));
+        $this->assertEventFired(StudentFeePaymentsTable::EVENT_AFTER_EACH_FEE_PAYMENT, $this->StudentFeePayments->getEventManager());
+        $this->assertEventFired(StudentFeePaymentsTable::EVENT_AFTER_FEES_PAYMENT, $this->StudentFeePayments->getEventManager());
+        $this->assertEventFired('Model.afterSave', $this->StudentFeePayments->getEventManager());
     }
 }

@@ -19,7 +19,8 @@ class StudentFeesFixture extends TestFixture
     public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
         'student_id' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'collate' => 'utf8_bin', 'comment' => '', 'precision' => null, 'fixed' => null],
-        'fee_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'fee_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'fee_category_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => 'This column is used to track special fee', 'precision' => null, 'autoIncrement' => null],
         'amount' => ['type' => 'decimal', 'length' => 10, 'precision' => 0, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => ''],
         'paid' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '0', 'comment' => '', 'precision' => null],
         'amount_remaining' => ['type' => 'decimal', 'length' => 10, 'precision' => 0, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => ''],
@@ -52,16 +53,31 @@ class StudentFeesFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'student_id' => 'Lorem ipsum dolor sit amet',
+            'student_id' => '1000',
             'fee_id' => 1,
-            'amount' => 1.5,
-            'paid' => 1,
-            'amount_remaining' => 1.5,
-            'purpose' => 'Lorem ipsum dolor sit amet',
-            'created' => '2018-01-07 10:55:10',
-            'modified' => '2018-01-07 10:55:10',
-            'created_by' => 'be4c6c7e-df61-4440-b097-b4790097c7f2',
-            'modified_by' => '1aa68e22-0584-47f3-8093-363ba5573dad'
+            'fee_category_id' => 1,
+            'amount' => null,
+            'paid' => 0,
+            'amount_remaining' => null,
+            'purpose' => '',
+            'created' => '2018-02-13 19:47:44',
+            'modified' => '2018-02-13 19:47:44',
+            'created_by' => 'ca79c1f1-7aa9-452d-85de-10ef846ab70a',
+            'modified_by' => '0a1248a3-42e2-4da5-bbea-2378e1defe6f'
         ],
+        [
+            'id' => 2,
+            'student_id' => '1000',
+            'fee_id' => null,
+            'fee_category_id' => 2,
+            'amount' => 2000,
+            'paid' => 0,
+            'amount_remaining' => null,
+            'purpose' => 'Damage',
+            'created' => '2018-02-13 19:47:44',
+            'modified' => '2018-02-13 19:47:44',
+            'created_by' => 'ca79c1f1-7aa9-452d-85de-10ef846ab70a',
+            'modified_by' => '0a1248a3-42e2-4da5-bbea-2378e1defe6f'
+        ]
     ];
 }

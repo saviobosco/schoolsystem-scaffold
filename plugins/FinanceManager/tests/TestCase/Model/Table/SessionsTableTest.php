@@ -25,30 +25,6 @@ class SessionsTableTest extends TestCase
      */
     public $fixtures = [
         'plugin.finance_manager.sessions',
-        'plugin.finance_manager.fees',
-        'plugin.finance_manager.fee_categories',
-        'plugin.finance_manager.student_fee_payments',
-        'plugin.finance_manager.terms',
-        'plugin.finance_manager.classes',
-        'plugin.finance_manager.student_fees',
-        'plugin.finance_manager.result_remarks',
-        'plugin.finance_manager.student_annual_position_on_class_demarcations',
-        'plugin.finance_manager.student_annual_positions',
-        'plugin.finance_manager.student_annual_results',
-        'plugin.finance_manager.student_annual_subject_position_on_class_demarcations',
-        'plugin.finance_manager.student_annual_subject_positions',
-        'plugin.finance_manager.student_class_counts',
-        'plugin.finance_manager.student_general_remarks',
-        'plugin.finance_manager.student_publish_results',
-        'plugin.finance_manager.student_result_pins',
-        'plugin.finance_manager.student_termly_position_on_class_demarcations',
-        'plugin.finance_manager.student_termly_positions',
-        'plugin.finance_manager.student_termly_results',
-        'plugin.finance_manager.student_termly_subject_position_on_class_demarcations',
-        'plugin.finance_manager.student_termly_subject_positions',
-        'plugin.finance_manager.students_affective_disposition_scores',
-        'plugin.finance_manager.students_psychomotor_skill_scores',
-        'plugin.finance_manager.subject_class_averages'
     ];
 
     /**

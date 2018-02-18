@@ -1,6 +1,10 @@
 <?php
 namespace FinanceManager\Test\TestCase\Model\Table;
 
+use Cake\I18n\Date;
+use Cake\I18n\FrozenTime;
+use Cake\I18n\Time;
+use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use FinanceManager\Model\Table\FeeCategoriesTable;
@@ -26,7 +30,9 @@ class FeeCategoriesTableTest extends TestCase
     public $fixtures = [
         'plugin.finance_manager.fee_categories',
         'plugin.finance_manager.fees',
-        'plugin.finance_manager.student_fee_payments'
+        'plugin.finance_manager.students',
+        'plugin.finance_manager.student_fees',
+        'plugin.finance_manager.student_fee_payments',
     ];
 
     /**
@@ -54,22 +60,108 @@ class FeeCategoriesTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
+     * Test findIncomeByFeeCategories method
      *
      * @return void
      */
-    public function testInitialize()
+    public function testFindIncomeByFeeCategories()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $expected = [
+            [
+                'id' => 1,
+                'type' => 'School Fees',
+                'income_amount' => 0
+            ]
+        ];
+        $this->assertArraySubset($expected,$this->FeeCategories->findIncomeByFeeCategories());
     }
 
     /**
-     * Test validationDefault method
+     * Test deleteFeeCategory method
      *
      * @return void
      */
-    public function testValidationDefault()
+    public function testDeleteFeeCategory()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $fee_category = new Entity(['id'=>1]);
+        $this->assertNotTrue($this->FeeCategories->deleteFeeCategory($fee_category));
+    }
+
+    /**
+     * Test getIncomeByFeeCategories method
+     *
+     * @return void
+     */
+    public function testGetIncomeByFeeCategories()
+    {
+        $postData = ['query' => 'year'];
+        $expected = [
+            0 => [
+                'id' => 1,
+                'type' => 'School Fees',
+                'student_fee_payments' => [
+                    0 => [
+                        'id' => 1,
+                        'fee_category_id' => 1,
+                        'amount_paid' => 1000,
+                        'created' => new FrozenTime('2018-02-13 21:21:02'),
+                    ]
+                ]
+            ],
+            1 => [
+                'id' => 2,
+                'type' => 'Damage',
+                'student_fee_payments' => [
+                    0 => [
+                        'id' => 2,
+                        'fee_category_id' => 2,
+                        'amount_paid' => 1000,
+                        'created' => new FrozenTime('2018-02-13 21:21:02'),
+                    ]
+                ]
+            ],
+        ];
+        $this->assertEquals($expected,$this->FeeCategories->getIncomeByFeeCategories($postData));
+    }
+
+    /**
+     * Test getIncomeByFeeCategoriesWithDateRange method
+     *
+     * @return void
+     */
+    public function testGetIncomeByFeeCategoriesWithDateRange()
+    {
+        $postData = [
+            'query' => 'custom',
+            'start_date' => '12/30/2017',
+            'end_date' => '02/16/2018',
+        ];
+        $expected = [
+            0 => [
+                'id' => 1,
+                'type' => 'School Fees',
+                'student_fee_payments' => [
+                    0 => [
+                        'id' => 1,
+                        'fee_category_id' => 1,
+                        'amount_paid' => 1000,
+                        'created' => new FrozenTime('2018-02-13 21:21:02'),
+                    ]
+                ]
+            ],
+            1 => [
+                'id' => 2,
+                'type' => 'Damage',
+                'student_fee_payments' => [
+                    0 => [
+                        'id' => 2,
+                        'fee_category_id' => 2,
+                        'amount_paid' => 1000,
+                        'created' => new FrozenTime('2018-02-13 21:21:02'),
+                    ]
+                ]
+            ],
+        ];
+        $this->assertEquals($expected,$this->FeeCategories->getIncomeByFeeCategoriesWithDateRange(new Date($postData['start_date']),(new Time($postData['end_date']))->addHours(23)->addMinutes(59)));
     }
 }

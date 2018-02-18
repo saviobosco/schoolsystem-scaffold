@@ -58,26 +58,31 @@ class StudentsFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => '592d42cd-80a3-4425-86dc-108bf81f4b4d',
-            'first_name' => 'Lorem ipsum dolor sit amet',
-            'last_name' => 'Lorem ipsum dolor sit amet',
-            'date_of_birth' => '2018-01-07',
-            'gender' => 'Lorem ipsum dolor sit amet',
-            'state_of_origin' => 'Lorem ipsum dolor sit amet',
-            'religion_id' => 1,
-            'home_residence' => 'Lorem ipsum dolor sit amet',
-            'guardian' => 'Lorem ipsum dolor sit amet',
-            'relationship_to_guardian' => 'Lorem ipsum dolor sit amet',
-            'occupation_of_guardian' => 'Lorem ipsum dolor sit amet',
-            'guardian_phone_number' => 'Lorem ipsum d',
+            'id' => 1000,
+            'first_name' => 'Omebe',
+            'last_name' => 'Johnbosco',
             'class_id' => 1,
-            'class_demarcation_id' => 1,
-            'photo' => 'Lorem ipsum dolor sit amet',
-            'photo_dir' => 'Lorem ipsum dolor sit amet',
-            'created' => '2018-01-07 10:15:46',
-            'modified' => '2018-01-07 10:15:46',
-            'status' => 1,
-            'state_id' => 1
+            'created' => '2018-01-07 13:55:32',
+            'modified' => '2018-01-07 13:55:32',
+            'status' => 1
         ],
+        [
+            'id' => 1005,
+            'first_name' => 'Omebe',
+            'last_name' => 'Ebuka',
+            'class_id' => 1,
+            'created' => '2018-01-07 13:55:32',
+            'modified' => '2018-01-07 13:55:32',
+            'status' => 1
+        ],
+        [
+            'id' => 1006,
+            'first_name' => 'Omebe',
+            'last_name' => 'Ebuka',
+            'class_id' => 6,
+            'created' => '2018-01-07 13:55:32',
+            'modified' => '2018-01-07 13:55:32',
+            'status' => 1
+        ]
     ];
 }

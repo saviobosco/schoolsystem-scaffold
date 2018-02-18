@@ -4,6 +4,8 @@ namespace FinanceManager\Test\TestCase\Model\Table;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use FinanceManager\Model\Table\ReceiptsTable;
+use Cake\Orm\Entity;
+use Cake\I18n\FrozenTime;
 
 /**
  * FinanceManager\Model\Table\ReceiptsTable Test Case
@@ -25,30 +27,14 @@ class ReceiptsTableTest extends TestCase
      */
     public $fixtures = [
         'plugin.finance_manager.receipts',
-        'plugin.finance_manager.students',
-        'plugin.finance_manager.religions',
-        'plugin.finance_manager.classes',
-        'plugin.finance_manager.class_demarcations',
-        'plugin.finance_manager.states',
-        'plugin.finance_manager.student_annual_position_on_class_demarcations',
-        'plugin.finance_manager.student_annual_positions',
-        'plugin.finance_manager.student_annual_results',
-        'plugin.finance_manager.student_annual_subject_position_on_class_demarcations',
-        'plugin.finance_manager.student_annual_subject_positions',
+        'plugin.finance_manager.student_fee_payments',
         'plugin.finance_manager.student_fees',
-        'plugin.finance_manager.student_general_remarks',
-        'plugin.finance_manager.student_publish_results',
-        'plugin.finance_manager.student_result_pins',
-        'plugin.finance_manager.student_termly_position_on_class_demarcations',
-        'plugin.finance_manager.student_termly_positions',
-        'plugin.finance_manager.student_termly_results',
-        'plugin.finance_manager.student_termly_subject_position_on_class_demarcations',
-        'plugin.finance_manager.student_termly_subject_positions',
-        'plugin.finance_manager.students_affective_disposition_scores',
-        'plugin.finance_manager.students_psychomotor_skill_scores',
+        'plugin.finance_manager.students',
+        'plugin.finance_manager.classes',
+        'plugin.finance_manager.fees',
+        'plugin.finance_manager.fee_categories',
+        'plugin.finance_manager.terms',
         'plugin.finance_manager.payments',
-        'plugin.finance_manager.payment_types',
-        'plugin.finance_manager.student_fee_payments'
     ];
 
     /**
@@ -76,32 +62,49 @@ class ReceiptsTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
+     * Test generateReceipt method
      *
      * @return void
      */
-    public function testInitialize()
+    public function testGenerateReceipt()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertInstanceOf(Entity::class,$this->Receipts->generateReceipt('1000','25000'));
     }
 
     /**
-     * Test validationDefault method
+     * Test deleteReceipt method
      *
      * @return void
      */
-    public function testValidationDefault()
+    public function testDeleteReceipt()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->Receipts->deleteReceipt(new Entity(['id'=>3,'total_amount_paid'=>'20000'])));
     }
 
     /**
-     * Test buildRules method
+     * Test getReceiptDetails method
      *
      * @return void
      */
-    public function testBuildRules()
+    public function testGetReceiptDetails()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $expected = [
+            0 => [
+                'id' => 1,
+                'student_fee_id' => 1,
+                'amount_paid' => 1000,
+                'amount_remaining' => 24000,
+                'receipt_id' => 1,
+                'fee_id' => 1,
+                'fee_category_id' => 1,
+                'created' => new FrozenTime('2018-02-13 21:21:02'),
+                'modified' => new FrozenTime('2018-02-13 21:21:02'),
+                'created_by' => '01b552f3-9310-4c4c-8b99-0d9ebe44eb13',
+                'modified_by' => '86740652-16c4-4683-8468-4af7912ae956'
+            ]
+        ];
+        $result = $this->Receipts->getReceiptDetails(1);
+        $this->assertArraySubset($expected,$result);
+        $this->assertEquals(2,count($result));
     }
 }

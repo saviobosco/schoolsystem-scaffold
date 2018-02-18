@@ -19,10 +19,9 @@ class StudentsControllerTest extends IntegrationTestCase
         'plugin.finance_manager.students',
         'plugin.finance_manager.sessions',
         'plugin.finance_manager.classes',
-        'plugin.finance_manager.blocks',
-        'plugin.finance_manager.class_demarcations',
-        'plugin.finance_manager.student_annual_results',
-        'plugin.finance_manager.student_termly_results',
+        'plugin.finance_manager.student_fees',
+        'plugin.finance_manager.fee_categories',
+        'plugin.finance_manager.fees',
     ];
 
     /**
@@ -32,7 +31,10 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public function testIndex()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/finance-manager/students?class_id=1');
+        $this->assertResponseOk();
+        $this->assertResponseContains('Omebe');
+        $this->assertResponseContains('Johnbosco');
     }
 
     /**
@@ -42,36 +44,8 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public function testView()
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test add method
-     *
-     * @return void
-     */
-    public function testAdd()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test edit method
-     *
-     * @return void
-     */
-    public function testEdit()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test delete method
-     *
-     * @return void
-     */
-    public function testDelete()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/finance-manager/students/view/1000');
+        $this->assertResponseOk();
+        $this->assertResponseContains('Omebe Johnbosco');
     }
 }

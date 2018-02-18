@@ -46,8 +46,8 @@ class ReceiptsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'student_id' => 'Lorem ipsum dolor sit amet',
-            'total_amount_paid' => 1.5,
+            'student_id' => '1000',
+            'total_amount_paid' => 20000,
             'created' => '2018-01-07 10:18:32',
             'modified' => '2018-01-07 10:18:32',
             'created_by' => 'a3c15f13-5323-4f5a-a0b1-1b49cfdc65a3',

@@ -47,11 +47,19 @@ class ClassesFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'class' => 'Lorem ipsum dolor sit amet',
+            'class' => 'JSS 1',
             'block_id' => 1,
             'created' => '2018-01-07 10:19:07',
             'modified' => '2018-01-07 10:19:07',
             'no_of_subjects' => 1
         ],
+        [
+            'id' => 6,
+            'class' => 'SSS 3',
+            'block_id' => 1,
+            'created' => '2018-01-07 10:19:07',
+            'modified' => '2018-01-07 10:19:07',
+            'no_of_subjects' => 1
+        ]
     ];
 }
