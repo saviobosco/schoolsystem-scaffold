@@ -61,7 +61,7 @@ use Cake\I18n\Time;
                                         </tr>
                                         <tr>
                                             <th><?= __('Religion') ?></th>
-                                            <td><?= h($student->religion) ?></td>
+                                            <td><?= h(@$religions[$student->religion_id]) ?></td>
                                         </tr>
                                         <tr>
                                             <th><?= __('Home Residence') ?></th>
@@ -70,6 +70,10 @@ use Cake\I18n\Time;
                                         <tr>
                                             <th><?= __('Class') ?></th>
                                             <td><?= $student->class->class ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Class Demarcation') ?></th>
+                                            <td><?= @$student->class_demarcation->name ?></td>
                                         </tr>
                                     </table>
 

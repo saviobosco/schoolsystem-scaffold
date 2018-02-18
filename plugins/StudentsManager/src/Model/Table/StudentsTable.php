@@ -32,7 +32,9 @@ class StudentsTable extends Table
 {
 
     const EVENT_ADDED_STUDENT = 'StudentManager.Model.Students.AddStudent';
-    const EVENT_DELETE_STUDENT = 'StudentManager.Model.Students.AddStudent';
+    const EVENT_DELETED_STUDENT = 'StudentManager.Model.Students.DeleteStudent';
+    const EVENT_DEACTIVATED_STUDENT = 'StudentManager.Model.Students.DeactivatedStudent';
+    const EVENT_ACTIVATED_STUDENT = 'StudentManager.Model.Students.ActivatedStudent';
     /**
      * Initialize method
      *
@@ -68,8 +70,14 @@ class StudentsTable extends Table
         ]);
 
         $this->belongsTo('States',[
-            'className' => 'States',
+            'className' => 'StudentsManager.States',
             'foreignKey' => 'state_id',
+            'joinType' => 'INNER'
+        ]);
+
+        $this->belongsTo('Religions',[
+            'className' => 'StudentsManager.Religions',
+            'foreignKey' => 'religion_id',
             'joinType' => 'INNER'
         ]);
     }
@@ -83,7 +91,8 @@ class StudentsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->allowEmpty('id', 'create')
+            ->requirePresence('id','create')
+            ->notEmpty('id', 'create')
             ->add('id', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
@@ -184,23 +193,13 @@ class StudentsTable extends Table
             ->toArray();
     }
 
-    /***
-     * @param Event $event
-     * @param $data
-     * The function is fired by the cakephp system automatically before a
-     * request data is converted to entities
-     */
-    public function beforeMarshal(Event $event, $data )
-    {
-        if ( !empty($data['date_of_birth'] )) {
-            $data['date_of_birth'] = new Date($data['date_of_birth']); // Converts the birth date Date properly
-        }
-    }
-
     public function deactivateStudent(Student $student )
     {
         $student->status = 0;
-        if ($this->save($student)) {
+        $student = $this->save($student);
+        if ($student) {
+            $event = new Event(self::EVENT_DEACTIVATED_STUDENT,$this,['student'=>$student]);
+            $this->getEventManager()->dispatch($event);
             return true;
         }
         return false;
@@ -209,7 +208,10 @@ class StudentsTable extends Table
     public function activateStudent(Student $student)
     {
         $student->status = 1;
-        if ($this->save($student)) {
+        $student = $this->save($student);
+        if ($student) {
+            $event = new Event(self::EVENT_ACTIVATED_STUDENT,$this,['student'=>$student]);
+            $this->getEventManager()->dispatch($event);
             return true;
         }
         return false;

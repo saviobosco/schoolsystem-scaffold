@@ -77,7 +77,7 @@ class StudentsFixture extends TestFixture
     {
         $faker = Factory::create();
 
-        for($num = 0; $num < 50; $num++) {
+        for($num = 0; $num < 10; $num++) {
             $this->records[] = [
                 'id' => $num,
                 'first_name' => $faker->firstName,

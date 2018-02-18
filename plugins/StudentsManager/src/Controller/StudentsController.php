@@ -9,10 +9,16 @@ use Cake\Datasource\Exception\RecordNotFoundException;
  * @property \StudentsManager\Model\Table\StudentsTable $Students
  * @property \StudentsManager\Model\Table\StatesTable $States
  * @property \StudentsManager\Model\Table\SessionsTable $Sessions
+ * @property \StudentsManager\Model\Table\ReligionsTable $Religions
  */
 class StudentsController extends AppController
 {
 
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadModel('StudentsManager.Religions');
+    }
     /**
      * Index method
      *
@@ -63,9 +69,10 @@ class StudentsController extends AppController
                 $this->redirect(['action' => 'index']);
             }
             $student = $this->Students->get($id, [
-                'contain' => ['Classes']
+                'contain' => ['Classes','ClassDemarcations']
             ]);
-            $this->set('student', $student);
+            $religions = $this->Religions->find('list')->toArray();
+            $this->set(compact('student','religions'));
             $this->set('_serialize', ['student']);
 
         } catch ( RecordNotFoundException $e ) {
@@ -96,11 +103,12 @@ class StudentsController extends AppController
                 $this->Flash->error(__('The student could not be saved. Please, try again.'));
             }
         }
-        $sessions = $this->Sessions->find('list', ['limit' => 200]);
-        $classes = $this->Students->Classes->find('list', ['limit' => 200]);
-        $classDemarcations = $this->Students->ClassDemarcations->find('list', ['limit' => 200]);
+        $sessions = $this->Sessions->find('list');
+        $classes = $this->Students->Classes->find('list');
+        $religions = $this->Religions->find('list');
+        $classDemarcations = $this->Students->ClassDemarcations->find('list');
         $states = $this->States->find('list');
-        $this->set(compact('student', 'sessions', 'classes', 'classDemarcations','states'));
+        $this->set(compact('student', 'sessions', 'classes', 'classDemarcations','states','religions'));
         $this->set('_serialize', ['student']);
     }
 
@@ -131,9 +139,10 @@ class StudentsController extends AppController
                 }
             }
             $states = $this->States->find('list');
-            $classes = $this->Students->Classes->find('list', ['limit' => 200]);
-            $classDemarcations = $this->Students->ClassDemarcations->find('list', ['limit' => 200]);
-            $this->set(compact('student', 'sessions', 'classes', 'classDemarcations','states'));
+            $religions = $this->Religions->find('list');
+            $classes = $this->Students->Classes->find('list');
+            $classDemarcations = $this->Students->ClassDemarcations->find('list');
+            $this->set(compact('student', 'sessions', 'classes', 'classDemarcations','states','religions'));
             $this->set('_serialize', ['student']);
 
         } catch ( RecordNotFoundException $e ) {
@@ -197,7 +206,8 @@ class StudentsController extends AppController
     }
 
     /**
-     * @param id
+     * @param null $id
+     * @return \Cake\Http\Response|null
      * This function is used to activate a student Account
      */
     public function activate($id = null )

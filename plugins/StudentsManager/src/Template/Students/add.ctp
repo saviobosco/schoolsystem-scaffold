@@ -41,11 +41,9 @@
                                 ],['default'=>'female', 'hiddenField'=>false,'label'=>true,'templates'=>['input' => '<input type="{{type}}" name="{{name}}"{{attrs}}/>',]]);
 
 
-                                echo $this->Form->input('date_of_birth',[
-                                    /*'minYear' => 1990,
-                                    'maxYear' => date('Y'),*/
-                                    'id' => 'datepicker-autoClose',
-                                    'type' => 'text',
+                                echo $this->Form->control('date_of_birth',[
+                                    'maxYear' => date('Y') - 5,
+                                    'minYear' => date('Y') - 25,
                                     'templates'=>[
                                         'inputContainer' => '<div class="form-group">{{content}}</div>'
                                         ,'input' => '<input class="form-control" type="{{type}}" name="{{name}}"{{attrs}}/>'
@@ -56,7 +54,7 @@
                         </div>
                         <?php
                         echo $this->Form->input('state_id',['options'=>$states,'label'=>['text'=>'State of Origin']]);
-                        echo $this->Form->input('religion');
+                        echo $this->Form->input('religion_id',['options'=>$religions]);
                         echo $this->Form->input('home_residence');
                         echo $this->Form->input('session_id', ['options' => $sessions,'empty'=>true,'label'=>'Session','required'=>true]);
                         echo $this->Form->input('class_id', ['options' => $classes,'empty'=>'Select Class','required'=>true]);
