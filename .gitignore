@@ -4,3 +4,4 @@
 /logs/*
 .idea
 .env
+/webroot/img/student-pictures/*
