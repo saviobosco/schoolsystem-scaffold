@@ -102,7 +102,7 @@ class StudentFeesController extends AppController
                 $this->Flash->error(__('The student fee could not be deleted. Please, try again.'));
             }
         } catch ( \PDOException $e ) {
-            $this->Flash->error(__('This fee cannot be deleted because a payment has been made for it.'));
+            $this->Flash->error(__($e->getMessage()));
         }
         return $this->redirect($this->request->referer());
     }

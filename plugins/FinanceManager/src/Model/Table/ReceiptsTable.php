@@ -108,9 +108,6 @@ class ReceiptsTable extends Table
 
     public function deleteReceipt(EntityInterface $receipt)
     {
-        if ( (bool) $this->StudentFeePayments->find()->where(['receipt_id'=>$receipt->id])->first()) {
-            throw new \PDOException;
-        }
         $this->delete($receipt);
         return true;
     }
@@ -129,7 +126,6 @@ class ReceiptsTable extends Table
             ->enableHydration(false)
             ->first();
         // getting the student special fees
-        //dd($receipt['student_fee_payments']);
         $specialFees = $this->find('all')->contain([
             'StudentFeePayments.StudentFees'=>function($q){
                 $q->where(['StudentFees.fee_id IS NULL']);

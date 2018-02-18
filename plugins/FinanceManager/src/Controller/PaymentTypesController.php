@@ -35,9 +35,7 @@ class PaymentTypesController extends AppController
      */
     public function view($id = null)
     {
-        $paymentType = $this->PaymentTypes->get($id, [
-            'contain' => ['Payments']
-        ]);
+        $paymentType = $this->PaymentTypes->get($id);
 
         $this->set('paymentType', $paymentType);
         $this->set('_serialize', ['paymentType']);

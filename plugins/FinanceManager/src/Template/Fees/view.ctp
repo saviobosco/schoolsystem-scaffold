@@ -8,7 +8,7 @@ $this->assign('title','View Fee');
 ?>
 <div class="m-b-15">
     <?= $this->Html->link('Get Fee Defaulters',['controller'=>'FeesDefaulters','action'=>'view',$fee->id],['class'=>'btn btn-danger m-r-15']) ?>
-    <?= $this->Html->link('Get Fees Complete Students',['controller'=>'FeesComplete','action'=>'index',$fee->id],['class'=>'btn btn-success m-r-15']) ?>
+    <?= $this->Html->link('Get Fees Complete Students',['controller'=>'FeesComplete','action'=>'view',$fee->id],['class'=>'btn btn-success m-r-15']) ?>
 </div>
 <table class="table table-responsive">
     <tr>

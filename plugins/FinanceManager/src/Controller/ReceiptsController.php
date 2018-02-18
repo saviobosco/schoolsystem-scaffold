@@ -30,29 +30,18 @@ class ReceiptsController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => [
-                'Students' => [
-                    'fields'=>[
-                        'id',
-                        'first_name',
-                        'last_name'
-                    ]
-                ],
+        $query = $this->Receipts->find('all')
+            ->contain([
+                'Students'=>function ($q) {
+                $q->select(['id','first_name','last_name']);
+                return $q;
+            },
                 'Payments',
-                'CreatedByUser'=>[
-                    'fields'=>[
-                        'id',
-                        'first_name',
-                        'last_name'
-                    ]
-                ]
-            ],
-            'order' => [
-                'created' => 'ASC'
-            ]
-        ];
-        $receipts = $this->paginate($this->Receipts);
+                'CreatedByUser' => function ($q) {
+                    return $q->select(['id','first_name','last_name']);
+                }
+            ])->orderDesc('Receipts.id');
+        $receipts = $this->paginate($query);
         $this->set(compact('receipts'));
         $this->set('_serialize', ['receipts']);
     }

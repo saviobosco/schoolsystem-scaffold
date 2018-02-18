@@ -25,11 +25,11 @@ $this->assign('title','View Receipt');
     </tr>
     <tr>
         <th scope="row"><?= __('Created By') ?></th>
-        <td><?= h($receipt->created_by_user->first_name.' '.$receipt->created_by_user->last_name) ?></td>
+        <td><?= @h($receipt->created_by_user->first_name.' '.$receipt->created_by_user->last_name) ?></td>
     </tr>
     <tr>
         <th scope="row"><?= __('Last Modified By') ?></th>
-        <td><?= h($receipt->modified_by_user->first_name.' '.$receipt->modified_by_user->last_name) ?></td>
+        <td><?= @h($receipt->modified_by_user->first_name.' '.$receipt->modified_by_user->last_name) ?></td>
     </tr>
     <tr>
         <td> <?= __('Payment Made by') ?> </td>

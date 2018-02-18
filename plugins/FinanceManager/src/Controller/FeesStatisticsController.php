@@ -41,8 +41,10 @@ class FeesStatisticsController extends AppController
     public function query()
     {
         $getQuery = $this->request->getQuery();
-        $fees = $this->Fees->queryFeesTable($getQuery);
-        $feeCategories = $this->Fees->getFeeCategoriesData();
+        if ( !empty($getQuery)) {
+            $fees = $this->Fees->queryFeesTable($getQuery);
+            $feeCategories = $this->Fees->getFeeCategoriesData();
+        }
         $terms = $this->Fees->Terms->find('list')->toArray();
         $classes = $this->Fees->Classes->find('list')->toArray();
         $sessions = $this->Fees->Sessions->find('list')->toArray();

@@ -95,24 +95,6 @@ class FeesController extends AppController
         }
     }
 
-    protected function createNewFee($fee)
-    {
-        $postData = $this->request->getData();
-        $fee = $this->Fees->patchEntity($fee, $this->request->getData());
-        // check if fee exists
-        if ( $this->Fees->checkIfFeeExistingForTermClassSession($fee)) {
-            return __(' A fee for the specified parameters already exists');
-        }
-        $fee = $this->Fees->createFee($fee);
-        if ($fee) {
-            if ( $postData['create_students_records']) {
-                $this->Fees->createStudentsFeeRecordByClass($fee->id,$fee->class_id);
-            }
-            return __('The fee has been successfully created.');
-        }
-        return __('The fee could not be created. Please, try again.');
-    }
-
     /**
      * Edit method
      *

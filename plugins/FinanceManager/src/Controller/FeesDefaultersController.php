@@ -24,10 +24,8 @@ class FeesDefaultersController extends AppController
             $feeDefaulters = $this->Fees->getFeeDefaulters($getQuery);
             $students = $this->Fees->getStudentsData();
         }
-        $compulsoryFees = null;
-        if ( !empty($getQuery['percentage'])) {
-            $compulsoryFees = $this->Fees->getCompulsoryFeesByParameters($getQuery);
-        }
+        $compulsoryFees = $this->Fees->getCompulsoryFeesByParameters($getQuery);
+
         $terms = $this->Fees->Terms->find('list')->toArray();
         $classes = $this->Fees->Classes->find('list')->toArray();
         $sessions = $this->Fees->Sessions->find('list')->toArray();

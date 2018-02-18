@@ -16,7 +16,7 @@ $this->assign('title','Fees Defaulters');
             <?= $this->Form->control('session_id',['empty' => 'All','options' => $sessions,'class'=>'form-control','data-select-id'=>'school','label'=>['text'=>' Change Session '],'value'=>($this->request->getQuery('session_id')) ? $this->request->getQuery('session_id') : '']); ?>
             <?= $this->Form->control('class_id',['empty' => 'All','options' => $classes,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Class'],'value'=>($this->request->getQuery('class_id') ? $this->request->getQuery('class_id') : '')]); ?>
             <?= $this->Form->control('term_id',['empty' => 'All','options' => $terms,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Term'],'value'=>($this->request->getQuery('term_id') ? $this->request->getQuery('term_id') : '' ) ]); ?>
-            <?= $this->Form->control('percentage',['options' => [''=>'Empty',25=>'25%',50=>'50%',75=>'75%'],'class'=>'form-control','label'=>['text'=>'Owing Percentage'],'value'=>($this->request->getQuery('percentage')) ? $this->request->getQuery('percentage') :'' ]); ?>
+            <?= $this->Form->control('percentage',['options' => [''=>'Empty',25=>'25%',50=>'50%',75=>'75%'],'class'=>'form-control','label'=>['text'=>'Percentage Owing'],'value'=>($this->request->getQuery('percentage')) ? $this->request->getQuery('percentage') :'' ]); ?>
             <?= $this->Form->submit(__('change'),[
                 'class'=>'btn btn-primary']) ?>
         </div>
@@ -30,19 +30,16 @@ $this->assign('title','Fees Defaulters');
             <td> <?= ($this->request->getQuery('class_id')) ? @$classes[$this->request->getQuery('class_id')] : 'All' ?> </td>
             <th> Term </th>
             <td> <?= ($this->request->getQuery('term_id')) ? @$terms[$this->request->getQuery('term_id')] : 'All' ?> </td>
-            <th> Owing Percentage </th>
+            <th> Percentage Owing </th>
             <td> <?= ($this->request->getQuery('percentage')) ? $this->request->getQuery('percentage').'%' : 'None' ?> </td>
+        </tr>
+        <tr>
+            <td> Total Amount </td>
+            <td colspan="3"> <?= $compulsoryFees ?> </td>
         </tr>
     </table>
 <?php
 $getQuery = $this->request->getQuery();
-if ( $compulsoryFees ) {
-    $feeCollection = new \Cake\Collection\Collection($compulsoryFees);
-    $feesTotal = $feeCollection->sumOf(function ($data) {
-        // if $data->amount_remaining is set return it else return $data->fee->amount
-        return  $data['amount'];
-    });
-}
 ?>
 <?php if ( $feeDefaulters ) : ?>
     <table id="data-table" class="table table-bordered table-responsive">
@@ -50,57 +47,26 @@ if ( $compulsoryFees ) {
         <tr>
             <th> Admission Number</th>
             <th> Name </th>
+            <th> Class</th>
             <th> Total </th>
         </tr>
         </thead>
         <tbody>
-        <?php foreach($feeDefaulters as $defaulter => $details ) : ?>
-            <?php
-            $collection = new \Cake\Collection\Collection($details);
-            $total = $collection->sumOf(function ($data) {
-                // if $data->amount_remaining is set return it else return $data->fee->amount
-                return ($data['amount_remaining']) ? $data['amount_remaining']  : $data['fee']['amount'];
-            });
-            if (!empty($getQuery['percentage'])) {
-                // make some calculations
-                // output the required result
-
-                $studentOwingPercentage = round($total / $feesTotal * 100 );
-                //debug('total '.$total);
-                //debug('total Fees to Pay '.$feesTotal);
-                //debug($studentOwingPercentage);
-                ?>
-                <?php if ( $studentOwingPercentage >= $getQuery['percentage'] ) : ?>
-                    <tr>
-                        <td>
-                            <?= $defaulter ?>
-                        </td>
-                        <td>
-                            <?= $students[$defaulter] ?>
-                        </td>
-                        <td>
-                            <?php
-                            echo $this->Currency->displayCurrency($total);
-                            ?>
-                        </td>
-                    </tr>
-                <?php endif; ?>
-
-            <?php } else {  ?>
-                <tr>
-                    <td>
-                        <?= $defaulter ?>
-                    </td>
-                    <td>
-                        <?= $students[$defaulter] ?>
-                    </td>
-                    <td>
-                        <?php
-                        echo $this->Currency->displayCurrency($total);
-                        ?>
-                    </td>
-                </tr>
-            <?php } ?>
+        <?php foreach($feeDefaulters as $defaulter ) : ?>
+            <tr>
+                <td>
+                    <?= $defaulter['student_id'] ?>
+                </td>
+                <td>
+                    <?= $students[$defaulter['student_id']] ?>
+                </td>
+                <td>
+                    <?= $classes[$defaulter['class_id']] ?>
+                </td>
+                <td>
+                    <?= $this->Currency->displayCurrency($defaulter['total']); ?>
+                </td>
+            </tr>
         <?php endforeach; ?>
         </tbody>
     </table>

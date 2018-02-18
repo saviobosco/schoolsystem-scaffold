@@ -16,5 +16,6 @@ class AppController extends BaseController
         parent::initialize();
         // for the footprint
         $this->_userModel = 'UsersManager.Accounts';
+        $this->loadComponent('Csrf');
     }
 }

@@ -6,7 +6,7 @@
 $this->extend('/Common/view');
 $this->assign('title','Receipts');
 ?>
-<table id="data-table" class="table table-responsive">
+<table id="data-tabl" class="table table-responsive">
     <thead>
     <tr>
         <th scope="col"><?= h('Ref #') ?></th>

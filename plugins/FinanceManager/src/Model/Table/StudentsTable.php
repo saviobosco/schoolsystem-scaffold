@@ -161,16 +161,6 @@ class StudentsTable extends Table
         }
     }
 
-
-    public function deleteStudent(EntityInterface $student )
-    {
-        if ( (bool)$this->StudentFees->find()->where(['student_id'=>$student->id])->first() ) {
-            throw new \PDOException;
-        }
-        $this->delete($student);
-        return true;
-    }
-
     /**
      * @param $student_id
      * @param array $queryData
@@ -237,7 +227,6 @@ class StudentsTable extends Table
             }
         ])->where(['Receipts.id'=>$receipt_id])->enableHydration(false)->first();
         // getting the student special fees
-        //dd($receipt['student_fee_payments']);
         $specialFees = $this->Receipts->find('all')->contain([
             'StudentFeePayments.StudentFees'=>function($q){
                 $q->where(['StudentFees.fee_id IS NULL']);
@@ -251,9 +240,19 @@ class StudentsTable extends Table
 
     public function getStudentsWithId( $id )
     {
-        return $this->find('all')->contain(['Classes'])->where(['Students.id'=>$id])->toArray();
+        return $this->find('all')
+            ->select(['Students.id','Students.first_name','Students.last_name'])
+            ->contain(['Classes'=>function($q){ $q->select(['Classes.id','Classes.class']); return $q;}])
+            ->where(['Students.id'=>$id])
+            ->enableHydration(false)
+            ->toArray();
     }
 
+    /**
+     * @param $student_id
+     * @return array
+     * this function is used to return the student arrears
+     */
     public function getStudentArrears($student_id)
     {
         return $studentFees = $this->StudentFees->find('all')

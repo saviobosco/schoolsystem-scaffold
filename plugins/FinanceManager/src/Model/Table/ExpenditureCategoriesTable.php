@@ -68,10 +68,6 @@ class ExpenditureCategoriesTable extends Table
 
     public function deleteExpenditureCategory(EntityInterface $expenditureCategory)
     {
-        if ((bool)$this->Expenditures->find()->where(['expenditure_category_id'=>$expenditureCategory->id])->first()) {
-            throw new \PDOException;
-        }
-        $this->delete($expenditureCategory);
-        return true;
+        return $this->delete($expenditureCategory);
     }
 }

@@ -89,30 +89,34 @@ $this->assign('title','Payment Record');
 
 <div class="related">
     <h4><?= __(' Payment Records ') ?></h4>
-    <?php if (!empty($student['student_fees'])): ?>
+    <?php if (!empty($studentFeePayments)): ?>
         <table class="table table-bordered table-responsive " >
             <tr>
                 <th scope="col"><?= __('Fees') ?></th>
-                <th scope="col"><?= __('Amount') ?></th>
+                <th scope="col"><?= __('Amount Paid') ?></th>
                 <th scope="col"><?= __('Amount Remaining') ?></th>
                 <th scope="col"><?= __('Class') ?></th>
                 <th scope="col"><?= __('Session') ?></th>
+                <th scope="col"><?= __('Receipt Id') ?></th>
                 <th scope="col"><?= __('Created On') ?></th>
             </tr>
 
-            <?php foreach ($student['student_fees'] as $studentFees): /* looping through the studentFees */?>
-                <?php foreach($studentFees['student_fee_payments'] as $studentFeePayment) : /* looping through the studentFeePayment */ ?>
-                    <tr>
-                        <td><?= h($studentFees['fee']['fee_category']['type']) ?></td>
-                        <td><?= $this->Currency->displayCurrency($studentFeePayment['amount_paid']) ?></td>
-                        <td><?= $this->Currency->displayCurrency($studentFeePayment['amount_remaining']) ?></td>
-                        <td><?= h($classes[$studentFees['fee']['class_id']]) ?></td>
-                        <td><?= h($sessions[$studentFees['fee']['session_id']] ).'--'.h('('.($studentFees['fee']['term_id'])? $terms[$studentFees['fee']['term_id']] : '' .')' ) ?></td>
-                        <td><?= $studentFeePayment['created'] ?></td>
-
-                    </tr>
-                <?php endforeach; ?>
-
+            <?php foreach($studentFeePayments as $studentFeePayment) : /* looping through the studentFeePayment */ ?>
+                <tr>
+                    <td><?php
+                        if ( !empty($studentFeePayment['student_fee']['fee_id'])) {
+                            echo $studentFeePayment['student_fee']['fee']['fee_category']['type'];
+                        } else {
+                            echo $studentFeePayment['student_fee']['Purpose'];
+                        }
+                        ?></td>
+                    <td><?= $this->Currency->displayCurrency($studentFeePayment['amount_paid']) ?></td>
+                    <td><?= $this->Currency->displayCurrency($studentFeePayment['amount_remaining']) ?></td>
+                    <td><?= h(@$classes[$studentFeePayment['student_fee']['fee']['class_id']]) ?></td>
+                    <td><?= h(@$sessions[$studentFeePayment['student_fee']['fee']['session_id']] ).'--'.h('('.(@$studentFeePayment['student_fee']['fee']['term_id'])? @$terms[$studentFeePayment['student_fee']['fee']['term_id']] : '' .')' ) ?></td>
+                    <td><?= h($studentFeePayment['receipt_id']) ?></td>
+                    <td><?= (new Time($studentFeePayment['created']))->format('Y-m-d H:i:s A') ?></td>
+                </tr>
             <?php endforeach; ?>
         </table>
     <?php endif; ?>
@@ -149,33 +153,3 @@ $this->assign('title','Payment Record');
         ]
     ) ?>
 </div>
-
-<!-- Modal -->
-<div class="modal fade" id="paymentDetailModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // using the modal to load the payment details
-    $("#paymentDetailModal").on('shown.bs.modal', function () { // before the modal is fully loaded
-        // get the payment id
-        console.log(event);
-    });
-
-</script>

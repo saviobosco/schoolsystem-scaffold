@@ -77,52 +77,47 @@ class FeeCategoriesTable extends Table
     {
         return $this->find('all')
             ->select(['id','type','income_amount'])
+            ->enableHydration(false)
             ->toArray();
     }
 
     public function deleteFeeCategory(EntityInterface $feeCategory)
     {
-        if ((bool)$this->Fees->find()->where(['fee_category_id' => $feeCategory->id])->first()) {
-            throw new \PDOException;
-        }
-        $this->delete($feeCategory);
-        return true;
+        return $this->delete($feeCategory);
     }
 
     public function getIncomeByFeeCategories($postData)
     {
-        $query = $this->find('all')->select(['id','type']);
-
-        switch ($postData['query'] ) {
-            case 'week':
-                $query->contain(['StudentFeePayments' => function($q) use ($postData){
-                    return $q->select(['id','fee_category_id','amount_paid'])
-                        ->where(['WEEK(created,1)'=>(new Date())->toWeek()]);
-                }]);
-                break;
-            case 'month':
-                $query->contain(['StudentFeePayments' => function($q) use ($postData){
-                    return $q->select(['id','fee_category_id','amount_paid'])
-                        ->where(['MONTH(created)'=>(new Date())->month]);
-                }]);
-                break;
-            case 'year':
-                $query->contain(['StudentFeePayments' => function($q) use ($postData){
-                    return $q->select(['id','fee_category_id','amount_paid'])
-                        ->where(['YEAR(created)'=>(new Date())->year]);
-                }]);
-                break;
-            default:
-                // perform nothing
-        }
-        return $query->enableHydration(false)->toArray();
+        $query = $this->find('all')
+            ->select(['id','type'])
+            ->enableHydration(false)
+            ->contain(['StudentFeePayments'=> function($q) use ($postData){
+                $q->select(['id','fee_category_id','amount_paid','created']);
+                switch ($postData['query']) {
+                    case 'week':
+                        $q->where(['WEEK(created,1)'=>(new Date())->toWeek()]);
+                        return $q;
+                        break;
+                    case 'month':
+                        $q->where(['MONTH(created)'=>(new Date())->month]);
+                        return $q;
+                        break;
+                    case 'year':
+                        $q->where(['YEAR(created)'=>(new Date())->year]);
+                        return $q;
+                        break;
+                    default: // do nothing
+                        return $q;
+                }
+            }]);
+        return $query->toArray();
     }
 
     public function getIncomeByFeeCategoriesWithDateRange($startDate,$endDate)
     {
         $query = $this->find('all')->select(['id','type'])
             ->contain(['StudentFeePayments' => function ($q) use ($startDate,$endDate){
-                return $q->select(['id','fee_category_id','amount_paid'])
+                return $q->select(['id','fee_category_id','amount_paid','created'])
                     ->where(function ($exp,$q) use ($startDate,$endDate) {
                         return $exp ->addCase(
                             [

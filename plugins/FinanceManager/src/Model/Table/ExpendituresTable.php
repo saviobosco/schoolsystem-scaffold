@@ -124,9 +124,19 @@ class ExpendituresTable extends Table
         }
     }
 
+    /**
+     * @param $data
+     * @return array
+     * This function returns the expenditure analysis using the passed value
+     * [week, month, year ]
+     */
     public function getExpenditureWithPassedValue($data)
     {
-        $query = $this->find()->contain(['ExpenditureCategories'=>function($q){ return $q->select(['id','type']);}])->select(['id','expenditure_category_id','purpose','date','amount'])->enableHydration(false);
+        $query = $this->find()
+            ->enableHydration(false)
+        ->select(['Expenditures.id','Expenditures.expenditure_category_id','Expenditures.purpose','Expenditures.date','Expenditures.amount'])
+            ->contain(['ExpenditureCategories'=>function($q){
+                return $q->select(['ExpenditureCategories.id','ExpenditureCategories.type']);}]);
         // checking which value was passed to query
         switch ($data['query'] ) {
             case 'week':
@@ -146,12 +156,15 @@ class ExpendituresTable extends Table
 
     public function getExpenditureWithDateRange($startDate,$endDate)
     {
-        $query = $this->find()->contain(['ExpenditureCategories'=>function($q){ return $q->select(['id','type']);}])->select(['id','expenditure_category_id','purpose','date','amount'])->enableHydration(false)
+        $query = $this->find()
+            ->enableHydration(false)
+            ->select(['Expenditures.id','Expenditures.expenditure_category_id','Expenditures.purpose','Expenditures.date','Expenditures.amount'])
+            ->contain(['ExpenditureCategories'=>function($q){
+                return $q->select(['ExpenditureCategories.id','ExpenditureCategories.type']);}])
             // checking which value was passed to query
             ->where(function ($exp,$q) use ($startDate,$endDate) {
                 return $exp ->addCase(
                     [
-                        // todo : refactor this particular section
                         $q->newExpr()->between('Expenditures.created',$startDate,$endDate)
                     ]
                 );
@@ -161,7 +174,12 @@ class ExpendituresTable extends Table
 
     public function getExpenditureWithPassedValueArrangedByExpenditureCat($data)
     {
-        $query = $this->find()->contain(['ExpenditureCategories'=>function($q){ return $q->select(['id','type']);}])->select(['id','expenditure_category_id','purpose','date','amount'])->enableHydration(false);
+        $query = $this->find()
+            ->enableHydration(false)
+            ->select(['Expenditures.expenditure_category_id', 'Expenditures.amount'])
+            ->contain(['ExpenditureCategories' => function ($q) {
+                return $q->select(['ExpenditureCategories.id', 'ExpenditureCategories.type']);
+            }]);
         // checking which value was passed to query
         switch ($data['query'] ) {
             case 'week':
@@ -181,7 +199,12 @@ class ExpendituresTable extends Table
 
     public function getExpenditureWithDateRangeArrangedByExpenditureCat($startDate,$endDate)
     {
-        $query = $this->find()->contain(['ExpenditureCategories'=>function($q){ return $q->select(['id','type']);}])->select(['id','expenditure_category_id','purpose','date','amount'])->enableHydration(false)
+        $query = $this->find()
+            ->enableHydration(false)
+            ->select(['Expenditures.expenditure_category_id','Expenditures.amount'])
+            ->contain(['ExpenditureCategories'=>function($q){
+                return $q->select(['ExpenditureCategories.id','ExpenditureCategories.type']);
+            }])
             // checking which value was passed to query
             ->where(function ($exp,$q) use ($startDate,$endDate) {
                 return $exp ->addCase(

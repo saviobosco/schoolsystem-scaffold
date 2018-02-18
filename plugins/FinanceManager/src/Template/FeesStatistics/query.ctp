@@ -11,7 +11,15 @@ $this->extend('/Common/view');
 $this->assign('title','Fees Query');
 ?>
     <div class="m-b-15">
-        <?= $this->element('searchParametersSessionClassTerm'); ?>
+        <?= $this->Form->create('',['class'=>'form-inline','type'=>'GET']) ?>
+        <div class="form-group">
+            <?= $this->Form->control('session_id',['empty' => 'All','options' => $sessions,'class'=>'form-control','data-select-id'=>'school','label'=>['text'=>' Change Session '],'value'=>($this->request->getQuery('session_id')) ? $this->request->getQuery('session_id') : '']); ?>
+            <?= $this->Form->control('class_id',['empty' => 'All','options' => $classes,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Class'],'value'=>($this->request->getQuery('class_id') ? $this->request->getQuery('class_id') : '')]); ?>
+            <?= $this->Form->control('term_id',['empty' => 'All','options' => $terms,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Term'],'value'=>($this->request->getQuery('term_id') ? $this->request->getQuery('term_id') : '' ) ]); ?>
+            <?= $this->Form->submit(__('change'),[
+                'class'=>'btn btn-primary']) ?>
+        </div>
+        <?= $this->Form->end() ?>
     </div>
     <table class="table table-bordered">
         <tr>
@@ -24,87 +32,59 @@ $this->assign('title','Fees Query');
         </tr>
     </table>
 
-<?php if ( $fees ) : ?>
-    <table class="table table-bordered table-responsive">
-        <thead>
-        <tr>
-            <th> Fee Category </th>
-            <th> Expected Income </th>
-            <th> Amount Received </th>
-            <th> Amount Remaining </th>
-            <th> Percentage Received </th>
-            <th> Percentage Remaining </th>
-            <th> Total Number of Students </th>
-            <th> Total Number of Students Remaining </th>
-            <th> Total Number of Students Paid </th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach($fees as $feeCategory => $details ) : ?>
-            <?php $collection = new \Cake\Collection\Collection($details); ?>
+<table class="table table-bordered table-responsive">
+    <thead>
+    <tr>
+        <th> Fee Category </th>
+        <th> Amount</th>
+        <th> Expected Income </th>
+        <th> Amount Received </th>
+        <th> Amount Remaining </th>
+        <th> Percentage Received </th>
+        <th> Percentage Remaining </th>
+        <th> Total Number of Students </th>
+        <th> Total Number of Students Paid </th>
+        <th> Total Number of Students Remaining </th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php if ( isset($fees) && !empty($fees) ) : ?>
+
+        <?php foreach($fees as $fee_category_id => $details ) : ?>
             <tr>
                 <td>
-                    <?= $feeCategories[$feeCategory] ?>
+                    <?= $feeCategories[$fee_category_id] ?>
                 </td>
                 <td>
-                    <?php
-                    $expectedIncome = $collection->sumOf(function ($data) {
-                        return $data['income_amount_expected'];
-                    });
-                    echo $this->Currency->displayCurrency($expectedIncome);
-                    ?>
+                    <?= $this->Currency->displayCurrency($details['amount']) ?>
                 </td>
                 <td>
-                    <?php
-                    $amountReceived = $collection->sumOf(function ($data) {
-                        return $data['amount_earned'];
-                    });
-                    echo $this->Currency->displayCurrency($amountReceived);
-                    ?>
+                    <?= $this->Currency->displayCurrency($details['expectedIncome']) ?>
                 </td>
                 <td>
-                    <?php
-                    $amountRemaining = $expectedIncome - $amountReceived ;
-                    echo $this->Currency->displayCurrency($amountRemaining);
-                    ?>
+                    <?= $this->Currency->displayCurrency($details['amountReceived']); ?>
                 </td>
                 <td>
-                    <?php
-                    $percentagePaid = $amountReceived / $expectedIncome * 100 ;
-                    echo \Cake\I18n\Number::precision($percentagePaid,2).'%';
-                    ?>
+                    <?= $this->Currency->displayCurrency($details['amountRemaining']); ?>
                 </td>
                 <td>
-                    <?php
-                    $percentageRemaining = $amountRemaining / $expectedIncome * 100 ;
-                    echo \Cake\I18n\Number::precision($percentageRemaining,2).'%';
-                    ?>
+                    <?= $details['percentageReceived'].'%'; ?>
                 </td>
                 <td>
-                    <?php
-                    $number_of_students = $collection->sumOf(function ($data) {
-                        return $data['number_of_students'];
-                    });
-                    echo $number_of_students;
-                    ?>
+                    <?= $details['percentageRemaining'].'%'; ?>
                 </td>
                 <td>
-                    <?php
-                    $number_of_students_remaining = $collection->sumOf(function ($data) {
-                        return count($data['student_fees']);
-                    });
-                    echo $number_of_students_remaining.' ('.\Cake\I18n\Number::precision($number_of_students_remaining / $number_of_students * 100,2) .'%)';
-                    ?>
+                    <?= $details['numberOfStudents']; ?>
                 </td>
                 <td>
-                    <?php
-                    $number_of_students_paid = $number_of_students - $number_of_students_remaining;
-                    echo $number_of_students_paid.' ('.\Cake\I18n\Number::precision($number_of_students_paid / $number_of_students * 100,2) .'%)';
-                    ?>
+                    <?= $details['numberOfStudentsPaid'] ?>
                 </td>
-
+                <td>
+                    <?= $details['numberOfStudentsRemaining'] ?>
+                </td>
             </tr>
         <?php endforeach; ?>
-        </tbody>
-    </table>
-<?php endif; ?>
+    <?php endif; ?>
+    </tbody>
+</table>
+<?= $this->element('selectParameters') ?>

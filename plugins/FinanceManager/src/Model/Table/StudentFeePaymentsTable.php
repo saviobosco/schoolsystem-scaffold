@@ -124,6 +124,7 @@ class StudentFeePaymentsTable extends Table
         $total = 0;
         if ( is_array($paymentInput)) {
             foreach ( $paymentInput as $id => $value ) {
+                $value->amount_paid = str_replace(',','',$value->amount_paid);// removes any comma in the figure
                 if ( !empty(trim($value->amount_paid)) && $value->amount_paid > 0 ) {
                     $paymentOutput[] = $value;
                     $total += $value->amount_paid;
@@ -151,7 +152,6 @@ class StudentFeePaymentsTable extends Table
         // generate receipt
         $receiptDetail = $this->Receipts->generateReceipt($postData['student_id'],$studentPaymentDetails['total']);
         // generate and save payment records
-        $postData['payment']['receipt_id'] = $receiptDetail->id;
         if ($this->savePayment($studentPaymentDetails['paymentData'],$receiptDetail,$postData['payment']) === false) {
             $return['error'] = __('Could not save the payment details please try again.');
             // revert the receipt generated
@@ -163,7 +163,7 @@ class StudentFeePaymentsTable extends Table
     }
 
 
-    public function savePayment(Array $payments,EntityInterface $receipt ,$paymentDetail)
+    public function savePayment(Array $payments,EntityInterface $receipt,$paymentDetail)
     {
         if ( empty($payments)) {
             return false;
@@ -171,6 +171,7 @@ class StudentFeePaymentsTable extends Table
         // Create payment Record
         $paymentTable = TableRegistry::get('FinanceManager.Payments');
         $paymentDetail['payment_status'] = 1;
+        $paymentDetail['receipt_id'] = $receipt->id;
         $newEntity = $paymentTable->newEntity($paymentDetail);
         $savedPaymentRecord = $paymentTable->save($newEntity);
         if ($savedPaymentRecord === false ) {
@@ -213,5 +214,37 @@ class StudentFeePaymentsTable extends Table
                 $this->StudentFees->save($studentFees);
             }
         }
+    }
+
+    public function getStudentPaymentRecords($student_id)
+    {
+        $query = $this->find('all')
+            ->enableHydration(false)
+            ->contain([
+                'StudentFees' => function ($q) use ($student_id) {
+                    $q->select(['id', 'student_id', 'fee_id']);
+                    $q->where(['StudentFees.student_id' => $student_id]);
+                    return $q;
+                },
+                'StudentFees.Fees' => function ($q) {
+                    $q->select(['Fees.id', 'Fees.fee_category_id','Fees.session_id','Fees.class_id','Fees.term_id']);
+                    return $q;
+                },
+                'StudentFees.Fees.FeeCategories' => function ($q) {
+                    $q->select(['FeeCategories.id', 'FeeCategories.type']);
+                    return $q;
+                }
+            ]);
+        $specialFeePayments = $this->find('all')
+            ->enableHydration(false)
+            ->contain([
+            'StudentFees'=>function($q){
+                $q->select(['id', 'student_id', 'fee_id','Purpose']);
+                $q->where(['StudentFees.fee_id IS NULL']);
+                return $q;
+            }
+        ])->toArray();
+        $mergedFeesPayments = collection($query->toArray())->append($specialFeePayments);
+        return $mergedFeesPayments->toList();
     }
 }

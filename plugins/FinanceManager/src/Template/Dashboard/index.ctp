@@ -63,7 +63,7 @@
                 </p>
             </div>
             <div class="stats-link">
-                <?= $this->Html->link('View Detail <i class="fa fa-arrow-circle-o-right"></i>',['controller'=>'Sessions','action'=>'index'],['escape'=>false]) ?>
+                <a href="#"> View Detail <i class="fa fa-arrow-circle-o-right"></i> </a>
             </div>
         </div>
     </div>

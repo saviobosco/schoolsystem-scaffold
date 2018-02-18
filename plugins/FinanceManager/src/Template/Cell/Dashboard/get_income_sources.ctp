@@ -15,10 +15,10 @@ $labelMax = count($labels) - 1;
     <?php foreach($incomeSources as $incomeSource ) : ?>
     <tr>
         <td>
-            <?=  $this->Html->link($incomeSource->type,['controller'=>'FeeCategories','action'=>'view',$incomeSource->id],['class'=>$labels[rand(0,$labelMax)] ])  ?>
+            <?=  $this->Html->link($incomeSource['type'],['controller'=>'FeeCategories','action'=>'view',$incomeSource['id']],['class'=>$labels[rand(0,$labelMax)] ])  ?>
         </td>
         <td>
-            <?= $this->Currency->displayCurrency($incomeSource->income_amount) ?>
+            <?= $this->Currency->displayCurrency($incomeSource['income_amount']) ?>
         </td>
     </tr>
     <?php endforeach; ?>

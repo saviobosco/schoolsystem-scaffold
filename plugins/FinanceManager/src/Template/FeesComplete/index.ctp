@@ -10,19 +10,17 @@ $this->Form->setTemplates($formTemplates);
 $this->extend('/Common/view');
 $this->assign('title','Fees Complete');
 ?>
-<div class="m-b-20">
-    <?= $this->element('searchParametersSessionClassTerm'); ?>
-</div>
-
-<?php
-if ( $compulsoryFees ) {
-    $feeCollection = new \Cake\Collection\Collection($compulsoryFees);
-    $feesTotal = $feeCollection->sumOf(function ($data) {
-        // if $data->amount_remaining is set return it else return $data->fee->amount
-        return  $data['amount'];
-    });
-}
-?>
+    <div class="m-b-15">
+        <?= $this->Form->create('', ['class' => 'form-inline', 'type' => 'GET']) ?>
+        <div class="form-group">
+            <?= $this->Form->control('session_id', ['empty' => 'All', 'options' => $sessions, 'class' => 'form-control', 'data-select-id' => 'school', 'label' => ['text' => ' Change Session '], 'value' => ($this->request->getQuery('session_id')) ? $this->request->getQuery('session_id') : '']); ?>
+            <?= $this->Form->control('class_id', ['empty' => 'All', 'options' => $classes, 'class' => 'form-control', 'data-select-id' => 'level', 'label' => ['text' => 'Change Class'], 'value' => ($this->request->getQuery('class_id') ? $this->request->getQuery('class_id') : '')]); ?>
+            <?= $this->Form->control('term_id', ['empty' => 'All', 'options' => $terms, 'class' => 'form-control', 'data-select-id' => 'level', 'label' => ['text' => 'Change Term'], 'value' => ($this->request->getQuery('term_id') ? $this->request->getQuery('term_id') : '')]); ?>
+            <?= $this->Form->submit(__('change'), [
+                'class' => 'btn btn-primary']) ?>
+        </div>
+        <?= $this->Form->end() ?>
+    </div>
     <table class="table table-bordered">
         <tr>
             <th>Session</th>
@@ -37,7 +35,7 @@ if ( $compulsoryFees ) {
                 Total Compulsory Fees
             </th>
             <td colspan="5">
-                <?= @$this->Currency->displayCurrency($feesTotal) ?>
+                <?= @$this->Currency->displayCurrency($compulsoryFees) ?>
             </td>
         </tr>
     </table>
@@ -48,35 +46,26 @@ if ( $compulsoryFees ) {
         <tr>
             <th> Admission Number</th>
             <th> Name </th>
+            <th> Class </th>
             <th> Total </th>
         </tr>
         </thead>
         <tbody>
-        <?php foreach($feeCompleteStudents as $feeCompleteStudent => $details ) : ?>
-            <?php
-            $collection = new \Cake\Collection\Collection($details);
-            ?>
-            <?php
-            $studentTotal = $collection->sumOf(function ($data) {
-                // if $data->amount_remaining is set return it else return $data->fee->amount
-                return  $data['fee']['amount'];
-            });
-            if ( $studentTotal >= $feesTotal ) :
-                ?>
-                <tr>
-                    <td>
-                        <?= $feeCompleteStudent ?>
-                    </td>
-                    <td>
-                        <?= $students[$feeCompleteStudent] ?>
-                    </td>
-                    <td>
-                        <?php
-                        echo $this->Currency->displayCurrency($studentTotal);
-                        ?>
-                    </td>
-                </tr>
-            <?php endif; ?>
+        <?php foreach($feeCompleteStudents as $feeCompleteStudent ) : ?>
+            <tr>
+                <td>
+                    <?= $feeCompleteStudent['student_id'] ?>
+                </td>
+                <td>
+                    <?= $students[$feeCompleteStudent['student_id']] ?>
+                </td>
+                <td>
+                    <?= $classes[$feeCompleteStudent['class_id']] ?>
+                </td>
+                <td>
+                    <?= $this->Currency->displayCurrency($feeCompleteStudent['total']); ?>
+                </td>
+            </tr>
         <?php endforeach; ?>
         </tbody>
     </table>

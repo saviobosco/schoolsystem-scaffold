@@ -58,33 +58,6 @@ class StudentsController extends AppController
         $this->set('_serialize', ['students']);
     }
 
-    public function unActiveStudents()
-    {
-        $this->paginate = [
-            'limit' => 1000,
-            'maxLimit' => 1000,
-            'contain' => ['Classes'],
-            'conditions' => [
-                'Students.status'   => 0,
-            ],
-            // Place the result in ascending order according to the class.
-            'order' => [
-                'class_id' => 'asc'
-            ]
-        ];
-        if ( !empty($this->request->getQuery('class_id'))) {
-            $this->paginate = array_merge_recursive($this->paginate,[
-                'conditions' => [
-                    'Students.class_id' => $this->request->getQuery('class_id')
-                ]
-            ]);
-        }
-        $students = $this->paginate($this->Students);
-        $classes = $this->Students->Classes->find('list',['limit' => 200]);
-        $this->set(compact('students','sessions','classes'));
-        $this->set('_serialize', ['students']);
-    }
-
     /**
      * View method
      *
@@ -133,48 +106,6 @@ class StudentsController extends AppController
             }
             $this->response->body($students->count());
             return $this->response;
-        }
-    }
-
-    public function changeClass()
-    {
-        $students = null;
-
-        if (!empty($this->request->getQuery('class_id'))) {
-            $this->paginate = [
-                'limit' => 1000,
-                'maxLimit' => 1000,
-                'contain' => ['Classes'],
-                'conditions' => [
-                    'Students.status'   => 1,
-                    'Students.class_id' => $this->request->getQuery('class_id')
-                ],
-            ];
-            $students = $this->paginate($this->Students);
-        }
-        $sessions = $this->Sessions->find('list',['limit' => 200]);
-        $classes = $this->Students->Classes->find('list',['limit' => 200]);
-        $this->set(compact('students','sessions','classes'));
-        $this->set('_serialize', ['students']);
-
-        if ( $this->request->is(['patch', 'post', 'put']) ) {
-            // get postData
-            $postData = $this->request->getData();
-            if ( empty($postData['change_class_id'])) {
-                $this->Flash->error(__('Please select a class to change students to .... '));
-                return;
-            }
-            if ( empty($postData['student_ids'])) {
-                $this->Flash->error(__('No Student was selected. Please select a student(s)'));
-                return;
-            }
-            $returnData = $this->Students->changeStudentsClass($postData['change_class_id'],$postData['student_ids']);
-            if ($returnData['success'] ) {
-                $this->Flash->success(__('The selected students class was successfully changed'));
-                return $this->redirect($this->request->referer());
-            } else {
-                $this->Flash->error(__('The specified class and current class are the same.'));
-            }
         }
     }
 }

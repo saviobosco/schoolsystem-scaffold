@@ -65,9 +65,9 @@ class PaymentsTable extends Table
             ->integer('id')
             ->allowEmpty('id', 'create');
 
-        /*$validator
+        $validator
             ->requirePresence('payment_made_by', 'create')
-            ->notEmpty('payment_made_by');*/
+            ->notEmpty('payment_made_by');
 
         $validator
             ->uuid('payment_received_by')
@@ -105,16 +105,14 @@ class PaymentsTable extends Table
         return $rules;
     }
 
-    public function generatePaymentRecord( Array $data,$receipt)
+    public function generatePaymentRecord( Array $data)
     {
-
         $data['payment_status'] = 0;
         $newEntity = $this->newEntity($data);
         $savedPaymentRecord = $this->save($newEntity);
         if ( !$savedPaymentRecord ) {
             return false;
         }
-
         return $savedPaymentRecord;
     }
 

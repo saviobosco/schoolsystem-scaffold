@@ -2,6 +2,7 @@
 namespace FinanceManager\Model\Table;
 
 use Cake\Datasource\EntityInterface;
+use Cake\I18n\Number;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -136,14 +137,9 @@ class FeesTable extends Table
 
     /**
      * @param EntityInterface $fee
-     * @return \App\Model\Entity\Fee|bool
-     * This function creates the fee and returns the fee entity details
+     * @return bool
+     * This function checks if a fee exists
      */
-    public function createFee(EntityInterface $fee)
-    {
-        return $this->save($fee);
-    }
-
     public function checkIfFeeExists(EntityInterface $fee)
     {
         $query = $this->find('all')
@@ -157,7 +153,7 @@ class FeesTable extends Table
             } else {
                 $query->andWhere(['term_id IS NULL']);
             }
-            $query = $query->toArray();
+            $query = $query->first();
         if (!empty($query)) {
             return true ;
         }
@@ -167,10 +163,10 @@ class FeesTable extends Table
     public function addFee($postData)
     {
         if ( 0 === (int)$postData['class_id']){
-            $studentsTable = TableRegistry::get('FinanceManager.Students')->find();
+            $studentsTable = TableRegistry::get('FinanceManager.Students');
             $classes = $this->Classes->find('all');
             foreach($classes as $class) {
-                $studentCounts = $studentsTable->where(['class_id'=>$class->id,'status'=>1])->count();
+                $studentCounts = $studentsTable->find('all')->where(['class_id'=>$class->id,'status'=>1])->count();
                 $fee = $this->newEntity([
                     'fee_category_id'=>$postData['fee_category_id'],
                     'compulsory' => $postData['compulsory'],
@@ -238,77 +234,74 @@ class FeesTable extends Table
         return true;
     }
 
-    // Todo : Review this algorithm later
-    public function createNewFee( EntityInterface $fee)
-    {
-        try {
-            // check if the fee exists
-            $query = $this->find('all')->where([
-                'fee_category_id'=>$fee->fee_category_id,
-                'class_id'=>$fee->class_id,
-                'session_id' => $fee->session_id,
-                ($fee->term_id ) ? 'term_id => '.$fee->term_id : 'term_id IS NULL' // checks if the $fee->term_id is set else return the else statement.
-            ])->toArray();
-            //debug($query); exit;
-            if ( !empty($query)) {
-                return ' Fees already exists ';
-            }
-
-            // save the fee
-            $fee = $this->save($fee);
-            if ($fee) {
-                $this->createStudentsFeeRecordByClass($fee->id,$fee->class_id);
-                return true;
-            }
-            return false;
-        } catch ( \Exception $e ) {
-            return $e->getTraceAsString();
-        }
-
-    }
-
-    public function getFeeDefaulters(Array $data )
+    public function getFeeDefaulters(Array $queryData )
     {
         $query = $this->StudentFees->find('all')
             ->enableHydration(false)
+            ->select(['student_id','fee_id','amount_remaining'])
             ->contain([
-                'Fees',
                 'Students' => function ($q) {
-                    return $q->select(['id','first_name','last_name']);
-                }]);
-        if ( !empty($data['session_id']) ) {
-            $query->contain(['Fees'=> function ($q) use ($data) {
-                return $q->where([
-                    'Fees.session_id' => $data['session_id'],
-                ]);
-            }]);
+                    return $q->select(['id','first_name','last_name','class_id']);
+                },
+                'Fees' => function ($q) use ($queryData) {
+                    $q->select(['amount','compulsory','term_id','class_id','session_id']);
+                    if (!empty($queryData['session_id'])) {
+                        $q->where([
+                            'Fees.session_id' => $queryData['session_id'],
+                        ]);
+                    }
+                    if (!empty($queryData['class_id'])) {
+                        $q->where([
+                            'Fees.class_id' => $queryData['class_id'],
+                        ]);
+                    }
+                    if (!empty($queryData['term_id'])) {
+                        $q->where([
+                            'Fees.term_id' => $queryData['term_id'],
+                        ]);
+                    }
+                    return $q;
+                }
+            ])
+            ->andWhere(['paid'=>0])
+            ->orderAsc('Fees.class_id')
+            ->groupBy('student_id');
+        $defaulters = $query->toArray();
+        $return = [];// initialise a return array
+        if ( isset($queryData['percentage']) && !empty($queryData['percentage'])) {
+            $compulsoryFeesTotal = $this->getCompulsoryFeesByParameters($queryData);
         }
-        if ( !empty($data['class_id']) ) {
-            $query->contain(['Fees'=> function ($q) use ($data) {
-                return $q->where([
-                    'Fees.class_id' => $data['class_id'],
-                ]);
-            }]);
+        foreach ( $defaulters as $defaulterStudent_id => $defaulterDetails)
+        {
+            $collection = collection($defaulterDetails);
+            $totalAmountOwing = $collection->sumOf(function ($data) {
+                return ($data['amount_remaining']) ? $data['amount_remaining']  : $data['fee']['amount'];
+            });
+            // check if percentage is specified and include percentage
+            if ( isset($queryData['percentage']) && !empty($queryData['percentage'])) {
+                $studentOwingPercentage = round($totalAmountOwing / $compulsoryFeesTotal * 100 );
+                if ( $studentOwingPercentage >= $queryData['percentage'] ) {
+                    $return[] = [
+                        'student_id' => $defaulterStudent_id,
+                        'class_id' => $defaulterDetails[0]['student']['class_id'],
+                        'total' => $totalAmountOwing
+                    ];
+                }
+            } else {
+                $return[] = [
+                    'student_id' => $defaulterStudent_id,
+                    'class_id' => $defaulterDetails[0]['student']['class_id'],
+                    'total' => $totalAmountOwing
+                ];
+            }
         }
-        if ( !empty($data['term_id']) ) {
-            $query->contain(['Fees'=> function ($q) use ($data) {
-                return $q->where([
-                    'Fees.term_id' => $data['term_id'],
-                ]);
-            }]);
-        }
-
-        $data = $query->where(['paid'=>0])
-            ->groupBy('student_id')
-            ->toArray();
-
-        return $data;
-
+        return $return;
     }
 
     public function getStudentsData()
     {
         $students = $this->StudentFees->Students->find('all')
+            ->where(['Students.status'=>1])
             ->map(function($row ) {
                 $row->full_name = $row->first_name.' '.$row->last_name;
                 return $row;
@@ -384,48 +377,63 @@ class FeesTable extends Table
                 'Sessions',
                 'FeeCategories',
                 'StudentFees' => function($q) {
-                    return $q->where(['paid'=>1]);
+                    return $q->where(['StudentFees.paid'=>1]);
                 }])
             ->where(['Fees.id'=>$fee_id])->first();
     }
 
 
-    public function getStudentWithCompleteFees(Array $data )
+    public function getStudentWithCompleteFees(Array $queryData )
     {
         $query = $this->StudentFees->find('all')
             ->enableHydration(false)
+            ->select(['student_id','fee_id','amount_remaining'])
             ->contain([
-                'Fees',
                 'Students' => function ($q) {
-                    return $q->select(['id','first_name','last_name']);
-                }]);
-        if ( !empty($data['session_id']) ) {
-            $query->contain(['Fees'=> function ($q) use ($data) {
-                return $q->where([
-                    'Fees.session_id' => $data['session_id'],
-                ]);
-            }]);
+                    return $q->select(['id','first_name','last_name','class_id']);
+                },
+                'Fees' => function ($q) use ($queryData) {
+                    $q->select(['amount','compulsory','term_id','class_id','session_id']);
+                    if (!empty($queryData['session_id'])) {
+                        $q->where([
+                            'Fees.session_id' => $queryData['session_id'],
+                        ]);
+                    }
+                    if (!empty($queryData['class_id'])) {
+                        $q->where([
+                            'Fees.class_id' => $queryData['class_id'],
+                        ]);
+                    }
+                    if (!empty($queryData['term_id'])) {
+                        $q->where([
+                            'Fees.term_id' => $queryData['term_id'],
+                        ]);
+                    }
+                    return $q;
+                }
+            ])
+            ->andWhere(['StudentFees.paid'=>1])
+            ->orderAsc('Fees.class_id')
+            ->groupBy('student_id');
+        $completedFeesStudents = $query->toArray();
+        $return = [];// initialise a return array
+        $compulsoryFeesTotal = $this->getCompulsoryFeesByParameters($queryData);
+        foreach ( $completedFeesStudents as $completedFeeStudent_id => $completedFeeDetails)
+        {
+            $collection = collection($completedFeeDetails);
+            $totalAmountPaid = $collection->sumOf(function ($data) {
+                return $data['fee']['amount'];
+            });
+            // check if percentage is specified and include percentage
+            if ( $totalAmountPaid >= $compulsoryFeesTotal) {
+                $return[] = [
+                    'student_id' => $completedFeeStudent_id,
+                    'class_id' => $completedFeeDetails[0]['student']['class_id'],
+                    'total' => $totalAmountPaid
+                ];
+            }
         }
-        if ( !empty($data['class_id']) ) {
-            $query->contain(['Fees'=> function ($q) use ($data) {
-                return $q->where([
-                    'Fees.class_id' => $data['class_id'],
-                ]);
-            }]);
-        }
-        if ( !empty($data['term_id']) ) {
-            $query->contain(['Fees'=> function ($q) use ($data) {
-                return $q->where([
-                    'Fees.term_id' => $data['term_id'],
-                ]);
-            }]);
-        }
-
-        $data = $query->where(['paid'=>1])
-            ->groupBy('student_id')
-            ->toArray();
-
-        return $data;
+        return $return;
     }
 
 
@@ -433,31 +441,36 @@ class FeesTable extends Table
     {
         $query = $this->find()
             ->enableHydration(false);
-
         if ( !empty($data['session_id'])){ // chain this query if session_id is set
             $query->andWhere(['session_id'=>$data['session_id']]);
         }
-
         if ( !empty($data['class_id'])){ // chain this query if class_id is set
             $query->andWhere(['class_id'=>$data['class_id']]);
         }
-
-        if ( !empty($data['term_id'])){ // chain this query if session_id is set
+        if ( !empty($data['term_id'])){ // chain this query if term_id is set
             $query->andWhere(['term_id'=>$data['term_id']]);
         }
         $query->andWhere(['compulsory'=>1]);
-        return $query->toArray();
+        return $query->sumOf('amount');
     }
 
-
+    /**
+     * @param array $data
+     * @return array
+     * This function is used to query the fee table to get the
+     * fee statistics
+     */
     public function queryFeesTable(Array $data )
     {
         $query = $this->find()
+            ->enableHydration(false)
             ->contain([
                 'StudentFees' => function ($q) {
-                    return $q->where(['StudentFees.paid'=>0]);
+                    $q->select(['StudentFees.fee_id','StudentFees.paid']);
+                    $q->where(['StudentFees.paid'=>0]);
+                    return $q;
                 },
-            ])->enableHydration(false);
+            ]);
         if ( !empty($data['session_id'])){ // chain this query if session_id is set
             $query->andWhere(['Fees.session_id'=>$data['session_id']]);
         }
@@ -467,9 +480,47 @@ class FeesTable extends Table
         if ( !empty($data['term_id'])){ // chain this query if session_id is set
             $query->andWhere(['Fees.term_id'=>$data['term_id']]);
         }
-        return $query->groupBy('fee_category_id')->toArray();
+        $result = $query->groupBy('fee_category_id')->toArray();
+        $return = [];
+        foreach( $result as $fee_category_id => $fees ) {
+            $feesCollection = collection($fees);
+            $amount = $feesCollection->sumOf(function ($data) {
+                return $data['amount'];
+            });
+            $expectedIncome = $feesCollection->sumOf(function ($data) {
+                return $data['income_amount_expected'];
+            });
+            $amountReceived = $feesCollection->sumOf(function ($data) {
+                return $data['amount_earned'];
+            });
+            $amountRemaining = $expectedIncome - $amountReceived;
+            $number_of_students = $feesCollection->sumOf(function ($data) {
+                return $data['number_of_students'];
+            });
+            $number_of_students_remaining = $feesCollection->sumOf(function ($data) {
+                return count($data['student_fees']);
+            });
+            $return[$fee_category_id] = [
+                'amount' => $amount,
+                'expectedIncome' => $expectedIncome,
+                'amountReceived' => $amountReceived,
+                'amountRemaining' => $amountRemaining,
+                'percentageReceived' => Number::precision($amountReceived/$expectedIncome * 100,2),
+                'percentageRemaining' => Number::precision($amountRemaining/$expectedIncome * 100,2),
+                'numberOfStudents' => $number_of_students,
+                'numberOfStudentsPaid' => $number_of_students - $number_of_students_remaining,
+                'numberOfStudentsRemaining' => $number_of_students_remaining
+            ];
+        }
+        return $return;
     }
 
+    /**
+     * @return array
+     * This function get the fee Categories in this order
+     * [ 1 => 'School Fees']
+     *
+     */
     public function getFeeCategoriesData()
     {
         $feeCategories = $this->FeeCategories->find('all')
@@ -480,11 +531,6 @@ class FeesTable extends Table
 
     public function deleteFee(EntityInterface $fee)
     {
-        // check if fee exist in student_fee_payments
-        if ( (bool)$this->StudentFees->StudentFeePayments->find()->where(['fee_id'=>$fee->id])->first()) {
-            // Throw PdoException
-            throw new \PDOException;
-        }
         $this->delete($fee);
         return true;
     }

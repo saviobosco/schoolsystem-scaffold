@@ -74,11 +74,11 @@ class IncomesTable extends Table
         return $validator;
     }
 
-    public function getIncomeWithPassedValue($data)
+    public function getIncomeWithPassedValue($postData)
     {
         $query = $this->find()->enableHydration(false);
         // checking which value was passed to query
-        switch ($data['query'] ) {
+        switch ($postData['query'] ) {
             case 'week':
                 $query->where(['WEEK(created,1)'=>(new Date())->toWeek()]);
                 break;
@@ -97,6 +97,7 @@ class IncomesTable extends Table
     public function getIncomeWithDateRange($startDate,$endDate)
     {
         $query = $this->find()
+            ->enableHydration(false)
             ->where(function ($exp,$q) use ($startDate,$endDate) {
                 return $exp ->addCase(
                     [
@@ -104,9 +105,7 @@ class IncomesTable extends Table
                     ]
                 );
             });
-
         return $query->toArray();
-
     }
 
 }

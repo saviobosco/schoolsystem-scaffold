@@ -111,9 +111,6 @@ class StudentFeesTable extends Table
 
     public function deleteStudentFee(EntityInterface $studentFee)
     {
-        if ( (bool)$this->StudentFeePayments->find()->where(['student_fee_id'=>$studentFee->id])->first()) {
-            throw new \PDOException;
-        }
         $this->delete($studentFee);
         return true;
     }

@@ -32,7 +32,7 @@ class StudentPaymentsController extends AppController
     {
         if ( $this->request->is(['patch', 'post', 'put'])) {
             $postData = $this->request->getData();
-            $postData['payment']['payment_received_by'] = $this->Auth->user('id');
+            $postData['payment']['payment_received_by'] = $this->request->getSession()->read('Auth.User.id');
             try {
                 $payment = $this->StudentFeePayments->payFees($postData);
                 if ( isset($payment['error'])) {
@@ -60,7 +60,7 @@ class StudentPaymentsController extends AppController
         // get the receipt information
         $receiptDetails = $this->Students->getReceiptDetails($id);
         //get Student Arrears
-        $arrears = $this->Students->getStudentArrears($receiptDetails['student_id']);
+        //$arrears = $this->Students->getStudentArrears($receiptDetails['student_id']);
         $sessions = $this->Sessions->find('list')->toArray();
         $classes = $this->Students->Classes->find('list')->toArray();
         $terms = $this->Terms->find('list', ['limit' => 200])->toArray();
@@ -70,14 +70,15 @@ class StudentPaymentsController extends AppController
     public function studentPaymentRecord($id = null)
     {
         $student = $this->Students->find()
-            ->contain(['Classes','StudentFees.Fees.FeeCategories','StudentFees.StudentFeePayments'])
+            ->contain(['Classes'])
             ->where(['Students.id'=>$id])
             ->enableHydration(false)
             ->first();
+        $studentFeePayments = $this->StudentFeePayments->getStudentPaymentRecords($id);
         $sessions = $this->Sessions->find('list', ['limit' => 200])->toArray();
         $classes = $this->Students->Classes->find('list', ['limit' => 200])->toArray();
         $terms = $this->Terms->find('list', ['limit' => 200])->toArray();
-        $this->set(compact('student','sessions','classes','terms'));
+        $this->set(compact('student','sessions','classes','terms','studentFeePayments'));
         $this->set('_serialize', ['student']);
     }
 }
