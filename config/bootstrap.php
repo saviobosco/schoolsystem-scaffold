@@ -194,7 +194,6 @@ Plugin::load('Migrations');
 
 // Only try to load DebugKit in development mode
 // Debug Kit should not be installed on a production system
-dd(Configure::read('debug'));
 
 if (Configure::read('debug')) {
     Plugin::load('DebugKit', ['bootstrap' => true]);
@@ -263,8 +262,8 @@ try {
     Log::alert('user_roles configuration file could not be loaded');
 }
 Configure::write('Users.config', ['users']);
-Plugin::load('Alaxos', ['bootstrap' => true]);
-Plugin::load('Alaxos/BootstrapTheme');
+//Plugin::load('Alaxos', ['bootstrap' => true]);
+//Plugin::load('Alaxos/BootstrapTheme');
 Plugin::load('UsersManager', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('Settings', ['bootstrap' => true, 'routes' => true]);
 Plugin::load('SkillsGradingSystem', ['bootstrap' => false, 'routes' => true]);

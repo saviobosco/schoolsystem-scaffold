@@ -45,7 +45,6 @@ $cakeDescription = Setting::read('Application.school_name')
     echo $this->Plugins->css('switchery/switchery.min.css');
 
     echo $this->Plugins->css('DataTables/media/css/dataTables.bootstrap.min.css');
-    //echo $this->Site->css('DataTables/extensions/ColReorder/css/colReorder.bootstrap.min.css');
     echo $this->Plugins->css('DataTables/extensions/Responsive/css/responsive.bootstrap.min.css');
     echo $this->Html->css('print.css');
     ?>

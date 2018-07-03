@@ -52,12 +52,12 @@ class StudentsTable extends Table
         $this->addBehavior('Timestamp');
 
         // loads the Proffer behaviour for picture upload .
-        $this->addBehavior('Proffer.Proffer', [
+        /*$this->addBehavior('Proffer.Proffer', [
             'photo' => [    // The name of your upload field
                 'root' => WWW_ROOT .'img/student-pictures', // Customise the root upload folder here, or omit to use the default
                 'dir' => 'photo_dir',   // The name of the field to store the folder
             ]
-        ]);
+        ]);*/
 
         $this->belongsTo('Classes', [
             'foreignKey' => 'class_id',
