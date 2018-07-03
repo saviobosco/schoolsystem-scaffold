@@ -62,7 +62,7 @@ class DashboardController extends AppController
                     $incomes = $this->Incomes->getIncomeWithDateRange($startDate,$endDate->addHours(23)->addMinutes(59));
                     if ( $postData['contain_fee_categories'] == 1 ) {
                         $this->loadModel('FinanceManager.FeeCategories');
-                        $feeCategoriesIncome = $this->FeeCategories->getIncomeByFeeCategoriesWithDateRange($startDate,$endDate->addHours(23)->addMinutes(59));
+                        $feeCategoriesIncome = $this->FeeCategories->getIncomeByFeeCategoriesWithDateRange($startDate,$endDate);
                     }
                 } else {
                     $incomes = $this->Incomes->getIncomeWithPassedValue($postData);
@@ -126,7 +126,8 @@ class DashboardController extends AppController
                         $expenditures = $this->Expenditures->getExpenditureWithDateRangeArrangedByExpenditureCat($startDate,$endDate->addHours(23)->addMinutes(59));
                         $expenditureTypes = $this->Expenditures->ExpenditureCategories->find('list')->toArray();
                     } else {
-                        $expenditures = $this->Expenditures->getExpenditureWithDateRange($startDate,$endDate->addHours(23)->addMinutes(59));
+                        $expenditures = $this->Expenditures->getExpenditureWithDateRange($startDate,$endDate
+                        );
                     }
                 } else {
                     if ( $postData['arrange_by_expenditure_categories'] == 1) {

@@ -65,6 +65,21 @@ $this->Form->templates($edittemplates);
                 <?= $this->Form->button(__d('CakeDC/Users', 'Login'),['class'=>'btn btn-success btn-block btn-lg']); ?>
                 <?= $this->Form->end() ?>
             </div>
+            <div class="panel-footer">
+                <h4> Default Logins </h4>
+                <h5> For Superuser</h5>
+                <p>username: admin</p>
+                <p>password: admin </p>
+                <h5> For Admission Officer</h5>
+                <p>username: admin2</p>
+                <p>password: admin</p>
+                <h5> For Bursar</h5>
+                <p>username: admin3</p>
+                <p>password: admin</p>
+                <h5> For Academic officer</h5>
+                <p>username: admin4</p>
+                <p>password: admin</p>
+            </div>
         </div>
     </div>
 </div>

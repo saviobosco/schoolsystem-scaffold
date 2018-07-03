@@ -41,7 +41,7 @@ class ReceiptsController extends AppController
                     return $q->select(['id','first_name','last_name']);
                 }
             ])->orderDesc('Receipts.id');
-        $receipts = $this->paginate($query);
+        $receipts = $this->paginate($query,['limit'=>100,'maxLimit'=>1000]);
         $this->set(compact('receipts'));
         $this->set('_serialize', ['receipts']);
     }
