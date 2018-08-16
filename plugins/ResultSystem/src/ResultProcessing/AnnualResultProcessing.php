@@ -60,7 +60,6 @@ class AnnualResultProcessing
         $subjectTable = TableRegistry::get('ResultSystem.Subjects');
         $annualResultTable = TableRegistry::get('ResultSystem.StudentAnnualResults');
 
-
         // loads the grade and remark table
         $resultGradingTable = TableRegistry::get('GradingSystem.ResultGradingSystems');
         // gets the grade from the table
@@ -71,7 +70,6 @@ class AnnualResultProcessing
         // loads the class Details .
         $classDetail = $classTable->find('all')->where(['id' => $class_id])->first();
         // selects all the subjects from the subject table...
-        $subjects = $subjectTable->find('all')->where(['block_id' => $classDetail['block_id']])->toArray();
         // finds all students in the students table using the class_id
         $studentsInAClass = $studentTable->find('all')
             ->where([
@@ -79,33 +77,37 @@ class AnnualResultProcessing
             ])->toArray();
         // This first loop , loops through the students
         // to select each student .
+
+        $studentSubjectsResults = [];
+
         foreach ( $studentsInAClass as $studentInAClass ) {
             // this second loop, loops through the subjects offered by a particular
             // student. it selects the first term, second term and third term scores ,
             // sums them and calculates the average.
-            foreach ( $subjects as $subject ) {
-                $studentTermlyTotalForSubjectInAllTerm = $annualResultTable->find('all')
-                    ->where(['student_id' => $studentInAClass['id'],
-                        'subject_id' => $subject['id'],
-                        'class_id'   => $class_id,
-                        'session_id' => $session_id
-                    ])->toArray();
-                // loops through the first term , second term and third term results and sums them
-                // up.
-                foreach ($studentTermlyTotalForSubjectInAllTerm as $studentAnnualTotalForASubject ) {
-                    // set the total index in the array
-                    // the total is first term + second term + third term
-                    $studentAnnualTotalForASubject['total'] = $studentAnnualTotalForASubject['first_term'] +
-                        $studentAnnualTotalForASubject['second_term'] + $studentAnnualTotalForASubject['third_term'];
-                    $studentAnnualTotalForASubject['average'] = $this->_determineNumberPrecision( $studentAnnualTotalForASubject['total'] / 3) ;
-                    // calculates the grade
-                    $studentAnnualTotalForASubject['grade'] = $this->calculateGrade($studentAnnualTotalForASubject['average'], $grades);
-                    // calculate the remark
-                    $studentAnnualTotalForASubject['remark'] = $remarks[$studentAnnualTotalForASubject['grade']];
-                    $annualResultTable->save($studentAnnualTotalForASubject);
-                }
+            $StudentTotalForAllTermlySubjects = $annualResultTable->find('all')
+                ->where([
+                    'student_id' => $studentInAClass['id'],
+                    'class_id'   => $class_id,
+                    'session_id' => $session_id
+                ])->indexBy('subject_id')->toArray();
+
+            foreach ($StudentTotalForAllTermlySubjects as $studentAnnualTotalForASubject ) {
+                // set the total index in the array
+                // the total is first term + second term + third term
+                // construct a new array
+                $studentAnnualTotalForASubject['total'] = $studentAnnualTotalForASubject['first_term'] +
+                    $studentAnnualTotalForASubject['second_term'] + $studentAnnualTotalForASubject['third_term'];
+                $studentAnnualTotalForASubject['average'] = $this->_determineNumberPrecision( $studentAnnualTotalForASubject['total'] / 3) ;
+                // calculates the grade
+                $studentAnnualTotalForASubject['grade'] = $this->calculateGrade($studentAnnualTotalForASubject['average'], $grades);
+                // calculate the remark
+                $studentAnnualTotalForASubject['remark'] = $remarks[$studentAnnualTotalForASubject['grade']];
+
+                // add to array
+                $studentSubjectsResults[] =  $studentAnnualTotalForASubject;
             }
         }
+        $annualResultTable->saveMany($studentSubjectsResults);
     }
 
     /**

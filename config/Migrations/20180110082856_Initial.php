@@ -5,7 +5,6 @@ class Initial extends AbstractMigration
 {
     public function up()
     {
-
         if ( $this->table('affective_dispositions')->exists() === false ) {
             $this->table('affective_dispositions')
                 ->addColumn('name', 'string', [

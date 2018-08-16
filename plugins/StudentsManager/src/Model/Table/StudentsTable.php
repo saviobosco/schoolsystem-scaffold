@@ -80,6 +80,11 @@ class StudentsTable extends Table
             'foreignKey' => 'religion_id',
             'joinType' => 'INNER'
         ]);
+
+        $this->hasMany('StudentTermlyResults', [
+            'foreignKey' => 'student_id',
+            'className' => 'ResultSystem.StudentTermlyResults'
+        ]);
     }
 
     /**
