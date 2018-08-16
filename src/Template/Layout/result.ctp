@@ -33,15 +33,15 @@ $cakeDescription = 'School System';
     ?>
 
     <?php
-    echo $this->AlaxosHtml->includeBootstrapCSS(['block' => false]);
+    echo $this->Plugins->css('bootstrap/css/bootstrap.min.css');
     echo $this->Site->css('select2/dist/css/select2.min.css');
     echo $this->Html->css('custom.css');
     echo $this->Html->css('result.css');
     echo $this->Html->css('print.css');
 
 
-    echo $this->AlaxosHtml->includeAlaxosJQuery(['block' => false]);
-    echo $this->AlaxosHtml->includeAlaxosBootstrapJS(['block' => false]);
+    echo $this->Plugins->script('jquery/jquery-1.9.1.min.js');
+    echo $this->Site->script('bootstrap/js/bootstrap.min.js');
     ?>
 
     <?= $this->fetch('meta') ?>

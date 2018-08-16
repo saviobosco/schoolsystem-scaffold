@@ -1,6 +1,7 @@
 <?php
 namespace StudentsManager\Controller;
 
+use Cake\Http\Client;
 use StudentsManager\Controller\AppController;
 use Cake\Datasource\Exception\RecordNotFoundException;
 /**
@@ -245,6 +246,31 @@ class StudentsController extends AppController
             $this->Flash->error(__('No Student Record was found!'));
             return $this->redirect($this->referer());
         }
+    }
+
+    public function pushData()
+    {
+        $this->loadModel('ClassManager.Classes');
+        $this->loadModel('Sessions');
+        $this->loadModel('ResultSystem.Terms');
+        $classes = $this->Classes->find('all')->toArray();
+        $sessions = $this->Sessions->find('all')->toArray();
+        $terms = $this->Terms->find('all')->toArray();
+        $student = $this->Students->find('all')->where(['id' => '001'])
+            /*->contain([
+                'StudentTermlyResults',
+            ])*/->first();
+        $http = new Client();
+        $data = ['student' => $student,
+            'classes' => $classes,
+            'terms' => $terms,
+            'sessions' => $sessions,
+        ];
+        $response = $http->post('http://localhost/SchoolSystem2/test-json/create',
+            json_encode($data),
+            ['type'=>'json']
+        );
+        dd($response->body());
     }
 
 }
