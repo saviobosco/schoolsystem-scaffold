@@ -5,4 +5,6 @@
 .idea
 .env
 /webroot/img/student-pictures/*
+/config/Migrations/schema-dump-default.lock
 todo.txt
+change-logs.txt

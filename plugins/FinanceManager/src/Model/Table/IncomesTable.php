@@ -4,6 +4,7 @@ namespace FinanceManager\Model\Table;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\I18n\Date;
+use FinanceManager\Exception\MissingIncomeRecordException;
 
 
 /**
@@ -108,4 +109,12 @@ class IncomesTable extends Table
         return $query->toArray();
     }
 
+    public function removeRecordWithReceiptId($receipt)
+    {
+        $income = $this->find()->where(['receipt_id' => $receipt->id])->first();
+        if ($income === null) {
+            throw new MissingIncomeRecordException('This receipt particular receipt cannot be deleted!.');
+        }
+        return $this->delete($income);
+    }
 }

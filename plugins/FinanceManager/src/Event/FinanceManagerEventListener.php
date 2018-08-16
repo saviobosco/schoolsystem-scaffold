@@ -44,6 +44,7 @@ class FinanceManagerEventListener implements EventListenerInterface
             StudentsTable::EVENT_ADDED_STUDENT => 'createStudentFees',
             StudentFeePaymentsTable::EVENT_AFTER_EACH_FEE_PAYMENT => 'recordIncomeByFeeAndFeeCategories',
             StudentFeePaymentsTable::EVENT_AFTER_FEES_PAYMENT => 'recordIncome',
+            StudentFeePaymentsTable::EVENT_DELETED_PAYMENT_FEE_ITEM => 'decrementIncomeByFeeAndFeeCategories'
         ];
     }
 
@@ -60,24 +61,46 @@ class FinanceManagerEventListener implements EventListenerInterface
         }
     }
 
-    public function recordIncomeByFeeAndFeeCategories($event,$paymentDetail)
+    public function recordIncomeByFeeAndFeeCategories($event,$paymentItem)
     {
         if ($event->isStopped()) {
             return false;
         }
         // Recording fee
-        if ( !empty($paymentDetail->fee_id)) {
+        if ( !empty($paymentItem->fee_id)) {
             $feesTable = TableRegistry::get('FinanceManager.Fees');
-            $fee = $feesTable->find()->where(['id'=>$paymentDetail->fee_id])->first();
-            $fee->amount_earned += $paymentDetail->amount_paid;
+            $fee = $feesTable->find()->where(['id'=>$paymentItem->fee_id])->first();
+            $fee->amount_earned += $paymentItem->amount_paid;
             $feesTable->save($fee);
         }
 
         // Recording Income to Fee Category
-        if ( !empty($paymentDetail->fee_category_id)) {
+        if ( !empty($paymentItem->fee_category_id)) {
             $feeCategoriesTable = TableRegistry::get('FinanceManager.FeeCategories');
-            $feeCategory = $feeCategoriesTable->find()->where(['id'=>$paymentDetail->fee_category_id])->first();
-            $feeCategory->income_amount += $paymentDetail->amount_paid;
+            $feeCategory = $feeCategoriesTable->find()->where(['id'=>$paymentItem->fee_category_id])->first();
+            $feeCategory->income_amount += $paymentItem->amount_paid;
+            $feeCategoriesTable->save($feeCategory);
+        }
+    }
+
+    public function decrementIncomeByFeeAndFeeCategories($event,$paymentItem)
+    {
+        if ($event->isStopped()) {
+            return false;
+        }
+        // Recording fee
+        if ( !empty($paymentItem->fee_id)) {
+            $feesTable = TableRegistry::get('FinanceManager.Fees');
+            $fee = $feesTable->find()->where(['id'=>$paymentItem->fee_id])->first();
+            $fee->amount_earned -= $paymentItem->amount_paid;
+            $feesTable->save($fee);
+        }
+
+        // Recording Income to Fee Category
+        if ( !empty($paymentItem->fee_category_id)) {
+            $feeCategoriesTable = TableRegistry::get('FinanceManager.FeeCategories');
+            $feeCategory = $feeCategoriesTable->find()->where(['id'=>$paymentItem->fee_category_id])->first();
+            $feeCategory->income_amount -= $paymentItem->amount_paid;
             $feeCategoriesTable->save($feeCategory);
         }
     }
@@ -89,12 +112,13 @@ class FinanceManagerEventListener implements EventListenerInterface
             return false;
         }
         $incomeTable = TableRegistry::get('FinanceManager.Incomes');
-        $dateCreated = new Time($receipt->created);
+        $dateCreated = new Time();
         $income = $incomeTable->newEntity([
             'amount' => $receipt->total_amount_paid,
             'week' => $dateCreated->toWeek(),
             'month' => $dateCreated->month,
-            'year' => $dateCreated->year
+            'year' => $dateCreated->year,
+            'receipt_id' => $receipt->id
         ]);
         // Record it to database
         $incomeTable->save($income);

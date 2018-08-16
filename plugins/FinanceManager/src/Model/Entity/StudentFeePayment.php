@@ -16,8 +16,6 @@ use Cake\ORM\Entity;
  * @property int $fee_category_id
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
- * @property string $created_by
- * @property string $modified_by
  *
  * @property \FinanceManager\Model\Entity\StudentFee $student_fee
  * @property \FinanceManager\Model\Entity\Receipt $receipt
@@ -46,8 +44,6 @@ class StudentFeePayment extends Entity
         'fee_category_id' => true,
         'created' => true,
         'modified' => true,
-        'created_by' => true,
-        'modified_by' => true,
         'student_fee' => true,
         'receipt' => true,
         'fee' => true,

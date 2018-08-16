@@ -158,12 +158,9 @@ class ReceiptsController extends AppController
             } else {
                 $this->Flash->error(__('The receipt could not be deleted. Please, try again.'));
             }
-            return $this->redirect(['action' => 'index']);
-        } catch ( \PDOException $e ) {
-            $this->Flash->error(__('This receipt cannot be deleted!!!'));
-            return $this->redirect(['action' => 'index']);
+        } catch ( \Exception $e ) {
+            $this->Flash->error(__($e->getMessage()));
         }
-
-
+        return $this->redirect(['action' => 'index']);
     }
 }

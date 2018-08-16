@@ -13,6 +13,7 @@ use Cake\ORM\Entity;
  * @property int $year
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property int $receipt_id
  */
 class Income extends Entity
 {
@@ -32,6 +33,7 @@ class Income extends Entity
         'month' => true,
         'year' => true,
         'created' => true,
-        'modified' => true
+        'modified' => true,
+        'receipt_id' => true
     ];
 }

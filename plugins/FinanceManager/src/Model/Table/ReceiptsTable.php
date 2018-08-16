@@ -11,6 +11,7 @@ use Cake\Datasource\EntityInterface;
  * Receipts Model
  *
  * @property \FinanceManager\Model\Table\StudentsTable|\Cake\ORM\Association\BelongsTo $Students
+ * @property \FinanceManager\Model\Table\IncomesTable|\Cake\ORM\Association\BelongsTo $Incomes
  * @property \FinanceManager\Model\Table\PaymentsTable|\Cake\ORM\Association\HasMany $Payments
  * @property \FinanceManager\Model\Table\StudentFeePaymentsTable|\Cake\ORM\Association\HasMany $StudentFeePayments
  *
@@ -79,6 +80,11 @@ class ReceiptsTable extends Table
             'className' => 'FinanceManager.Accounts',
             'foreignKey' => 'modified_by'
         ]);
+
+        $this->belongsTo('Incomes',[
+            'className' => 'FinanceManager.Incomes',
+            'foreignKey' => 'receipt_id'
+        ]);
     }
 
     /**
@@ -108,6 +114,8 @@ class ReceiptsTable extends Table
 
     public function deleteReceipt(EntityInterface $receipt)
     {
+        $this->Incomes->removeRecordWithReceiptId($receipt);
+        $this->StudentFeePayments->destroyStudentFeePaymentsBelongingToReceipt($receipt);
         $this->delete($receipt);
         return true;
     }

@@ -31,6 +31,7 @@ class StudentFeePaymentsTable extends Table
 
     const EVENT_AFTER_FEES_PAYMENT = 'Model.StudentFeePayments.afterPayment';
     const EVENT_AFTER_EACH_FEE_PAYMENT = 'Model.StudentFeePayments.afterEachPaymentSaved';
+    const EVENT_DELETED_PAYMENT_FEE_ITEM = 'Model.StudentFeePayments.afterPaymentItemIsDeleted';
     /**
      * Initialize method
      *
@@ -47,15 +48,6 @@ class StudentFeePaymentsTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->addBehavior('Muffin/Footprint.Footprint', [
-            'events' => [
-                'Model.beforeSave' => [
-                    'created_by' => 'new',
-                    'modified_by' => 'always'
-                ]
-            ],
-        ]);
-
         $this->belongsTo('StudentFees', [
             'foreignKey' => 'student_fee_id',
             'joinType' => 'INNER',
@@ -66,11 +58,6 @@ class StudentFeePaymentsTable extends Table
             'foreignKey' => 'receipt_id',
             'joinType' => 'INNER',
             'className' => 'FinanceManager.Receipts'
-        ]);
-
-        $this->hasMany('Incomes', [
-            'foreignKey' => 'student_fee_payment_id',
-            'className' => 'FinanceManager.Incomes'
         ]);
     }
 
@@ -119,11 +106,11 @@ class StudentFeePaymentsTable extends Table
      * This Function filters through each payment Data to remove those with empty amount
      * This is to prevent data corruption ..
      */
-    public function processPaymentData($paymentInput,&$paymentOutput = [])
+    public function processPaymentData($paymentInput,$paymentOutput = [])
     {
         $total = 0;
         if ( is_array($paymentInput)) {
-            foreach ( $paymentInput as $id => $value ) {
+            foreach ( $paymentInput as $value ) {
                 $value->amount_paid = str_replace(',','',$value->amount_paid);// removes any comma in the figure
                 if ( !empty(trim($value->amount_paid)) && $value->amount_paid > 0 ) {
                     $paymentOutput[] = $value;
@@ -163,12 +150,11 @@ class StudentFeePaymentsTable extends Table
     }
 
 
-    public function savePayment(Array $payments,EntityInterface $receipt,$paymentDetail)
+    public function savePayment(Array $StudentFeesPaymentItems,EntityInterface $receipt,$paymentDetail)
     {
-        if ( empty($payments)) {
+        if ( empty($StudentFeesPaymentItems)) {
             return false;
         }
-        // Create payment Record
         $paymentTable = TableRegistry::get('FinanceManager.Payments');
         $paymentDetail['payment_status'] = 1;
         $paymentDetail['receipt_id'] = $receipt->id;
@@ -179,24 +165,21 @@ class StudentFeePaymentsTable extends Table
             $this->Receipts->delete($receipt);
             return false;
         }
-        foreach ( $payments as $payment ) {
-            if ( $payment->amount_paid < $payment->amount_to_pay ) { // if amount paid is less than the amount to pay
-                $payment->amount_remaining = (float)$payment->amount_to_pay - (float)$payment->amount_paid ;
+        foreach ( $StudentFeesPaymentItems as $paymentItem ) {
+            if ( $paymentItem->amount_paid < $paymentItem->amount_to_pay ) {
+                $paymentItem->amount_remaining = (float)$paymentItem->amount_to_pay - (float)$paymentItem->amount_paid ;
             }
-            $payment->receipt_id = $receipt->id;
-            $saved = $this->save($payment);
+            $paymentItem->receipt_id = $receipt->id;
+            $savedPaymentItem = $this->save($paymentItem);
 
             $event = new Event(self::EVENT_AFTER_EACH_FEE_PAYMENT,$this,[
-                'paymentDetail' => $saved ]);
+                'paymentItem' => $savedPaymentItem ]);
             $this->getEventManager()->dispatch($event);
-            // dispatch Income by fees record keeping
         }
         $event = new Event(self::EVENT_AFTER_FEES_PAYMENT,$this,[
             'receipt' => $receipt
         ]);
-        // dispatch payment event
         $this->getEventManager()->dispatch($event);
-        // this returns the receipt id
         return true;
     }
 
@@ -246,5 +229,29 @@ class StudentFeePaymentsTable extends Table
         ])->toArray();
         $mergedFeesPayments = collection($query->toArray())->append($specialFeePayments);
         return $mergedFeesPayments->toList();
+    }
+
+    public function destroyStudentFeePaymentsBelongingToReceipt($receipt)
+    {
+        $studentFeePaymentItems = $this->find('all')
+            ->contain(['StudentFees'])
+            ->where(['StudentFeePayments.receipt_id' => $receipt->id]);
+        $studentFees = null;
+        foreach ( $studentFeePaymentItems as $paymentItem ) {
+            if ($paymentItem->student_fee->paid) {
+                $paymentItem->student_fee->amount_remaining = $paymentItem->amount_paid;
+            } else {
+                $paymentItem->student_fee->amount_remaining = $paymentItem->student_fee->amount_remaining + $paymentItem->amount_paid;
+            }
+            $paymentItem->student_fee->paid = 0;
+            $studentFees[] = $paymentItem->student_fee;
+            if ($this->delete($paymentItem)) {
+                $event = new Event(self::EVENT_DELETED_PAYMENT_FEE_ITEM,$this,[
+                    'paymentItem' => $paymentItem
+                ]);
+                $this->getEventManager()->dispatch($event);
+            }
+        }
+        $this->StudentFees->saveMany($studentFees);
     }
 }
