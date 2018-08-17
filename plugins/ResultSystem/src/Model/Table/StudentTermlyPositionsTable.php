@@ -5,6 +5,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Database\Schema\TableSchema;
 
 /**
  * StudentTermlyPositions Model
@@ -35,9 +36,9 @@ class StudentTermlyPositionsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('student_termly_positions');
-        $this->displayField('id');
-        $this->primaryKey(['student_id','term_id','class_id','session_id']);
+        $this->setTable('student_termly_positions');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey(['student_id','term_id','class_id','session_id']);
 
         $this->belongsTo('Students', [
             'foreignKey' => 'student_id',
@@ -59,6 +60,24 @@ class StudentTermlyPositionsTable extends Table
             'joinType' => 'INNER',
             'className' => 'App.Sessions'
         ]);
+    }
+
+    /**
+     * Override this function in order to alter the schema used by this table.
+     * This function is only called after fetching the schema out of the database.
+     * If you wish to provide your own schema to this table without touching the
+     * database, you can override schema() or inject the definitions though that
+     * method.
+     * @param \Cake\Database\Schema\TableSchema $schema The table definition fetched from database.
+     * @return \Cake\Database\Schema\TableSchema the altered schema
+     */
+    protected function _initializeSchema(TableSchema $schema)
+    {
+        // total is type float in database but converted to string here
+        //So as to Group the students results based on their total
+        // eg . 80.9 > 80.
+        $schema->setColumnType('total', 'string');
+        return $schema;
     }
 
     /**
@@ -95,10 +114,10 @@ class StudentTermlyPositionsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['student_id'], 'Students'));
+        /*$rules->add($rules->existsIn(['student_id'], 'Students'));
         $rules->add($rules->existsIn(['class_id'], 'Classes'));
         $rules->add($rules->existsIn(['term_id'], 'Terms'));
-        $rules->add($rules->existsIn(['session_id'], 'Sessions'));
+        $rules->add($rules->existsIn(['session_id'], 'Sessions'));*/
 
         return $rules;
     }

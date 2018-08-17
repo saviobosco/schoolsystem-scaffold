@@ -94,11 +94,11 @@ class StudentTermlySubjectPositionsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['subject_id'], 'Subjects'));
+        /*$rules->add($rules->existsIn(['subject_id'], 'Subjects'));
         $rules->add($rules->existsIn(['student_id'], 'Students'));
         $rules->add($rules->existsIn(['class_id'], 'Classes'));
         $rules->add($rules->existsIn(['term_id'], 'Terms'));
-        $rules->add($rules->existsIn(['session_id'], 'Sessions'));
+        $rules->add($rules->existsIn(['session_id'], 'Sessions'));*/
 
         return $rules;
     }

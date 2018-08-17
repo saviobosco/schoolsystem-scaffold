@@ -15,36 +15,12 @@ use Cake\I18n\Number;
 class AnnualResultProcessing
 {
     use GradeableTrait;
-
-    /**
-     * @var bool
-     *  This status indicates the status of the processor
-     */
-    protected $status = false;
+    use ResultProcessingTrait;
 
 
-    public function __construct($class_id,$session_id)
+    public function __construct()
     {
-        $this->calculateAnnualTotals($class_id,$session_id);
-        $this->inputTotalInAnnualPositionTable($class_id,$session_id);
-        $this->calculateStudentAnnualSubjectPosition($class_id,$session_id);
-        // sets the status of the processor as true
-        $this->_setStatus();
-    }
-
-    /**
-     * @param $value
-     * @return int|string
-     * The precision function is used to determine the decimal precision
-     * of a Number eg . 70.555666 converted to 70.55.
-     * This function uses the Number::precision static method .
-     */
-    protected function _determineNumberPrecision($value)
-    {
-        if ( !is_float($value) ) {
-            return (int)$value;
-        }
-        return Number::precision($value,2);
+        $this->_initialize();
     }
 
 
@@ -52,139 +28,82 @@ class AnnualResultProcessing
      * @param $class_id
      * @param $session_id
      */
-    public function calculateAnnualTotals($class_id,$session_id)
+    public function calculateAnnualTotals($class_id, $session_id)
     {
         // Initialize the required tables
         $studentTable = TableRegistry::get('ResultSystem.Students');
-        $classTable   = TableRegistry::get('ResultSystem.Classes');
-        $subjectTable = TableRegistry::get('ResultSystem.Subjects');
         $annualResultTable = TableRegistry::get('ResultSystem.StudentAnnualResults');
-
-        // loads the grade and remark table
-        $resultGradingTable = TableRegistry::get('GradingSystem.ResultGradingSystems');
-        // gets the grade from the table
-        $grades = $resultGradingTable->find('all')->combine('score','grade')->toArray();
-
-        // gets the remark from the table .
-        $remarks = $resultGradingTable->find('all')->combine('grade','remark')->toArray();
-        // loads the class Details .
-        $classDetail = $classTable->find('all')->where(['id' => $class_id])->first();
-        // selects all the subjects from the subject table...
+        $annualPositionTable = TableRegistry::get('ResultSystem.StudentAnnualPositions');
         // finds all students in the students table using the class_id
         $studentsInAClass = $studentTable->find('all')
+            ->select(['id','class_id'])
             ->where([
-                'class_id' => $class_id
+                'class_id' => $class_id,
+                'status' => 1
             ])->toArray();
         // This first loop , loops through the students
         // to select each student .
-
-        $studentSubjectsResults = [];
-
         foreach ( $studentsInAClass as $studentInAClass ) {
-            // this second loop, loops through the subjects offered by a particular
-            // student. it selects the first term, second term and third term scores ,
             // sums them and calculates the average.
             $StudentTotalForAllTermlySubjects = $annualResultTable->find('all')
                 ->where([
                     'student_id' => $studentInAClass['id'],
                     'class_id'   => $class_id,
                     'session_id' => $session_id
-                ])->indexBy('subject_id')->toArray();
+                ])->toArray();
 
+            if (0 === count($StudentTotalForAllTermlySubjects)) {
+                continue;
+            }
+            $sumOfSubjectsTotal = 0;
+            $sumOfSubjectsAverage = 0;
+            $subjectCount = 0;
             foreach ($StudentTotalForAllTermlySubjects as $studentAnnualTotalForASubject ) {
-                // set the total index in the array
-                // the total is first term + second term + third term
-                // construct a new array
+                // if all columns in this subject is empty , it means it was added by mistake.
+                // remove the record.
+                if (!$studentAnnualTotalForASubject['first_term'] AND ! $studentAnnualTotalForASubject['second_term'] AND ! $studentAnnualTotalForASubject['third_term'] ) {
+                    $annualResultTable->delete($studentAnnualTotalForASubject);
+                    continue;
+                }
                 $studentAnnualTotalForASubject['total'] = $studentAnnualTotalForASubject['first_term'] +
                     $studentAnnualTotalForASubject['second_term'] + $studentAnnualTotalForASubject['third_term'];
                 $studentAnnualTotalForASubject['average'] = $this->_determineNumberPrecision( $studentAnnualTotalForASubject['total'] / 3) ;
                 // calculates the grade
-                $studentAnnualTotalForASubject['grade'] = $this->calculateGrade($studentAnnualTotalForASubject['average'], $grades);
+                $studentAnnualTotalForASubject['grade'] = $this->calculateGrade($studentAnnualTotalForASubject['average'], $this->grades);
                 // calculate the remark
-                $studentAnnualTotalForASubject['remark'] = $remarks[$studentAnnualTotalForASubject['grade']];
+                $studentAnnualTotalForASubject['remark'] = $this->remarks[$studentAnnualTotalForASubject['grade']];
 
-                // add to array
-                $studentSubjectsResults[] =  $studentAnnualTotalForASubject;
+                $annualResultTable->save($studentAnnualTotalForASubject);
+                $sumOfSubjectsTotal += $studentAnnualTotalForASubject['total'];
+                $sumOfSubjectsAverage += $studentAnnualTotalForASubject['average'];
+                $subjectCount++;
             }
-        }
-        $annualResultTable->saveMany($studentSubjectsResults);
-    }
-
-    /**
-     * @param $class_id
-     * @param $session_id
-     */
-    public function inputTotalInAnnualPositionTable($class_id,$session_id)
-    {
-        // Initialize the required tables
-        $studentTable = TableRegistry::get('ResultSystem.Students');
-        $annualResultTable = TableRegistry::get('ResultSystem.StudentAnnualResults');
-        $annualPositionTable = TableRegistry::get('ResultSystem.StudentAnnualPositions');
-        // loads the grade and remark table
-        $resultGradingTable = TableRegistry::get('GradingSystem.ResultGradingSystems');
-        // gets the grade from the table
-        $grades = $resultGradingTable->find('all')->combine('score','grade')->toArray();
-        // gets the remark from the table .
-        $remarks = $resultGradingTable->find('all')->combine('grade','remark')->toArray();
-
-        $studentsInAClass = $studentTable->find('all')
-            ->where(['class_id' => $class_id])->toArray();
-
-        foreach ( $studentsInAClass as $studentInAClass ) {
-            $studentTermlyTotalForSubjectInAllTerm = $annualResultTable->find('all')
-                ->where(['student_id' => $studentInAClass['id'],
-                    'class_id'   => $class_id,
+            $subjectAverage = $this->_determineNumberPrecision($sumOfSubjectsAverage / $subjectCount);
+            $studentAnnualPosition = $annualPositionTable->newEntity(
+                [
+                    'student_id' => $studentInAClass['id'],
+                    'total'      => $sumOfSubjectsTotal,
+                    'average'    => $subjectAverage,
+                    'grade'     => $this->remarks[$this->calculateGrade($subjectAverage,$this->grades)],
+                    'class_id'  => $class_id,
                     'session_id' => $session_id
-                ])->toArray();
-
-            // Check if the student has any subject result
-            // else break the current loop and continue to prevent error .
-            if ( count($studentTermlyTotalForSubjectInAllTerm) <= 0 ) {
-                continue;
-            }
-            // This value contains the sum of the subject totals
-            $sumOfSubjectTotal = 0;
-            $sumOfSubjectAverage = 0;
-            foreach ($studentTermlyTotalForSubjectInAllTerm as $studentAnnualTotalInASubject) {
-
-                $sumOfSubjectTotal += $studentAnnualTotalInASubject['total'];
-            }
-            // to calculate the subject Annual Average , You will add all the subjects averages
-            // and divide by the number of the offered subjects
-            foreach ($studentTermlyTotalForSubjectInAllTerm as $studentAnnualTotalInASubject) {
-                $sumOfSubjectAverage += $studentAnnualTotalInASubject['average'];
-            }
-            $count = count($studentTermlyTotalForSubjectInAllTerm);
-            $subjectAverage = $this->_determineNumberPrecision($sumOfSubjectAverage / $count);
-            $studentDetailsInAnnualPositionTable = $annualPositionTable->findOrCreate(['student_id' => $studentInAClass['id'],
-                    'class_id'    => $class_id,
-                    'session_id' => $session_id
-                ]);
-
-            $newData = ['student_id' => $studentInAClass['id'],
-                'total'      => $sumOfSubjectTotal,
-                'average'    => $subjectAverage,
-                'grade'     => $remarks[$this->calculateGrade($subjectAverage,$grades)],
-                'class_id'  => $class_id,
-                'session_id' => $session_id
-            ];
-            $studentDetailsInAnnualPositionTable = $annualPositionTable->patchEntity($studentDetailsInAnnualPositionTable,$newData);
-            $annualPositionTable->save($studentDetailsInAnnualPositionTable);
+                ]
+            );
+            $annualPositionTable->save($studentAnnualPosition);
         }
-        // This function is used to calculate the student positions
-        $this->calculateAnnualPosition($class_id,$session_id);
     }
 
     public function calculateAnnualPosition($class_id,$session_id)
     {
         // Initializes the All required tables
         $annualPositionTable = TableRegistry::get('ResultSystem.StudentAnnualPositions');
-        $students = $annualPositionTable->find('all')->where(['class_id'=>$class_id,
+        $annualResultsTotal = $annualPositionTable->find('all')->where([
+            'class_id'=>$class_id,
             'session_id' => $session_id
         ])->order(['total'=>'DESC'])->groupBy('total')->toArray();
         $position = 1;
-        foreach ($students as $key => $value ) {
-            foreach($value as $student) {
+        foreach ($annualResultsTotal as  $totalGroup ) {
+            foreach($totalGroup as $student) {
                 $student['position'] = $position ;
                 $annualPositionTable->save($student);
             }
@@ -203,9 +122,7 @@ class AnnualResultProcessing
         $annualSubjectPositionTable = TableRegistry::get('ResultSystem.StudentAnnualSubjectPositions');
         // find the block the class_id is under. Either junior or senior
         $classDetail = $classTable->find('all')->where(['id'=>$class_id])->first();
-        // The block id is used to get all subjects belonging to a particular block
-        $block_id = $classDetail['block_id'];
-        $subjects = $subjectTable->find('all')->where(['block_id'=>$block_id])->toArray();
+        $subjects = $subjectTable->find('all')->where(['block_id'=>$classDetail['block_id']])->toArray();
         // loops through each particular subject
         // and find the students under that course for each particular class,
         // term and session .
@@ -218,20 +135,18 @@ class AnnualResultProcessing
             $position = 1;
             foreach ( $studentsStudyingTheSubject as $key => $value ) {
                 foreach ( $value as $studentStudyingTheSubject ) {
-                    $studentSubjectPosition = $annualSubjectPositionTable->findOrCreate([
-                        'student_id' => $studentStudyingTheSubject['student_id'],
-                        'subject_id' => $studentStudyingTheSubject['subject_id'],
-                        'class_id'   => $class_id,
-                        'session_id' => $session_id
-                    ]);
-                    $newData = [
-                        'total'      => $studentStudyingTheSubject['total'],
-                        'position'   => $position,
-                    ];
-                    $studentSubjectPosition = $annualSubjectPositionTable->patchEntity($studentSubjectPosition,$newData);
+                    $studentSubjectPosition = $annualSubjectPositionTable->newEntity(
+                        [
+                            'student_id' => $studentStudyingTheSubject['student_id'],
+                            'subject_id' => $studentStudyingTheSubject['subject_id'],
+                            'class_id'   => $class_id,
+                            'session_id' => $session_id,
+                            'total'      => $studentStudyingTheSubject['total'],
+                            'position'   => $position,
+                        ]
+                    );
                     $annualSubjectPositionTable->save($studentSubjectPosition);
                 }
-                // increment the position variable
                 $position++;
             }
         }
@@ -303,7 +218,6 @@ class AnnualResultProcessing
         }
         return true;
     }
-
 
     public function calculateAnnualSubjectPositionOnClassDemarcation( $class_id,$session_id )
     {
@@ -385,16 +299,6 @@ class AnnualResultProcessing
             }
         }
         return true;
-    }
-
-    protected function _setStatus()
-    {
-        $this->status = true;
-    }
-
-    public function getStatus()
-    {
-        return $this->status;
     }
 
 }

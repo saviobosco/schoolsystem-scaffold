@@ -9,7 +9,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 use ResultSystem\Exception\MissingGradesException;
 use ResultSystem\Model\Entity\GradeableTrait;
-
+use Cake\Database\Schema\TableSchema;
 /**
  * StudentTermlyResults Model
  *
@@ -41,9 +41,9 @@ class StudentTermlyResultsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('student_termly_results');
-        $this->displayField('id');
-        $this->primaryKey(['student_id','subject_id','term_id','class_id','session_id']);
+        $this->setTable('student_termly_results');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey(['student_id','subject_id','term_id','class_id','session_id']);
 
         $this->belongsTo('Students', [
             'className' => 'ResultSystem.Students',
@@ -71,6 +71,15 @@ class StudentTermlyResultsTable extends Table
             'joinType' => 'INNER',
             'className' => 'App.Sessions'
         ]);
+    }
+
+    protected function _initializeSchema(TableSchema $schema)
+    {
+        // total is type float in database but converted to string here
+        //So as to Group the students results based on their total
+        // eg . 80.9 > 80.
+        $schema->setColumnType('total', 'string');
+        return $schema;
     }
 
     /**
@@ -131,6 +140,9 @@ class StudentTermlyResultsTable extends Table
 
     public function beforeSave(Event $event , Entity $entity )
     {
+        if ($event->isStopped()) {
+            return false;
+        }
         // getting the gradeInput to process the total
         $resultGradeInputsTable = TableRegistry::get('ResultSystem.ResultGradeInputs');
         $gradeInputs = $resultGradeInputsTable->getValidGradeInputs();
@@ -139,25 +151,19 @@ class StudentTermlyResultsTable extends Table
             $total += $entity->{$gradeKey};
         }
         $entity->total = $total ;
-
         // loads the grade and remark table
         $resultGradingTable = TableRegistry::get('GradingSystem.ResultGradingSystems');
 
         // gets the grade from the table
-        $resultGradingTableQuery = $resultGradingTable->find('all');
+        $resultGradingTableQuery = $resultGradingTable->find('all')->all();
 
         $grades = $resultGradingTableQuery->combine('score','grade')->toArray();
         if ( empty($grades)) { // if no grades found stop event and emit error
             throw new MissingGradesException('Result could not be added because no Grading was found. Please Add grading and try again later');
             $event->stopPropagation();
         }
-        // check if grade is empty , if empty throw up an exception
-        // stop event
-        // calculates the grade
         $entity->grade = $this->calculateGrade($entity->total,$grades);
-        // gets the remark from the table.
         $remarks = $resultGradingTableQuery->combine('grade','remark')->toArray();
-        // create the remark property
         $entity->remark = @$remarks[$entity->grade];
     }
 
@@ -168,60 +174,52 @@ class StudentTermlyResultsTable extends Table
     public function afterSave(Event $event , Entity $entity)
     {
             // upload the result to the annual result table
-            $studentAnnualResultTable = TableRegistry::get('StudentAnnualResults');
+        $studentAnnualResultTable = TableRegistry::get('ResultSystem.StudentAnnualResults');
+        $studentAnnualResult = $studentAnnualResultTable->newEntity(
+            [
+                'student_id' => $entity->student_id,
+                'subject_id' => $entity->subject_id,
+                'class_id' => $entity->class_id,
+                'session_id' => $entity->session_id
+            ]
+            );
+        switch ( $event->data['entity']['term_id'] ) {
+            case 1:
+                $studentAnnualResult['first_term'] = $event->data['entity']['total'];
+                break;
+            case 2 :
+                $studentAnnualResult['second_term'] = $event->data['entity']['total'];
+                break;
+            case 3 :
+                $studentAnnualResult['third_term'] = $event->data['entity']['total'];
+                break;
+        }
+        $studentAnnualResultTable->save($studentAnnualResult);
+    }
 
-            $studentAnnualResult = $studentAnnualResultTable->find('all')
-                ->where(['student_id' => $event->data['entity']['student_id'],
-                        'subject_id' => $event->data['entity']['subject_id'],
-                        'class_id' => $event->data['entity']['class_id'],
-                        'session_id' => $event->data['entity']['session_id']
-                ])->first();
-
-            if ( $studentAnnualResult == null ) {
-
-                $studentAnnualResult = $studentAnnualResultTable->newEntity([
-                    'student_id' => $entity->student_id,
-                    'subject_id' => $entity->subject_id,
-                    'class_id'   => $entity->class_id,
-                    'session_id' => $entity->session_id
-                ]);
-
-                switch ( $event->data['entity']['term_id'] ) {
-                    case 1:
-                        $studentAnnualResult['first_term'] = $event->data['entity']['total'];
-                        break;
-                    case 2 :
-                        $studentAnnualResult['second_term'] = $event->data['entity']['total'];
-                        break;
-                    case 3 :
-                        $studentAnnualResult['third_term'] = $event->data['entity']['total'];
-                        break;
-                }
-            } else {
-
-                switch ( $event->data['entity']['term_id'] ) {
-                    case 1:
-                        $studentAnnualResult['first_term'] = $event->data['entity']['total'];
-                        break;
-                    case 2 :
-                        $studentAnnualResult['second_term'] = $event->data['entity']['total'];
-                        break;
-                    case 3 :
-                        $studentAnnualResult['third_term'] = $event->data['entity']['total'];
-                        break;
-                }
-
-                $newData = [
-                    'student_id' => $entity->student_id,
-                    'subject_id' => $entity->subject_id,
-                    'class_id'   => $entity->class_id,
-                    'session_id' => $entity->session_id
-                ];
-
-                $studentAnnualResult = $studentAnnualResultTable->patchEntity($studentAnnualResult,$newData);
-            }
-
-            $studentAnnualResultTable->save($studentAnnualResult);
+    public function afterDelete(Event $event , Entity $entity)
+    {
+        $studentAnnualResultTable = TableRegistry::get('ResultSystem.StudentAnnualResults');
+        $studentAnnualResult = $studentAnnualResultTable->newEntity(
+            [
+                'student_id' => $event->data['entity']['student_id'],
+                'subject_id' => $event->data['entity']['subject_id'],
+                'class_id' => $event->data['entity']['class_id'],
+                'session_id' => $event->data['entity']['session_id']
+            ]
+        );
+        switch ( $event->data['entity']['term_id'] ) {
+            case 1:
+                $studentAnnualResult['first_term'] = 0;
+                break;
+            case 2 :
+                $studentAnnualResult['second_term'] = 0;
+                break;
+            case 3 :
+                $studentAnnualResult['third_term'] = 0;
+                break;
+        }
+        $studentAnnualResultTable->save($studentAnnualResult);
     }
 
     /**

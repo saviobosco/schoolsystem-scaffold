@@ -1,11 +1,10 @@
 <?php
 namespace ResultSystem\Model\Table;
 
-use Cake\Event\Event;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Database\Schema\TableSchema;
 
 /**
  * StudentAnnualPositions Model
@@ -56,6 +55,14 @@ class StudentAnnualPositionsTable extends Table
         ]);
     }
 
+    protected function _initializeSchema(TableSchema $schema)
+    {
+        // total is type float in database but converted to string here
+        //So as to Group the students results based on their total
+        // eg . 80.9 > 80.
+        $schema->setColumnType('total', 'string');
+        return $schema;
+    }
     /**
      * Default validation rules.
      *
@@ -82,9 +89,9 @@ class StudentAnnualPositionsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['student_id'], 'Students'));
+        /*$rules->add($rules->existsIn(['student_id'], 'Students'));
         $rules->add($rules->existsIn(['class_id'], 'Classes'));
-        $rules->add($rules->existsIn(['session_id'], 'Sessions'));
+        $rules->add($rules->existsIn(['session_id'], 'Sessions'));*/
 
         return $rules;
     }

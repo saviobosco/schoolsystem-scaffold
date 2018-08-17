@@ -51,16 +51,29 @@ class ResultProcessingController extends AppController
         // initialize the ClassCount Class .
         $classCount = new ClassCount();
         if ( isset($postData['term_id'] ) &&  4 === (int)$postData['term_id'] ) {
-            $annualResultProcessing = new AnnualResultProcessing($postData['class_id'],$postData['session_id']);
-            $classCount->getStudentNumberInClasses($postData['class_id'],$postData['session_id'],$postData['term_id']);
-            if ($annualResultProcessing->getStatus()) {
-                $this->Flash->success('Successfully Calculated the students annual results');
+            $annualResultProcessing = new AnnualResultProcessing();
+            if ($annualResultProcessing->isBusy()) {
+                $this->Flash->error('The Result Processing server is busy now. Try again later.');
+                return;
             }
+            $annualResultProcessing->startProcessing();
+            $annualResultProcessing->calculateAnnualTotals($postData['class_id'], $postData['session_id']);
+            $annualResultProcessing->calculateAnnualPosition($postData['class_id'], $postData['session_id']);
+            $annualResultProcessing->calculateStudentAnnualSubjectPosition($postData['class_id'], $postData['session_id']);
+            $annualResultProcessing->stopProcessing();
+            $classCount->getStudentNumberInClasses($postData['class_id'],$postData['session_id'],$postData['term_id']);
+            $this->Flash->success('Successfully Calculated the students annual results');
             return;
         }
-            // process the result with the supplied parameters
-            $termlyResultProcessing  = new TermlyResultProcessing();
-            $returnData = $termlyResultProcessing->calculateTermlyTotalAndAverage($postData['class_id'],$postData['term_id'],$postData['session_id'],$postData['no_of_subjects']);
+        // process the result with the supplied parameters
+        $termlyResultProcessing  = new TermlyResultProcessing();
+        if ($termlyResultProcessing->isBusy()) {
+            $this->Flash->error('The Result Processing server is busy now. Try again later.');
+            return;
+        }
+        $termlyResultProcessing->startProcessing();
+
+        $returnData = $termlyResultProcessing->calculateTermlyTotalAndAverage($postData['class_id'],$postData['term_id'],$postData['session_id'],$postData['no_of_subjects']);
             if (is_array($returnData)) {
                 if ( !empty($returnData['subjectCountIssues'])) {
                     $response = (new Collection($returnData['subjectCountIssues']))->unfold()->toList();
@@ -74,6 +87,9 @@ class ResultProcessingController extends AppController
                 }
                 return;
             }
+        if ($returnData === null) {
+            $this->Flash->success('Successfully Calculated the students termly results ');
+        }
         // check is the cal_student_position is checked and calculate student positions
         if (isset($postData['cal_student_position']) && !empty($postData['cal_student_position'])) {
             if ($termlyResultProcessing->calculateTermlyPosition($postData['class_id'],$postData['term_id'],$postData['session_id'])){
@@ -92,10 +108,9 @@ class ResultProcessingController extends AppController
                 $this->Flash->success(__('Successfully calculated the students positions'));
             }
         }
-            if ($termlyResultProcessing->getStatus()) {
-                $this->Flash->success('Successfully Calculated the students termly results ');
-            }
-        if ( isset($postData['cal_class_average']) && !empty($postData['cal_class_average'])) {
+        $termlyResultProcessing->stopProcessing();
+
+        if (isset($postData['cal_class_count']) && !empty($postData['cal_class_count'])) {
             $classCount->getStudentNumberInClasses($postData['class_id'],$postData['session_id'],$postData['term_id']);
             $this->Flash->success('Successfully counted the students in the class');
         }

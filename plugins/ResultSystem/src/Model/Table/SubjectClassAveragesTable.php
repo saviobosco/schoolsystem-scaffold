@@ -35,9 +35,9 @@ class SubjectClassAveragesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('subject_class_averages');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('subject_class_averages');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey(['subject_id','session_id','class_id','term_id']);
 
         $this->belongsTo('Subjects', [
             'foreignKey' => 'subject_id',
@@ -94,10 +94,10 @@ class SubjectClassAveragesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['subject_id'], 'Subjects'));
+        /*$rules->add($rules->existsIn(['subject_id'], 'Subjects'));
         $rules->add($rules->existsIn(['class_id'], 'Classes'));
         $rules->add($rules->existsIn(['term_id'], 'Terms'));
-        $rules->add($rules->existsIn(['session_id'], 'Sessions'));
+        $rules->add($rules->existsIn(['session_id'], 'Sessions'));*/
 
         return $rules;
     }

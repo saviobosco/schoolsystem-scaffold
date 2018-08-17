@@ -35,9 +35,9 @@ class StudentAnnualSubjectPositionsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('student_annual_subject_positions');
-        $this->displayField('id');
-        $this->primaryKey(['student_id','subject_id','class_id','session_id']);
+        $this->setTable('student_annual_subject_positions');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey(['student_id','subject_id','class_id','session_id']);
 
         $this->belongsTo('Subjects', [
             'foreignKey' => 'subject_id',
@@ -94,10 +94,10 @@ class StudentAnnualSubjectPositionsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['subject_id'], 'Subjects'));
+        /*$rules->add($rules->existsIn(['subject_id'], 'Subjects'));
         $rules->add($rules->existsIn(['student_id'], 'Students'));
         $rules->add($rules->existsIn(['class_id'], 'Classes'));
-        $rules->add($rules->existsIn(['session_id'], 'Sessions'));
+        $rules->add($rules->existsIn(['session_id'], 'Sessions'));*/
 
         return $rules;
     }

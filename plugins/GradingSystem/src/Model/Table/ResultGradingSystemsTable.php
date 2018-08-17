@@ -81,4 +81,9 @@ class ResultGradingSystemsTable extends Table
     {
         return $this->find('all')->orderAsc('cal_order')->combine('score','grade')->toArray();
     }
+
+    public function getAllRecords()
+    {
+        return $this->find('all')->orderAsc('cal_order')->all();
+    }
 }
