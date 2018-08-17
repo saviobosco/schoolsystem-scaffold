@@ -9,41 +9,35 @@
 namespace GradingSystem\Model\Entity;
 
 
+use GradingSystem\Exception\MissingScoreRangeException;
+
 trait GradeableTrait
 {
 
     public function calculateGrade($total , Array $grades)
     {
-
         if (is_int( (int) $total) || is_float( (float) $total)) {
-
-
             if (is_array($grades)) {
-
-                $count = count($grades);
-
-                $position = 1;
-                foreach ($grades as $key => $grade) {
-
-                    list($first,$last) = explode("-", $key);
-
-
-                    if ($position === 1) {
-                        if ((int)$total >= (int) $first ) {
-                            return $grade;
-                        }
-                    } elseif( $position > 1 && $position < $count ) {
-                        if ( (int)$total >= (int) $first && (int)$total <= (int) $last ) {
-                            return $grade ;
-                        }
-                    } elseif ($position === $count ) {
-                        if ( (int)$total < (int) $first ) {
-                            return $grade ;
-                        }
+                $scoreGrade = null;
+                foreach ($grades as $scoreRange => $grade) {
+                    list($first,$last) = explode("-", $scoreRange);
+                    $scoreGrade = $this->_getGrade($first, $last, $total, $grade);
+                    if ($scoreGrade !== null) {
+                        break;
                     }
-                    $position++;
                 }
+                if ($scoreGrade === null) {
+                    throw new MissingScoreRangeException(['widget' => $total ]);
+                }
+                return $scoreGrade;
             }
+        }
+    }
+
+    protected function _getGrade($beginRange, $endRange, $total, $grade)
+    {
+        if ( (int)$total >= (int) $beginRange && (int)$total <= (int) $endRange ) {
+            return $grade ;
         }
     }
 
