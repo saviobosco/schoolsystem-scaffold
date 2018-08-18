@@ -51,5 +51,10 @@ class SubjectsFixture extends TestFixture
             'name' => 'French',
             'block_id' => 1
         ],
+        [
+            'id' => 4,
+            'name' => 'Igbo Language',
+            'block_id' => 1
+        ],
     ];
 }

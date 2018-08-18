@@ -8,3 +8,4 @@
 /config/Migrations/schema-dump-default.lock
 todo.txt
 change-logs.txt
+test_db.sqlite

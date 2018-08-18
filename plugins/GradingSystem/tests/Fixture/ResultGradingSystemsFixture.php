@@ -43,7 +43,7 @@ class ResultGradingSystemsFixture extends TestFixture
         [
             'id' => 1,
             'grade' => 'A',
-            'score' => '75 - above',
+            'score' => '75 - 100',
             'remark' => 'Distinction',
             'cal_order' => 1,
             'created' => '2017-07-13 14:09:37',
@@ -70,7 +70,7 @@ class ResultGradingSystemsFixture extends TestFixture
         [
             'id' => 4,
             'grade' => 'F',
-            'score' => '45 - below',
+            'score' => '0 - 45',
             'remark' => 'Fail',
             'cal_order' => 4,
             'created' => '2017-07-13 14:09:37',

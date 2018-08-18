@@ -220,6 +220,20 @@ class StudentTermlyResultsTable extends Table
                 break;
         }
         $studentAnnualResultTable->save($studentAnnualResult);
+        // delete position in subject positions table
+        $termlySubjectPositionTable = TableRegistry::get('ResultSystem.StudentTermlyPositions');
+        $studentTermlySubjectPosition = $termlySubjectPositionTable->find()
+            ->where([
+                'student_id' => $event->data['entity']['student_id'],
+                'subject_id' => $event->data['entity']['subject_id'],
+                'class_id' => $event->data['entity']['class_id'],
+                'session_id' => $event->data['entity']['session_id'],
+                'term_id' => $event->data['entity']['term_id']
+            ])
+            ->first();
+        if ($studentTermlySubjectPosition) {
+            $termlySubjectPositionTable->delete($studentTermlySubjectPosition);
+        }
     }
 
     /**

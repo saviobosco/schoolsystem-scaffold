@@ -58,7 +58,6 @@ class StudentsControllerTest extends IntegrationTestCase
                     'username' => 'testing',
                     'role' => 'admin',
                     'super_user' => 1
-                    // other keys.
                 ]
             ]
         ]);
@@ -148,8 +147,7 @@ class StudentsControllerTest extends IntegrationTestCase
                 ]
             ]
         ];
-        $this->put('/result-system/add-student-result/001?session_id=1&class_id=1&term_id=2',$data);
-        //$this->assertResponseContains('');
+        $this->post('/result-system/add-student-result/001?session_id=1&class_id=1&term_id=2',$data);
         $this->assertRedirect();
         $this->assertSession('The student results and remarks has been saved.', 'Flash.flash.0.message');
     }
@@ -214,7 +212,6 @@ class StudentsControllerTest extends IntegrationTestCase
         ];
         $this->put('/result-system/edit-student-result/001?session_id=1&class_id=1&term_id=1',$data);
         $this->assertRedirect();
-        //$this->assertResponseContains('Edit Termly Results');
         $this->assertSession('The student has been saved.', 'Flash.flash.0.message');
     }
 

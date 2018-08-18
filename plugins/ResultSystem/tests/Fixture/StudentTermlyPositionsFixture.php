@@ -52,5 +52,25 @@ class StudentTermlyPositionsFixture extends TestFixture
             'term_id' => 1,
             'session_id' => 1
         ],
+        [
+            'id' => 2,
+            'student_id' => '002',
+            'total' => '80.5',
+            'average' => 2,
+            'position' => 1,
+            'class_id' => 1,
+            'term_id' => 1,
+            'session_id' => 1
+        ],
+        [
+            'id' => 3,
+            'student_id' => '003',
+            'total' => '75',
+            'average' => 2,
+            'position' => 1,
+            'class_id' => 1,
+            'term_id' => 1,
+            'session_id' => 1
+        ],
     ];
 }
