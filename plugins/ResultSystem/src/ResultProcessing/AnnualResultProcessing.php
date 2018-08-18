@@ -36,7 +36,7 @@ class AnnualResultProcessing
         $annualPositionTable = TableRegistry::get('ResultSystem.StudentAnnualPositions');
         // finds all students in the students table using the class_id
         $studentsInAClass = $studentTable->find('all')
-            ->select(['id','class_id'])
+            ->select(['id','class_id','status'])
             ->where([
                 'class_id' => $class_id,
                 'status' => 1
@@ -106,10 +106,15 @@ class AnnualResultProcessing
     {
         // Initializes the All required tables
         $annualPositionTable = TableRegistry::get('ResultSystem.StudentAnnualPositions');
-        $annualResultsTotal = $annualPositionTable->find('all')->where([
+        $annualResultsTotal = $annualPositionTable->find('all')
+            ->select(['total','class_id','session_id','student_id'])
+            ->where([
             'class_id'=>$class_id,
             'session_id' => $session_id
         ])->order(['total'=>'DESC'])->groupBy('total')->toArray();
+        if (empty($annualResultsTotal)) {
+            return false;
+        }
         $position = 1;
         foreach ($annualResultsTotal as  $totalGroup ) {
             foreach($totalGroup as $student) {

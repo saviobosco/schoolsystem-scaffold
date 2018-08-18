@@ -46,7 +46,11 @@ class TermlyResultProcessing
         $termlyResultTable = TableRegistry::get('ResultSystem.StudentTermlyResults');
         $termlyPositionTable = TableRegistry::get('ResultSystem.StudentTermlyPositions');
 
-        $students = $studentTable->where(['class_id' => $class_id, 'status' => 1])->toArray();
+        $students = $studentTable
+            ->find('all')
+            ->select(['id','status','class_id'])
+            ->where(['class_id' => $class_id, 'status' => 1])
+            ->toArray();
         // iterates through the student Array sets
         if (empty ($students)) {
             $returnData['error'] = 'No Student found';
@@ -54,7 +58,9 @@ class TermlyResultProcessing
         }
         foreach ($students as $student ) {
             // gets the student subject
-            $subjects = $termlyResultTable->find('all')->where([
+            $subjects = $termlyResultTable->find('all')
+                ->select(['total','student_id','class_id','term_id','session_id'])
+                ->where([
                 'student_id' => $student->id,
                 'class_id' => $class_id,
                 'term_id' => $term_id,
@@ -117,7 +123,9 @@ class TermlyResultProcessing
             'term_id' => $term_id,
             'session_id' => $session_id
         ])->orderDesc('total')->groupBy('total')->toArray();
-
+        if (empty($studentsGroupByTotal)) {
+            return false;
+        }
         $position = 1;
         foreach ($studentsGroupByTotal as  $studentsWithSameTotal ) {
             foreach($studentsWithSameTotal as $student ) {
