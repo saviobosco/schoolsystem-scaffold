@@ -23,10 +23,10 @@ Router::plugin(
                 'action'=>'view'
             ]);
 
-        $routes->put('/add-student-result/**',
+        $routes->post('/add-student-result/**',
             [
                 'controller'=>'Students',
-                'action'=>'processAdd'
+                'action'=>'store'
             ]
         );
 
@@ -40,7 +40,7 @@ Router::plugin(
         $routes->put('/edit-student-result/**',
             [
                 'controller'=>'Students',
-                'action'=>'processEdit'
+                'action'=>'update'
             ]
         );
         $routes->connect('/edit-student-result/**',

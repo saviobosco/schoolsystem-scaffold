@@ -9,12 +9,10 @@
 namespace ResultSystem\ResultProcessing;
 
 use Cake\ORM\TableRegistry;
-use ResultSystem\Model\Entity\GradeableTrait;
-use Cake\I18n\Number;
+use GradingSystem\Exception\MissingScoreRangeException;
 
 class AnnualResultProcessing
 {
-    use GradeableTrait;
     use ResultProcessingTrait;
 
 
@@ -27,9 +25,11 @@ class AnnualResultProcessing
     /**
      * @param $class_id
      * @param $session_id
+     * @return $returnData
      */
     public function calculateAnnualTotals($class_id, $session_id)
     {
+        $returnData = null;
         // Initialize the required tables
         $studentTable = TableRegistry::get('ResultSystem.Students');
         $annualResultTable = TableRegistry::get('ResultSystem.StudentAnnualResults');
@@ -58,39 +58,48 @@ class AnnualResultProcessing
             $sumOfSubjectsTotal = 0;
             $sumOfSubjectsAverage = 0;
             $subjectCount = 0;
-            foreach ($StudentTotalForAllTermlySubjects as $studentAnnualTotalForASubject ) {
-                // if all columns in this subject is empty , it means it was added by mistake.
-                // remove the record.
-                if (!$studentAnnualTotalForASubject['first_term'] AND ! $studentAnnualTotalForASubject['second_term'] AND ! $studentAnnualTotalForASubject['third_term'] ) {
-                    $annualResultTable->delete($studentAnnualTotalForASubject);
-                    continue;
-                }
-                $studentAnnualTotalForASubject['total'] = $studentAnnualTotalForASubject['first_term'] +
-                    $studentAnnualTotalForASubject['second_term'] + $studentAnnualTotalForASubject['third_term'];
-                $studentAnnualTotalForASubject['average'] = $this->_determineNumberPrecision( $studentAnnualTotalForASubject['total'] / 3) ;
-                // calculates the grade
-                $studentAnnualTotalForASubject['grade'] = $this->calculateGrade($studentAnnualTotalForASubject['average'], $this->grades);
-                // calculate the remark
-                $studentAnnualTotalForASubject['remark'] = $this->remarks[$studentAnnualTotalForASubject['grade']];
+            try {
+                foreach ($StudentTotalForAllTermlySubjects as $studentAnnualTotalForASubject ) {
+                    // if all columns in this subject is empty , it means it was added by mistake.
+                    // remove the record.
+                    if (!$studentAnnualTotalForASubject['first_term'] AND ! $studentAnnualTotalForASubject['second_term'] AND ! $studentAnnualTotalForASubject['third_term'] ) {
+                        $annualResultTable->delete($studentAnnualTotalForASubject);
+                        continue;
+                    }
+                    $averageDivision = 0;
+                    if ($studentAnnualTotalForASubject['first_term']) { $averageDivision++; }
+                    if ($studentAnnualTotalForASubject['second_term']) { $averageDivision++; }
+                    if ($studentAnnualTotalForASubject['third_term']) { $averageDivision++; }
+                    $studentAnnualTotalForASubject['total'] = $studentAnnualTotalForASubject['first_term'] +
+                        $studentAnnualTotalForASubject['second_term'] + $studentAnnualTotalForASubject['third_term'];
+                    $studentAnnualTotalForASubject['average'] = $this->_determineNumberPrecision( $studentAnnualTotalForASubject['total'] / $averageDivision) ;
+                    // calculates the grade
+                    $studentAnnualTotalForASubject['grade'] = $this->calculateGrade($studentAnnualTotalForASubject['average'], $this->grades);
+                    // calculate the remark
+                    $studentAnnualTotalForASubject['remark'] = $this->remarks[$studentAnnualTotalForASubject['grade']];
 
-                $annualResultTable->save($studentAnnualTotalForASubject);
-                $sumOfSubjectsTotal += $studentAnnualTotalForASubject['total'];
-                $sumOfSubjectsAverage += $studentAnnualTotalForASubject['average'];
-                $subjectCount++;
+                    $annualResultTable->save($studentAnnualTotalForASubject);
+                    $sumOfSubjectsTotal += $studentAnnualTotalForASubject['total'];
+                    $sumOfSubjectsAverage += $studentAnnualTotalForASubject['average'];
+                    $subjectCount++;
+                }
+                $subjectAverage = $this->_determineNumberPrecision($sumOfSubjectsAverage / $subjectCount);
+                $studentAnnualPosition = $annualPositionTable->newEntity(
+                    [
+                        'student_id' => $studentInAClass['id'],
+                        'total'      => $sumOfSubjectsTotal,
+                        'average'    => $subjectAverage,
+                        'grade'     => $this->remarks[$this->calculateGrade($subjectAverage,$this->grades)],
+                        'class_id'  => $class_id,
+                        'session_id' => $session_id
+                    ]
+                );
+                $annualPositionTable->save($studentAnnualPosition);
+            } catch (MissingScoreRangeException $exception) {
+                $returnData['subjectCountIssues'][] = $exception->getMessage();
             }
-            $subjectAverage = $this->_determineNumberPrecision($sumOfSubjectsAverage / $subjectCount);
-            $studentAnnualPosition = $annualPositionTable->newEntity(
-                [
-                    'student_id' => $studentInAClass['id'],
-                    'total'      => $sumOfSubjectsTotal,
-                    'average'    => $subjectAverage,
-                    'grade'     => $this->remarks[$this->calculateGrade($subjectAverage,$this->grades)],
-                    'class_id'  => $class_id,
-                    'session_id' => $session_id
-                ]
-            );
-            $annualPositionTable->save($studentAnnualPosition);
         }
+        return $returnData;
     }
 
     public function calculateAnnualPosition($class_id,$session_id)

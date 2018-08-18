@@ -57,7 +57,20 @@ class ResultProcessingController extends AppController
                 return;
             }
             $annualResultProcessing->startProcessing();
-            $annualResultProcessing->calculateAnnualTotals($postData['class_id'], $postData['session_id']);
+            $returnData = $annualResultProcessing->calculateAnnualTotals($postData['class_id'], $postData['session_id']);
+            if (is_array($returnData)) {
+                if ( !empty($returnData['subjectCountIssues'])) {
+                    $list = '<ol>';
+                    for( $i = 0; $i < count($returnData['subjectCountIssues']); $i++) {
+                        $list .= '<li>'. $returnData['subjectCountIssues'][$i] .'</li>';
+                    }
+                    $list .= '</ol>';
+                    $this->Flash->set('<p><i class="fa fa-warning"></i><b> The following issues occurred while processing your request :</b></p>'.
+                        $list.'<p> Please review them and try again</p>',[
+                        'element'=>'unescaped_error',
+                        'escape'=>false]);
+                }
+            }
             $annualResultProcessing->calculateAnnualPosition($postData['class_id'], $postData['session_id']);
             $annualResultProcessing->calculateStudentAnnualSubjectPosition($postData['class_id'], $postData['session_id']);
             $annualResultProcessing->stopProcessing();
@@ -76,9 +89,13 @@ class ResultProcessingController extends AppController
         $returnData = $termlyResultProcessing->calculateTermlyTotalAndAverage($postData['class_id'],$postData['term_id'],$postData['session_id'],$postData['no_of_subjects']);
             if (is_array($returnData)) {
                 if ( !empty($returnData['subjectCountIssues'])) {
-                    $response = (new Collection($returnData['subjectCountIssues']))->unfold()->toList();
-                    $this->Flash->set('<p><i class="fa fa-warning"></i><b>The following issues occurred while processing your request :</b></p>'.
-                        __(Text::toList($response)).'<p> Please review them and try again</p>',[
+                    $list = '<ol>';
+                    for( $i = 0; $i < count($returnData['subjectCountIssues']); $i++) {
+                        $list .= '<li>'. $returnData['subjectCountIssues'][$i] .'</li>';
+                    }
+                    $list .= '</ol>';
+                    $this->Flash->set('<p><i class="fa fa-warning"></i><b> The following issues occurred while processing your request :</b></p>'.
+                        $list.'<p> Please review them and try again</p>',[
                         'element'=>'unescaped_error',
                         'escape'=>false]);
                 }

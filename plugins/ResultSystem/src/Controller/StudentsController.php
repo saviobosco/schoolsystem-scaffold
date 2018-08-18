@@ -216,7 +216,7 @@ class StudentsController extends AppController
         }
     }
 
-    public function processAdd()
+    public function store()
     {
         if ($this->request->is(['patch', 'post', 'put'])) {
             try {
@@ -276,7 +276,7 @@ class StudentsController extends AppController
         }
     }
 
-    public function processEdit($id = null)
+    public function update($id = null)
     {
         $queryData = $this->request->getQuery();
         if (empty($queryData) ) {

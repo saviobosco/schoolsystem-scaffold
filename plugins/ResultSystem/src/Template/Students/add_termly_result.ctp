@@ -76,7 +76,7 @@ if ( isset($studentResultExists) AND !empty($studentResultExists)) {
     </div>
 <?php endif; ?>
 
-<?= $this->Form->create($student,['method'=>'POST',]) ?>
+<?= $this->Form->create(null,['method'=>'POST']) ?>
 <fieldset>
     <legend><?= __('Add Student Termly Result') ?></legend>
     <?php if (!empty($subjects)): ?>

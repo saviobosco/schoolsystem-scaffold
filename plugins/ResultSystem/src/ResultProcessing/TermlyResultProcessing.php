@@ -9,7 +9,8 @@
 namespace ResultSystem\ResultProcessing;
 
 use Cake\ORM\TableRegistry;
-use ResultSystem\Model\Entity\GradeableTrait;
+use GradingSystem\Exception\MissingScoreRangeException;
+
 /**
  * Class TermlyResultProcessing
  * @package ResultSystem\ResultProcessing
@@ -17,9 +18,7 @@ use ResultSystem\Model\Entity\GradeableTrait;
  */
 class TermlyResultProcessing
 {
-    use GradeableTrait;
     use ResultProcessingTrait;
-
 
     public function __construct()
     {
@@ -56,22 +55,20 @@ class TermlyResultProcessing
         foreach ($students as $student ) {
             // gets the student subject
             $subjects = $termlyResultTable->find('all')->where([
-                'student_id'=>$student->id,
-                'class_id'=>$class_id,
+                'student_id' => $student->id,
+                'class_id' => $class_id,
                 'term_id' => $term_id,
                 'session_id' => $session_id
             ])->toArray();
             $subjectCount = count($subjects);
-            /* Check if the Student has any subject result for that year
-               If the student does not have , continue with the next student
-            */
+
             if ( $subjectCount <= 0 ) {
                 continue;
             }
             // check if the student subjects is greater that the supplied $no_of_students
             if ( $subjectCount < $no_of_subjects OR $subjectCount > $no_of_subjects) {
                 $studentId = $student['id'];
-                $returnData['subjectCountIssues'][] = ["$studentId has $subjectCount subjects.<br/> "];
+                $returnData['subjectCountIssues'][] = "Student with Id <strong>$studentId</strong> has <strong>$subjectCount</strong> subjects.";
                 unset($studentId);
             }
             $sum = 0 ;
@@ -80,16 +77,20 @@ class TermlyResultProcessing
             }
             $average = $this->_determineNumberPrecision($sum / $no_of_subjects ) ;
             // check to know if the record already exists in the table .
-            $studentTotal = $termlyPositionTable->newEntity([
-                'student_id' => $student->id,
-                'total' => $sum ,
-                'average' => $average,
-                'grade'   => $this->remarks[$this->calculateGrade($average,$this->grades)],
-                'class_id' => $class_id,
-                'term_id' => $term_id,
-                'session_id' => $session_id
-            ]);
-            $termlyPositionTable->save($studentTotal);
+            try {
+                $studentTotal = $termlyPositionTable->newEntity([
+                    'student_id' => $student->id,
+                    'total' => $sum ,
+                    'average' => $average,
+                    'grade'   => $this->remarks[$this->calculateGrade($average,$this->grades)],
+                    'class_id' => $class_id,
+                    'term_id' => $term_id,
+                    'session_id' => $session_id
+                ]);
+                $termlyPositionTable->save($studentTotal);
+            } catch (MissingScoreRangeException $exception) {
+                $returnData['subjectCountIssues'][] = $exception->getMessage();
+            }
         }
         return $returnData;
     }

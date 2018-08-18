@@ -7,11 +7,13 @@
  */
 
 namespace ResultSystem\ResultProcessing;
-
+use GradingSystem\Model\Entity\GradeableTrait;
 use Cake\ORM\TableRegistry;
 use Cake\I18n\Number;
 trait ResultProcessingTrait
 {
+    use GradeableTrait;
+
     public $grades = null;
     public $remarks = null;
     protected $_busy = false;

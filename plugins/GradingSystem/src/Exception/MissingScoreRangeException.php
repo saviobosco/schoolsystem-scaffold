@@ -13,5 +13,5 @@ use Cake\Core\Exception\Exception;
 
 class MissingScoreRangeException extends Exception
 {
-    protected $_messageTemplate = 'Seems that the score range for %d is missing.';
+    protected $_messageTemplate = 'Seems the Score Range for <strong>%d</strong> is Missing.';
 }

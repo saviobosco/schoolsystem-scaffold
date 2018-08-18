@@ -7,8 +7,8 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
+use GradingSystem\Model\Entity\GradeableTrait;
 use ResultSystem\Exception\MissingGradesException;
-use ResultSystem\Model\Entity\GradeableTrait;
 use Cake\Database\Schema\TableSchema;
 /**
  * StudentTermlyResults Model
