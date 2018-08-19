@@ -19,13 +19,19 @@
             <exclude>./tests/TestCase/Model</exclude>
         </testsuite>-->
         <testsuite name="Result System Plugin">
-            <!--<directory>./plugins/ResultSystem/tests/TestCase</directory>-->
-            <!--<exclude>./plugins/ResultSystem/tests/TestCase/Model</exclude>-->
-            <file>./plugins/ResultSystem/tests/TestCase/Controller/StudentsControllerTest.php</file>
+            <directory>./plugins/ResultSystem/tests/TestCase/Controller</directory>
             <directory>./plugins/ResultSystem/tests/TestCase/ResultProcessing</directory>
+            <directory>./plugins/ResultSystem/tests/TestCase/Model/Table</directory>
+            <directory>./plugins/ResultSystem/tests/TestCase/View</directory>
         </testsuite>
-        <!--<testsuite name="Grading System Plugin">-->
-            <!--<directory>./plugins/GradingSystem/tests/TestCase</directory>-->
+        <testsuite name="Grading System Plugin">
+            <directory>./plugins/GradingSystem/tests/TestCase</directory>
+        </testsuite>
+        <!--<testsuite name="Students Manager Plugin">-->
+            <!--<directory>./plugins/StudentsManager/tests/TestCase</directory>-->
+        <!--</testsuite>-->
+        <!--<testsuite name="Finance Manager Plugin">-->
+            <!--<directory>./plugins/FinanceManager/tests/TestCase/Model</directory>-->
         <!--</testsuite>-->
         <!--<testsuite name="Skill Grading System Plugin">-->
             <!--<directory>./plugins/SkillsGradingSystem/tests/TestCase</directory>-->

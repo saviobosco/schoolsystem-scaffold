@@ -35,10 +35,6 @@ class ResultProcessingController extends AppController
 
     public function index()
     {
-        if ( $this->request->is(['patch', 'post', 'put']) ) {
-            $postData = $this->request->getData();
-            $this->processResult($postData);
-        }
         $sessions = $this->Sessions->find('list');
         $classes = $this->Classes->find('list');
         $terms = $this->Terms->find('list');
@@ -100,7 +96,7 @@ class ResultProcessingController extends AppController
 
         if (isset($postData['cal_class_average']) && !empty($postData['cal_class_average'])) {
             if($termlyResultProcessing->calculateSubjectClassAverage($postData['class_id'],$postData['term_id'],$postData['session_id'])) {
-                $this->Flash->success(__('Successfully calculated the students positions'));
+                $this->Flash->success(__('Successfully calculated the class averages'));
             }
         }
         $termlyResultProcessing->stopProcessing();
@@ -119,7 +115,7 @@ class ResultProcessingController extends AppController
         $annualResultProcessing = new AnnualResultProcessing();
         if ($annualResultProcessing->isBusy()) {
             $this->Flash->error('The Result Processing server is busy now. Try again later.');
-            return;
+            return $this->redirect($this->referer());
         }
         $annualResultProcessing->startProcessing();
 

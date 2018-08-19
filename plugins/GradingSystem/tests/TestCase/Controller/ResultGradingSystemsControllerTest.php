@@ -70,7 +70,7 @@ class ResultGradingSystemsControllerTest extends IntegrationTestCase
         $data = [
             'id' => 5,
             'grade' => 'A',
-            'score' => '75 - above',
+            'score' => '75 - 100',
             'remark' => 'Distinction',
             'cal_order' => 5,
             'created' => '2017-07-13 14:09:37',

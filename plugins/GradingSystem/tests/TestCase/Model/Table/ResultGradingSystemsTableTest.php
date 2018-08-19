@@ -59,10 +59,10 @@ class ResultGradingSystemsTableTest extends TestCase
         $grade = $this->ResultGradingSystems->getGrades();
         $this->assertCount(4,$grade,'Numbers are not equal');
         $expected = [
-            '75 - above' => 'A',
+            '75 - 100' => 'A',
             '55 - 74' => 'B',
             '45 - 54' => 'P',
-            '45 - below' => 'F'
+            '0 - 45' => 'F'
         ];
         $this->assertEquals($expected, $grade);
     }
@@ -71,10 +71,10 @@ class ResultGradingSystemsTableTest extends TestCase
     {
         $totals = [100,75,74.55,55,54.5,43];
         $grades = [
-            '75 - above' => 'A',
+            '75 - 100' => 'A',
             '55 - 74' => 'B',
             '45 - 54' => 'P',
-            '45 - below' => 'F'
+            '0 - 45' => 'F'
         ];
         $this->assertEquals('A',$this->ResultGradingSystems->calculateGrade($totals[0],$grades));
         $this->assertEquals('A',$this->ResultGradingSystems->calculateGrade($totals[1],$grades));

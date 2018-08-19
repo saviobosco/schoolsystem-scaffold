@@ -54,5 +54,7 @@ class StudentClassCountsTableTest extends TestCase
     public function testGetStudentsClassCount()
     {
         //
+        $actualResult = $this->StudentClassCounts->getStudentsClassCount(1, 1, 1);
+        $this->assertEquals(1, $actualResult['student_count']);
     }
 }

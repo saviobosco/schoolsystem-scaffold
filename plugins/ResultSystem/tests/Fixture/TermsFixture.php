@@ -49,5 +49,17 @@ class TermsFixture extends TestFixture
             'created' => '2016-09-01 22:15:35',
             'modified' => '2016-09-01 22:15:35'
         ],
+        [
+            'id' => 3,
+            'name' => 'Third Term',
+            'created' => '2016-09-01 22:15:35',
+            'modified' => '2016-09-01 22:15:35'
+        ],
+        [
+            'id' => 4,
+            'name' => 'Annual Term',
+            'created' => '2016-09-01 22:15:35',
+            'modified' => '2016-09-01 22:15:35'
+        ],
     ];
 }

@@ -83,7 +83,7 @@ class StudentsTableTest extends TestCase
             2 => 1,
             3 => 1
         ];
-        $this->assertEquals($expected,$this->Students->getStudentAnnualSubjectPositions('001',1,1));
+        $this->assertEquals($expected,$this->Students->getStudentAnnualSubjectPositions('001', 1, 1));
     }
 
     /**
@@ -106,7 +106,7 @@ class StudentsTableTest extends TestCase
             'term_id' => 1,
             'session_id' => 1
         ];
-        $this->assertEquals($expected,$this->Students->getStudentGeneralRemark('001',1,1,1));
+        $this->assertEquals($expected,$this->Students->getStudentGeneralRemark('001', 1, 1, 1));
     }
 
     /**
@@ -223,12 +223,8 @@ class StudentsTableTest extends TestCase
             'id' => 1,
             'student_id' => '001',
             'total' => '85',
-            'average' => 3,
-            'position' => 1,
-            'class_id' => 1,
-            'session_id' => 1
         ];
-        $this->assertEquals($expected,$this->Students->getStudentAnnualPosition('001',['term_id'=>1,'session_id'=>1,'class_id'=>1]));
+        $this->assertEquals($expected['student_id'],$this->Students->getStudentAnnualPosition('001',['term_id'=>1,'session_id'=>1,'class_id'=>1])['student_id']);
     }
 
     /**
@@ -239,11 +235,11 @@ class StudentsTableTest extends TestCase
     public function testGetStudentAnnualPromotions()
     {
         $expected = [
-            'id' => '002',
-            'first_name' => 'Iwueze',
-            'last_name' => 'Ifeoma',
+            'id' => '001',
+            'first_name' => 'Omebe',
+            'last_name' => 'Johnbosco',
             'student_annual_positions' => []
         ];
-        $this->assertContains($expected,$this->Students->getStudentAnnualPromotions(['term_id'=>1,'session_id'=>1,'class_id'=>1]));
+        $this->assertEquals($expected['id'],$this->Students->getStudentAnnualPromotions(['term_id'=>1,'session_id'=>1,'class_id'=>1])[0]['id']);
     }
 }

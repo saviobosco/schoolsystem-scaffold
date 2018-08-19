@@ -34,9 +34,9 @@ class StudentClassCountsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('student_class_counts');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('student_class_counts');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey(['class_id','session_id','term_id']);
 
         $this->belongsTo('Classes', [
             'foreignKey' => 'class_id',

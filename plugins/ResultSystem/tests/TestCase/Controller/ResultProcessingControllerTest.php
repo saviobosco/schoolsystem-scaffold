@@ -37,6 +37,9 @@ class ResultProcessingControllerTest extends IntegrationTestCase
         'plugin.result_system.student_termly_subject_position_on_class_demarcations',
         'plugin.result_system.student_class_counts',
         'plugin.result_system.subject_class_averages',
+        'plugin.result_system.student_class_counts',
+        'plugin.result_system.student_annual_positions',
+        'plugin.result_system.student_annual_subject_positions',
     ];
 
     public function setUp()
@@ -65,72 +68,50 @@ class ResultProcessingControllerTest extends IntegrationTestCase
      */
     public function testIndex()
     {
-        $data = [
-            'session_id' => 1,
-            'class_id' => 1,
-            'term_id' => 1,
-            'no_of_subjects' => 3
-        ];
-        $this->post('result-system/result-processing',$data);
+        $this->get('result-system/result-processing');
         $this->assertResponseOk();
-        $this->assertResponseContains('Successfully Calculated the students termly results');
     }
 
-    /**
-     * Test index ResultProcessingWithStudentPosition
-     *
-     * @return void
-     */
-    public function testResultProcessingWithStudentPosition()
+   /** @test */
+    public function testProcessTermlyResults()
     {
         $data = [
             'session_id' => 1,
             'class_id' => 1,
             'term_id' => 1,
             'no_of_subjects' => 3,
-            'cal_student_position' => true
+            'cal_student_total' => true,
+            'cal_student_position' => true,
+            'cal_subject_position' => true,
+            'cal_class_average' => true,
+            'cal_class_count' => true,
         ];
-        $this->post('result-system/result-processing',$data);
-        $this->assertResponseOk();
-        $this->assertResponseContains('Successfully Calculated the students termly results');
+        $this->post('result-system/result-processing/process-termly-result',$data);
+        $this->assertRedirect();
+        $this->assertSession('Successfully Calculated the students termly results ', 'Flash.flash.0.message');
+        $this->assertSession('Successfully calculated the students positions', 'Flash.flash.1.message');
+        $this->assertSession('Successfully calculated the students subject positions', 'Flash.flash.2.message');
+        $this->assertSession('Successfully calculated the class averages', 'Flash.flash.3.message');
+        $this->assertSession('Successfully counted the students in the class', 'Flash.flash.4.message');
     }
 
-    /**
-     * Test index ResultProcessingWithSubjectPosition
-     *
-     * @return void
-     */
-    public function testResultProcessingWithSubjectPosition()
+    /** @test */
+    public function testProcessAnnualResults()
     {
         $data = [
             'session_id' => 1,
             'class_id' => 1,
-            'term_id' => 1,
-            'no_of_subjects' => 3,
-            'cal_subject_position' => true
+            'term_id' => 4,
+            'cal_student_total' => true,
+            'cal_student_position' => true,
+            'cal_subject_position' => true,
+            'cal_class_count' => true,
         ];
-        $this->post('result-system/result-processing',$data);
-        $this->assertResponseOk();
-        $this->assertResponseContains('Successfully calculated the students subject position');
+        $this->post('result-system/result-processing/process-annual-result',$data);
+        $this->assertRedirect();
+        $this->assertSession('Successfully Calculated the students annual results', 'Flash.flash.0.message');
+        $this->assertSession('Successfully calculated the students positions', 'Flash.flash.1.message');
+        $this->assertSession('Successfully calculated the students subject positions', 'Flash.flash.2.message');
+        $this->assertSession('Successfully counted the students in the class', 'Flash.flash.3.message');
     }
-
-    /**
-     * Test index ResultProcessingWithClassAverage
-     *
-     * @return void
-     */
-    public function testResultProcessingWithClassAverage()
-    {
-        $data = [
-            'session_id' => 1,
-            'class_id' => 1,
-            'term_id' => 1,
-            'no_of_subjects' => 3,
-            'cal_class_average' => true
-        ];
-        $this->post('result-system/result-processing',$data);
-        $this->assertResponseOk();
-        $this->assertResponseContains('Successfully Calculated the students termly results');
-    }
-
 }

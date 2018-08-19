@@ -72,7 +72,7 @@ class SubjectsTableTest extends TestCase
     public function testGetSubjectClassAverages()
     {
         $expected = [1 => 50];
-        $this->assertEquals($expected,$this->Subjects->getSubjectClassAverages(1,1,1));
+        $this->assertEquals($expected,$this->Subjects->getSubjectClassAverages(1, 1, 1));
     }
 
     /**
@@ -83,25 +83,27 @@ class SubjectsTableTest extends TestCase
     public function testGetAnnualResults()
     {
         $expected = [
-            'id' => 1,
-            'student_id' => '001',
-            'subject_id' => 1,
-            'first_term' => 45,
-            'second_term' => 36,
-            'third_term' => 156,
-            'total' => 1,
-            'average' => 1,
-            'remark' => '',
-            'class_id' => 1,
-            'session_id' => 1,
-            'grade' => '',
-            'student' => [
-                'id' => '001',
-                'first_name' => 'Omebe',
-                'last_name' => 'Johnbosco'
+            0 => [
+                'id' => 1,
+                'student_id' => '001',
+                'subject_id' => 1,
+                'first_term' => 92,
+                'second_term' => null,
+                'third_term' => null,
+                'total' => 92.0,
+                'average' => 1,
+                'remark' => '',
+                'class_id' => 1,
+                'session_id' => 1,
+                'grade' => '',
+                'student' => [
+                    'id' => '001',
+                    'first_name' => 'Omebe',
+                    'last_name' => 'Johnbosco'
+                ]
             ]
         ];
-        $this->assertContains($expected,$this->Subjects->getAnnualResults(1,['class_id'=>1,'session_id'=>1]));
+        $this->assertArraySubset($expected,$this->Subjects->getAnnualResults(1, ['class_id'=>1, 'session_id'=>1]));
     }
 
     /**
@@ -112,7 +114,7 @@ class SubjectsTableTest extends TestCase
     public function testGetAnnualSubjectPositions()
     {
         $expected = ['001' => 1];
-        $this->assertEquals($expected,$this->Subjects->getAnnualSubjectPositions(1,['class_id'=>1,'session_id'=>1]));
+        $this->assertEquals($expected,$this->Subjects->getAnnualSubjectPositions(1, ['class_id'=>1, 'session_id'=>1]));
     }
 
     /**
@@ -123,28 +125,31 @@ class SubjectsTableTest extends TestCase
     public function testGetTermlyResults()
     {
         $expected = [
-            'id' => 1,
-            'student_id' => '001',
-            'subject_id' => 1,
-            'first_test' => 9,
-            'second_test' => 8,
-            'third_test' => 10,
-            'exam' => 65,
-            'total' => null,
-            'grade' => null,
-            'remark' => null,
-            'principal_comment' => null,
-            'head_teacher_comment' => null,
-            'class_id' => 1,
-            'term_id' => 1,
-            'session_id' => 1,
-            'student' => [
-                'id' => '001',
-                'first_name' => 'Omebe',
-                'last_name' => 'Johnbosco'
+            0 => [
+                'id' => 1,
+                'student_id' => '001',
+                'subject_id' => 1,
+                'first_test' => 9,
+                'second_test' => 8,
+                'third_test' => 10,
+                'exam' => 65,
+                'total' => 92,
+                'grade' => null,
+                'remark' => null,
+                'principal_comment' => null,
+                'head_teacher_comment' => null,
+                'class_id' => 1,
+                'term_id' => 1,
+                'session_id' => 1,
+                'student' => [
+                    'id' => '001',
+                    'first_name' => 'Omebe',
+                    'last_name' => 'Johnbosco'
+                ]
             ]
         ];
-        $this->assertContains($expected,$this->Subjects->getTermlyResults(1,['class_id'=>1,'session_id'=>1,'term_id'=>1]));
+
+        $this->assertArraySubset($expected,$this->Subjects->getTermlyResults(1, ['class_id'=>1, 'session_id'=>1, 'term_id'=>1]));
     }
 
     /**
@@ -155,7 +160,7 @@ class SubjectsTableTest extends TestCase
     public function testGetTermlySubjectPositions()
     {
         $expected = ['001' => 1];
-        $this->assertEquals($expected,$this->Subjects->getTermlySubjectPositions(1,['class_id'=>1,'session_id'=>1,'term_id'=>1]));
+        $this->assertEquals($expected,$this->Subjects->getTermlySubjectPositions(1, ['class_id'=>1, 'session_id'=>1, 'term_id'=>1]));
     }
 
     /**

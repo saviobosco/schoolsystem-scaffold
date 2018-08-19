@@ -16,7 +16,9 @@ class StudentTermlyResultsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.result_system.student_termly_results'
+        'plugin.result_system.student_termly_results',
+        'plugin.result_system.student_annual_results',
+        'plugin.result_system.student_termly_subject_positions',
     ];
 
     public function setUp()
@@ -42,5 +44,6 @@ class StudentTermlyResultsControllerTest extends IntegrationTestCase
     {
         $this->delete('/result-system/delete-termly-result/1');
         $this->assertRedirect();
+        $this->assertSession('The record has been deleted.','Flash.flash.0.message');
     }
 }
