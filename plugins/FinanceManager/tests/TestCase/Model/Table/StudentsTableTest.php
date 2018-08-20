@@ -26,9 +26,9 @@ class StudentsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.finance_manager.students',
         'plugin.finance_manager.classes',
         'plugin.finance_manager.fees',
+        'plugin.finance_manager.students',
         'plugin.finance_manager.fee_categories',
         'plugin.finance_manager.student_fee_payments',
         'plugin.finance_manager.student_fees',
@@ -72,20 +72,19 @@ class StudentsTableTest extends TestCase
     public function testGetStudentFees()
     {
         $expected = [
-            'id' => 2,
-            'student_id' => '1000',
+            'id' => 1,
+            'student_id' => '001',
             'fee_id' => null,
             'fee_category_id' => 2,
             'amount' => 2000,
             'paid' => 0,
             'amount_remaining' => null,
             'purpose' => 'Damage',
-            'created' => new FrozenTime('2018-02-13 19:47:44'),
-            'modified' => new FrozenTime('2018-02-13 19:47:44'),
-            'created_by' => 'ca79c1f1-7aa9-452d-85de-10ef846ab70a',
-            'modified_by' => '0a1248a3-42e2-4da5-bbea-2378e1defe6f'
         ];
-        $this->assertContains($expected,$this->Students->getStudentFees('1000'));
+        $actual = $this->Students->getStudentFees('001');
+        $this->assertEquals($expected['id'], $actual[0]['id']);
+        $this->assertEquals($expected['amount'], $actual[0]['amount']);
+        $this->assertEquals($expected['student_id'], $actual[0]['student_id']);
     }
 
     /**
@@ -96,22 +95,18 @@ class StudentsTableTest extends TestCase
     public function testGetStudentSpecialFees()
     {
         $expected = [
-            [
-                'id' => 2,
-                'student_id' => '1000',
-                'fee_id' => null,
-                'fee_category_id' => 2,
-                'amount' => 2000,
-                'paid' => 0,
-                'amount_remaining' => null,
-                'purpose' => 'Damage',
-                'created' => new FrozenTime('2018-02-13 19:47:44'),
-                'modified' => new FrozenTime('2018-02-13 19:47:44'),
-                'created_by' => 'ca79c1f1-7aa9-452d-85de-10ef846ab70a',
-                'modified_by' => '0a1248a3-42e2-4da5-bbea-2378e1defe6f'
-            ]
+            'id' => 2,
+            'student_id' => '001',
+            'fee_id' => null,
+            'fee_category_id' => 2,
+            'amount' => 2000,
+            'paid' => 0,
+            'amount_remaining' => null,
+            'purpose' => 'Damage',
         ];
-        $this->assertEquals($expected,$this->Students->getStudentSpecialFees('1000'));
+        $actual = $this->Students->getStudentSpecialFees('001');
+        $this->assertEquals($expected['id'], $actual[0]['id']);
+        $this->assertEquals($expected['purpose'], $actual[0]['purpose']);
     }
 
     /**
@@ -130,15 +125,18 @@ class StudentsTableTest extends TestCase
                     'amount_remaining' => 24000,
                     'receipt_id' => 1,
                     'fee_id' => 1,
-                    'fee_category_id' => 1,
-                    'created' => new FrozenTime('2018-02-13 21:21:02'),
-                    'modified' => new FrozenTime('2018-02-13 21:21:02'),
-                    'created_by' => '01b552f3-9310-4c4c-8b99-0d9ebe44eb13',
-                    'modified_by' => '86740652-16c4-4683-8468-4af7912ae956'
+                ],
+                [
+                    'id' => 2,
+                    'student_fee_id' => 2,
                 ]
             ]
         ];
-        $this->assertArraySubset($expected,$this->Students->getReceiptDetails(1));
+        $actual = $this->Students->getReceiptDetails(1);
+        $this->assertEquals($expected['student_fee_payments'][0]['student_fee_id'], $actual['student_fee_payments'][0]['student_fee_id']);
+        $this->assertEquals($expected['student_fee_payments'][1]['student_fee_id'], $actual['student_fee_payments'][1]['student_fee_id']);
+        $this->assertEquals('001', $actual['student']['id']);
+        $this->assertEquals(1, $actual['student']['class']['id']);
     }
 
     /**
@@ -149,7 +147,7 @@ class StudentsTableTest extends TestCase
     public function testGetStudentsWithId()
     {
         $expected = [
-            'id' => 1000,
+            'id' => '001',
             'first_name' => 'Omebe',
             'last_name' => 'Johnbosco',
             'class' => [
@@ -157,7 +155,9 @@ class StudentsTableTest extends TestCase
                 'class' => 'JSS 1'
             ]
         ];
-        $this->assertContains($expected,$this->Students->getStudentsWithId('1000'));
+        $actual = $this->Students->getStudentsWithId('001');
+        $this->assertContains($expected['id'], $actual[0]['id']);
+        $this->assertContains($expected['first_name'], $actual[0]['first_name']);
     }
 
     /**
@@ -170,7 +170,7 @@ class StudentsTableTest extends TestCase
         $expected = [
             [
                 'id' => 1,
-                'student_id' => '1000',
+                'student_id' => '001',
                 'fee_id' => 1,
                 'fee_category_id' => 1,
                 'amount' => null,
@@ -187,7 +187,8 @@ class StudentsTableTest extends TestCase
                 ]
             ]
         ];
-        $this->assertEquals($expected,$this->Students->getStudentArrears('1000'));
+        $actual = $this->Students->getStudentArrears('001');
+        $this->assertEquals($expected[0]['id'], $actual[0]['id']);
     }
 
     /**
@@ -198,9 +199,9 @@ class StudentsTableTest extends TestCase
     public function testGetStudentsDataList()
     {
         $expected = [
-            1000 => 'Omebe Johnbosco',
+            '001' => 'Omebe Johnbosco',
         ];
-        $this->assertArraySubset($expected,$this->Students->getStudentsDataList());
+        $this->assertEquals($expected['001'],$this->Students->getStudentsDataList()['001']);
     }
 
     /**
@@ -210,6 +211,9 @@ class StudentsTableTest extends TestCase
      */
     public function testCreateStudentFeesByClassIdAndSessionId()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->Students->createStudentFeesByClassIdAndSessionId('002', 1, 1);
+        $studentFeeTable = TableRegistry::get('FinanceManager.StudentFees');
+        $studentFees = $studentFeeTable->find()->where(['student_id' => '002'])->toArray();
+        $this->assertEquals(1, $studentFees[0]['fee_id']);
     }
 }

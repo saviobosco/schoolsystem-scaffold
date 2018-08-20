@@ -56,6 +56,7 @@ class StatesControllerTest extends IntegrationTestCase
     {
         $this->get('/states/view/1');
         $this->assertResponseOk();
+        $this->assertResponseContains('Anambra');
     }
 
     /**
@@ -67,7 +68,7 @@ class StatesControllerTest extends IntegrationTestCase
     {
         $data = [
             'id' => 2,
-            'state' => 'Lorem ipsum dolor sit amet'
+            'state' => 'Abia State'
         ];
         $this->post('/states/add',$data);
         $this->assertRedirect();

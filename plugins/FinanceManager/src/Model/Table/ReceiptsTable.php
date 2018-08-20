@@ -6,6 +6,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Datasource\EntityInterface;
+use FinanceManager\Exception\MissingIncomeRecordException;
 
 /**
  * Receipts Model
@@ -114,9 +115,13 @@ class ReceiptsTable extends Table
 
     public function deleteReceipt(EntityInterface $receipt)
     {
-        $this->Incomes->removeRecordWithReceiptId($receipt);
-        $this->StudentFeePayments->destroyStudentFeePaymentsBelongingToReceipt($receipt);
-        $this->delete($receipt);
+        try {
+            $this->Incomes->removeRecordWithReceiptId($receipt);
+            $this->StudentFeePayments->destroyStudentFeePaymentsBelongingToReceipt($receipt);
+            $this->delete($receipt);
+        } catch (MissingIncomeRecordException $exception) {
+            return false;
+        }
         return true;
     }
 

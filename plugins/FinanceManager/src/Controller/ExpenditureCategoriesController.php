@@ -35,9 +35,7 @@ class ExpenditureCategoriesController extends AppController
      */
     public function view($id = null)
     {
-        $expenditureCategory = $this->ExpenditureCategories->get($id, [
-            'contain' => []
-        ]);
+        $expenditureCategory = $this->ExpenditureCategories->get($id);
 
         $this->set('expenditureCategory', $expenditureCategory);
         $this->set('_serialize', ['expenditureCategory']);
@@ -73,9 +71,7 @@ class ExpenditureCategoriesController extends AppController
      */
     public function edit($id = null)
     {
-        $expenditureCategory = $this->ExpenditureCategories->get($id, [
-            'contain' => []
-        ]);
+        $expenditureCategory = $this->ExpenditureCategories->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $expenditureCategory = $this->ExpenditureCategories->patchEntity($expenditureCategory, $this->request->getData());
             if ($this->ExpenditureCategories->save($expenditureCategory)) {
@@ -99,19 +95,12 @@ class ExpenditureCategoriesController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        try {
-            $expenditureCategory = $this->ExpenditureCategories->get($id);
-            if ($this->ExpenditureCategories->deleteExpenditureCategory($expenditureCategory)) {
-                $this->Flash->success(__('The expenditure category has been deleted.'));
-            } else {
-                $this->Flash->error(__('The expenditure category could not be deleted. Please, try again.'));
-            }
-
-            return $this->redirect(['action' => 'index']);
-        } catch ( \PDOException $e ) {
-            $this->Flash->error(__('This expenditure category cannot be deleted because an has been record on it.'));
-            return $this->redirect(['action' => 'index']);
+        $expenditureCategory = $this->ExpenditureCategories->get($id);
+        if ($this->ExpenditureCategories->deleteExpenditureCategory($expenditureCategory)) {
+            $this->Flash->success(__('The expenditure category has been deleted.'));
+        } else {
+            $this->Flash->error(__('The expenditure category could not be deleted. Please, try again.'));
         }
-
+        return $this->redirect(['action' => 'index']);
     }
 }

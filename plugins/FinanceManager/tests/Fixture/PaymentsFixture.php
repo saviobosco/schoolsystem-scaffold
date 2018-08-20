@@ -28,18 +28,14 @@ class PaymentsFixture extends TestFixture
         'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         '_indexes' => [
-            'payment_type_id' => ['type' => 'index', 'columns' => ['payment_type_id'], 'length' => []],
-            'receipt_id' => ['type' => 'index', 'columns' => ['receipt_id'], 'length' => []],
+            'payment_payment_type_id' => ['type' => 'index', 'columns' => ['payment_type_id'], 'length' => []],
+            'payment_receipt_id' => ['type' => 'index', 'columns' => ['receipt_id'], 'length' => []],
             'payment_made_by' => ['type' => 'index', 'columns' => ['payment_made_by'], 'length' => []],
         ],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
             'payments_ibfk_1' => ['type' => 'foreign', 'columns' => ['payment_type_id'], 'references' => ['payment_types', 'id'], 'update' => 'cascade', 'delete' => 'noAction', 'length' => []],
             'payments_ibfk_2' => ['type' => 'foreign', 'columns' => ['receipt_id'], 'references' => ['receipts', 'id'], 'update' => 'cascade', 'delete' => 'cascade', 'length' => []],
-            'payments_ibfk_3' => ['type' => 'foreign', 'columns' => ['payment_type_id'], 'references' => ['payment_types', 'id'], 'update' => 'cascade', 'delete' => 'noAction', 'length' => []],
-            'payments_ibfk_4' => ['type' => 'foreign', 'columns' => ['receipt_id'], 'references' => ['receipts', 'id'], 'update' => 'cascade', 'delete' => 'cascade', 'length' => []],
-            'payments_ibfk_5' => ['type' => 'foreign', 'columns' => ['payment_type_id'], 'references' => ['payment_types', 'id'], 'update' => 'cascade', 'delete' => 'noAction', 'length' => []],
-            'payments_ibfk_6' => ['type' => 'foreign', 'columns' => ['receipt_id'], 'references' => ['receipts', 'id'], 'update' => 'cascade', 'delete' => 'cascade', 'length' => []],
         ],
         '_options' => [
             'engine' => 'InnoDB',

@@ -22,6 +22,7 @@ class IncomesFixture extends TestFixture
         'week' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'month' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'year' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'receipt_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         '_constraints' => [
@@ -57,6 +58,16 @@ class IncomesFixture extends TestFixture
             'year' => 1,
             'created' => '2018-01-07 10:21:42',
             'modified' => '2018-01-07 10:21:42'
-        ]
+        ],
+        [
+        'id' => 3,
+        'amount' => 20000,
+        'week' => 1,
+        'month' => 1,
+        'year' => 1,
+            'receipt_id' => 1,
+        'created' => '2018-01-07 10:21:42',
+        'modified' => '2018-01-07 10:21:42'
+    ]
     ];
 }

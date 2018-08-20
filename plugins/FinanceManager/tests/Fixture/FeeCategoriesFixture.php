@@ -54,6 +54,14 @@ class FeeCategoriesFixture extends TestFixture
             'income_amount' => 0,
             'created' => '2018-01-07 10:17:16',
             'modified' => '2018-01-07 10:17:16'
+        ],
+        [
+            'id' => 3,
+            'type' => 'Medicals',
+            'description' => 'Medicals',
+            'income_amount' => 0,
+            'created' => '2018-01-07 10:17:16',
+            'modified' => '2018-01-07 10:17:16'
         ]
     ];
 }

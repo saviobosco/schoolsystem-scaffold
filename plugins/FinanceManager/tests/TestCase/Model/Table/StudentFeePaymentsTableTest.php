@@ -92,7 +92,7 @@ class StudentFeePaymentsTableTest extends TestCase
         $expected = [
             'total' => (float)'26000'
         ];
-        $this->assertArraySubset($expected,$this->StudentFeePayments->processPaymentData($entities));
+        $this->assertEquals($expected['total'],$this->StudentFeePayments->processPaymentData($entities)['total']);
     }
 
     public function testProcessPaymentsRemovedComma()
@@ -156,16 +156,16 @@ class StudentFeePaymentsTableTest extends TestCase
     public function testPayFees()
     {
         $postData = [
-            'student_id' => '1000',
+            'student_id' => '001',
             'student_fees' => [
-                (int) 0 => [
+                0 => [
                     'amount_to_pay' => '25000',
                     'fee_id' => '1',
                     'fee_category_id' => '1',
                     'amount_paid' => '25000',
                     'student_fee_id' => '1'
                 ],
-                (int) 1 => [
+                1 => [
                     'amount_to_pay' => '2000',
                     'fee_id' => '',
                     'fee_category_id' => '2',
@@ -181,7 +181,7 @@ class StudentFeePaymentsTableTest extends TestCase
             'generate_receipt' => 'two'
         ];
         $expected = [
-            'receipt_id' => 2
+            'receipt_id' => 3
         ];
         $this->assertEquals($expected,$this->StudentFeePayments->payFees($postData));
         $this->assertEventFired(StudentFeePaymentsTable::EVENT_AFTER_EACH_FEE_PAYMENT, $this->StudentFeePayments->getEventManager());
@@ -252,5 +252,42 @@ class StudentFeePaymentsTableTest extends TestCase
         $this->assertEventFired(StudentFeePaymentsTable::EVENT_AFTER_EACH_FEE_PAYMENT, $this->StudentFeePayments->getEventManager());
         $this->assertEventFired(StudentFeePaymentsTable::EVENT_AFTER_FEES_PAYMENT, $this->StudentFeePayments->getEventManager());
         $this->assertEventFired('Model.afterSave', $this->StudentFeePayments->getEventManager());
+    }
+
+    public function testGetStudentPaymentRecord()
+    {
+        $actual = $this->StudentFeePayments->getStudentPaymentRecords('001');
+        $expected = [
+            [
+                'id' => 1,
+                'student_fee_id' => 1,
+                'amount_paid' => 1000,
+            ],
+            [
+                'id' => 2,
+                'student_fee_id' => 2,
+                'amount_paid' => 1000,
+                'student_fee' => [
+                    'Purpose' => 'Damage'
+                ]
+            ]
+        ];
+        $this->assertEquals($expected[0]['id'], $actual[0]['id']);
+        $this->assertEquals($expected[1]['student_fee']['Purpose'], $actual[1]['student_fee']['Purpose']);
+    }
+
+    public function testDestroyStudentFeePaymentsBelongingToReceipt()
+    {
+        $expected = [
+            1 => 1000,
+            2 => 1000
+        ];
+        $receipt = new Entity(['id' => 1]);
+        $this->StudentFeePayments->destroyStudentFeePaymentsBelongingToReceipt($receipt);
+        $this->assertEventFired(StudentFeePaymentsTable::EVENT_DELETED_PAYMENT_FEE_ITEM, $this->StudentFeePayments->getEventManager());
+        $studentFeePayments = $this->StudentFeePayments->find()->all()->toArray();
+        $this->assertEmpty($studentFeePayments);
+        $studentFees = $this->StudentFeePayments->StudentFees->find()->all()->combine('id','amount_remaining')->toArray();
+        $this->assertEquals($expected[1], $studentFees[1]);
     }
 }

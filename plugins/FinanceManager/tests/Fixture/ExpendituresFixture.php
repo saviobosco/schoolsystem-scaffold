@@ -27,7 +27,7 @@ class ExpendituresFixture extends TestFixture
         'modified_by' => ['type' => 'uuid', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'amount' => ['type' => 'decimal', 'length' => 10, 'precision' => 2, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => ''],
         '_indexes' => [
-            'expenditure_category_id' => ['type' => 'index', 'columns' => ['expenditure_category_id'], 'length' => []],
+            'expense_expenditure_category_id' => ['type' => 'index', 'columns' => ['expenditure_category_id'], 'length' => []],
         ],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
@@ -53,8 +53,8 @@ class ExpendituresFixture extends TestFixture
             'date' => '2018-01-07',
             'created' => '2018-01-07 10:17:01',
             'modified' => '2018-01-07 10:17:01',
-            'created_by' => '9fee2b93-0aa4-4d80-9dec-37c69d0ec3e8',
-            'modified_by' => '7de9b568-589a-4c50-9da5-f9d5d821ec0b',
+            'created_by' => 'f8b668c2-0de6-4561-9018-f0199c9e8525',
+            'modified_by' => 'f8b668c2-0de6-4561-9018-f0199c9e8525',
             'amount' => 15000
         ],
     ];

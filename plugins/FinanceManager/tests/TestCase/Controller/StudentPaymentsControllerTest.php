@@ -64,7 +64,7 @@ class StudentPaymentsControllerTest extends IntegrationTestCase
     public function testPayFees()
     {
         $postData = [
-            'student_id' => '1005',
+            'student_id' => '001',
             'student_fees' => [
                 (int) 0 => [
                     'amount_to_pay' => '25000',
@@ -87,8 +87,8 @@ class StudentPaymentsControllerTest extends IntegrationTestCase
             ],
             'generate_receipt' => 'two'
         ];
-        $this->post('/finance-manager/pay-fees/1000',$postData);
-        $this->assertRedirect('/finance-manager/payment-receipt/2');
+        $this->post('/finance-manager/pay-fees/001',$postData);
+        $this->assertRedirect('/finance-manager/payment-receipt/3');
         $this->assertEventFired(StudentFeePaymentsTable::EVENT_AFTER_EACH_FEE_PAYMENT, EventManager::instance());
         $this->assertEventFired(StudentFeePaymentsTable::EVENT_AFTER_FEES_PAYMENT, EventManager::instance());
     }
@@ -111,7 +111,7 @@ class StudentPaymentsControllerTest extends IntegrationTestCase
      */
     public function testStudentPaymentRecord()
     {
-        $this->get('/finance-manager/payment-records/1000');
+        $this->get('/finance-manager/payment-records/001');
         $this->assertResponseOk();
         $this->assertResponseContains('Omebe');
     }

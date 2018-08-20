@@ -32,10 +32,10 @@ class FeesFixture extends TestFixture
         'created_by' => ['type' => 'uuid', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified_by' => ['type' => 'uuid', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         '_indexes' => [
-            'class_id' => ['type' => 'index', 'columns' => ['class_id'], 'length' => []],
-            'fee_category_id' => ['type' => 'index', 'columns' => ['fee_category_id'], 'length' => []],
-            'session_id' => ['type' => 'index', 'columns' => ['session_id'], 'length' => []],
-            'term_id' => ['type' => 'index', 'columns' => ['term_id'], 'length' => []],
+            'fee_class_id' => ['type' => 'index', 'columns' => ['class_id'], 'length' => []],
+            'fee_fee_category_id' => ['type' => 'index', 'columns' => ['fee_category_id'], 'length' => []],
+            'fee_session_id' => ['type' => 'index', 'columns' => ['session_id'], 'length' => []],
+            'fee_term_id' => ['type' => 'index', 'columns' => ['term_id'], 'length' => []],
         ],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
@@ -70,8 +70,8 @@ class FeesFixture extends TestFixture
             'session_id' => 1,
             'created' => '2018-02-13 19:50:00',
             'modified' => '2018-02-13 19:50:00',
-            'created_by' => '61165c04-45bb-43b9-8b39-06d24d1189cf',
-            'modified_by' => '7b44335b-50d1-4b0b-bddc-ac6d2397f028'
+            'created_by' => 'f8b668c2-0de6-4561-9018-f0199c9e8525',
+            'modified_by' => 'f8b668c2-0de6-4561-9018-f0199c9e8525'
         ],
     ];
 }

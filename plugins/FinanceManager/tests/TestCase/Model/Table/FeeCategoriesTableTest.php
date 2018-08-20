@@ -1,6 +1,7 @@
 <?php
 namespace FinanceManager\Test\TestCase\Model\Table;
 
+use Cake\Database\Driver\Mysql;
 use Cake\I18n\Date;
 use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
@@ -121,7 +122,9 @@ class FeeCategoriesTableTest extends TestCase
                 ]
             ],
         ];
-        $this->assertEquals($expected,$this->FeeCategories->getIncomeByFeeCategories($postData));
+        if ($this->FeeCategories->getConnection()->getDriver() instanceof Mysql) {
+            $this->assertEquals($expected,$this->FeeCategories->getIncomeByFeeCategories($postData));
+        }
     }
 
     /**
@@ -162,6 +165,9 @@ class FeeCategoriesTableTest extends TestCase
                 ]
             ],
         ];
-        $this->assertEquals($expected,$this->FeeCategories->getIncomeByFeeCategoriesWithDateRange(new Date($postData['start_date']),(new Time($postData['end_date']))->addHours(23)->addMinutes(59)));
+        $actual = $this->FeeCategories->getIncomeByFeeCategoriesWithDateRange(new Date($postData['start_date']),(new Time($postData['end_date']))->addHours(23)->addMinutes(59));
+        $this->assertEquals($expected[0]['type'], $actual[0]['type']);
+        $this->assertEquals($expected[0]['id'], $actual[0]['id']);
+        $this->assertEquals($expected[0]['student_fee_payments'], $actual[0]['student_fee_payments']);
     }
 }

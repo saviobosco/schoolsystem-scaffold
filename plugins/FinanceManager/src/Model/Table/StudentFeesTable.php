@@ -1,6 +1,7 @@
 <?php
 namespace FinanceManager\Model\Table;
 
+use Cake\Database\Driver\Sqlite;
 use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -111,6 +112,11 @@ class StudentFeesTable extends Table
 
     public function deleteStudentFee(EntityInterface $studentFee)
     {
+        if ($this->getConnection()->getDriver() instanceof Sqlite) {
+            if ($this->StudentFeePayments->exists(['student_fee_id' => $studentFee->id])) {
+                return false;
+            }
+        }
         $this->delete($studentFee);
         return true;
     }

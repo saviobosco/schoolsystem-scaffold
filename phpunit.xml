@@ -13,11 +13,6 @@
 
     <!-- Add any additional test suites you want to run here -->
     <testsuites>
-        <!--<testsuite name="App Test Suite">
-            <directory>./tests/TestCase</directory>
-            <file>./tests/TestCase/Model/StudentsTableTest.php</file>
-            <exclude>./tests/TestCase/Model</exclude>
-        </testsuite>-->
         <testsuite name="Result System Plugin">
             <directory>./plugins/ResultSystem/tests/TestCase/Controller</directory>
             <directory>./plugins/ResultSystem/tests/TestCase/ResultProcessing</directory>
@@ -27,12 +22,18 @@
         <testsuite name="Grading System Plugin">
             <directory>./plugins/GradingSystem/tests/TestCase</directory>
         </testsuite>
-        <!--<testsuite name="Students Manager Plugin">-->
-            <!--<directory>./plugins/StudentsManager/tests/TestCase</directory>-->
-        <!--</testsuite>-->
-        <!--<testsuite name="Finance Manager Plugin">-->
-            <!--<directory>./plugins/FinanceManager/tests/TestCase/Model</directory>-->
-        <!--</testsuite>-->
+        <testsuite name="Students Manager Plugin">
+            <directory>./plugins/StudentsManager/tests/TestCase/Model/Table</directory>
+            <directory>./plugins/StudentsManager/tests/TestCase/Controller</directory>
+        </testsuite>
+        <testsuite name="Subjects Manager Plugin">
+            <directory>./plugins/SubjectsManager/tests/TestCase</directory>
+        </testsuite>
+        <testsuite name="Finance Manager Plugin">
+            <directory>./plugins/FinanceManager/tests/TestCase/Model</directory>
+            <directory>./plugins/FinanceManager/tests/TestCase/Controller</directory>
+        </testsuite>
+
         <!--<testsuite name="Skill Grading System Plugin">-->
             <!--<directory>./plugins/SkillsGradingSystem/tests/TestCase</directory>-->
             <!--<exclude>./plugins/SkillsGradingSystem/tests/TestCase/Model</exclude>-->

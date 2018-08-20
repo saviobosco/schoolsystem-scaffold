@@ -246,7 +246,7 @@ class StudentFeePaymentsTable extends Table
             $paymentItem->student_fee->paid = 0;
             $studentFees[] = $paymentItem->student_fee;
             if ($this->delete($paymentItem)) {
-                $event = new Event(self::EVENT_DELETED_PAYMENT_FEE_ITEM,$this,[
+                $event = new Event(self::EVENT_DELETED_PAYMENT_FEE_ITEM, $this, [
                     'paymentItem' => $paymentItem
                 ]);
                 $this->getEventManager()->dispatch($event);

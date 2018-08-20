@@ -1,6 +1,7 @@
 <?php
 namespace StudentsManager\Test\TestCase\Controller;
 
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestCase;
 use StudentsManager\Controller\StudentsController;
 
@@ -21,6 +22,7 @@ class StudentsControllerTest extends IntegrationTestCase
         'plugin.students_manager.classes',
         'plugin.students_manager.class_demarcations',
         'plugin.students_manager.states',
+        'plugin.students_manager.religions',
     ];
 
     public function setUp()
@@ -48,9 +50,9 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public function testIndex()
     {
-        $this->get('/students');
+        $this->get('/students-manager');
         $this->assertResponseOk();
-        $this->assertResponseContains('Students');
+        $this->assertResponseContains('Omebe');
     }
 
     /**
@@ -60,7 +62,7 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public function testView()
     {
-        $this->get('/students/view/1000');
+        $this->get('/students-manager/view/001');
         $this->assertResponseOk();
         $this->assertResponseContains('Omebe');
     }
@@ -73,14 +75,14 @@ class StudentsControllerTest extends IntegrationTestCase
     public function testAdd()
     {
         $data = [
-            'id' => 1001,
+            'id' => '003',
             'first_name' => 'Iwueze',
             'last_name' => 'Ifeoma',
             'class_id' => 1,
             'session_id' => 1,
-            'gender' => 'male'
+            'gender' => 'female'
         ];
-        $this->post('/students/add',$data);
+        $this->post('/students-manager/add',$data);
         $this->assertRedirect(['action'=>'index']);
         $this->assertSession('The student has been saved.', 'Flash.flash.0.message');
     }
@@ -88,15 +90,15 @@ class StudentsControllerTest extends IntegrationTestCase
     public function testAddReturnBack()
     {
         $data = [
-            'id' => 1002,
+            'id' => '003',
             'first_name' => 'Iwueze',
             'last_name' => 'Ifeoma',
             'class_id' => 1,
             'return_here' => 1,
-            'gender' => 'male',
+            'gender' => 'female',
             'session_id' => 1,
         ];
-        $this->post('/students/add',$data);
+        $this->post('/students-manager/add',$data);
         $this->assertRedirect(['action'=>'add']);
         $this->assertSession('The student has been saved.', 'Flash.flash.0.message');
     }
@@ -113,9 +115,12 @@ class StudentsControllerTest extends IntegrationTestCase
             'last_name' => 'Ebuka',
             'class_id' => 1,
         ];
-        $this->post('/students/edit/1000',$data);
+        $this->post('/students-manager/edit/001',$data);
         $this->assertResponseOk();
         $this->assertSession('The student has been saved.', 'Flash.flash.0.message');
+        $studentTable = TableRegistry::get('StudentsManager.Students');
+        $student = $studentTable->get('001');
+        $this->assertEquals($data['last_name'],$student['last_name']);
     }
 
     /**
@@ -125,7 +130,7 @@ class StudentsControllerTest extends IntegrationTestCase
      */
     public function testDelete()
     {
-        $this->delete('/students/delete/1000');
+        $this->delete('/students-manager/delete/001');
         $this->assertRedirect();
         $this->assertSession('The student has been deleted.', 'Flash.flash.0.message');
     }

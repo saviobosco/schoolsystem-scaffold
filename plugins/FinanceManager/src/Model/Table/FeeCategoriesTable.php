@@ -1,6 +1,7 @@
 <?php
 namespace FinanceManager\Model\Table;
 
+use Cake\Database\Driver\Sqlite;
 use Cake\Datasource\EntityInterface;
 use Cake\I18n\Date;
 use Cake\ORM\Query;
@@ -83,7 +84,16 @@ class FeeCategoriesTable extends Table
 
     public function deleteFeeCategory(EntityInterface $feeCategory)
     {
-        return $this->delete($feeCategory);
+        try {
+            if ($this->getConnection()->getDriver() instanceof Sqlite) {
+                if ($this->Fees->exists(['fee_category_id' => $feeCategory->id])) {
+                    throw new \PDOException;
+                }
+            }
+            return $this->delete($feeCategory);
+        } catch ( \PDOException $exception) {
+            return false;
+        }
     }
 
     public function getIncomeByFeeCategories($postData)

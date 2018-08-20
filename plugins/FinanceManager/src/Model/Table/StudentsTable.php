@@ -238,7 +238,13 @@ class StudentsTable extends Table
         return $receipt;
     }
 
-    public function getStudentsWithId( $id )
+    /**
+     * @param $id
+     * @return array
+     * Get the list of students with class
+     * Used in the Ajax student class
+     */
+    public function getStudentsWithId($id)
     {
         return $this->find('all')
             ->select(['Students.id','Students.first_name','Students.last_name'])

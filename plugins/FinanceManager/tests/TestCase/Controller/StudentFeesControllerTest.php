@@ -59,7 +59,7 @@ class StudentFeesControllerTest extends IntegrationTestCase
      */
     public function testGetStudentFees()
     {
-        $this->get('/finance-manager/pay-fees/1000');
+        $this->get('/finance-manager/pay-fees/001');
         $this->assertResponseOk();
         $this->assertResponseContains('Omebe');
     }
@@ -71,7 +71,7 @@ class StudentFeesControllerTest extends IntegrationTestCase
      */
     public function testGetStudentBill()
     {
-        $this->get('/finance-manager/get-student-bills/1000');
+        $this->get('/finance-manager/get-student-bills/001');
         $this->assertResponseOk();
         $this->assertResponseContains('Omebe');
     }
@@ -88,7 +88,7 @@ class StudentFeesControllerTest extends IntegrationTestCase
             'amount' => '3000',
             'purpose' => 'Damaged the school Bus'
         ];
-        $this->post('/finance-manager/student-fees/add/1000',$postData);
+        $this->post('/finance-manager/student-fees/add/001',$postData);
         $this->assertSession('Student Fee was successfully added.', 'Flash.flash.0.message');
     }
 

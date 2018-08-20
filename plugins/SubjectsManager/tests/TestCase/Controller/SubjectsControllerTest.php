@@ -1,6 +1,7 @@
 <?php
 namespace SubjectsManager\Test\TestCase\Controller;
 
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestCase;
 use SubjectsManager\Controller\SubjectsController;
 
@@ -18,15 +19,25 @@ class SubjectsControllerTest extends IntegrationTestCase
     public $fixtures = [
         'plugin.subjects_manager.subjects',
         'plugin.subjects_manager.blocks',
-        'plugin.subjects_manager.classes',
-        'plugin.subjects_manager.class_demarcations',
-        'plugin.subjects_manager.student_annual_results',
-        'plugin.subjects_manager.student_termly_results',
-        'plugin.subjects_manager.students',
-        'plugin.subjects_manager.sessions',
-        'plugin.subjects_manager.session_admitted',
-        'plugin.subjects_manager.session_graduated'
+        'plugin.class_manager.classes',
     ];
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->session([
+            'Auth' => [
+                'User' => [
+                    'id' => 1,
+                    'username' => 'testing',
+                    'role' => 'superuser',
+                    'super_user' => 1
+                    // other keys.
+                ]
+            ]
+        ]);
+        $this->enableRetainFlashMessages();
+    }
 
     /**
      * Test index method
@@ -35,7 +46,8 @@ class SubjectsControllerTest extends IntegrationTestCase
      */
     public function testIndex()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/subjects-manager/subjects');
+        $this->assertResponseOk();
     }
 
     /**
@@ -45,7 +57,8 @@ class SubjectsControllerTest extends IntegrationTestCase
      */
     public function testView()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/subjects-manager/subjects/view/1');
+        $this->assertResponseContains('Mathematics');
     }
 
     /**
@@ -55,7 +68,15 @@ class SubjectsControllerTest extends IntegrationTestCase
      */
     public function testAdd()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $postData = [
+            'name' => 'English',
+            'block_id' => 1
+        ];
+        $this->post('/subjects-manager/subjects/add', $postData);
+        $this->assertRedirect();
+        $subjectTable = TableRegistry::get('SubjectsManager.Subjects');
+        $subject = $subjectTable->get(2);
+        $this->assertEquals($postData['name'], $subject['name']);
     }
 
     /**
@@ -65,7 +86,15 @@ class SubjectsControllerTest extends IntegrationTestCase
      */
     public function testEdit()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $postData = [
+            'id' => 1,
+            'name' => 'Igbo'
+        ];
+        $this->put('/subjects-manager/subjects/edit/1', $postData);
+        $this->assertRedirect();
+        $subjectTable = TableRegistry::get('SubjectsManager.Subjects');
+        $subject = $subjectTable->get(1);
+        $this->assertEquals($postData['name'], $subject['name']);
     }
 
     /**
@@ -75,6 +104,8 @@ class SubjectsControllerTest extends IntegrationTestCase
      */
     public function testDelete()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->delete('/subjects-manager/subjects/delete/1');
+        $this->assertRedirect();
+        $this->assertSession('The subject has been deleted.', 'Flash.flash.0.message');
     }
 }

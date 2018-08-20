@@ -95,9 +95,7 @@ class SubjectsController extends AppController
             if (empty($id)) {
                 return $this->redirect(['action'=>'index']);
             }
-            $subject = $this->Subjects->get($id, [
-                'contain' => []
-            ]);
+            $subject = $this->Subjects->get($id);
             if ($this->request->is(['patch', 'post', 'put'])) {
                 $subject = $this->Subjects->patchEntity($subject, $this->request->data);
                 if ($this->Subjects->save($subject)) {

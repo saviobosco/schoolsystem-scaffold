@@ -25,7 +25,7 @@ class ReceiptsFixture extends TestFixture
         'created_by' => ['type' => 'uuid', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified_by' => ['type' => 'uuid', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         '_indexes' => [
-            'student_id' => ['type' => 'index', 'columns' => ['student_id'], 'length' => []],
+            'receipt_student_id' => ['type' => 'index', 'columns' => ['student_id'], 'length' => []],
         ],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
@@ -46,7 +46,16 @@ class ReceiptsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'student_id' => '1000',
+            'student_id' => '001',
+            'total_amount_paid' => 20000,
+            'created' => '2018-01-07 10:18:32',
+            'modified' => '2018-01-07 10:18:32',
+            'created_by' => 'f8b668c2-0de6-4561-9018-f0199c9e8525',
+            'modified_by' => 'f8b668c2-0de6-4561-9018-f0199c9e8525'
+        ],
+        [
+            'id' => 2,
+            'student_id' => '001',
             'total_amount_paid' => 20000,
             'created' => '2018-01-07 10:18:32',
             'modified' => '2018-01-07 10:18:32',

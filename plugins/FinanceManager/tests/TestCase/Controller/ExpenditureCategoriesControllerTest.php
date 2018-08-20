@@ -16,8 +16,29 @@ class ExpenditureCategoriesControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.finance_manager.expenditure_categories'
+        'plugin.finance_manager.expenditure_categories',
+        'plugin.finance_manager.expenditures',
+        'plugin.finance_manager.users',
     ];
+
+    public function setUp()
+    {
+        parent::setUp();
+        // Set session data
+        $this->session([
+            'Auth' => [
+                'User' => [
+                    'id' => 'f8b668c2-0de6-4561-9018-f0199c9e8525',
+                    'username' => 'testing',
+                    'role' => 'superuser',
+                    'super_user' => 1
+                ]
+            ]
+        ]);
+        $this->enableRetainFlashMessages();
+        $this->disableErrorHandlerMiddleware();
+        $this->enableCsrfToken();
+    }
 
     /**
      * Test index method
@@ -26,7 +47,9 @@ class ExpenditureCategoriesControllerTest extends IntegrationTestCase
      */
     public function testIndex()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/finance-manager/expenditure-categories');
+        $this->assertResponseOk();
+        $this->assertResponseContains('Feeding');
     }
 
     /**
@@ -36,7 +59,9 @@ class ExpenditureCategoriesControllerTest extends IntegrationTestCase
      */
     public function testView()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/finance-manager/expenditure-categories/view/1');
+        $this->assertResponseOk();
+        $this->assertResponseContains('Feeding');
     }
 
     /**
@@ -46,7 +71,12 @@ class ExpenditureCategoriesControllerTest extends IntegrationTestCase
      */
     public function testAdd()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $postData = [
+            'type' => 'Diesel',
+            'description' => 'for diesel'
+        ];
+        $this->post('/finance-manager/expenditure-categories/add', $postData);
+        $this->assertSession('The expenditure category has been saved.', 'Flash.flash.0.message');
     }
 
     /**
@@ -56,7 +86,12 @@ class ExpenditureCategoriesControllerTest extends IntegrationTestCase
      */
     public function testEdit()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $postData = [
+            'type' => 'Diesel',
+            'description' => 'for diesel'
+        ];
+        $this->post('/finance-manager/expenditure-categories/edit/1', $postData);
+        $this->assertSession('The expenditure category has been saved.', 'Flash.flash.0.message');
     }
 
     /**
@@ -66,6 +101,13 @@ class ExpenditureCategoriesControllerTest extends IntegrationTestCase
      */
     public function testDelete()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->delete('/finance-manager/expenditure-categories/delete/2');
+        $this->assertSession('The expenditure category has been deleted.', 'Flash.flash.0.message');
+    }
+
+    public function testDeleteFailed()
+    {
+        $this->delete('/finance-manager/expenditure-categories/delete/1');
+        $this->assertSession('The expenditure category could not be deleted. Please, try again.', 'Flash.flash.0.message');
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace FinanceManager\Model\Table;
 
+use Cake\Database\Driver\Sqlite;
 use Cake\Datasource\EntityInterface;
 use Cake\I18n\Number;
 use Cake\ORM\RulesChecker;
@@ -78,6 +79,10 @@ class FeesTable extends Table
         $this->hasMany('StudentFees', [
             'foreignKey' => 'fee_id',
             'className' => 'FinanceManager.StudentFees',
+        ]);
+        $this->hasMany('StudentFeePayments', [
+            'foreignKey' => 'fee_id',
+            'className' => 'FinanceManager.StudentFeePayments',
         ]);
 
         $this->belongsTo('FeeCategories',[
@@ -531,8 +536,21 @@ class FeesTable extends Table
 
     public function deleteFee(EntityInterface $fee)
     {
-        $this->delete($fee);
-        return true;
+        try {
+            if ($this->getConnection()->getDriver() instanceof Sqlite) {
+                // check if the fees exists in paid fees
+                //throw error
+                if ($this->StudentFeePayments->exists(['fee_id' => $fee->id])) {
+                    throw new \PDOException;
+                } else {
+                    $this->StudentFees->deleteAll(['fee_id' => $fee->id]);
+                }
+            }
+            $this->delete($fee);
+            return true;
+        } catch ( \PDOException $exception) {
+            return false;
+        }
     }
 
 }

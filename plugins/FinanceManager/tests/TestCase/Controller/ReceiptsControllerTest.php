@@ -82,7 +82,7 @@ class ReceiptsControllerTest extends IntegrationTestCase
     public function testEdit()
     {
         $postData = [
-            'student_id' => '1000',
+            'student_id' => '001',
             'payment' => [
                 'payment_made_by' => 'Mr. Parent',
                 'payment_type_id' => '1'

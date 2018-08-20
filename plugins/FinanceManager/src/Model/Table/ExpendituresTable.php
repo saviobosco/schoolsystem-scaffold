@@ -58,12 +58,12 @@ class ExpendituresTable extends Table
         ]);
 
         $this->belongsTo('CreatedByUser',[
-            'className' => 'Accounts',
+            'className' => 'FinanceManager.Accounts',
             'foreignKey' => 'created_by',
         ]);
 
         $this->belongsTo('ModifiedByUser',[
-            'className' => 'Accounts',
+            'className' => 'FinanceManager.Accounts',
             'foreignKey' => 'modified_by'
         ]);
     }

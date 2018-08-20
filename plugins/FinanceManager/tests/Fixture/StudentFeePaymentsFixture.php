@@ -26,13 +26,11 @@ class StudentFeePaymentsFixture extends TestFixture
         'fee_category_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => 'Fee Category id is need to know fee category income', 'precision' => null, 'autoIncrement' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
-        'created_by' => ['type' => 'uuid', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
-        'modified_by' => ['type' => 'uuid', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         '_indexes' => [
-            'receipt_id' => ['type' => 'index', 'columns' => ['receipt_id'], 'length' => []],
-            'student_fee_id' => ['type' => 'index', 'columns' => ['student_fee_id'], 'length' => []],
-            'fee_id' => ['type' => 'index', 'columns' => ['fee_id'], 'length' => []],
-            'fee_category_id' => ['type' => 'index', 'columns' => ['fee_category_id'], 'length' => []],
+            'student_payment_receipt_id' => ['type' => 'index', 'columns' => ['receipt_id'], 'length' => []],
+            'payment_student_fee_id' => ['type' => 'index', 'columns' => ['student_fee_id'], 'length' => []],
+            'payment_fee_id' => ['type' => 'index', 'columns' => ['fee_id'], 'length' => []],
+            'payment_fee_category_id' => ['type' => 'index', 'columns' => ['fee_category_id'], 'length' => []],
         ],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
@@ -64,8 +62,6 @@ class StudentFeePaymentsFixture extends TestFixture
             'fee_category_id' => 1,
             'created' => '2018-02-13 21:21:02',
             'modified' => '2018-02-13 21:21:02',
-            'created_by' => '01b552f3-9310-4c4c-8b99-0d9ebe44eb13',
-            'modified_by' => '86740652-16c4-4683-8468-4af7912ae956'
         ],
         [
             'id' => 2,
@@ -77,8 +73,6 @@ class StudentFeePaymentsFixture extends TestFixture
             'fee_category_id' => 2,
             'created' => '2018-02-13 21:21:02',
             'modified' => '2018-02-13 21:21:02',
-            'created_by' => '01b552f3-9310-4c4c-8b99-0d9ebe44eb13',
-            'modified_by' => '86740652-16c4-4683-8468-4af7912ae956'
         ]
     ];
 }

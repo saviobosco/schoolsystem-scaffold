@@ -159,9 +159,9 @@ class FeesTableTest extends TestCase
 
         $expected = [
             [
-                'student_id' => '1000',
+                'student_id' => '001',
                 'class_id' => 1,
-                'total' =>(float)25000
+                'total' => 25000
             ]
         ];
         $this->assertEquals($expected,$this->Fees->getFeeDefaulters($queryData));
@@ -175,7 +175,7 @@ class FeesTableTest extends TestCase
     public function testGetStudentsData()
     {
         $expected = [
-            '1000' => 'Omebe Johnbosco',
+            '001' => 'Omebe Johnbosco',
         ];
         $this->assertArraySubset($expected,$this->Fees->getStudentsData());
     }
@@ -203,7 +203,7 @@ class FeesTableTest extends TestCase
         $postData = [
             'fee_id' => 1,
             'student_ids' => [
-                '1005'
+                '002'
             ]
         ];
         $this->assertTrue($this->Fees->createStudentsFeeRecord($postData));
@@ -243,8 +243,15 @@ class FeesTableTest extends TestCase
             'class_id' => 1,
             'term_id' => 1
         ];
-        $expected = [];
-        $this->assertEquals($expected,$this->Fees->getStudentWithCompleteFees($queryData));
+        $expected = [
+            [
+                'student_id' => '003',
+                'total' => 25000
+            ]
+        ];
+        $actual = $this->Fees->getStudentWithCompleteFees($queryData);
+        $this->assertEquals($expected[0]['student_id'], $actual[0]['student_id']);
+        $this->assertEquals($expected[0]['total'], $actual[0]['total']);
     }
 
     /**
@@ -301,7 +308,9 @@ class FeesTableTest extends TestCase
             1 => 'School Fees',
             2 => 'Damage'
         ];
-        $this->assertEquals($expected,$this->Fees->getFeeCategoriesData());
+        $actual = $this->Fees->getFeeCategoriesData();
+        $this->assertEquals($expected[1], $actual[1]);
+        $this->assertEquals($expected[2], $actual[2]);
     }
 
     /**
@@ -311,7 +320,25 @@ class FeesTableTest extends TestCase
      */
     public function testDeleteFee()
     {
-        $fee = new Entity(['id'=>1]);
+        $data = [
+            'fee_category_id' => '1',
+            'amount' => '32000',
+            'term_id' => '1',
+            'class_id' => '6',
+            'session_id' => '1',
+            'compulsory' => '1',
+            'create_students_records' => '1',
+            'income_amount_expected' => '1',
+            'number_of_students' => '1'
+        ];
+        $fee = $this->Fees->newEntity($data);
+        $this->Fees->save($fee);
         $this->assertTrue($this->Fees->deleteFee($fee));
+    }
+
+    public function testDeleteFeeFailed()
+    {
+        $fee = new Entity(['id'=>1]);
+        $this->assertFalse($this->Fees->deleteFee($fee));
     }
 }

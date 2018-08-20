@@ -30,8 +30,8 @@ class StudentFeesFixture extends TestFixture
         'created_by' => ['type' => 'uuid', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified_by' => ['type' => 'uuid', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         '_indexes' => [
-            'fee_id' => ['type' => 'index', 'columns' => ['fee_id'], 'length' => []],
-            'student_id' => ['type' => 'index', 'columns' => ['student_id'], 'length' => []],
+            'student_fee_fee_id' => ['type' => 'index', 'columns' => ['fee_id'], 'length' => []],
+            'student_fee_student_id' => ['type' => 'index', 'columns' => ['student_id'], 'length' => []],
         ],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
@@ -53,10 +53,10 @@ class StudentFeesFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'student_id' => '1000',
+            'student_id' => '001',
             'fee_id' => 1,
             'fee_category_id' => 1,
-            'amount' => null,
+            'amount' => 2000,
             'paid' => 0,
             'amount_remaining' => null,
             'purpose' => '',
@@ -67,11 +67,25 @@ class StudentFeesFixture extends TestFixture
         ],
         [
             'id' => 2,
-            'student_id' => '1000',
+            'student_id' => '001',
             'fee_id' => null,
             'fee_category_id' => 2,
             'amount' => 2000,
             'paid' => 0,
+            'amount_remaining' => null,
+            'purpose' => 'Damage',
+            'created' => '2018-02-13 19:47:44',
+            'modified' => '2018-02-13 19:47:44',
+            'created_by' => 'ca79c1f1-7aa9-452d-85de-10ef846ab70a',
+            'modified_by' => '0a1248a3-42e2-4da5-bbea-2378e1defe6f'
+        ],
+        [
+            'id' => 3,
+            'student_id' => '003',
+            'fee_id' => 1,
+            'fee_category_id' => 1,
+            'amount' => 2000,
+            'paid' => 1,
             'amount_remaining' => null,
             'purpose' => 'Damage',
             'created' => '2018-02-13 19:47:44',

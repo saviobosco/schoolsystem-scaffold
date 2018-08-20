@@ -37,7 +37,7 @@ class StatesFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'state' => 'Lorem ipsum dolor sit amet'
+            'state' => 'Anambra'
         ],
     ];
 }

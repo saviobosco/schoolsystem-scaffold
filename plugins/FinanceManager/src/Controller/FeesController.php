@@ -104,9 +104,7 @@ class FeesController extends AppController
      */
     public function edit($id = null)
     {
-        $fee = $this->Fees->get($id, [
-            'contain' => []
-        ]);
+        $fee = $this->Fees->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $fee = $this->Fees->patchEntity($fee, $this->request->getData());
             if ($this->Fees->save($fee)) {
@@ -133,15 +131,11 @@ class FeesController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        try {
-            $fee = $this->Fees->get($id);
-            if ($this->Fees->deleteFee($fee)) {
-                $this->Flash->success(__('The fee has been deleted.'));
-            } else {
-                $this->Flash->error(__('The fee could not be deleted. Please, try again.'));
-            }
-        } catch ( \PDOException $e ) {
-            $this->Flash->error(__('This fee cannot be deleted because a payment has been made on it.'));
+        $fee = $this->Fees->get($id);
+        if ($this->Fees->deleteFee($fee)) {
+            $this->Flash->success(__('The fee has been deleted.'));
+        } else {
+            $this->Flash->error(__('The fee could not be deleted. Please, try again.'));
         }
         return $this->redirect(['action' => 'index']);
     }

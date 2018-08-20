@@ -45,5 +45,12 @@ class ExpenditureCategoriesFixture extends TestFixture
             'created' => '2018-01-07 10:16:51',
             'modified' => '2018-01-07 10:16:51'
         ],
+        [
+            'id' => 2,
+            'type' => 'Up Keeping',
+            'description' => 'student feeding',
+            'created' => '2018-01-07 10:16:51',
+            'modified' => '2018-01-07 10:16:51'
+        ],
     ];
 }

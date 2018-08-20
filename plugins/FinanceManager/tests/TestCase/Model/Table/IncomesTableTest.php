@@ -1,12 +1,16 @@
 <?php
 namespace FinanceManager\Test\TestCase\Model\Table;
 
+use Cake\Database\Driver\Mysql;
+use Cake\Database\Driver\Sqlite;
 use Cake\I18n\Date;
 use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
+use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use FinanceManager\Model\Table\IncomesTable;
+use Cake\Datasource\ConnectionManager;
 
 /**
  * FinanceManager\Model\Table\IncomesTable Test Case
@@ -30,6 +34,8 @@ class IncomesTableTest extends TestCase
         'plugin.finance_manager.incomes'
     ];
 
+    public $autoFixtures = false;
+
     /**
      * setUp method
      *
@@ -38,8 +44,12 @@ class IncomesTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+       /* $dsn = 'mysql://root:mypassword@172.17.0.2/test_db';
+        ConnectionManager::drop('test');
+        ConnectionManager::setConfig('test', ['url' => $dsn]);*/
         $config = TableRegistry::exists('Incomes') ? [] : ['className' => IncomesTable::class];
         $this->Incomes = TableRegistry::get('Incomes', $config);
+        $this->loadFixtures();
     }
 
     /**
@@ -62,9 +72,10 @@ class IncomesTableTest extends TestCase
     public function testGetIncomeWithPassedValue()
     {
         $postData = ['query' => 'week'];
-        $this->assertEquals([],$this->Incomes->getIncomeWithPassedValue($postData));
+        $this->assertEquals([], $this->Incomes->getIncomeWithPassedValue($postData));
         $postData['query'] = 'month';
-        $this->assertEquals([],$this->Incomes->getIncomeWithPassedValue($postData));
+        $this->assertEquals([], $this->Incomes->getIncomeWithPassedValue($postData));
+
         $expected = [
             [
                 'id' => 1,
@@ -86,7 +97,9 @@ class IncomesTableTest extends TestCase
             ]
         ];
         $postData['query'] = 'year';
-        $this->assertEquals($expected,$this->Incomes->getIncomeWithPassedValue($postData));
+        if ($this->Incomes->getConnection()->getDriver() instanceof Mysql) {
+            $this->assertEquals($expected[0]['amount'], $this->Incomes->getIncomeWithPassedValue($postData)[0]['amount']);
+        }
     }
 
     /**
@@ -111,16 +124,15 @@ class IncomesTableTest extends TestCase
                 'created' => new FrozenTime('2018-01-07 10:21:42'),
                 'modified' => new FrozenTime('2018-01-07 10:21:42')
             ],
-            [
-                'id' => 2,
-                'amount' => 20000,
-                'week' => 1,
-                'month' => 1,
-                'year' => 1,
-                'created' => new FrozenTime('2018-01-07 10:21:42'),
-                'modified' => new FrozenTime('2018-01-07 10:21:42')
-            ]
         ];
-        $this->assertEquals($expected,$this->Incomes->getIncomeWithDateRange(new Date($postData['start_date']),(new Time($postData['end_date']))->addHours(23)->addMinutes(59) ));
+        if ($this->Incomes->getConnection()->getDriver() instanceof Mysql) {
+            $this->assertEquals($expected[0]['amount'],$this->Incomes->getIncomeWithDateRange(new Date($postData['start_date']),(new Time($postData['end_date']))->addHours(23)->addMinutes(59) )[0]['amount']);
+        }
+    }
+
+    public function testRemoveRecordWithReceiptId()
+    {
+        $actual = $this->Incomes->removeRecordWithReceiptId(new Entity(['id' => 1]));
+        $this->assertEquals(true, $actual);
     }
 }

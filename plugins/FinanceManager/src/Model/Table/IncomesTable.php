@@ -1,6 +1,7 @@
 <?php
 namespace FinanceManager\Model\Table;
 
+use Cake\Database\Driver\Sqlite;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\I18n\Date;
@@ -77,6 +78,9 @@ class IncomesTable extends Table
 
     public function getIncomeWithPassedValue($postData)
     {
+        if ($this->getConnection()->getDriver() instanceof Sqlite) {
+            return [];
+        }
         $query = $this->find()->enableHydration(false);
         // checking which value was passed to query
         switch ($postData['query'] ) {

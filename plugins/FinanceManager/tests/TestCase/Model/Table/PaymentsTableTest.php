@@ -1,6 +1,7 @@
 <?php
 namespace FinanceManager\Test\TestCase\Model\Table;
 
+use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use FinanceManager\Model\Table\PaymentsTable;
@@ -53,33 +54,19 @@ class PaymentsTableTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    public function testInitialize()
+    public function testGeneratePaymentRecord()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $paymentData = [
+            'receipt_id' => 1,
+            'payment_made_by' => 'Parent',
+            'payment_type_id' => 1,
+            'payment_received_by' => 'ac794aa2-bd1d-4cfc-a736-7e8afb53b083',
+        ];
+        $this->assertInstanceOf(Entity::class, $this->Payments->generatePaymentRecord($paymentData));
     }
 
-    /**
-     * Test validationDefault method
-     *
-     * @return void
-     */
-    public function testValidationDefault()
+    public function testGetPaymentDetails()
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    public function testBuildRules()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertEquals(1, $this->Payments->getPaymentDetails(1)['id']);
     }
 }

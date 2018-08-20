@@ -78,7 +78,8 @@ class StudentsTable extends Table
         $this->belongsTo('Religions',[
             'className' => 'StudentsManager.Religions',
             'foreignKey' => 'religion_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
+            'propertyName' => 'student_religion_id'
         ]);
 
         $this->hasMany('StudentTermlyResults', [
@@ -172,7 +173,9 @@ class StudentsTable extends Table
 
     public function addStudent(EntityInterface $student)
     {
-        // save student and dispatch add
+        //a hack to make the id unique validation work
+        // because the id is same as the primary key, $rules->add($rules->isUnique(['id'])); will not work fine
+        $this->setPrimaryKey('created');
         $savedStudent = $this->save($student);
         if ( $savedStudent) {
             $event = new Event(self::EVENT_ADDED_STUDENT,$this,['student'=>$student]);
@@ -232,12 +235,12 @@ class StudentsTable extends Table
             if ( !$student ) {
                 continue;
             }
-            if ( $student->class_id == $class_id ) {
+            if ( $student->class_id === $class_id ) {
                 $returnData['success'] = 0;
                 break;
             }
             $student->class_id = $class_id;
-            $this->save($student);
+            $this->save($student, ['checkRules' => false]);
         }
         return $returnData;
     }

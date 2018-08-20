@@ -17,6 +17,7 @@ class FeesDefaultersControllerTest extends IntegrationTestCase
      */
     public $fixtures = [
         'plugin.finance_manager.fees',
+        'plugin.finance_manager.fee_categories',
         'plugin.finance_manager.student_fees',
         'plugin.finance_manager.sessions',
         'plugin.finance_manager.classes',
@@ -43,15 +44,16 @@ class FeesDefaultersControllerTest extends IntegrationTestCase
         $this->enableRetainFlashMessages();
         $this->disableErrorHandlerMiddleware();
         $this->enableCsrfToken();
-        $this->enableRetainFlashMessages();
     }
 
+    /** @test */
     public function testIndex()
     {
         $this->get('/finance-manager/fees-defaulters?session_id=&class_id=&term_id=&percentage=');
         $this->assertResponseOk();
     }
 
+    /** @test */
     public function testView()
     {
         $this->get('/finance-manager/fee-defaulter/1');

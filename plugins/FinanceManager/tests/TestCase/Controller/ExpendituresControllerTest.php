@@ -16,8 +16,29 @@ class ExpendituresControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.finance_manager.expenditures'
+        'plugin.finance_manager.expenditures',
+        'plugin.finance_manager.expenditure_categories',
+        'plugin.finance_manager.users',
     ];
+
+    public function setUp()
+    {
+        parent::setUp();
+        // Set session data
+        $this->session([
+            'Auth' => [
+                'User' => [
+                    'id' => 'f8b668c2-0de6-4561-9018-f0199c9e8525',
+                    'username' => 'testing',
+                    'role' => 'superuser',
+                    'super_user' => 1
+                ]
+            ]
+        ]);
+        $this->enableRetainFlashMessages();
+        $this->disableErrorHandlerMiddleware();
+        $this->enableCsrfToken();
+    }
 
     /**
      * Test index method
@@ -26,7 +47,10 @@ class ExpendituresControllerTest extends IntegrationTestCase
      */
     public function testIndex()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/finance-manager/expenditures');
+        $this->assertResponseOk();
+        $this->assertResponseContains('Feeding');
+        $this->assertResponseContains('15,000.00');
     }
 
     /**
@@ -36,7 +60,10 @@ class ExpendituresControllerTest extends IntegrationTestCase
      */
     public function testView()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->get('/finance-manager/expenditures/view/1');
+        $this->assertResponseOk();
+        $this->assertResponseContains('Feeding');
+        $this->assertResponseContains('15,000.00');
     }
 
     /**
@@ -46,7 +73,14 @@ class ExpendituresControllerTest extends IntegrationTestCase
      */
     public function testAdd()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $postData = [
+            'expenditure_category_id' => '1',
+            'amount' => '25000',
+            'purpose' => 'Feeding Teachers',
+            'date' => '08/20/2018'
+        ];
+        $this->post('/finance-manager/expenditures/add', $postData);
+        $this->assertSession('The expenditure has been saved.', 'Flash.flash.0.message');
     }
 
     /**
@@ -56,7 +90,14 @@ class ExpendituresControllerTest extends IntegrationTestCase
      */
     public function testEdit()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $postData = [
+            'expenditure_category_id' => '1',
+            'amount' => '25000',
+            'purpose' => 'Feeding Teachers',
+            'date' => '08/20/2018'
+        ];
+        $this->post('/finance-manager/expenditures/edit/1', $postData);
+        $this->assertSession('The expenditure has been saved.', 'Flash.flash.0.message');
     }
 
     /**
@@ -66,6 +107,7 @@ class ExpendituresControllerTest extends IntegrationTestCase
      */
     public function testDelete()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->delete('/finance-manager/expenditures/delete/1');
+        $this->assertSession('The expenditure has been deleted.', 'Flash.flash.0.message');
     }
 }

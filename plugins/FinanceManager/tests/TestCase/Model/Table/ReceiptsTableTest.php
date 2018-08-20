@@ -35,6 +35,7 @@ class ReceiptsTableTest extends TestCase
         'plugin.finance_manager.fee_categories',
         'plugin.finance_manager.terms',
         'plugin.finance_manager.payments',
+        'plugin.finance_manager.incomes',
     ];
 
     /**
@@ -68,7 +69,7 @@ class ReceiptsTableTest extends TestCase
      */
     public function testGenerateReceipt()
     {
-        $this->assertInstanceOf(Entity::class,$this->Receipts->generateReceipt('1000','25000'));
+        $this->assertInstanceOf(Entity::class, $this->Receipts->generateReceipt('001', '25000'));
     }
 
     /**
@@ -78,7 +79,12 @@ class ReceiptsTableTest extends TestCase
      */
     public function testDeleteReceipt()
     {
-        $this->assertTrue($this->Receipts->deleteReceipt(new Entity(['id'=>3,'total_amount_paid'=>'20000'])));
+        $this->assertTrue($this->Receipts->deleteReceipt(new Entity(['id'=>1])));
+    }
+
+    public function testDeleteReceiptFailed()
+    {
+        $this->assertFalse($this->Receipts->deleteReceipt(new Entity(['id'=>2])));
     }
 
     /**
@@ -104,7 +110,7 @@ class ReceiptsTableTest extends TestCase
             ]
         ];
         $result = $this->Receipts->getReceiptDetails(1);
-        $this->assertArraySubset($expected,$result);
+        $this->assertEquals($expected[0]['id'],$result[0]['id']);
         $this->assertEquals(2,count($result));
     }
 }

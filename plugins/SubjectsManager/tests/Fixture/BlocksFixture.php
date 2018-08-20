@@ -41,7 +41,7 @@ class BlocksFixture extends TestFixture
             'id' => 1,
             'name' => 'Lorem ipsum dolor ',
             'created' => '2017-10-05 14:22:52',
-            'modified' => 'Lorem ipsum dolor sit amet'
+            'modified' => '2017-10-05 14:22:52'
         ],
     ];
 }

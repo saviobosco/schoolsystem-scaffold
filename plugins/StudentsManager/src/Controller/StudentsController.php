@@ -70,7 +70,7 @@ class StudentsController extends AppController
                 $this->redirect(['action' => 'index']);
             }
             $student = $this->Students->get($id, [
-                'contain' => ['Classes','ClassDemarcations']
+                'contain' => ['Classes']
             ]);
             $religions = $this->Religions->find('list')->toArray();
             $this->set(compact('student','religions'));

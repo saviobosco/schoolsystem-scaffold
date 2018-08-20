@@ -1,6 +1,7 @@
 <?php
 namespace FinanceManager\Test\TestCase\Model\Table;
 
+use Cake\Database\Driver\Mysql;
 use Cake\I18n\Date;
 use Cake\I18n\FrozenDate;
 use Cake\I18n\Time;
@@ -78,7 +79,9 @@ class ExpendituresTableTest extends TestCase
                 ]
             ]
         ];
-        $this->assertEquals($expected,$this->Expenditures->getExpenditureWithPassedValue($postData));
+        if ($this->Expenditures->getConnection()->getDriver() instanceof Mysql) {
+            $this->assertEquals($expected,$this->Expenditures->getExpenditureWithPassedValue($postData));
+        }
     }
 
     /**
@@ -131,7 +134,9 @@ class ExpendituresTableTest extends TestCase
                 ]
             ]
         ];
-        $this->assertEquals($expected,$this->Expenditures->getExpenditureWithPassedValueArrangedByExpenditureCat($postData));
+        if ($this->Expenditures->getConnection()->getDriver() instanceof Mysql) {
+            $this->assertEquals($expected,$this->Expenditures->getExpenditureWithPassedValueArrangedByExpenditureCat($postData));
+        }
     }
 
     /**

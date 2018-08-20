@@ -50,7 +50,7 @@ class StudentsClassControllerTest extends IntegrationTestCase
     public function testChangeStudentClassPost()
     {
         $data = [
-            'student_ids'=>[1005],
+            'student_ids'=>['001'],
             'change_class_id'=> 2
         ];
         $this->post('/students/change-students-class?class_id=1',$data);

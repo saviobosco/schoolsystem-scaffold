@@ -1,6 +1,7 @@
 <?php
 namespace FinanceManager\Model\Table;
 
+use Cake\Database\Driver\Sqlite;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -68,6 +69,15 @@ class ExpenditureCategoriesTable extends Table
 
     public function deleteExpenditureCategory(EntityInterface $expenditureCategory)
     {
-        return $this->delete($expenditureCategory);
+        try {
+            if ($this->getConnection()->getDriver() instanceof Sqlite) {
+                if ($this->Expenditures->exists(['expenditure_category_id' => $expenditureCategory->id])) {
+                    throw new \PDOException;
+                }
+            }
+            return $this->delete($expenditureCategory);
+        } catch (\PDOException $exception) {
+            return false;
+        }
     }
 }
