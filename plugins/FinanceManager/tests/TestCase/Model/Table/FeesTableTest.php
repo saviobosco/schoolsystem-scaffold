@@ -27,9 +27,9 @@ class FeesTableTest extends TestCase
      */
     public $fixtures = [
         'plugin.finance_manager.fees',
-        'plugin.finance_manager.fee_categories',
-        'plugin.finance_manager.student_fee_payments',
         'plugin.finance_manager.student_fees',
+        'plugin.finance_manager.student_fee_payments',
+        'plugin.finance_manager.fee_categories',
         'plugin.finance_manager.students',
         'plugin.finance_manager.classes',
         'plugin.finance_manager.receipts',
@@ -208,7 +208,7 @@ class FeesTableTest extends TestCase
         ];
         $this->assertTrue($this->Fees->createStudentsFeeRecord($postData));
         $fee = $this->Fees->get(1);
-        $this->assertEquals('50000',$fee->income_amount_expected);
+        $this->assertEquals('75000',$fee->income_amount_expected);
     }
 
     /**
@@ -284,13 +284,13 @@ class FeesTableTest extends TestCase
         $expected = [
             1 => [
                 'amount' => 25000,
-                'expectedIncome' => 25000,
+                'expectedIncome' => 50000,
                 'amountReceived' => 0,
-                'amountRemaining' => 25000,
+                'amountRemaining' => 50000,
                 'percentageReceived' => '0.00',
                 'percentageRemaining' => '100.00',
-                'numberOfStudents' => 1,
-                'numberOfStudentsPaid' => 0,
+                'numberOfStudents' => 2,
+                'numberOfStudentsPaid' => 1,
                 'numberOfStudentsRemaining' => 1
             ]
         ];
@@ -338,7 +338,7 @@ class FeesTableTest extends TestCase
 
     public function testDeleteFeeFailed()
     {
-        $fee = new Entity(['id'=>1]);
+        $fee = $this->Fees->get(1);
         $this->assertFalse($this->Fees->deleteFee($fee));
     }
 }

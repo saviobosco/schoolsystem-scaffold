@@ -123,7 +123,8 @@ class FeeCategoriesTableTest extends TestCase
             ],
         ];
         if ($this->FeeCategories->getConnection()->getDriver() instanceof Mysql) {
-            $this->assertEquals($expected,$this->FeeCategories->getIncomeByFeeCategories($postData));
+            $actual = $this->FeeCategories->getIncomeByFeeCategories($postData);
+            $this->assertEquals($expected[0], $actual[0]);
         }
     }
 

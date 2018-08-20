@@ -62,9 +62,21 @@ class StudentFeesTableTest extends TestCase
      *
      * @return void
      */
-    public function testDeleteStudentFee()
+    public function testDeleteStudentFeeFailedCauseOfPaidFees()
     {
-        $studentFee = new Entity(['id'=>1]);
+        $studentFee = $this->StudentFees->get(1);
         $this->assertNotTrue($this->StudentFees->deleteStudentFee($studentFee));
     }
+
+    /** @test */
+    public function testDeleteStudentFee()
+    {
+        $studentFee = $this->StudentFees->get(3);
+        $this->assertTrue($this->StudentFees->deleteStudentFee($studentFee));
+        $fee = $this->StudentFees->Fees->get($studentFee->fee_id);
+        $this->assertEquals(25000, $fee->income_amount_expected);
+        $this->assertEquals(1, $fee->number_of_students);
+    }
+
+
 }

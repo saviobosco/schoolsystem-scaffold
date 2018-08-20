@@ -112,13 +112,17 @@ class StudentFeesTable extends Table
 
     public function deleteStudentFee(EntityInterface $studentFee)
     {
-        if ($this->getConnection()->getDriver() instanceof Sqlite) {
-            if ($this->StudentFeePayments->exists(['student_fee_id' => $studentFee->id])) {
-                return false;
+        try {
+            if ($this->getConnection()->getDriver() instanceof Sqlite) {
+                if ($this->StudentFeePayments->exists(['student_fee_id' => $studentFee->id])) {
+                    throw new \PDOException;
+                }
             }
+            $this->delete($studentFee);
+            return true;
+        } catch (\PDOException $exception) {
+            return false;
         }
-        $this->delete($studentFee);
-        return true;
     }
 
     public function afterDelete(Event $event,$entity)
