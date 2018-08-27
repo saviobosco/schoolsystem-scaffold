@@ -221,4 +221,23 @@ class StudentsControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
     }
 
+    /** @test */
+    public function testPrintStudentsResultsForTermly()
+    {
+        $this->get('/result-system/print-students-results?session_id=1&class_id=1&term_id=1');
+        $this->assertResponseOk();
+        $this->assertResponseContains('001');
+        $this->assertResponseContains('002');
+        $this->assertResponseContains('003');
+    }
+
+    /** @test */
+    public function testPrintStudentsResultsForAnnual()
+    {
+        $this->get('/result-system/print-students-results?session_id=1&class_id=1&term_id=4');
+        $this->assertResponseOk();
+        $this->assertResponseContains('001');
+        $this->assertResponseContains('002');
+        $this->assertResponseContains('003');
+    }
 }

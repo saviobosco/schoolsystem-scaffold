@@ -300,7 +300,7 @@ class StudentsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function viewStudentResultForAdmin($id = null )
+    public function viewStudentResultForAdmin($id = null)
     {
         try {
             $queryData = $this->request->getQuery();
@@ -334,23 +334,30 @@ class StudentsController extends AppController
                 // setting the variables
                 $this->set(compact('studentAffectiveDispositions','studentPsychomotorSkills'));
             }
-            if (   isset($queryData['term_id']) && 4 === (int)$queryData['term_id'] ) {
+            if (isset($queryData['term_id']) && 4 === (int)$queryData['term_id']) {
 
-                $student = $this->Students->getStudentAnnualResultOnly($id,$queryData);
+                $student = $this->Students
+                    ->find()
+                    ->enableHydration(false)
+                    ->select(['id','first_name','last_name','class_id','photo','photo_dir'])
+                    ->where(['id' => $id])
+                    ->first();
+                $studentAnnualResults = $this->Students->getStudentAnnualResultOnly($student['id'],$queryData);
                 // get student annual position
-                $studentPosition = $this->Students->getStudentAnnualPosition($student->id,$queryData);
+                $studentPosition = $this->Students->getStudentAnnualPosition($student['id'],$queryData);
                 // get student annual subject positions
-                $studentAnnualSubjectPositions = $this->Students->getStudentAnnualSubjectPositions($student->id,$queryData['session_id'],$queryData['class_id']);
+                $studentSubjectPositions = $this->Students->getStudentAnnualSubjectPositions($student['id'],$queryData['session_id'],$queryData['class_id']);
                 //get the student remark
-                $studentRemark = $this->Students->getStudentGeneralRemark($student->id,$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
+                $studentRemark = $this->Students->getStudentGeneralRemark($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
                 //$fees = $this->_getSchoolFees($this->request->query['session_id'],$this->request->query['term_id']);
                 //$nextTerm = $this->_getTermTimeTable($this->request->query['session_id'],$this->request->query['term_id']);
                 $this->set(compact('student',
+                    'studentAnnualResults',
                     'remarkInputs',
                     'studentRemark',
                     'fees',
                     'subjects',
-                    'studentAnnualSubjectPositions',
+                    'studentSubjectPositions',
                     'studentPosition',
                     'studentResultPublishStatus',
                     'studentsCount',
@@ -359,18 +366,24 @@ class StudentsController extends AppController
                 $this->set('_serialize', ['student']);
                 $this->render('view_student_annual_result_for_admin');
             } else {
-
-                $student = $this->Students->getStudentTermlyResultOnly($id,$queryData);
+                $student = $this->Students
+                    ->find()
+                    ->enableHydration(false)
+                    ->select(['id','first_name','last_name','class_id','photo','photo_dir'])
+                    ->where(['id' => $id])
+                    ->first();
+                $studentTermlyResults = $this->Students->getStudentTermlyResultOnly($student['id'],$queryData);
                 //get the student remark
-                $studentRemark = $this->Students->getStudentGeneralRemark($student->id,$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
+                $studentRemark = $this->Students->getStudentGeneralRemark($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
                 // get the student position
-                $studentPosition = $this->Students->getStudentTermlyPosition($student->id,$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
+                $studentPosition = $this->Students->getStudentTermlyPosition($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
                 // gets the student subject positions
-                $studentSubjectPositions = $this->Students->getStudentTermlySubjectPositions($student->id,$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
+                $studentSubjectPositions = $this->Students->getStudentTermlySubjectPositions($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
                 //$fees = $this->_getSchoolFees($this->request->query['session_id'],$this->request->query['term_id']);
                 // Next Term
                 //$nextTerm = $this->_getTermTimeTable($this->request->query['session_id'],$this->request->query['term_id']);
                 $this->set(compact('student',
+                    'studentTermlyResults',
                     'gradeInputs',
                     'remarkInputs',
                     'gradeInputsForTableHead',
@@ -386,6 +399,99 @@ class StudentsController extends AppController
                 $this->set('_serialize', ['student']);
                 $this->render('view_student_termly_result_for_admin');
             }
+        } catch ( RecordNotFoundException $e  ) {
+            $this->render('/Element/Error/recordnotfound');
+        }
+    }
+
+    public function printStudentsResults()
+    {
+        try {
+            $queryData = $this->request->getQuery();
+            $sessions = $this->Students->Sessions->find('list')->toArray();
+            $terms = $this->Terms->find('list')->toArray();
+            $classes = $this->Students->Classes->find('list')->toArray();
+            $this->set(compact('sessions','terms','classes'));
+            if ( empty($queryData)) {
+                $this->render('view_student_termly_result_for_admin');
+                return;
+            }
+            $subjects = $this->Subjects->find('list')->toArray();
+            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs();
+            $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs();
+            $gradeInputsForTableHead = $this->ResultGradeInputs->getValidGradeInputsWithAllData();
+            $this->loadModel('ResultSystem.StudentClassCounts');
+            $studentsCount = $this->StudentClassCounts->getStudentsClassCount($queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
+            $subjectClassAverages = $this->Subjects->getSubjectClassAverages($queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
+
+            // get all students
+            $this->paginate = [
+                'fields' => ['id','class_id','first_name','last_name','photo','photo_dir'],
+                'limit' => 10,
+                'maxLimit' => 10,
+                'contain' => ['Classes'],
+                'conditions' => [
+                    'Students.status'   => 1,
+                    'Students.class_id' => $this->request->getQuery('class_id')
+                ],
+                // Place the result in ascending order according to the class.
+                'order' => [
+                    'class_id' => 'asc'
+                ],
+            ];
+            $students = $this->paginate($this->Students->find('all')->enableHydration(false));
+            $studentsResults = null;
+            $this->loadModel('ResultSystem.StudentPublishResults');
+            if (Plugin::loaded('SkillsGradingSystem')) {
+                // Loads the Affective and Psychomotor Skills Table
+                $affectiveDispositionTable = TableRegistry::get('SkillsGradingSystem.StudentsAffectiveDispositionScores');
+                $psychomotorSkillsTable = TableRegistry::get('SkillsGradingSystem.StudentsPsychomotorSkillScores');
+            }
+            foreach($students as $student) {
+                $studentsResults[$student['id']]['studentDetails'] = $student;
+                $studentsResults[$student['id']]['studentResultPublishStatus'] = $this->StudentPublishResults->getStudentResultPublishStatus($student['id'], $queryData['session_id'], $queryData['class_id'], $queryData['term_id']);
+                if (Plugin::loaded('SkillsGradingSystem')) {
+                    // Finds the student Record in the Affective score table
+                    $studentsResults[$student['id']]['studentAffectiveDispositions'] = $affectiveDispositionTable->getStudentAffectiveDepositions($student['id'], $queryData['session_id'], $queryData['class_id'], $queryData['term_id']);
+                    // Finds the student record in the Psychomotor score table
+                    $studentsResults[$student['id']]['studentPsychomotorSkills'] = $psychomotorSkillsTable->getStudentPsychomotorSkills($student['id'], $queryData['session_id'], $queryData['class_id'], $queryData['term_id']);
+                }
+
+                if (   isset($queryData['term_id']) && 4 === (int)$queryData['term_id'] ) {
+
+                    $studentsResults[$student['id']]['studentAnnualResults'] = $this->Students->getStudentAnnualResultOnly($student['id'],$queryData);
+                    // get student annual position
+                    $studentsResults[$student['id']]['studentPosition'] = $this->Students->getStudentAnnualPosition($student['id'],$queryData);
+                    // get student annual subject positions
+                    $studentsResults[$student['id']]['studentSubjectPositions'] = $this->Students->getStudentAnnualSubjectPositions($student['id'],$queryData['session_id'],$queryData['class_id']);
+                    //get the student remark
+                    $studentsResults[$student['id']]['studentRemark'] = $this->Students->getStudentGeneralRemark($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
+                    //$fees = $this->_getSchoolFees($this->request->query['session_id'],$this->request->query['term_id']);
+                    //$nextTerm = $this->_getTermTimeTable($this->request->query['session_id'],$this->request->query['term_id']);
+                } else {
+                    $studentsResults[$student['id']]['studentTermlyResults'] = $this->Students->getStudentTermlyResultOnly($student['id'],$queryData);
+                    //get the student remark
+                    $studentsResults[$student['id']]['studentRemark'] = $this->Students->getStudentGeneralRemark($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
+                    // get the student position
+                    $studentsResults[$student['id']]['studentPosition'] = $this->Students->getStudentTermlyPosition($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
+                    // gets the student subject positions
+                    $studentsResults[$student['id']]['studentSubjectPositions'] = $this->Students->getStudentTermlySubjectPositions($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
+                    //$fees = $this->_getSchoolFees($this->request->query['session_id'],$this->request->query['term_id']);
+                    // Next Term
+                    //$nextTerm = $this->_getTermTimeTable($this->request->query['session_id'],$this->request->query['term_id']);
+                }
+            }
+            $this->set(compact(
+                        'studentsResults',
+                        'gradeInputs',
+                        'remarkInputs',
+                        'gradeInputsForTableHead',
+                        'subjects',
+                        'studentsCount',
+                        'fees',
+                        'subjectClassAverages',
+                        'nextTerm'));
+            //dd($studentsResults);
         } catch ( RecordNotFoundException $e  ) {
             $this->render('/Element/Error/recordnotfound');
         }

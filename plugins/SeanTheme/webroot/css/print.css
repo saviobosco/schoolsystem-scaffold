@@ -43,4 +43,8 @@
     .content {
         margin: 0;
     }
+    .student_result {
+        page-break-after: always;
+        margin: 0;
+    }
 }

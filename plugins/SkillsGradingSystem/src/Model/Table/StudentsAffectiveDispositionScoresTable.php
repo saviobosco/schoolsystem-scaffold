@@ -110,10 +110,23 @@ class StudentsAffectiveDispositionScoresTable extends Table
     public function getStudentAffectiveDepositions($student_id,$session,$class,$term)
     {
         return $this->find('all')
+            ->enableHydration(false)
+            ->select([
+                'StudentsAffectiveDispositionScores.student_id',
+                'StudentsAffectiveDispositionScores.affective_id',
+                'StudentsAffectiveDispositionScores.score',
+                'StudentsAffectiveDispositionScores.class_id',
+                'StudentsAffectiveDispositionScores.term_id',
+                'StudentsAffectiveDispositionScores.session_id',
+            ])
             ->where(['student_id' => $student_id,
                 'session_id' => @$session,
                 'class_id' => @$class,
                 'term_id'    => @$term
-            ])->contain(['Affectives']);
+            ])->contain(['Affectives' => function($query) {
+                $query->select(['Affectives.name']);
+                return $query;
+            }])
+            ->toArray();
     }
 }

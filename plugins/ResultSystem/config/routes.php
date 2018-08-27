@@ -121,6 +121,11 @@ Router::plugin(
             'action' => 'delete'
         ],['id' => '\d+', 'pass' => ['id']]);
 
+        $routes->connect('/print-students-results/**',[
+            'controller' => 'Students',
+            'action' => 'printStudentsResults'
+        ]);
+
         $routes->fallbacks('DashedRoute');
     }
 );

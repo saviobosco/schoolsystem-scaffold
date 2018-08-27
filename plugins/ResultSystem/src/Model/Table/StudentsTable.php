@@ -273,31 +273,29 @@ class StudentsTable extends Table
 
     public function getStudentTermlyResultOnly($id,$queryData)
     {
-        return $this->get($id, [
-            'contain' => [
-                'StudentTermlyResults' => [
-                    'conditions' => [
-                        'StudentTermlyResults.session_id' => @$queryData['session_id'],
-                        'StudentTermlyResults.class_id' => @$queryData['class_id'],
-                        'StudentTermlyResults.term_id' => @$queryData['term_id']
-                    ]
-                ],
-            ]
-        ]);
+        return $this->StudentTermlyResults
+            ->find()
+            ->enableHydration(false)
+            ->where([
+                'StudentTermlyResults.student_id' => $id,
+                'StudentTermlyResults.session_id' => @$queryData['session_id'],
+                'StudentTermlyResults.class_id' => @$queryData['class_id'],
+                'StudentTermlyResults.term_id' => @$queryData['term_id']
+            ])
+            ->toArray();
     }
 
     public function getStudentAnnualResultOnly($id, $queryData)
     {
-        return $this->get($id, [
-            'contain' => [
-                'StudentAnnualResults' => [
-                    'conditions' => [
-                        'StudentAnnualResults.session_id' => @$queryData['session_id'],
-                        'StudentAnnualResults.class_id' => @$queryData['class_id'],
-                    ]
-                ]
-            ]
-        ]);
+        return $this->StudentAnnualResults
+            ->find()
+            ->enableHydration(false)
+            ->where([
+                'StudentAnnualResults.student_id' => $id,
+                'StudentAnnualResults.session_id' => @$queryData['session_id'],
+                'StudentAnnualResults.class_id' => @$queryData['class_id'],
+            ])
+            ->toArray();
     }
 
     public function getStudentAnnualPosition($id,$queryData)

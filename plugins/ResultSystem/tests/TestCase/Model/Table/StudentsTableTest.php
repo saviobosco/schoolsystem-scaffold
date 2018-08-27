@@ -199,7 +199,20 @@ class StudentsTableTest extends TestCase
      */
     public function testGetStudentTermlyResultOnly()
     {
-        $this->assertInstanceOf(Entity::class,$this->Students->getStudentTermlyResultOnly('001',['term_id'=>1,'session_id'=>1,'class_id'=>1]));
+        $actual = $this->Students->getStudentTermlyResultOnly('001',['term_id'=>1,'session_id'=>1,'class_id'=>1]);
+        $expected = [
+            [
+                'id' => 1,
+                'student_id' => '001',
+                'subject_id' => '1',
+                'first_test' => 9,
+                'second_test' => 8,
+                'third_test' => 8,
+                'exam' => 8,
+            ]
+        ];
+        $this->assertEquals($expected[0]['student_id'], $actual[0]['student_id']);
+        $this->assertEquals($expected[0]['first_test'], $actual[0]['first_test']);
     }
 
     /**
@@ -209,7 +222,17 @@ class StudentsTableTest extends TestCase
      */
     public function testGetStudentAnnualResultOnly()
     {
-        $this->assertInstanceOf(Entity::class,$this->Students->getStudentAnnualResultOnly('001',['term_id'=>1,'session_id'=>1,'class_id'=>1]));
+        $actual = $this->Students->getStudentAnnualResultOnly('001',['term_id'=>1,'session_id'=>1,'class_id'=>1]);
+        $expected = [
+            [
+                'id' => 1,
+                'student_id' => '001',
+                'subject_id' => 1,
+                'first_term' => 92
+            ]
+        ];
+        $this->assertEquals($expected[0]['student_id'], $actual[0]['student_id']);
+        $this->assertEquals($expected[0]['first_term'], $actual[0]['first_term']);
     }
 
     /**
@@ -224,7 +247,8 @@ class StudentsTableTest extends TestCase
             'student_id' => '001',
             'total' => '85',
         ];
-        $this->assertEquals($expected['student_id'],$this->Students->getStudentAnnualPosition('001',['term_id'=>1,'session_id'=>1,'class_id'=>1])['student_id']);
+        $actual = $this->Students->getStudentAnnualPosition('001',['term_id'=>1,'session_id'=>1,'class_id'=>1]);
+        $this->assertEquals($expected['student_id'], $actual['student_id']);
     }
 
     /**

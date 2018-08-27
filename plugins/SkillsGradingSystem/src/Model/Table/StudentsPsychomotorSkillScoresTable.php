@@ -110,10 +110,24 @@ class StudentsPsychomotorSkillScoresTable extends Table
     public function getStudentPsychomotorSkills($student_id,$session,$class,$term)
     {
         return $this->find('all')
+            ->enableHydration(false)
+            ->select([
+                'StudentsPsychomotorSkillScores.student_id',
+                'StudentsPsychomotorSkillScores.psychomotor_id',
+                'StudentsPsychomotorSkillScores.score',
+                'StudentsPsychomotorSkillScores.class_id',
+                'StudentsPsychomotorSkillScores.term_id',
+                'StudentsPsychomotorSkillScores.session_id',
+            ])
             ->where(['student_id' => $student_id,
                 'session_id' => @$session,
                 'class_id' => @$class,
                 'term_id'    => @$term
-            ])->contain(['Psychomotors']);
+            ])
+            ->contain(['Psychomotors' => function($query) {
+                $query->select(['Psychomotors.name']);
+                return $query;
+            }])
+            ->toArray();
     }
 }
