@@ -29,7 +29,7 @@ class UploadResultController extends AppController
         $terms = $this->StudentTermlyResults->Terms->find('list', ['limit' => 3]);
         $sessions = $this->StudentTermlyResults->Sessions->find('list', ['limit' => 200]);
         $this->loadModel('ResultSystem.ResultGradeInputs');
-        $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs();
+        $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
         $this->set(compact('classes', 'terms', 'sessions','gradeInputs'));
         $this->set('_serialize', ['studentTermlyResult']);
     }

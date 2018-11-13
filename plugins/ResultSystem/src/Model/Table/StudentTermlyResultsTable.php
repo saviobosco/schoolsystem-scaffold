@@ -145,7 +145,7 @@ class StudentTermlyResultsTable extends Table
         }
         // getting the gradeInput to process the total
         $resultGradeInputsTable = TableRegistry::get('ResultSystem.ResultGradeInputs');
-        $gradeInputs = $resultGradeInputsTable->getValidGradeInputs();
+        $gradeInputs = $resultGradeInputsTable->getValidGradeInputs($resultGradeInputsTable->getResultGradeInputs());
         $total = 0;
         foreach($gradeInputs as $gradeKey => $gradeValue){
             $total += $entity->{$gradeKey};

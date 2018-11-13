@@ -94,6 +94,30 @@ class SubjectsControllerTest extends IntegrationTestCase
                     'class_id' => '1',
                     'term_id' => '2',
                     'session_id' => '1'
+                ],
+                '002' => [
+                    'first_test' => '4',
+                    'second_test' => '5',
+                    'third_test' => '4',
+                    'fourth_test' => '4',
+                    'exam' => '34',
+                    'student_id' => '002',
+                    'subject_id' => '1',
+                    'class_id' => '1',
+                    'term_id' => '2',
+                    'session_id' => '1'
+                ],
+                '003' => [
+                    'first_test' => '4',
+                    'second_test' => '5',
+                    'third_test' => '4',
+                    'fourth_test' => '4',
+                    'exam' => '34',
+                    'student_id' => '003',
+                    'subject_id' => '1',
+                    'class_id' => '1',
+                    'term_id' => '2',
+                    'session_id' => '1'
                 ]
             ]
         ];

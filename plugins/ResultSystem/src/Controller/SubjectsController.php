@@ -79,7 +79,7 @@ class SubjectsController extends AppController
                 $subjectTermlyResults = $this->Subjects->getTermlyResults($subject->id,$queryData);
                 // gets the student subject positions
                 $subjectStudentPositions = $this->Subjects->getTermlySubjectPositions($subject->id,$queryData);
-                $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs();
+                $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
                 $this->set(compact('gradeInputs','subjectStudentPositions','subjectTermlyResults'));
                 $this->set('_serialize', ['subject']);
                 $this->render('view_termly_subject_result');
@@ -97,12 +97,12 @@ class SubjectsController extends AppController
     public function add($id = null)
     {
         $subject = $this->Subjects->get($id,['contain'=>'Blocks']);
-        $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs();
+        $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
         $queryData = $this->request->getQuery();
         if ( !empty($queryData)){
             // check if subject has existing value for the records
             $studentResultExists = $this->Subjects->StudentTermlyResults->find('all')
-                ->select(['student_id','subject_id'])
+                ->select(['student_id','subject_id','session_id','class_id','term_id'])
                 ->where([
                     'StudentTermlyResults.subject_id' =>$id,
                     'StudentTermlyResults.session_id' =>$queryData['session_id'],
@@ -115,16 +115,14 @@ class SubjectsController extends AppController
             // get student with $queryData['class_id']
             $this->loadModel('ResultSystem.Students');
             $students = $this->Students->find('all')
+                ->select(['id','first_name','last_name','class_id','status'])
                 ->where(['class_id'=>$queryData['class_id'],'status'=>1])
-                ->map(function($row){
-                    $row->full_name = $row->first_name.' '.$row->last_name;
-                    return $row;
-                })->combine('id','full_name')->toArray();
+                ->combine('id','full_name')->toArray();
             $this->set(compact('students','gradeInputs'));
         } else {
             $this->set('selectParameter',true); // set the value selectParameter to true
         }
-        $sessions = $this->Sessions->find('list',['limit' => 200])->toArray();
+        $sessions = $this->Sessions->find('list')->toArray();
         $classes = $this->Classes->find('list',['limit' => 3 ])->where(['block_id' => $subject->block_id]);
         $terms = $this->Terms->find('list',['limit' => 3])->toArray();
         $this->set(compact('subject', 'sessions','classes','terms'));
@@ -134,7 +132,7 @@ class SubjectsController extends AppController
     public function processAdd()
     {
         try {
-            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs();
+            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
             if ( $this->request->is(['put','patch','post'])) {
                 $processedResults = $this->ResultSystem->processSubmittedResults($this->request->getData('student_termly_results'),$gradeInputs);
                 $subjectResults = $this->Subjects->StudentTermlyResults->newEntities($processedResults);
@@ -180,7 +178,7 @@ class SubjectsController extends AppController
                 $this->render('edit_annual_subject_result');
             } else {
                 $subject = $this->Subjects->getTermlyResultWithHydration($id,$queryData);
-                $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs();
+                $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
                 $classes = $this->Classes->find('list')->where(['block_id' => $subject->block_id]);
                 $this->set(compact('gradeInputs','subject','classes'));
                 $this->set('_serialize', ['subject']);
@@ -197,8 +195,7 @@ class SubjectsController extends AppController
                 }
             }
         } catch ( \Exception $e ) {
-            $this->render('/Element/Error/recordnotfound');
+            $this->Flash->error(__($e->getMessage()));
         }
     }
-
 }

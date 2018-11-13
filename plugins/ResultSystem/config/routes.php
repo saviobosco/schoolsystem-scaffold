@@ -126,6 +126,16 @@ Router::plugin(
             'action' => 'printStudentsResults'
         ]);
 
+        $routes->connect('/students-class-count',[
+            'controller' => 'StudentClassCounts',
+            'action' => 'update'
+        ])->setMethods(['POST', 'PUT']);
+
+        $routes->connect('/students-class-count',[
+            'controller' => 'StudentClassCounts',
+            'action' => 'index'
+        ]);
+
         $routes->fallbacks('DashedRoute');
     }
 );

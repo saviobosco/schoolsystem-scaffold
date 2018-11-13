@@ -40,7 +40,7 @@ if ( isset($subjectContainsResult) AND !empty($subjectContainsResult)) {
                     <h4><?= __(' Student Termly Results') ?></h4>
                     <?php if (isset($students) AND !empty($students)): ?>
                         <?= $this->Form->create(null,['method'=>'post']) ?>
-                        <table id="data-table" class="table table-bordered table-responsive">
+                        <table class="table table-bordered table-responsive">
                             <thead>
                             <tr>
                                 <th><?= __('Student Id') ?></th>

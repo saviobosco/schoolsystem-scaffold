@@ -904,7 +904,7 @@ class Initial extends AbstractMigration
                 ->addColumn('student_count', 'integer', [
                     'default' => null,
                     'limit' => 11,
-                    'null' => false,
+                    'null' => true,
                 ])
                 ->addColumn('class_id', 'integer', [
                     'default' => null,
@@ -1370,6 +1370,31 @@ class Initial extends AbstractMigration
                     'limit' => 3,
                     'null' => false,
                 ])
+                ->addIndex(
+                    [
+                        'student_id',
+                    ]
+                )
+                ->addIndex(
+                    [
+                        'subject_id',
+                    ]
+                )
+                ->addIndex(
+                    [
+                        'class_id',
+                    ]
+                )
+                ->addIndex(
+                    [
+                        'term_id',
+                    ]
+                )
+                ->addIndex(
+                    [
+                        'session_id',
+                    ]
+                )
                 ->create();
         }
 
@@ -2037,6 +2062,12 @@ class Initial extends AbstractMigration
         $this->table('student_fee_payments')
             ->dropForeignKey(
                 'receipt_id'
+            )
+            ->dropForeignKey(
+                'fee_id'
+            )
+            ->dropForeignKey(
+                'fee_category_id'
             )
             ->dropForeignKey(
                 'student_fee_id'

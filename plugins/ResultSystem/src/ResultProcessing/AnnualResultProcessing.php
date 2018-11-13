@@ -31,62 +31,54 @@ class AnnualResultProcessing
     {
         $returnData = null;
         // Initialize the required tables
-        $studentTable = TableRegistry::get('ResultSystem.Students');
         $annualResultTable = TableRegistry::get('ResultSystem.StudentAnnualResults');
         $annualPositionTable = TableRegistry::get('ResultSystem.StudentAnnualPositions');
-        // finds all students in the students table using the class_id
-        $studentsInAClass = $studentTable->find('all')
-            ->select(['id','class_id','status'])
-            ->where([
-                'class_id' => $class_id,
-                'status' => 1
-            ])->toArray();
-        // This first loop , loops through the students
-        // to select each student .
-        foreach ( $studentsInAClass as $studentInAClass ) {
-            // sums them and calculates the average.
-            $StudentTotalForAllTermlySubjects = $annualResultTable->find('all')
-                ->where([
-                    'student_id' => $studentInAClass['id'],
-                    'class_id'   => $class_id,
-                    'session_id' => $session_id
-                ])->toArray();
 
-            if (0 === count($StudentTotalForAllTermlySubjects)) {
+        $StudentTotalForAllTermlySubjects = $annualResultTable->find('all')
+            ->where([
+                'class_id'   => $class_id,
+                'session_id' => $session_id
+            ])
+            ->groupBy('student_id')
+            ->toArray();
+
+        foreach ($StudentTotalForAllTermlySubjects as $student_id => $studentAnnualTotalForASubject) {
+            $subjectsCount = count($studentAnnualTotalForASubject);
+            if (0 === $subjectsCount) {
                 continue;
             }
             $sumOfSubjectsTotal = 0;
             $sumOfSubjectsAverage = 0;
             $subjectCount = 0;
+
             try {
-                foreach ($StudentTotalForAllTermlySubjects as $studentAnnualTotalForASubject ) {
-                    // if all columns in this subject is empty , it means it was added by mistake.
-                    // remove the record.
-                    if (!$studentAnnualTotalForASubject['first_term'] AND ! $studentAnnualTotalForASubject['second_term'] AND ! $studentAnnualTotalForASubject['third_term'] ) {
-                        $annualResultTable->delete($studentAnnualTotalForASubject);
+                for($num = 0; $num < $subjectsCount; $num++) {
+                    // deleting empty columns.
+                    if (!$studentAnnualTotalForASubject[$num]['first_term'] AND ! $studentAnnualTotalForASubject[$num]['second_term'] AND ! $studentAnnualTotalForASubject[$num]['third_term'] ) {
+                        $annualResultTable->delete($studentAnnualTotalForASubject[$num]);
                         continue;
                     }
                     $averageDivision = 0;
-                    if ($studentAnnualTotalForASubject['first_term']) { $averageDivision++; }
-                    if ($studentAnnualTotalForASubject['second_term']) { $averageDivision++; }
-                    if ($studentAnnualTotalForASubject['third_term']) { $averageDivision++; }
-                    $studentAnnualTotalForASubject['total'] = $studentAnnualTotalForASubject['first_term'] +
-                        $studentAnnualTotalForASubject['second_term'] + $studentAnnualTotalForASubject['third_term'];
-                    $studentAnnualTotalForASubject['average'] = $this->_determineNumberPrecision( $studentAnnualTotalForASubject['total'] / $averageDivision) ;
+                    if ($studentAnnualTotalForASubject[$num]['first_term']) { $averageDivision++; }
+                    if ($studentAnnualTotalForASubject[$num]['second_term']) { $averageDivision++; }
+                    if ($studentAnnualTotalForASubject[$num]['third_term']) { $averageDivision++; }
+                    $studentAnnualTotalForASubject[$num]['total'] = $studentAnnualTotalForASubject[$num]['first_term'] +
+                        $studentAnnualTotalForASubject[$num]['second_term'] + $studentAnnualTotalForASubject[$num]['third_term'];
+                    $studentAnnualTotalForASubject[$num]['average'] = $this->_determineNumberPrecision( $studentAnnualTotalForASubject[$num]['total'] / $averageDivision) ;
                     // calculates the grade
-                    $studentAnnualTotalForASubject['grade'] = $this->calculateGrade($studentAnnualTotalForASubject['average'], $this->grades);
+                    $studentAnnualTotalForASubject[$num]['grade'] = $this->calculateGrade($studentAnnualTotalForASubject[$num]['average'], $this->grades);
                     // calculate the remark
-                    $studentAnnualTotalForASubject['remark'] = $this->remarks[$studentAnnualTotalForASubject['grade']];
+                    $studentAnnualTotalForASubject[$num]['remark'] = $this->remarks[$studentAnnualTotalForASubject[$num]['grade']];
 
-                    $annualResultTable->save($studentAnnualTotalForASubject);
-                    $sumOfSubjectsTotal += $studentAnnualTotalForASubject['total'];
-                    $sumOfSubjectsAverage += $studentAnnualTotalForASubject['average'];
+                    $annualResultTable->save($studentAnnualTotalForASubject[$num]);
+                    $sumOfSubjectsTotal += $studentAnnualTotalForASubject[$num]['total'];
+                    $sumOfSubjectsAverage += $studentAnnualTotalForASubject[$num]['average'];
                     $subjectCount++;
                 }
                 $subjectAverage = $this->_determineNumberPrecision($sumOfSubjectsAverage / $subjectCount);
                 $studentAnnualPosition = $annualPositionTable->newEntity(
                     [
-                        'student_id' => $studentInAClass['id'],
+                        'student_id' => $student_id,
                         'total'      => $sumOfSubjectsTotal,
                         'average'    => $subjectAverage,
                         'grade'     => $this->remarks[$this->calculateGrade($subjectAverage,$this->grades)],
@@ -95,9 +87,11 @@ class AnnualResultProcessing
                     ]
                 );
                 $annualPositionTable->save($studentAnnualPosition);
+
             } catch (MissingScoreRangeException $exception) {
                 $returnData['subjectCountIssues'][] = $exception->getMessage();
             }
+
         }
         return $returnData;
     }

@@ -42,38 +42,33 @@ class TermlyResultProcessing
     {
         $returnData = null; // this is the return value
         // Initializes the All required tables
-        $studentTable = TableRegistry::get('ResultSystem.Students')->find('all');
         $termlyResultTable = TableRegistry::get('ResultSystem.StudentTermlyResults');
         $termlyPositionTable = TableRegistry::get('ResultSystem.StudentTermlyPositions');
 
-        $students = $studentTable
-            ->find('all')
-            ->select(['id','status','class_id'])
-            ->where(['class_id' => $class_id, 'status' => 1])
+        $studentsTermlyResultsQuery = $termlyResultTable->find('all');
+        $studentsTermlyResults = $studentsTermlyResultsQuery
+            ->select(['student_id','total','class_id','term_id','session_id'])
+            ->where([
+                'term_id' => $term_id,
+                'class_id' => $class_id,
+                'session_id' => $session_id
+            ])
+            ->groupBy('student_id')
             ->toArray();
-        // iterates through the student Array sets
-        if (empty ($students)) {
+
+        if(empty($studentsTermlyResults)) {
             $returnData['error'] = 'No Student found';
             return $returnData;
         }
-        foreach ($students as $student ) {
-            // gets the student subject
-            $subjects = $termlyResultTable->find('all')
-                ->select(['total','student_id','class_id','term_id','session_id'])
-                ->where([
-                'student_id' => $student->id,
-                'class_id' => $class_id,
-                'term_id' => $term_id,
-                'session_id' => $session_id
-            ])->toArray();
-            $subjectCount = count($subjects);
 
+        foreach ( $studentsTermlyResults as $student_id => $subjects) {
+            $subjectCount = count($subjects);
             if ( $subjectCount <= 0 ) {
                 continue;
             }
             // check if the student subjects is greater that the supplied $no_of_students
             if ( $subjectCount < $no_of_subjects OR $subjectCount > $no_of_subjects) {
-                $studentId = $student['id'];
+                $studentId = $student_id;
                 $returnData['subjectCountIssues'][] = "Student with Id <strong>$studentId</strong> has <strong>$subjectCount</strong> subjects.";
                 unset($studentId);
             }
@@ -84,8 +79,43 @@ class TermlyResultProcessing
             $average = $this->_determineNumberPrecision($sum / $no_of_subjects ) ;
             // check to know if the record already exists in the table .
             try {
-                $studentTotal = $termlyPositionTable->newEntity([
-                    'student_id' => $student->id,
+                // get from table
+                // if null create new
+                // else patch and check if dirty
+                // else continue
+                $studentTotal = $termlyPositionTable->find('all')->where(['student_id' => $student_id,
+                    'class_id' => $class_id,
+                    'term_id' => $term_id,
+                    'session_id' => $session_id
+                ])->first();
+
+                // if the record does not exist , Create a new record
+                if ($studentTotal == null ) {
+                    $studentTotal = $termlyPositionTable->newEntity(['student_id' => $student_id,
+                        'total' => $sum ,
+                        'average' => $average,
+                        'grade'   => $this->remarks[$this->calculateGrade($average,$this->grades)],
+                        'class_id' => $class_id,
+                        'term_id' => $term_id,
+                        'session_id' => $session_id]);
+                } else {
+                    // else update the existing record
+                    $newData = ['student_id' => $student_id,
+                        'total' => $sum ,
+                        'average' => $average,
+                        'grade'   => $this->remarks[$this->calculateGrade($average,$this->grades)],
+                        'class_id' => $class_id,
+                        'term_id' => $term_id,
+                        'session_id' => $session_id];
+
+                    $studentTotal = $termlyPositionTable->patchEntity($studentTotal,$newData);
+                }
+                if ($studentTotal->isNew() || $studentTotal->isDirty()) {
+                    $termlyPositionTable->save($studentTotal);
+                }
+
+                /*$studentTotal = $termlyPositionTable->newEntity([
+                    'student_id' => $student_id,
                     'total' => $sum ,
                     'average' => $average,
                     'grade'   => $this->remarks[$this->calculateGrade($average,$this->grades)],
@@ -93,7 +123,7 @@ class TermlyResultProcessing
                     'term_id' => $term_id,
                     'session_id' => $session_id
                 ]);
-                $termlyPositionTable->save($studentTotal);
+                $termlyPositionTable->save($studentTotal);*/
             } catch (MissingScoreRangeException $exception) {
                 $returnData['subjectCountIssues'][] = $exception->getMessage();
             }
@@ -118,9 +148,10 @@ class TermlyResultProcessing
         $termlyPositionTable = TableRegistry::get('ResultSystem.StudentTermlyPositions');
 
         $studentsGroupByTotal = $termlyPositionTable->find('all')
-            ->select(['id','class_id','term_id','session_id','student_id','total'])
-            ->where(['class_id'=>$class_id,
-            'term_id' => $term_id,
+            ->select(['id','class_id','term_id','session_id','student_id','total','position'])
+            ->where([
+                'term_id' => $term_id,
+                'class_id'=>$class_id,
             'session_id' => $session_id
         ])->orderDesc('total')->groupBy('total')->toArray();
         if (empty($studentsGroupByTotal)) {
@@ -129,8 +160,11 @@ class TermlyResultProcessing
         $position = 1;
         foreach ($studentsGroupByTotal as  $studentsWithSameTotal ) {
             foreach($studentsWithSameTotal as $student ) {
-                $student['position'] = $position ;
-                $termlyPositionTable->save($student);
+                //$student['position'] = $position ;
+                $student = $termlyPositionTable->patchEntity($student, ['position' => $position]);
+                if ($student->isDirty()) {
+                    $termlyPositionTable->save($student);
+                }
             }
             $position++;
         }
@@ -156,19 +190,45 @@ class TermlyResultProcessing
             $studentsUnderTheSubject = $termlyResultTable->find('all')
                 ->select(['subject_id','student_id','total','class_id','term_id','session_id'])
                 ->where([
-                'subject_id' => $subject['id'],
-                'class_id' => $class_id,
-                'term_id' => $term_id,
-                'session_id' => $session_id
+                    'term_id' => $term_id,
+                    'session_id' => $session_id,
+                    'subject_id' => $subject['id'],
+                    'class_id' => $class_id
             ])->order(['total'=>'DESC'])->groupBy('total')->toArray();
             // If there are no students under the subject .. jump to the next subject
-            if ( empty($studentsUnderTheSubject) ) {
+            if ( is_null($studentsUnderTheSubject) || empty($studentsUnderTheSubject) ) {
                 continue;
             }
             $position = 1;
-            foreach ($studentsUnderTheSubject as  $totalGroup ) {
-                foreach ( $totalGroup as $studentStudyingTheSubject ) {
-                    $studentSubjectPosition = $termlySubjectPositionTable->newEntity(
+            foreach ($studentsUnderTheSubject as  $totalGroup) {
+                foreach ($totalGroup as $studentStudyingTheSubject) {
+
+                    $studentSubjectPosition = $termlySubjectPositionTable->find('all')->where([
+                        'student_id' => $studentStudyingTheSubject['student_id'],
+                        'subject_id' => $studentStudyingTheSubject['subject_id'],
+                        'class_id'   => $class_id,
+                        'term_id'    => $term_id,
+                        'session_id' => $session_id
+                    ])->first();
+
+                    if ( $studentSubjectPosition == null ) {
+                        $studentSubjectPosition = $termlySubjectPositionTable->newEntity(['student_id' => $studentStudyingTheSubject['student_id'],
+                            'subject_id' => $studentStudyingTheSubject['subject_id'],
+                            'total'      => $studentStudyingTheSubject['total'],
+                            'position'   => $position,
+                            'class_id'   => $class_id,
+                            'term_id'    => $term_id,
+                            'session_id' => $session_id
+                        ]);
+                    } else {
+                        $newData = ([
+                            'total'      => $studentStudyingTheSubject['total'],
+                            'position'   => $position,
+                        ]);
+                        $studentSubjectPosition = $termlySubjectPositionTable->patchEntity($studentSubjectPosition,$newData);
+                    }
+
+                    /*$studentSubjectPosition = $termlySubjectPositionTable->newEntity(
                        [
                            'student_id' => $studentStudyingTheSubject['student_id'],
                            'subject_id' => $studentStudyingTheSubject['subject_id'],
@@ -178,8 +238,10 @@ class TermlyResultProcessing
                            'total'      => $studentStudyingTheSubject['total'],
                            'position'   => $position,
                        ]
-                    );
-                    $termlySubjectPositionTable->save($studentSubjectPosition);
+                    );*/
+                    if ($studentSubjectPosition->isNew() || $studentSubjectPosition->isDirty()) {
+                        $termlySubjectPositionTable->save($studentSubjectPosition);
+                    }
                 }
                 // increment the position variable
                 $position++;
@@ -360,47 +422,31 @@ class TermlyResultProcessing
     public function calculateSubjectClassAverage($class_id,$term_id,$session_id)
     {
         //Initialize all required Tables
-        $classTable = TableRegistry::get('ResultSystem.Classes');
-        $subjectTable = TableRegistry::get('ResultSystem.Subjects');
         $termlyResultTable = TableRegistry::get('ResultSystem.StudentTermlyResults');
         $subjectClassAverageTable = TableRegistry::get('ResultSystem.SubjectClassAverages');
 
-        // find the block the class_id is under. Either junior or senior
-        $classDetail = $classTable->find('all')->where(['id'=>$class_id])->first();
-        $block_id = $classDetail['block_id'];
-        $subjects = $subjectTable->find('all')->where(['block_id'=>$block_id])->toArray();
-        // loops through each particular subject
-        // and find the students under that course for each particular class,
-        // term and session .
-        foreach ( $subjects as $subject ) {
-            $studentsUnderTheSubject = $termlyResultTable->find('all')->select(['subject_id','total'])->where([
-                'subject_id' => $subject['id'],
-                'class_id' => $class_id,
-                'term_id' => $term_id,
-                'session_id' => $session_id
-            ])
-                ->enableHydration(false)
-                ->toArray();
-            // if the class does not contain any data
-            // skip the class
-            if ( $studentsUnderTheSubject === null ){
+        $studentsUnderTheSubject = $termlyResultTable->find('all')->select(['subject_id','total'])->where([
+            'class_id' => $class_id,
+            'term_id' => $term_id,
+            'session_id' => $session_id
+        ])
+            ->enableHydration(false)
+            ->groupBy('subject_id')
+            ->toArray();
+        foreach ($studentsUnderTheSubject as $subject_id => $studentsTotal) {
+            if ( empty($studentsTotal) || $studentsTotal === null ){
                 continue;
             }
-            $studentCount = count($studentsUnderTheSubject);
+            $studentCount = count($studentsTotal);
             // Initialize the sum variable
             $sum = 0;
             for ($num = 0; $num < $studentCount ; $num++ ) {
-                $sum += $studentsUnderTheSubject[$num]['total'] ;
-            }
-            // if the sum variable is 0 skip the current loop
-            // it means that the particular subject was not done by the class
-            if ( 0 === (int)$sum ) {
-                continue;
+                $sum += $studentsTotal[$num]['total'] ;
             }
             $class_average = $this->_determineNumberPrecision($sum / $studentCount);
             $subjectClassAverage = $subjectClassAverageTable->newEntity(
                 [
-                    'subject_id' => $subject->id,
+                    'subject_id' => $subject_id,
                     'class_id' => $class_id,
                     'term_id' => $term_id,
                     'session_id' => $session_id,

@@ -7,6 +7,7 @@
 /webroot/img/student-pictures/*
 /webroot/img/image-banner.png
 /config/Migrations/schema-dump-default.lock
+config/Seeds/StudentsSeed.php
 todo.txt
 change-logs.txt
 test_db.sqlite

@@ -49,7 +49,15 @@ class ResultGradeInputsTable extends Table
         return $validator;
     }
 
+    public function getResultGradeInputs()
+    {
+        return  $this->find('all')
+            ->where(['visibility'=>1])
+            ->orderAsc('output_order')
+            ->all();
+    }
     /**
+     * @param $query
      * @return array
      * This method returns only the grades inputs with visibility => 1 in this format
      * $array = [
@@ -61,26 +69,22 @@ class ResultGradeInputsTable extends Table
      * ]
      *
      */
-    public function getValidGradeInputs()
+    public function getValidGradeInputs($query)
     {
-        $data = $this->find('all')
-            ->where(['visibility'=>1])
-            ->orderAsc('output_order')
+        $data = $query
             ->map(function($row){ $row->details = $row->replacement.' ('.$row->percentage.'%)'; return $row;})
             ->combine('main_value','details')->toArray();
         return $data;
     }
 
     /**
+     * @param $query
      * @return array
      * This method return all grade inputs with visibility => 1;
      */
-    public function getValidGradeInputsWithAllData()
+    public function getValidGradeInputsWithAllData($query)
     {
-        $data = $this->find('all')
-            ->where(['visibility'=>1])
-            ->orderAsc('output_order')
-            ->enableHydration(false)
+        $data = $query
             ->toArray();
         return $data;
     }

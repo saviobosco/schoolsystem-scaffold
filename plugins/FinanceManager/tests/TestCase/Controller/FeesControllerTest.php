@@ -185,7 +185,7 @@ class FeesControllerTest extends IntegrationTestCase
     public function testAddFeesToStudents()
     {
         $postData = [
-            'fee_id' => '41',
+            'fee_id' => '1',
             'student_ids' => [
                 0 => '001',
                 1 => '005',

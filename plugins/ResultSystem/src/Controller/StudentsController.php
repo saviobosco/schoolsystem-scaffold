@@ -90,7 +90,7 @@ class StudentsController extends AppController
             return ; // end the function execution here
         }
         try {
-            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs();
+            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
 
             if (  isset($queryData['term_id'] ) && $queryData['term_id'] == 4 ) {
 
@@ -200,8 +200,8 @@ class StudentsController extends AppController
                 if (!empty($studentResultExists)) {
                     $this->set('studentResultExists',$studentResultExists);
                 }
-                $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs();
-                $classBlock = $this->Students->Classes->find()->select(['id','block_id'])->where(['id'=>$student->class_id])->enableHydration(false)->first();
+                $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
+                $classBlock = $this->Students->Classes->find()->select(['id','block_id'])->where(['id'=>$queryData['class_id']])->enableHydration(false)->first();
                 $subjects = $this->Subjects->find('all')->where(['block_id'=>$classBlock['block_id']])->combine('id','name')->toArray();
                 $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs();
             }
@@ -220,7 +220,7 @@ class StudentsController extends AppController
     {
         if ($this->request->is(['patch', 'post', 'put'])) {
             try {
-                $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs();
+                $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
                 $processedResults = $this->ResultSystem->processSubmittedResults($this->request->getData('student_termly_results'),$gradeInputs);
                 $studentResults = $this->Students->StudentTermlyResults->newEntities($processedResults);
                 $studentRemark = $this->Students->StudentGeneralRemarks->newEntity($this->request->getData('student_general_remarks')[0]);
@@ -258,7 +258,7 @@ class StudentsController extends AppController
                 $this->render('edit_termly_result');
                 return;
             }
-            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs();
+            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
             $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs();
             if (isset($queryData['term_id']) && $queryData['term_id'] == 4) {
                 $student = $this->Students->getStudentAnnualResult($id, $queryData);
@@ -313,9 +313,10 @@ class StudentsController extends AppController
                 return;
             }
             $subjects = $this->Subjects->find('list')->toArray();
-            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs();
+            $resultGradeInputs = $this->ResultGradeInputs->getResultGradeInputs();
+            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($resultGradeInputs);
+            $gradeInputsForTableHead = $this->ResultGradeInputs->getValidGradeInputsWithAllData($resultGradeInputs);
             $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs();
-            $gradeInputsForTableHead = $this->ResultGradeInputs->getValidGradeInputsWithAllData();
             $this->loadModel('ResultSystem.StudentClassCounts');
             $studentsCount = $this->StudentClassCounts->getStudentsClassCount($queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
             $this->loadModel('ResultSystem.Subjects');
@@ -417,9 +418,10 @@ class StudentsController extends AppController
                 return;
             }
             $subjects = $this->Subjects->find('list')->toArray();
-            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs();
+            $resultGradeInputs = $this->ResultGradeInputs->getResultGradeInputs();
+            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($resultGradeInputs);
+            $gradeInputsForTableHead = $this->ResultGradeInputs->getValidGradeInputsWithAllData($resultGradeInputs);
             $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs();
-            $gradeInputsForTableHead = $this->ResultGradeInputs->getValidGradeInputsWithAllData();
             $this->loadModel('ResultSystem.StudentClassCounts');
             $studentsCount = $this->StudentClassCounts->getStudentsClassCount($queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
             $subjectClassAverages = $this->Subjects->getSubjectClassAverages($queryData['session_id'],$queryData['class_id'],$queryData['term_id']);

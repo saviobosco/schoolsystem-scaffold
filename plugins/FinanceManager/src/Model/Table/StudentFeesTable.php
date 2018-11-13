@@ -104,8 +104,8 @@ class StudentFeesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['student_id'], 'Students'));
-        $rules->add($rules->existsIn(['fee_id'], 'Fees'));
+        //$rules->add($rules->existsIn(['student_id'], 'Students'));
+        //$rules->add($rules->existsIn(['fee_id'], 'Fees'));
 
         return $rules;
     }
