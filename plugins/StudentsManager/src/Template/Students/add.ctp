@@ -14,7 +14,6 @@
                         <legend><?= __('Add Student') ?></legend>
                         <div class="row">
                             <div class="col-sm-3">
-                                File upload is disabled in <strong> Heroku </strong>
                                 <div class="form-group">
                                     <div class="fileinput fileinput-new" data-provides="fileinput"><input type="hidden" value="" name="...">
                                         <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px; line-height: 150px;"></div>
@@ -74,7 +73,9 @@
                         ?>
                     </fieldset>
 
-                    <?= $this->Form->button(__('Add Student'),['class' => 'btn btn-primary']) ?>
+                    <?php if (\Cake\Core\Plugin::loaded('FinanceManager') ) { ?>
+                        <?= $this->Form->button(__('Add Student'),['class' => 'btn btn-primary']) ?>
+                    <?php } ?>
                     <?= $this->Form->end() ?>
 
                 </div>
