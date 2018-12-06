@@ -23,8 +23,10 @@ if ( $is_superUser OR $this->request->session()->read('Auth.User.role') === 'adm
 ?>
 <!-- bursar sidebar -->
 <?php
-if ( $is_superUser OR $this->request->session()->read('Auth.User.role') === 'bursar' ) {
-    echo $this->element('Sidebar/bursar');
+if (\Cake\Core\Plugin::loaded('FinanceManager')) {
+    if ( $is_superUser OR $this->request->session()->read('Auth.User.role') === 'bursar' ) {
+        echo $this->element('Sidebar/bursar');
+    }
 }
 ?>
 <?php

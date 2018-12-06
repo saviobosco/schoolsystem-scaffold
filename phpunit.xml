@@ -29,10 +29,10 @@
         <testsuite name="Subjects Manager Plugin">
             <directory>./plugins/SubjectsManager/tests/TestCase</directory>
         </testsuite>
-        <testsuite name="Finance Manager Plugin">
-            <directory>./plugins/FinanceManager/tests/TestCase/Model</directory>
-            <directory>./plugins/FinanceManager/tests/TestCase/Controller</directory>
-        </testsuite>
+        <!--<testsuite name="Finance Manager Plugin">-->
+            <!--<directory>./plugins/FinanceManager/tests/TestCase/Model</directory>-->
+            <!--<directory>./plugins/FinanceManager/tests/TestCase/Controller</directory>-->
+        <!--</testsuite>-->
 
         <!--<testsuite name="Skill Grading System Plugin">-->
             <!--<directory>./plugins/SkillsGradingSystem/tests/TestCase</directory>-->

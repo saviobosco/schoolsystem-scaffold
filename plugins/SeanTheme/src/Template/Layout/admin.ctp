@@ -14,7 +14,8 @@
  */
 use Cake\Core\Configure;
 use Settings\Core\Setting;
-$cakeDescription = Setting::read('Application.school_name')
+$cakeDescription = Setting::read('Application.school_name');
+$application_detail = Configure::read('Application');
 ?>
 <!DOCTYPE html>
 <html>
@@ -113,7 +114,7 @@ $cakeDescription = Setting::read('Application.school_name')
     </div>
     <!-- end #content -->
     <div class="footer">
-        <p class="pull-right"><?= Configure::read('Application.Name') ?> <?= Configure::read('Application.Version') ?> Powered by &copy; <a class="text-orange" href="http://www.Crack-reactor.com" title="Visit crack-reactor" data-toggle='tooltip' trigger="focus" ><?= Configure::read('Application.Company') ?></a> All copyright reserved.</p>
+        <p class="pull-right"><?= $application_detail['Name'] ?> <?= $application_detail['Version'] ?> Powered by &copy; <a class="text-orange" href="<?= $application_detail['href_link'] ?>" title="Visit <?= $application_detail['Name'] ?>" data-toggle='tooltip' trigger="focus" ><?= Configure::read('Application.Company') ?></a> All copyright reserved.</p>
     </div>
 
 

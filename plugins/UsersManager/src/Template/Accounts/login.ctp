@@ -10,6 +10,8 @@
  */
 //$this->layout = "SeanTheme.login";
 use Cake\Core\Configure;
+use Settings\Core\Setting;
+$app_name = Setting::read('Application.school_name');
 $this->assign('title','Login');
 $edittemplates = [
     'inputContainer' => '<div class="form-group m-b-20 ">{{content}}</div>',
@@ -23,7 +25,7 @@ $this->Form->templates($edittemplates);
     <!-- begin brand -->
     <div class="login-header">
         <div class="brand">
-            <span class="text-center"> School Administration System </span>
+            <span class="text-center"> <?= $app_name ?> </span>
             <small>A simple School Administrative System </small>
         </div>
     </div>
@@ -59,26 +61,12 @@ $this->Form->templates($edittemplates);
                             echo ' | ';
                         }
                         echo $this->Html->link(__d('CakeDC/Users', 'Reset Password'), ['action' => 'requestResetPassword']);
+                        echo $this->Html->link('Go to Homepage','/',['class' => 'pull-right']);
                     }
                     ?>
                 </fieldset>
                 <?= $this->Form->button(__d('CakeDC/Users', 'Login'),['class'=>'btn btn-success btn-block btn-lg']); ?>
                 <?= $this->Form->end() ?>
-            </div>
-            <div class="panel-footer">
-                <h4> Default Logins </h4>
-                <h5> For Superuser</h5>
-                <p>username: admin</p>
-                <p>password: admin </p>
-                <h5> For Admission Officer</h5>
-                <p>username: admin2</p>
-                <p>password: admin</p>
-                <h5> For Bursar</h5>
-                <p>username: admin3</p>
-                <p>password: admin</p>
-                <h5> For Academic officer</h5>
-                <p>username: admin4</p>
-                <p>password: admin</p>
             </div>
         </div>
     </div>

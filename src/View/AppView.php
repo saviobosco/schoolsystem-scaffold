@@ -45,5 +45,6 @@ class AppView extends View
         $this->loadHelper('CakeDC/Users.User');
         $this->loadHelper('FinanceManager.Currency');
         $this->loadHelper('FinanceManager.Payment');
+        $this->loadHelper('ResultSystem.CheckResult');
     }
 }

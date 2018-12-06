@@ -1,64 +1,45 @@
 <?php
-
+/**
+ * file name check_result.ctp .
+ */
 use Cake\Core\Configure;
-
-$this->assign('title','Welcome to '.Configure::read('Application.name'));
-$this->layout = 'custom';
+use Settings\Core\Setting;
+$this->assign('title','Homepage');
+$app_name = Setting::read('Application.school_name');
+$edittemplates = [
+    'input' => '<div class="col-sm-8"> <input class="form-control input-sm" type="{{type}}" name="{{name}}"{{attrs}}/> </div>',
+    'select' => '<div class="col-sm-8"> <select name="{{name}}"{{attrs}}>{{content}}</select> </div> ',
+];
+$this->Form->templates($edittemplates)
 ?>
+<div class="row">
 
-<div id="page-title" class="page-title has-bg">
-    <div class="bg-cover"><?= $this->Html->image('systemfiles/banner.JPG')  ?></div>
-    <div class="container">
-        <h1>Welcome To <?= __(Configure::read('Application.name')) ?> </h1>
+    <div class="col-sm-12">
+        <h3> Welcome to <?= $app_name ?> Result Checking Portal </h3>
+        <hr>
+        <p> <?= $app_name ?> Family welcomes you to our result checking portal.
+            Here is the part of our school website responsible for students' results
+            processing and checking.
+            Here our students can check their results, print it and even download transcript after
+            graduation .</p>
+        <p> Feel free to call or text us in case of any difficulty for swift support. For Support Call us on <i class="fa fa-phone"></i> 07012572570 or chat with our live customer support. </p>
     </div>
 </div>
-<div id="work" class="content">
-    <!-- begin container -->
-    <div class="container">
-        <h2 class="content-title">ABOUT OUR SCHOOL</h2>
-        <!-- begin row -->
-        <div class="row row-space-10">
-            <!-- begin col-3 -->
-            <div class="col-md-4 col-sm-6">
-                <!-- begin work -->
-                <div class="work">
-                    <div class="image">
-                    </div>
-                    <div class="desc">
-                        <span class="desc-title">Old and returning students Registration</span>
-                    </div>
-                </div>
-                <!-- end work -->
-            </div>
-            <!-- end col-3 -->
-            <!-- begin col-3 -->
-            <div class="col-md-4 col-sm-6">
-                <!-- begin work -->
-                <div class="work">
-                    <div class="image">
-                    </div>
-                    <div class="desc">
-                        <span class="desc-title">New Student Registration</span>
-                    </div>
-                </div>
-                <!-- end work -->
-            </div>
-            <!-- end col-3 -->
-            <!-- begin col-3 -->
-            <div class="col-md-4 col-sm-6">
-                <!-- begin work -->
-                <div class="work">
-                    <div class="image">
-                    </div>
-                    <div class="desc">
-                        <span class="desc-title">Apply to study</span>
-                    </div>
-                </div>
-                <!-- end work -->
-            </div>
-            <!-- end col-3 -->
+
+<div class="row m-b-90">
+    <div class="col-sm-6 pull-right">
+        <div class="well">
+            <h5> Steps on how to check your result</h5>
+            <ul>
+                <li> Enter your Admission Number</li>
+                <li> Enter the scratch card pin number</li>
+                <li> Select the class, session and term respectively </li>
+                <li class="text-danger">Please cross check your details well before proceeding </li>
+                <li> click the <kbd class="bg-primary">Check Result</kbd> button</li>
+            </ul>
         </div>
-        <!-- end row -->
     </div>
-    <!-- end container -->
+    <div class="col-sm-6 m-b-20">
+        <?= $this->CheckResult->showCheckResultForm() ?>
+    </div>
 </div>

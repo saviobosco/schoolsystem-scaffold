@@ -8,7 +8,8 @@ return [
         'Motto' => 'delivering the best technologies to you!!',
         'Version' => '0.1',
         'Author' => 'Saviobosco',
-        'Company' => 'Focus',
-        'logo' => 'system-images/school-system-logo.png'
+        'Company' => 'Upsilion Technologies',
+        'logo' => 'system-images/school-system-logo.png',
+        'href_link' => 'https://www.upsitech.com/'
     ]
 ];

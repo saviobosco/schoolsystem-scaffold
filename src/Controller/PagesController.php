@@ -29,6 +29,10 @@ use Cake\View\Exception\MissingTemplateException;
 class PagesController extends AppController
 {
 
+    public function beforeFilter(Event $event) {
+        parent::beforeFilter($event);
+        $this->Auth->allow();
+    }
     /**
      * Displays a view
      *
@@ -68,9 +72,5 @@ class PagesController extends AppController
     {
         $title = 'Welcome to '.Configure::read('Application.name');
         $this->set(compact('title'));
-    }
-
-    public function beforeFilter(Event $event)
-    {
     }
 }

@@ -24,14 +24,12 @@ $cakeDescription = 'School System';
         <?= $cakeDescription ?>:
         <?= $this->fetch('title') ?>
     </title>
-
     <?= $this->Html->meta(
         'favicon.ico',
         '/img/systemfiles/crack-reactor-logo.png',
         ['type' => 'icon']
     );
     ?>
-
     <?php
     echo $this->AlaxosHtml->includeBootstrapCSS(['block' => false]);
     echo $this->Site->css('font-awesome/css/font-awesome.css');
@@ -57,15 +55,11 @@ $cakeDescription = 'School System';
         <?= $this->Flash->render() ?>
         <?= $this->fetch('content') ?>
     </div>
-
-    <?php //$this->Element('footerLinks');
-    ?>
 </div>
 <?= $this->Element('footer'); ?>
 
 <?= $this->Site->script('select2/dist/js/select2.full.min.js') ?>
 <?= $this->Html->script('app.js') ?>
-
 <script>
     $(document).ready(function() {
         $('select').select2();
