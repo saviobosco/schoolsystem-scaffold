@@ -240,4 +240,11 @@ class StudentsControllerTest extends IntegrationTestCase
         $this->assertResponseContains('002');
         $this->assertResponseContains('003');
     }
+
+    public function testDeleteStudentResults()
+    {
+        $this->delete('/result-system/delete-student-result/001?session_id=1&class_id=1&term_id=1');
+        $this->assertRedirect();
+        $this->assertSession('The student results was successfully deleted.', 'Flash.flash.0.message');
+    }
 }

@@ -498,4 +498,15 @@ class StudentsController extends AppController
             $this->render('/Element/Error/recordnotfound');
         }
     }
+
+    public function delete($id = null)
+    {
+        $this->request->allowMethod(['post', 'delete']);
+        $queryData = $this->request->getQuery();
+        $this->Students->deleteTermlyResults($id, $queryData);
+        $this->Students->deleteTermlyPosition($id, $queryData);
+        $this->Students->deleteTermlySubjectPositions($id, $queryData);
+        $this->Flash->success(__('The student results was successfully deleted.'));
+        return $this->redirect($this->request->referer());
+    }
 }

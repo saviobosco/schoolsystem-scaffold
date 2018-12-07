@@ -319,4 +319,34 @@ class StudentsTable extends Table
             ->where(['Students.status'=>1,'Students.class_id'=>$queryData['class_id']])
             ->enableHydration(false)->toArray();
     }
+
+    public function deleteTermlyResults($id, $queryData)
+    {
+        return $this->StudentTermlyResults->deleteAll([
+            'student_id' => $id,
+            'session_id' => $queryData['session_id'],
+            'class_id' => $queryData['class_id'],
+            'term_id' => $queryData['term_id'],
+        ]);
+    }
+
+    public function deleteTermlyPosition($id, $queryData)
+    {
+        return $this->StudentTermlyPositions->deleteAll([
+            'student_id' => $id,
+            'session_id' => $queryData['session_id'],
+            'class_id' => $queryData['class_id'],
+            'term_id' => $queryData['term_id'],
+        ]);
+    }
+
+    public function deleteTermlySubjectPositions($id, $queryData)
+    {
+        return $this->StudentTermlySubjectPositions->deleteAll([
+            'student_id' => $id,
+            'session_id' => $queryData['session_id'],
+            'class_id' => $queryData['class_id'],
+            'term_id' => $queryData['term_id'],
+        ]);
+    }
 }

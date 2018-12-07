@@ -49,6 +49,12 @@ Router::plugin(
                 'action'=>'edit'
             ]
         );
+        $routes->connect('/delete-student-result/**',
+            [
+                'controller'=>'Students',
+                'action'=>'delete'
+            ]
+        );
         $routes->connect('/check-student-result',
             [
                 'controller'=>'Students',

@@ -138,6 +138,7 @@ $this->assign('title','Edit Termly Results');
 </fieldset>
 <?= $this->Form->button(__('Submit'),['class' => 'btn btn-primary']) ?>
 <?= $this->Form->end() ?>
+<?= $this->Form->postLink(__('Delete Result'), ['action' => 'delete', $student->id,'?' => $this->request->getQuery()], ['escape'=> false, 'class' => 'pull-right btn btn-danger', 'confirm' => __('Are you sure you want to delete all results for student {0} in the selected term?', $student->id)]) ?>
 <?php endif; ?>
 
 <?php if ( empty($this->request->getQuery())) : ?>
