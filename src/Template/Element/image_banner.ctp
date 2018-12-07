@@ -1,0 +1,1 @@
+<?=  $this->Html->image('image-banner.png') ?>

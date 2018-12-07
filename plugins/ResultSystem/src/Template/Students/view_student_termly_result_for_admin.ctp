@@ -9,11 +9,12 @@ $this->assign('title', ( !empty($this->request->getQuery()) ) ? $sessions[$this-
 ?>
 <div class="container-fluid m-t-20">
     <?= $this->element('searchParametersSessionClassTerm') ?>
+
     <?php if ( isset($student) ) : ?>
         <?= $this->element('ResultSystem.StudentResult/Shared/is_published') ?>
     <div class="row banner-image m-b-15 m-t-20 ">
         <div class="col-sm-10">
-            <?php /* $this->Html->image('result-banner.png')*/ ?>
+            <?= $this->element('image_banner') ?>
         </div>
         <div class="col-sm-2">
             <div class="profile-picture">

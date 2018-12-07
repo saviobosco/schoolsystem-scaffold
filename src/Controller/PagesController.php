@@ -28,6 +28,11 @@ use Cake\View\Exception\MissingTemplateException;
  */
 class PagesController extends AppController
 {
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('Csrf');
+    }
 
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);

@@ -18,7 +18,7 @@ $this->assign('title',$sessions[$this->request->query['session_id']].' '.$terms[
 
     <div class="row banner-image m-b-15 m-t-20">
         <div class="col-sm-10">
-            <?= $this->Html->image('result-banner.png') ?>
+            <?= $this->element('image_banner') ?>
         </div>
         <div class="col-sm-2">
             <div class="profile-picture">

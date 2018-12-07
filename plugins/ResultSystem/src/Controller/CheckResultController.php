@@ -10,6 +10,7 @@ namespace ResultSystem\Controller;
 
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use ResultSystem\Model\Entity\StudentResultPin;
 /**
@@ -36,7 +37,6 @@ class CheckResultController extends AppController
         $this->loadModel('ResultSystem.Terms');
         $this->loadModel('ResultSystem.Sessions');
         $this->loadModel('ResultSystem.Subjects');
-        Configure::write('allTerms',true); // Todo: Remove this , its a testing feature
         // allow all actions
         $this->Auth->allow();
     }
@@ -61,7 +61,7 @@ class CheckResultController extends AppController
                     ]);
                 }
             } else {
-                $this->Flash->error(__('Incorrect registration number or Invalid pin'), ['key' => 'check_result']);
+                $this->Flash->error(__('Incorrect registration number or Invalid pin'));
             }
         }
         return $this->redirect($this->request->referer());
@@ -78,25 +78,25 @@ class CheckResultController extends AppController
         $session = $this->request->session();
         if(!empty($pin->student_id)){
             // the submitted number against the stored number
-            if ($pin->student_id != $postData['reg_number']) {
-                $this->Flash->error(__('Incorrect registration number or Invalid pin'), ['key' => 'check_result']);
+            if ($pin->student_id !== $postData['reg_number']) {
+                $this->Flash->error(__('Sorry this pin has been used by another student.'));
                 return false;
             }
             // check if the session is Ok
             if ($pin->session_id !==  (int) $postData['session_id']) {
-                $this->Flash->error(__('This pin belongs to you but the session is incorrect. Check and try again'), ['key' => 'check_result']);
+                $this->Flash->error(__('This pin has been used by you, but the session selected is incorrect. Please try again'));
                 return false;
             }
             // Check if the class is ok
             if ( $pin->class_id !== (int) $postData['class_id'] ) {
-                $this->Flash->error(__('This pin belongs to you but the class is incorrect. Check and try again'), ['key' => 'check_result']);
+                $this->Flash->error(__('This pin has been used by you, but the class selected is incorrect. Please try again'));
                 return false;
             }
 
-            if ( !Configure::read('allTerms')){ // Todo: change to the real term
+            if (! Configure::read('ResultPin.allTerms')){
                 // Check if the term is Ok
                 if ($pin->term_id !== (int) $postData['term_id']) {
-                    $this->Flash->error(__('This pin belongs to you but the term is incorrect. Check and try again'), ['key' => 'check_result']);
+                    $this->Flash->error(__('This pin has been used by you, but the term selected is incorrect. Please try again'));
                     return false;
                 }
             }
@@ -113,7 +113,7 @@ class CheckResultController extends AppController
         }else{
             $student = $this->Students->find()->where(['id'=>$postData['reg_number']])->first();
             if (empty($student)){
-                $this->Flash->error(__('Incorrect registration number or Invalid pin'), ['key' => 'check_result']);
+                $this->Flash->error(__('The registration number does not exist.'));
                 return false;
             }
             //update student in resultPins table
@@ -196,7 +196,7 @@ class CheckResultController extends AppController
                     'nextTerm'
                 ));
                 $this->set('_serialize', ['student']);
-                $this->render('/Students/view_student_annual_result_for_admin');
+                $this->render('/CheckResult/annual_result');
             } else {
                 $student = $this->Students
                     ->find()
@@ -229,10 +229,13 @@ class CheckResultController extends AppController
                     'studentResultPublishStatus',
                     'nextTerm'));
                 $this->set('_serialize', ['student']);
-                $this->render('/Students/view_student_termly_result_for_admin');
+                $this->render('/CheckResult/termly_result');
             }
-        } catch ( \PDOException $e  ) {
+        } catch ( RecordNotFoundException $e  ) {
             $this->render('/Element/Error/recordnotfound');
+        } catch ( \Exception $error) {
+            $this->Flash->error('Error occurred: '.$error->getMessage());
+            $this->render('/Students/view_student_termly_result_for_admin');
         }
     }
 
