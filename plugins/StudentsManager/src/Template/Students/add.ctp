@@ -66,16 +66,14 @@
                         echo $this->Form->input('relationship_to_guardian');
                         echo $this->Form->input('occupation_of_guardian');
                         echo $this->Form->input('guardian_phone_number');
-                        //if (\Cake\Core\Plugin::loaded('FinanceManager')){
+                        if (\Cake\Core\Plugin::loaded('FinanceManager')){
                             echo $this->Form->input('add_student_fee',['type'=>'checkbox','label'=>'Add the student Fees Automatically','checked'=>true]);
-                        //}
+                        }
                         echo $this->Form->input('return_here',['type'=>'checkbox','checked'=>true])
                         ?>
                     </fieldset>
 
-                    <?php if (\Cake\Core\Plugin::loaded('FinanceManager') ): ?>
-                        <?= $this->Form->button(__('Add Student'),['class' => 'btn btn-primary']) ?>
-                    <?php endif; ?>
+                    <?= $this->Form->button(__('Add Student'),['class' => 'btn btn-primary']) ?>
                     <?= $this->Form->end() ?>
 
                 </div>
