@@ -27,7 +27,7 @@ $this->Form->templates($edittemplates)
 </div>
 
 <div class="row m-b-90">
-    <div class="col-sm-6 pull-right">
+    <div class="col-sm-6">
         <div class="well">
             <h5> Steps on how to check your result</h5>
             <ul>
