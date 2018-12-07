@@ -73,9 +73,9 @@
                         ?>
                     </fieldset>
 
-                    <?php if (\Cake\Core\Plugin::loaded('FinanceManager') ) { ?>
+                    <?php if (\Cake\Core\Plugin::loaded('FinanceManager') ): ?>
                         <?= $this->Form->button(__('Add Student'),['class' => 'btn btn-primary']) ?>
-                    <?php } ?>
+                    <?php endif; ?>
                     <?= $this->Form->end() ?>
 
                 </div>
