@@ -1,6 +1,8 @@
 <?php
 namespace ResultSystem\Model\Table;
 
+use Cake\Event\Event;
+use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -120,5 +122,15 @@ class StudentTermlyPositionsTable extends Table
         $rules->add($rules->existsIn(['session_id'], 'Sessions'));*/
 
         return $rules;
+    }
+
+    public function beforeSave(Event $event , Entity $entity )
+    {
+        if ($event->isStopped()) {
+            return false;
+        }
+        if (empty($entity->total)) {
+            $entity->total = null;
+        }
     }
 }
