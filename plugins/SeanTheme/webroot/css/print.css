@@ -27,6 +27,9 @@
     .col-sm-3 {
         width: 25%;
     }
+    .col-sm-12 {
+        width: 100%;
+    }
     .btn {
         display: none;
     }
