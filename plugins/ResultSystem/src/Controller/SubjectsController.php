@@ -123,7 +123,7 @@ class SubjectsController extends AppController
             $this->set('selectParameter',true); // set the value selectParameter to true
         }
         $sessions = $this->Sessions->find('list')->toArray();
-        $classes = $this->Classes->find('list',['limit' => 3 ])->where(['block_id' => $subject->block_id]);
+        $classes = $this->Classes->find('list')->where(['block_id' => $subject->block_id]);
         $terms = $this->Terms->find('list',['limit' => 3])->toArray();
         $this->set(compact('subject', 'sessions','classes','terms'));
         $this->set('_serialize', ['subject','sessions','classes','terms']);
