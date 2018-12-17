@@ -26,6 +26,7 @@ echo $this->element('searchParametersSessionClassTerm');
                         <table class="table table-bordered">
                             <tr>
                                 <th><?= __('Student Admission No') ?></th>
+                                <th><?= __('Student Full Name') ?></th>
                                 <th><?= __('First Term') ?></th>
                                 <th><?= __('Second Term') ?></th>
                                 <th><?= __('Third Term') ?></th>
@@ -34,6 +35,7 @@ echo $this->element('searchParametersSessionClassTerm');
                             <?php for ($num = 0; $num < count($subject->student_annual_results); $num++ ): ?>
                                 <tr>
                                     <td><?= h($subject['student_annual_results'][$num]['student_id']) ?></td>
+                                    <td><?= h($subject['student_annual_results'][$num]['student']['first_name'].' '.$subject['student_annual_results'][$num]['student']['last_name']) ?></td>
                                     <td><?= $this->Form->input('student_annual_results.'.$num.'.first_term') ?></td>
                                     <td><?= $this->Form->input('student_annual_results.'.$num.'.second_term') ?></td>
                                     <td><?= $this->Form->input('student_annual_results.'.$num.'.third_term') ?></td>
