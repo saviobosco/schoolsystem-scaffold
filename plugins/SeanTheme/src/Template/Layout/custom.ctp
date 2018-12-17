@@ -13,7 +13,6 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 use Settings\Core\Setting;
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,8 +20,7 @@ use Settings\Core\Setting;
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <?= $cakeDescription ?>:
-        <?= $this->fetch('title') ?>
+        <?= Setting::read('Application.school_name') ?>
     </title>
     <?= $this->fetch('meta') ?>
     <?= $this->Html->meta(

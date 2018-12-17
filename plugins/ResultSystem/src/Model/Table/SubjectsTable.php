@@ -179,11 +179,15 @@ class SubjectsTable extends Table
     {
         return $this->get($id, [
             'contain' => [
-                'StudentTermlyResults' => ['conditions' => [
+                'StudentTermlyResults' => [
+                    'conditions' => [
                     'StudentTermlyResults.session_id' => $queryData['session_id'],
                     'StudentTermlyResults.class_id' => $queryData['class_id'],
                     'StudentTermlyResults.term_id' => $queryData['term_id'],
-                ]
+                    ],
+                    'Students' => [
+                        'fields' => ['id','first_name','last_name']
+                    ]
                 ]
             ]
         ]);

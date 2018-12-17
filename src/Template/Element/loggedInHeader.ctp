@@ -10,7 +10,7 @@ use Settings\Core\Setting;
     <div class="container-fluid">
         <!-- begin mobile sidebar expand / collapse button -->
         <div class="navbar-header">
-            <a class="navbar-brand" href=""><?= Setting::read('Application.school_name'); ?></a>
+            <?= $this->Html->link(Setting::read('Application.school_name'), '/', ['class' => 'navbar-brand']) ?>
             <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
