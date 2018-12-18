@@ -57,6 +57,7 @@
                     var reg_number = event.target.value;
                     if (!reg_number) {
                         states.student_id = '';
+                        CheckResultView.clearDisplay();
                         return;
                     }
                     states.student_id = reg_number;
