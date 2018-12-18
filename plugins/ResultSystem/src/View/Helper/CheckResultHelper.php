@@ -17,7 +17,7 @@ class CheckResultHelper extends Helper
 
     public function showCheckResultForm()
     {
-        $sessions = (TableRegistry::getTableLocator()->get('ResultSystem.Sessions'))->find('list');
+        $sessions = (TableRegistry::getTableLocator()->get('ResultSystem.Sessions'))->find('list',['order' => ['created' => 'desc']]);
         $classes = (TableRegistry::getTableLocator()->get('ResultSystem.Classes'))->find('list');
         $terms = (TableRegistry::getTableLocator()->get('ResultSystem.Terms'))->find('list');
         return $this->_View->element(

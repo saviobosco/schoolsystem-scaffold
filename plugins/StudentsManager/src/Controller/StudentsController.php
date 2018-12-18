@@ -1,6 +1,7 @@
 <?php
 namespace StudentsManager\Controller;
 
+use Cake\Event\Event;
 use Cake\Http\Client;
 use StudentsManager\Controller\AppController;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -19,6 +20,12 @@ class StudentsController extends AppController
     {
         parent::initialize();
         $this->loadModel('StudentsManager.Religions');
+    }
+
+    public function beforeFilter(Event $event)
+    {
+        parent::beforeFilter($event);
+        $this->Auth->allow(['view']);
     }
     /**
      * Index method
@@ -70,13 +77,20 @@ class StudentsController extends AppController
                 $this->redirect(['action' => 'index']);
             }
             $student = $this->Students->get($id, [
-                'contain' => ['Classes']
+                'contain' => ['Classes' => ['fields' => ['id','class']]
+                ]
             ]);
+            if ($this->request->accepts('application/json')) {
+                return $this->response->withStringBody(json_encode($student));
+            }
             $religions = $this->Religions->find('list')->toArray();
             $this->set(compact('student','religions'));
             $this->set('_serialize', ['student']);
 
-        } catch ( RecordNotFoundException $e ) {
+        } catch ( RecordNotFoundException $exception ) {
+            if ($this->request->accepts('application/json')) {
+                return $this->response->withStatus(404, 'Resource Not Found');
+            }
             $this->render('/Element/Error/studentRecordNotFound');
         }
 
