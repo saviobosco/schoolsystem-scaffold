@@ -79,7 +79,7 @@
         return {
             fetchStudentDetails: function() {
                 if(window.fetch && typeof window.fetch === "function") {
-                    return fetch(window.location.origin + '/students-manager/view/' + states.student_id, {
+                    return fetch(window.location.href + '/students-manager/view/' + states.student_id, {
                         method: "get",
                         headers: {"Accept": "application/json"}
                     }).then(function(response) {
