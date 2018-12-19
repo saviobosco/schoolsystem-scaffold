@@ -37,7 +37,11 @@ class AccountsController extends AppController
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
-        $this->Auth->allow(['logout']);
+        $this->Auth->allow([
+            'logout',
+            'requestResetPassword',
+            'changePassword',
+        ]);
         $this->Auth->deny(['register']);
 
         if ( $this->request->getParam('action') === 'login') {
