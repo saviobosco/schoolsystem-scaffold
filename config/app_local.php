@@ -14,26 +14,26 @@ return [
             'url' => env('DATABASE_TEST_URL', null),
         ],
     ],
-    'Cache' => [
+    /*'Cache' => [
         'default' => [
             'className' => 'File',
             'path' => CACHE,
             'server' => '172.17.0.3',
             'url' => env('CACHE_DEFAULT_URL', null),
-        ],
+        ],*/
         /**
          * Configure the cache used for general framework caching.
          * Translation cache files are stored with this configuration.
          * Duration will be set to '+1 year' in bootstrap.php when debug = false
          */
-        '_cake_core_' => [
+        /*'_cake_core_' => [
             'className' => 'File',
             'prefix' => 'myapp_cake_core_',
             'path' => CACHE . 'persistent/',
             'serialize' => true,
             'duration' => '+2 minutes',
             'url' => env('CACHE_CAKECORE_URL', null),
-        ],
+        ],*/
 
         /**
          * Configure the cache for model and datasource caches. This cache
@@ -41,7 +41,7 @@ return [
          * in connections.
          * Duration will be set to '+1 year' in bootstrap.php when debug = false
          */
-        '_cake_model_' => [
+        /*'_cake_model_' => [
             'className' => 'File',
             'prefix' => 'myapp_cake_model_',
             'path' => CACHE . 'models/',
@@ -49,5 +49,5 @@ return [
             'duration' => '+2 minutes',
             'url' => env('CACHE_CAKEMODEL_URL', null),
         ],
-    ],
+    ],*/
 ];
