@@ -21,7 +21,7 @@
 use Cake\Core\Plugin;
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
-
+use App\Middleware\DisableCacheMiddleware;
 /**
  * The default class to use for all routes
  *
@@ -43,12 +43,15 @@ use Cake\Routing\Router;
 Router::defaultRouteClass('DashedRoute');
 
 Router::scope('/', function (RouteBuilder $routes) {
+    $routes->registerMiddleware('disableCache', new DisableCacheMiddleware());
+    $routes->applyMiddleware('disableCache');
     /**
      * Here, we are connecting '/' (base path) to a controller called 'Pages',
      * its action called 'display', and we pass a param to select the view file
      * to use (in this case, src/Template/Pages/home.ctp)...
      */
     $routes->connect('/', ['controller' => 'Pages', 'action' => 'homepage']);
+    $routes->connect('/login',['plugin'=>'UsersManager','controller'=>'Accounts','action'=>'login']);
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
      */
