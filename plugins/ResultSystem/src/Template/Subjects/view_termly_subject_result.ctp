@@ -32,7 +32,7 @@ $this->assign('title',$subject->name);
             <?php foreach ($subjectTermlyResults as $studentTermlyResults): ?>
                 <tr>
                     <td><?= h($studentTermlyResults['student_id']) ?></td>
-                    <td><?= h($studentTermlyResults['student']['first_name'].' '.$studentTermlyResults['student']['first_name']) ?></td>
+                    <td><?= h($studentTermlyResults['student']['first_name'].' '.$studentTermlyResults['student']['last_name']) ?></td>
                     <?php foreach( $gradeInputs as $key => $value ) : ?>
                         <td><?= h($studentTermlyResults[$key]) ?></td>
                     <?php endforeach; ?>

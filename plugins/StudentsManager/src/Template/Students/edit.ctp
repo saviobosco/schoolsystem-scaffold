@@ -31,7 +31,8 @@
                             </div>
                         </div>
                         <div class="col-sm-9">
-                            <?= $this->Form->input('id',['type' => 'text','data-toggle' =>'tooltip','trigger' =>'focus','title' =>'Please if you edit this column this student will lost all his previous results', 'label'=>['text'=>'Reg Number'],'disabled'=>true]);  ?>
+                            <a class="pull-right" data-toggle="modal" data-target="#admissionNumberModal"  title="Change Admission">Change Admission No. <i class="fa fa-info-circle text-primary" data-toggle="tooltip" title="Change Admission Number"></i></a>
+                            <?= $this->Form->input('id',['type' => 'text','data-toggle' =>'tooltip','trigger' =>'focus','title' =>'Please if you edit this column this student will lost all his previous results', 'label'=>['text'=>'Admission No'],'disabled'=>true]);  ?>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <?= $this->Form->input('first_name');  ?>
@@ -87,7 +88,31 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="admissionNumberModal" role="dialog">
+    <div class="modal-dialog">
 
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title text-danger"> Change Admission Number</h4>
+            </div>
+            <div class="modal-body">
+                <?= $this->Form->create(null,['url'=>['controller'=>'Students','action'=>'change_admission_number'],'class'=>'form-inline','type'=>'POST','role'=>'form']) ?>
+                <?= $this->Form->hidden('old_admission_number',['value' => $student->id]) ?>
+                <?= $this->Form->input('new_admission_number',['id' => 'new_admission_number',
+                    'class'=>'form-control','label'=>['text'=>'New Admission Number'],'required'=>true]); ?>
+                <i class="fa fa-info-circle text-primary" data-toggle="tooltip" title="New Admission Number"></i>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <?= $this->Form->button(__('Change'),['type'=>'submit','class'=>'btn btn-primary','escape'=>false]) ?>
+            </div>
+            <?= $this->Form->end() ?>
+        </div>
+    </div>
+</div>
 <?= $this->Plugins->script('bootstrap-datepicker/js/bootstrap-datepicker.js',['block' => true]) ?>
 <?= $this->Plugins->script('custom/js/fileinput.min.js',['block' => true]) ?>
 <?= $this->Site->script('switchery/switchery.min.js',['block' => true]) ?>

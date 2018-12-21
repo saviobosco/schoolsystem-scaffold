@@ -25,7 +25,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-9">
-                                <?= $this->Form->input('id',['type' => 'text','label'=>['text'=>'Reg Number']]);  ?>
+                                <?= $this->Form->input('id',['type' => 'text','label'=>['text'=>'Admission No']]);  ?>
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <?= $this->Form->input('first_name');  ?>

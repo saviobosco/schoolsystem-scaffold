@@ -287,5 +287,26 @@ class StudentsController extends AppController
         dd($response->body());
     }
 
+    public function changeAdmissionNumber()
+    {
+        $postData = $this->request->getData();
+        if (empty($postData['new_admission_number'])) {
+            $this->Flash->error('New admission number cannot be empty!');
+        }
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            try {
+                $this->Students->query()
+                    ->update()
+                    ->set(['id' => $postData['new_admission_number']])
+                    ->where(['id' => $postData['old_admission_number']])
+                    ->execute();
+                $this->Flash->success('Admission Number was successfully changed');
+                return $this->redirect(['action' => 'edit', $postData['new_admission_number']]);
+            } catch ( \Exception $exception) {
+                $this->Flash->error($exception->getMessage());
+            }
+        }
+        return $this->redirect($this->referer());
+    }
 }
 
