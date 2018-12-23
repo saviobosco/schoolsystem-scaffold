@@ -282,5 +282,6 @@ Plugin::load('Muffin/Footprint');
 Plugin::load('BankSystem', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('Saviobosco/Core', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('Dashboard', ['bootstrap' => false, 'routes' => true]);
-Plugin::load('Connehito/CakeSentry', ['bootstrap' => true]);
-
+if (!Configure::read('debug')) {
+    Plugin::load('Connehito/CakeSentry', ['bootstrap' => true]);
+}
