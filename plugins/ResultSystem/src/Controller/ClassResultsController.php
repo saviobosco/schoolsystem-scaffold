@@ -102,9 +102,9 @@ class ClassResultsController extends AppController
                 ->enableHydration(false)
                 ->select(['total','student_id','subject_id','class_id','session_id','term_id'])
                 ->where([
-                    'StudentTermlyResults.session_id' => 1,
-                    'StudentTermlyResults.class_id' => 1,
-                    'StudentTermlyResults.term_id' => 1
+                    'StudentTermlyResults.session_id' => $queryData['session_id'],
+                    'StudentTermlyResults.class_id' => $queryData['class_id'],
+                    'StudentTermlyResults.term_id' => $queryData['term_id']
                 ])
                 ->combine('subject_id',
                     function($entity) {
