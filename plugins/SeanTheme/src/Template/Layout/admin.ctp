@@ -147,6 +147,7 @@ echo $this->Site->script('switchery/switchery.min.js');
 <?php
 echo $this->Site->script('DataTables/media/js/jquery.dataTables.js');
 echo $this->Site->script('DataTables/media/js/dataTables.bootstrap.min.js');
+echo $this->fetch('tableCombineJs');
 echo $this->Site->script('DataTables/extensions/Responsive/js/dataTables.responsive.min.js');
 echo $this->Site->script('bootstrap-datepicker/js/bootstrap-datepicker.js');
 echo $this->Html->script('table-manage-default.demo.js');

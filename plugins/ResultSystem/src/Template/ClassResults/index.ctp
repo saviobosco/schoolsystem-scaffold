@@ -28,10 +28,10 @@ $queryData = $this->request->getQuery();
 <div class="row m-t-30">
     <div class="col-sm-12">
         <?php if (!empty($subjects)) : ?>
-            <table class="table table-bordered table-responsive">
+            <table class="table table-bordered table-responsive" id="data-table-combine">
                 <thead>
                 <tr>
-                    <th> Student </th>
+                    <th> Students </th>
 
                     <?php foreach($subjects as $subject) : ?>
                         <th> <?= $subject ?> </th>
@@ -63,3 +63,13 @@ $queryData = $this->request->getQuery();
         <?php endif; ?>
     </div>
 </div>
+<?php $this->start('tableCombineJs');
+echo $this->Site->script('DataTables/extensions/Buttons/js/dataTables.buttons.min.js');
+echo $this->Site->script('DataTables/extensions/Buttons/js/buttons.bootstrap.min.js');
+echo $this->Site->script('DataTables/extensions/Buttons/js/buttons.flash.min.js');
+echo $this->Site->script('DataTables/extensions/Buttons/js/jszip.min.js');
+echo $this->Site->script('DataTables/extensions/Buttons/js/pdfmake.min.js');
+echo $this->Site->script('DataTables/extensions/Buttons/js/vfs_fonts.min.js');
+echo $this->Site->script('DataTables/extensions/Buttons/js/buttons.html5.min.js');
+echo $this->Site->script('DataTables/extensions/Buttons/js/buttons.print.min.js');
+ $this->end() ?>
