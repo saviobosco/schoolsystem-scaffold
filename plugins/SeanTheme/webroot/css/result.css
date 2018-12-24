@@ -56,7 +56,6 @@ body {
     padding: 0;
 }
 .table-result thead tr th div {
-    transform: rotate(-90deg);
     margin-top: -60px;
     font-size: 9px;
 }
