@@ -160,13 +160,12 @@ class TermlyResultProcessing
         $position = 1;
         foreach ($studentsGroupByTotal as  $studentsWithSameTotal ) {
             foreach($studentsWithSameTotal as $student ) {
-                //$student['position'] = $position ;
                 $student = $termlyPositionTable->patchEntity($student, ['position' => $position]);
                 if ($student->isDirty()) {
                     $termlyPositionTable->save($student);
                 }
             }
-            $position++;
+            $position += count($studentsWithSameTotal);
         }
         return true;
     }
@@ -227,24 +226,12 @@ class TermlyResultProcessing
                         ]);
                         $studentSubjectPosition = $termlySubjectPositionTable->patchEntity($studentSubjectPosition,$newData);
                     }
-
-                    /*$studentSubjectPosition = $termlySubjectPositionTable->newEntity(
-                       [
-                           'student_id' => $studentStudyingTheSubject['student_id'],
-                           'subject_id' => $studentStudyingTheSubject['subject_id'],
-                           'class_id'   => $class_id,
-                           'term_id'    => $term_id,
-                           'session_id' => $session_id,
-                           'total'      => $studentStudyingTheSubject['total'],
-                           'position'   => $position,
-                       ]
-                    );*/
                     if ($studentSubjectPosition->isNew() || $studentSubjectPosition->isDirty()) {
                         $termlySubjectPositionTable->save($studentSubjectPosition);
                     }
                 }
                 // increment the position variable
-                $position++;
+                $position += count($totalGroup);
             }
         }
         return true;

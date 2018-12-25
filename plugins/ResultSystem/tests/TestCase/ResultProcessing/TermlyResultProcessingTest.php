@@ -33,6 +33,7 @@ class TermlyResultProcessingTest extends IntegrationTestCase
         'plugin.result_system.subjects',
         'plugin.result_system.terms',
         'plugin.result_system.student_termly_results',
+        'plugin.result_system.student_annual_results',
         'plugin.result_system.student_result_pins',
         'plugin.result_system.student_termly_positions',
         'plugin.result_system.student_termly_subject_positions',
