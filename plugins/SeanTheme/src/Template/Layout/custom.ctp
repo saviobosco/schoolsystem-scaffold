@@ -25,7 +25,7 @@ use Settings\Core\Setting;
     <?= $this->fetch('meta') ?>
     <?= $this->Html->meta(
         'favicon.ico',
-        '/img/systemfiles/crack-reactor-logo.png',
+        'school-system.png',
         ['type' => 'icon']
     );
     ?>
@@ -78,7 +78,6 @@ use Settings\Core\Setting;
 </div>
 <?= $this->Element('footer'); ?>
 <?= $this->Site->script('select2/dist/js/select2.full.min.js') ?>
-<?= $this->Html->script('app.js') ?>
 <script>
     $(document).ready(function() {
         $('select').select2();

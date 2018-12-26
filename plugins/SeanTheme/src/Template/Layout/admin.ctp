@@ -41,7 +41,6 @@ $application_detail = Configure::read('Application');
     echo $this->Html->css('animate.css');
     echo $this->Html->css('style.css');
     echo $this->Html->css('style-responsive.min.css');
-    //echo $this->Html->css('default.css');
     echo $this->Plugins->css('select2/dist/css/select2.min.css');
     echo $this->Plugins->css('switchery/switchery.min.css');
 

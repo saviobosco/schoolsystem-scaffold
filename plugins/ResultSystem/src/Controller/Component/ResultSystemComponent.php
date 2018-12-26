@@ -119,6 +119,9 @@ class ResultSystemComponent extends Component
     public function processSubmittedResults(array $results ,array $inputGrades)
     {
         // processing the resultTotal
+        if (is_null($results) || empty($results)) {
+            return [];
+        }
         $modifiedResult = (new Collection($results))->filter(function($result,$key) use ($inputGrades){
             $containsAnyResult = false;
            foreach($inputGrades as $gradeKey => $gradeValue)
