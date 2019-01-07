@@ -1,11 +1,13 @@
 <?php
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
+use App\Middleware\DisableCacheMiddleware;
 
 Router::plugin(
     'ResultSystem',
     ['path' => '/result-system'],
     function (RouteBuilder $routes) {
+        $routes->registerMiddleware('disableCache', new DisableCacheMiddleware());
 
         $routes->connect('/students-results',[
             'controller' => 'Students',
@@ -143,5 +145,11 @@ Router::plugin(
         ]);
 
         $routes->fallbacks('DashedRoute');
+
+        $routes->applyMiddleware('disableCache');
+        $routes->connect('/view-student-result-sheet',[
+            'controller' => 'CheckResult',
+            'action' => 'viewStudentResult'
+        ]);
     }
 );
