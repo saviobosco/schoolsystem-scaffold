@@ -8,6 +8,8 @@
 
 namespace ResultSystem\Controller;
 
+use Cake\Cache\Cache;
+use Cake\Chronos\Chronos;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -54,9 +56,11 @@ class CheckResultController extends AppController
                     return $this->redirect([
                         'action' => 'viewStudentResult',
                         '?' => [
+                            'id' => $sessionData['id'],
                             'session_id' => $sessionData['session_id'],
                             'class_id' => $sessionData['class_id'],
                             'term_id' => $sessionData['term_id'],
+                            'ts' => $sessionData['ts']
                         ]
                     ]);
                 }
@@ -75,7 +79,6 @@ class CheckResultController extends AppController
      */
     protected function _checkRequestData(StudentResultPin $pin,$postData)
     {
-        $session = $this->request->session();
         if(!empty($pin->student_id)){
             // the submitted number against the stored number
             if ($pin->student_id !== $postData['reg_number']) {
@@ -100,14 +103,13 @@ class CheckResultController extends AppController
                     return false;
                 }
             }
-
             // If all checks are true(OK) set the user sessions .
-            $session->write([
-                'Student.id' => $pin->student_id,
-                'Student.session_id' => $postData['session_id'],
-                'Student.class_id' => $postData['class_id'],
-                'Student.term_id' => $postData['term_id'],
-            ]); // write to session and return true
+            $this->storeResultDetails([
+                'id' => $pin->student_id,
+                'session_id' => $postData['session_id'],
+                'class_id' => $postData['class_id'],
+                'term_id' => $postData['term_id'],
+            ]);
             return true;
 
         }else{
@@ -118,10 +120,11 @@ class CheckResultController extends AppController
             }
             //update student in resultPins table
             if ($this->Students->StudentResultPins->updateStudentPin($pin,$student->id,$postData['session_id'],$postData['class_id'],$postData['term_id'])) {
-                $session->write(['Student.id'=> $student->id,
-                    'Student.session_id' => $postData['session_id'],
-                    'Student.class_id' => $postData['class_id'],
-                    'Student.term_id' => $postData['term_id'],
+                $this->storeResultDetails([
+                    'id'=> $student->id,
+                    'session_id' => $postData['session_id'],
+                    'class_id' => $postData['class_id'],
+                    'term_id' => $postData['term_id'],
                 ]);
                 return true;
             }
@@ -131,11 +134,11 @@ class CheckResultController extends AppController
 
     public function viewStudentResult()
     {
-        if ($this->request->getSession()->check('Student') !== true ){
-            return $this->redirect(['action'=>'checkResult']);
-        }
-        $session = $this->request->getSession()->read('Student');
         $queryData = $this->request->getQuery();
+        $session = Cache::read(@$queryData['id'].'-'.@$queryData['ts']);
+        if (!$session) {
+            return $this->redirect($this->request->referer());
+        }
 
         try {
             $sessions = $this->Students->Sessions->find('list')->toArray();
@@ -239,10 +242,22 @@ class CheckResultController extends AppController
         }
     }
 
-    public function destroySession()
+    protected function storeResultDetails($data)
     {
-        $this->request->getSession()->delete('Student');
-        $this->Flash->success(__('Your session was successfully deactivated '));
-        return $this->redirect(['action'=>'checkResult']);
+        $timestamp = Chronos::now()->timestamp;
+        Cache::write($data['id'].'-'.$timestamp,[
+            'id'=> $data['id'],
+            'session_id' => $data['session_id'],
+            'class_id' => $data['class_id'],
+            'term_id' => $data['term_id']
+        ]);
+        $this->request->getSession()->write([
+            'Student.id'=> $data['id'],
+            'Student.session_id' => $data['session_id'],
+            'Student.class_id' => $data['class_id'],
+            'Student.term_id' => $data['term_id'],
+            'Student.ts' => $timestamp
+        ]);
     }
+
 }

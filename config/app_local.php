@@ -14,8 +14,8 @@ return [
             'url' => env('DATABASE_TEST_URL', null),
         ],
     ],
-    /*'Cache' => [
-        'default' => [
+    'Cache' => [
+        /*'default' => [
             'className' => 'File',
             'path' => CACHE,
             'server' => '172.17.0.3',
@@ -48,6 +48,6 @@ return [
             'serialize' => true,
             'duration' => '+2 minutes',
             'url' => env('CACHE_CAKEMODEL_URL', null),
-        ],
-    ],*/
+        ],*/
+    ],
 ];

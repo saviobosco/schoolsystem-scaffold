@@ -9,6 +9,8 @@
 namespace ResultSystem\Test\TestCase\Controller;
 
 
+use Cake\Chronos\Chronos;
+use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestCase;
 use ResultSystem\Controller\CheckResultController;
@@ -76,7 +78,7 @@ class CheckResultControllerTest extends IntegrationTestCase
             'term_id' => 1
         ];
         $this->post('/result-system/check-result/check-result', $postData);
-        $this->assertRedirect('/result-system/check-result/view-student-result?session_id=1&class_id=1&term_id=1');
+        $this->assertRedirect('/result-system/view-student-result-sheet?id=001&session_id=1&class_id=1&term_id=1&ts='.Chronos::now()->timestamp);
         $this->assertResponseCode(302);
     }
 
@@ -97,15 +99,14 @@ class CheckResultControllerTest extends IntegrationTestCase
 
     public function testViewStudentResult()
     {
-        $this->session([
-            'Student' => [
-                'id' => '001',
-                'class_id' => 1,
-                'session_id' => 1,
-                'term_id' => 1
-            ]
+        $timestamp = Chronos::now()->timestamp;
+         Cache::write('001-'.$timestamp,[
+             'id' => '001',
+             'class_id' => 1,
+             'session_id' => 1,
+             'term_id' => 1
         ]);
-        $this->get('/result-system/check-result/view-student-result?session_id=1&class_id=1&term_id=1');
+        $this->get('/result-system/check-result/view-student-result?id=001&session_id=1&class_id=1&term_id=1&ts='.$timestamp);
         $this->assertResponseOk();
     }
 
@@ -150,7 +151,7 @@ class CheckResultControllerTest extends IntegrationTestCase
             'term_id' => 2
         ];
         $this->post('/result-system/check-result/check-result', $postData);
-        $this->assertRedirect('/result-system/check-result/view-student-result?session_id=1&class_id=1&term_id=2');
+        $this->assertRedirect('/result-system/view-student-result-sheet?id=001&session_id=1&class_id=1&term_id=2&ts='.Chronos::now()->timestamp);
         $this->assertResponseCode(302);
     }
 
