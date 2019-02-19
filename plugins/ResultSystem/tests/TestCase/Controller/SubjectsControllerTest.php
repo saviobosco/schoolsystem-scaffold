@@ -152,7 +152,7 @@ class SubjectsControllerTest extends IntegrationTestCase
         ];
         $this->put('/result-system/edit-subject-result/1?session_id=1&class_id=1&term_id=1',$data);
         $this->assertRedirect();
-        $this->assertSession('The subject result was successfully updated.', 'Flash.flash.0.message');
+        $this->assertSession('The subject results was successfully updated.', 'Flash.flash.0.message');
 
     }
 }

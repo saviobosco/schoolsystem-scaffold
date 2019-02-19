@@ -89,8 +89,7 @@ class StudentTermlyResultsTableTest extends TestCase
             'class_id' => 1,
             'term_id' => 1,
             'session_id' => 1]);
-        $expected = ['error'=>[0=>'005']];
-        $this->assertEquals($expected,$this->StudentTermlyResults->saveResult($passData));
+        $this->assertEquals([],$this->StudentTermlyResults->saveResult($passData));
     }
 
 

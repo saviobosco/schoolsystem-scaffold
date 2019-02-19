@@ -185,17 +185,17 @@ class SubjectsController extends AppController
                 $this->render('edit_termly_subject_result');
             }
             if ($this->request->is(['patch', 'post', 'put'])) {
-                $subject = $this->Subjects->patchEntity($subject, $this->request->getData());
-                if ($this->Subjects->save($subject)) {
-                    $this->Flash->success(__('The subject result was successfully updated.'));
-                    return $this->redirect($this->referer());
+                $subject = $this->Subjects->StudentTermlyResults->patchEntities($subject['student_termly_results'], $this->request->getData('student_termly_results'));
+                if($this->Subjects->StudentTermlyResults->saveMany($subject)) {
+                    $this->Flash->success(__('The subject results was successfully updated.'));
                 } else {
-                    $this->Flash->error(__('The subject could not be saved. Please, try again.'));
-                    return $this->redirect($this->referer());
+                    $this->Flash->error(__('The subject results could not be updated.'));
                 }
+                return $this->redirect($this->referer());
             }
         } catch ( \Exception $e ) {
             $this->Flash->error(__($e->getMessage()));
+            return $this->redirect($this->referer());
         }
     }
 }

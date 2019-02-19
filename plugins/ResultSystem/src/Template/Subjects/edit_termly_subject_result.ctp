@@ -43,7 +43,6 @@ echo $this->element('searchParametersSessionClassTerm');
                                     <?php endforeach; ?>
                                     <td><?= $this->Form->input('student_termly_results.' . $num . '.total', ['readonly']) ?></td>
                                     <td class="hidden"><?= $this->Form->hidden('student_termly_results.' . $num . '.student_id') ?></td>
-                                    <td class="hidden"><?= $this->Form->hidden('student_termly_results.' . $num . '.student_id') ?></td>
                                     <td class="hidden"><?= $this->Form->hidden('student_termly_results.' . $num . '.subject_id') ?></td>
                                     <td class="hidden"><?= $this->Form->hidden('student_termly_results.' . $num . '.class_id') ?></td>
                                     <td class="hidden"><?= $this->Form->hidden('student_termly_results.' . $num . '.term_id') ?></td>

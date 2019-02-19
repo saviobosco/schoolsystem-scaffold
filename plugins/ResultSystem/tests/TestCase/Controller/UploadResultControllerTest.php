@@ -109,6 +109,6 @@ class UploadResultControllerTest extends IntegrationTestCase
         ];
         $this->put('/result-system/upload-result',$data);
         $this->assertRedirect();
-        $this->assertSession('2 records were successfully read and uploaded. An error occurred uploading the following students results with admission No: 005. Possible cause of error is incorrect Admission Number. Please Check it and try again', 'Flash.flash.0.message');
+        $this->assertSession('3 records were successfully read and uploaded.', 'Flash.flash.0.message');
     }
 }
