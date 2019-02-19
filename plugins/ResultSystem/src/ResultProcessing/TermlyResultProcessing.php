@@ -53,10 +53,9 @@ class TermlyResultProcessing
                 'class_id' => $class_id,
                 'session_id' => $session_id
             ])
-            ->groupBy('student_id')
-            ->toArray();
+            ->groupBy('student_id');
 
-        if(empty($studentsTermlyResults)) {
+        if($studentsTermlyResults->isEmpty()) {
             $returnData['error'] = 'No Student found';
             return $returnData;
         }
@@ -113,17 +112,6 @@ class TermlyResultProcessing
                 if ($studentTotal->isNew() || $studentTotal->isDirty()) {
                     $termlyPositionTable->save($studentTotal);
                 }
-
-                /*$studentTotal = $termlyPositionTable->newEntity([
-                    'student_id' => $student_id,
-                    'total' => $sum ,
-                    'average' => $average,
-                    'grade'   => $this->remarks[$this->calculateGrade($average,$this->grades)],
-                    'class_id' => $class_id,
-                    'term_id' => $term_id,
-                    'session_id' => $session_id
-                ]);
-                $termlyPositionTable->save($studentTotal);*/
             } catch (MissingScoreRangeException $exception) {
                 $returnData['subjectCountIssues'][] = $exception->getMessage();
             }
@@ -153,8 +141,9 @@ class TermlyResultProcessing
                 'term_id' => $term_id,
                 'class_id'=>$class_id,
             'session_id' => $session_id
-        ])->orderDesc('total')->groupBy('total')->toArray();
-        if (empty($studentsGroupByTotal)) {
+        ])->orderDesc('total')
+            ->groupBy('total');
+        if ($studentsGroupByTotal->isEmpty()) {
             return false;
         }
         $position = 1;
@@ -181,10 +170,13 @@ class TermlyResultProcessing
         // find the block the class_id is under. Either junior or senior
         $classDetail = $classTable->find('all')->where(['id'=>$class_id])->first();
         $block_id = $classDetail['block_id'];
-        $subjects = $subjectTable->find('all')->where(['block_id'=>$block_id])->toArray();
+        $subjects = $subjectTable->find('all')->where(['block_id'=>$block_id]);
         // loops through each particular subject
         // and find the students under that course for each particular class,
         // term and session .
+        if ($subjects->isEmpty()) {
+            return false;
+        }
         foreach ( $subjects as $subject ) {
             $studentsUnderTheSubject = $termlyResultTable->find('all')
                 ->select(['subject_id','student_id','total','class_id','term_id','session_id'])
@@ -193,9 +185,10 @@ class TermlyResultProcessing
                     'session_id' => $session_id,
                     'subject_id' => $subject['id'],
                     'class_id' => $class_id
-            ])->order(['total'=>'DESC'])->groupBy('total')->toArray();
+            ])->order(['total'=>'DESC'])
+                ->groupBy('total');
             // If there are no students under the subject .. jump to the next subject
-            if ( is_null($studentsUnderTheSubject) || empty($studentsUnderTheSubject) ) {
+            if ( $studentsUnderTheSubject->isEmpty()) {
                 continue;
             }
             $position = 1;
@@ -237,6 +230,13 @@ class TermlyResultProcessing
         return true;
     }
 
+    /**
+     * @param $class_id
+     * @param $term_id
+     * @param $session_id
+     * @return bool
+     * @deprecated
+     */
     public function calculateTermlyPositionBasedOnClassDemarcation($class_id,$term_id,$session_id)
     {
         // Initializes the required tables
@@ -307,6 +307,13 @@ class TermlyResultProcessing
         return true;
     }
 
+    /**
+     * @param $class_id
+     * @param $term_id
+     * @param $session_id
+     * @return bool
+     * @deprecated
+     */
     public function calculateTermlySubjectPositionOnClassDemarcation( $class_id,$term_id,$session_id )
     {
         //Initialize all required Tables
@@ -418,10 +425,12 @@ class TermlyResultProcessing
             'session_id' => $session_id
         ])
             ->enableHydration(false)
-            ->groupBy('subject_id')
-            ->toArray();
+            ->groupBy('subject_id');
+        if ($studentsUnderTheSubject->isEmpty()) {
+            return false;
+        }
         foreach ($studentsUnderTheSubject as $subject_id => $studentsTotal) {
-            if ( empty($studentsTotal) || $studentsTotal === null ){
+            if (empty($studentsTotal)){
                 continue;
             }
             $studentCount = count($studentsTotal);

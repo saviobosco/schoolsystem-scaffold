@@ -39,8 +39,10 @@ class AnnualResultProcessing
                 'class_id'   => $class_id,
                 'session_id' => $session_id
             ])
-            ->groupBy('student_id')
-            ->toArray();
+            ->groupBy('student_id');
+        if ($StudentTotalForAllTermlySubjects->isEmpty()) {
+            return false;
+        }
 
         foreach ($StudentTotalForAllTermlySubjects as $student_id => $studentAnnualTotalForASubject) {
             $subjectsCount = count($studentAnnualTotalForASubject);
@@ -105,8 +107,10 @@ class AnnualResultProcessing
             ->where([
             'class_id'=>$class_id,
             'session_id' => $session_id
-        ])->order(['total'=>'DESC'])->groupBy('total')->toArray();
-        if (empty($annualResultsTotal)) {
+            ])
+            ->order(['total'=>'DESC'])
+            ->groupBy('total');
+        if ($annualResultsTotal->isEmpty()) {
             return false;
         }
         $position = 1;
@@ -130,16 +134,24 @@ class AnnualResultProcessing
         $annualSubjectPositionTable = TableRegistry::get('ResultSystem.StudentAnnualSubjectPositions');
         // find the block the class_id is under. Either junior or senior
         $classDetail = $classTable->find('all')->where(['id'=>$class_id])->first();
-        $subjects = $subjectTable->find('all')->where(['block_id'=>$classDetail['block_id']])->toArray();
+        $subjects = $subjectTable->find('all')->where(['block_id'=>$classDetail['block_id']]);
         // loops through each particular subject
         // and find the students under that course for each particular class,
         // term and session .
+        if ($subjects->isEmpty()) {
+            return false;
+        }
         foreach ( $subjects as $subject ) {
             $studentsStudyingTheSubject = $annualResultTable->find('all')->where([
                 'subject_id' => $subject['id'],
                 'class_id' => $class_id,
                 'session_id' => $session_id
-            ])->order(['total'=>'DESC'])->groupBy('total')->toArray();
+                ])
+                ->order(['total'=>'DESC'])
+                ->groupBy('total');
+            if ($studentsStudyingTheSubject->isEmpty()) {
+                continue;
+            }
             $position = 1;
             foreach ( $studentsStudyingTheSubject as $key => $value ) {
                 foreach ( $value as $studentStudyingTheSubject ) {
