@@ -13,19 +13,20 @@ $edittemplates = [
 $this->Form->templates($edittemplates)
 ?>
 <div class="row">
-
     <div class="col-sm-12">
-        <h3> Welcome to <?= $app_name ?> Result Checking Portal </h3>
         <hr>
-        <div>
-            School Write up here.
-        </div>
+
+        <?= $this->Html->image('image-banner.png',['width'=>'100%' , 'height' => '150px']) ?>
+        <hr>
+<!--        <div>-->
+<!--            School Write up here.-->
+<!--        </div>-->
 
         <p> Feel free to call or text us in case of any difficulty for swift support. For Support Call us on <i class="fa fa-phone"></i> 07012572570 or chat with our live customer support. </p>
     </div>
 </div>
 
-<div class="row m-b-90">
+<div class="row ">
     <div class="col-sm-6">
         <div class="well">
             <h5> Steps on how to check your result</h5>

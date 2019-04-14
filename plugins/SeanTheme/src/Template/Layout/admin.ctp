@@ -113,7 +113,7 @@ $application_detail = Configure::read('Application');
     </div>
     <!-- end #content -->
     <div class="footer">
-        <p class="pull-right"><?= $application_detail['Name'] ?> <?= $application_detail['Version'] ?> Powered by &copy; <a class="text-orange" href="<?= $application_detail['href_link'] ?>" title="Visit <?= $application_detail['Company'] ?>" data-toggle='tooltip' trigger="focus" ><?= Configure::read('Application.Company') ?></a> All copyright reserved.</p>
+        <p class="pull-right"><?= $application_detail['Name'] ?> <?= $application_detail['Version'] ?> Powered by &copy; <a class="text-orange" href="<?= $application_detail['Href_link'] ?>" title="Visit <?= $application_detail['Company'] ?>" data-toggle='tooltip' trigger="focus" ><?= Configure::read('Application.Company') ?></a> All copyright reserved.</p>
     </div>
 
 
