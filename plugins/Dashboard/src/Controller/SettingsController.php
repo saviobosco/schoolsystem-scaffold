@@ -80,5 +80,41 @@ class SettingsController extends AppController
         }
         $this->set(compact('file'));
     }
+
+    public function uploadSchoolLogo()
+    {
+        $dir = new Folder(WWW_ROOT.'img');
+        $file = $dir->find('school-logo.png', true);
+        if ( $this->request->is(['patch', 'post', 'put'])) {
+            try {
+                // check if upload
+                //debug($this->request->data); exit;
+                if (empty($this->request->getData('logo')['name'])) {
+                    $this->Flash->error(__('No file selected.'));
+                    return $this->redirect($this->request->referer());
+                }
+                $imageDetails = pathinfo($this->request->getData('logo')['name']);
+
+                if ($imageDetails['extension'] !== 'png') {
+                    $this->Flash->error(__('Image must be a .png file .'));
+                    return $this->redirect($this->request->referer());
+                }
+                // check if folder is writable
+                $file = new File(WWW_ROOT.'img/school-logo.png');
+                if ( $file->exists() ) {
+                    $file->delete();
+                }
+                if ( move_uploaded_file($this->request->getData('logo')['tmp_name'], WWW_ROOT.'img/school-logo.png') ) {
+                    $this->Flash->success(__('File was successfully uploaded'));
+                } else {
+                    $this->Flash->error(__('An Error occurred uploading this image. Please try again.'));
+                }
+            } catch (\Exception $e ) {
+                $this->Flash->success(__('An Error occurred uploading this image. Please try again.'));
+            }
+            return $this->redirect($this->referer());
+        }
+        $this->set(compact('file'));
+    }
 }
 
