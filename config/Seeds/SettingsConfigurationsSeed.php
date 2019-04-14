@@ -79,9 +79,46 @@ class SettingsConfigurationsSeed extends AbstractSeed
                 'created' => '2017-12-04 12:35:44',
                 'modified' => '2017-12-04 12:35:44',
             ],
+            [
+                'id' => '8',
+                'name' => 'Application.current_session',
+                'value' => '',
+                'description' => 'Current Session',
+                'type' => 'select',
+                'editable' => '1',
+                'weight' => '6',
+                'autoload' => '1',
+                'created' => '2019-04-11 23:30:22',
+                'modified' => '2019-04-11 23:48:14',
+            ],
+            [
+                'id' => '9',
+                'name' => 'Application.current_term',
+                'value' => '',
+                'description' => NULL,
+                'type' => 'select',
+                'editable' => '1',
+                'weight' => '7',
+                'autoload' => '1',
+                'created' => '2019-04-11 23:48:53',
+                'modified' => '2019-04-11 23:51:11',
+            ],
+            [
+                'id' => '10',
+                'name' => 'Application.use_result_pin_for_all_terms',
+                'value' => '0',
+                'description' => NULL,
+                'type' => 'checkbox',
+                'editable' => '1',
+                'weight' => '8',
+                'autoload' => '1',
+                'created' => '2019-04-14 16:15:34',
+                'modified' => '2019-04-14 16:15:34',
+            ],
         ];
 
         $table = $this->table('settings_configurations');
+        $table->truncate();
         $table->insert($data)->save();
     }
 }
