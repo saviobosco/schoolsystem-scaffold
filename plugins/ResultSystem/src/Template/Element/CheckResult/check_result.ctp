@@ -151,7 +151,7 @@
                     states.student_id = reg_number;
                     var queryStringObject = { 'student_id' : states.student_id };
                     CheckResultView.showLoading();
-                    app.client.request(undefined, '/result-system/check-result/get-student', 'GET', queryStringObject, undefined, function(statusCode, responsePayload){
+                    app.client.request(undefined, "<?= $this->Url->build(['plugin'=>'ResultSystem','controller'=>'CheckResult','action'=>'get-student']) ?>" , 'GET', queryStringObject, undefined, function(statusCode, responsePayload){
                         if (statusCode !== 200) {
                             // Try to get the error from the api, or set a default error message
                             var error = typeof(responsePayload.Error) == 'string' ? responsePayload.Error : 'An error has occurred, please try again';
@@ -177,7 +177,7 @@
                                 }
                                 // get the sessions
                                 queryStringObject.class_id = states.studentDetails.class_id;
-                                app.client.request(undefined,'/result-system/check-result/get-student-result-sessions', 'GET', queryStringObject, undefined, function(statusCode, responsePayload) {
+                                app.client.request(undefined, "<?= $this->Url->build(['plugin'=>'ResultSystem','controller'=>'CheckResult','action'=>'get-student-result-sessions']) ?>", 'GET', queryStringObject, undefined, function(statusCode, responsePayload) {
                                    if (statusCode !== 200) {
                                        // Try to get the error from the api, or set a default error message
                                        var error = typeof(responsePayload.Error) == 'string' ? responsePayload.Error : 'An error has occurred, please try again';
@@ -214,7 +214,7 @@
                             session_id : states.session_id
                         };
                         CheckResultView.showLoading();
-                        app.client.request(undefined, '/result-system/check-result/get-student-result-terms', 'GET', queryStringObject, undefined, function(statusCode, responsePayload) {
+                        app.client.request(undefined, "<?= $this->Url->build(['plugin'=>'ResultSystem','controller'=>'CheckResult','action'=>'get-student-result-terms']) ?>", 'GET', queryStringObject, undefined, function(statusCode, responsePayload) {
                            if (statusCode !== 200) {
                                // Try to get the error from the api, or set a default error message
                                var error = typeof(responsePayload.Error) == 'string' ? responsePayload.Error : 'An error has occurred, please try again';
