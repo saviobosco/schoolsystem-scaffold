@@ -148,7 +148,7 @@ class StudentTermlyResultsTable extends Table
         $gradeInputs = $resultGradeInputsTable->getValidGradeInputs($resultGradeInputsTable->getResultGradeInputs());
         $total = 0;
         foreach($gradeInputs as $gradeKey => $gradeValue){
-            $total += $entity->{$gradeKey};
+            $total += (int)$entity->{$gradeKey};
         }
         $entity->total = $total ;
         // loads the grade and remark table

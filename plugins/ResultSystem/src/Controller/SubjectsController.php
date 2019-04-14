@@ -117,6 +117,7 @@ class SubjectsController extends AppController
             $students = $this->Students->find('all')
                 ->select(['id','first_name','last_name','class_id','status'])
                 ->where(['class_id'=>$queryData['class_id'],'status'=>1])
+                ->orderAsc('first_name')
                 ->combine('id','full_name')->toArray();
             $this->set(compact('students','gradeInputs'));
         } else {

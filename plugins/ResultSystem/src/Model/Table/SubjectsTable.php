@@ -186,10 +186,10 @@ class SubjectsTable extends Table
                     'StudentTermlyResults.term_id' => $queryData['term_id'],
                     ],
                     'Students' => [
-                        'fields' => ['id','first_name','last_name']
+                        'fields' => ['id','first_name','last_name'],
                     ]
                 ]
-            ]
+            ],
         ]);
     }
 
