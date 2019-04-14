@@ -15,6 +15,7 @@ use Cake\Core\Plugin;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use ResultSystem\Model\Entity\StudentResultPin;
+use Settings\Core\Setting;
 /**
  * Class StudentsController
  * @package FrontEnd\Controller
@@ -39,6 +40,7 @@ class CheckResultController extends AppController
         $this->loadModel('ResultSystem.Terms');
         $this->loadModel('ResultSystem.Sessions');
         $this->loadModel('ResultSystem.Subjects');
+        $this->loadModel('ResultSystem.StudentPublishResults');
         // allow all actions
         $this->Auth->allow();
     }
@@ -267,6 +269,121 @@ class CheckResultController extends AppController
             'Student.term_id' => $data['term_id'],
             'Student.ts' => $timestamp
         ]);
+    }
+
+    public function getStudent()
+    {
+        $this->response = $this->response->withType('application/json');
+        $queryData = $this->request->getQuery();
+        if (!$this->request->is('get')) {
+            return $this->response->withStatus(405)->withStringBody(json_encode(['Error' => 'Method not allowed']));
+        }
+        if (isset($queryData['student_id']) && !empty($queryData['student_id'])) {
+            // get the student
+            $student = $this->Students->query()
+                ->select(['id', 'first_name', 'last_name', 'class_id'])
+                ->contain(['Classes' => function($query) {
+                    $query->select(['id', 'class']);
+                    return $query;
+                } ])
+                ->where(['Students.id' => $queryData['student_id']])
+                ->first();
+            if ($student) {
+                return $this->response->withStatus(200)
+                    ->withStringBody(json_encode($student));
+            } else {
+                return $this->response->withStatus(404)
+                    ->withStringBody(json_encode(['Error' => 'Student Record Not Found!']));
+            }
+        } else {
+            return $this->response->withStatus(400)
+                ->withStringBody(json_encode(['Error' => 'Missing required detail']));
+        }
+    }
+
+    public function getStudentResultSessions()
+    {
+        $this->response = $this->response->withType('application/json');
+        $queryData = $this->request->getQuery();
+        if (!$this->request->is('get')) {
+            return $this->response->withStatus(405)->withStringBody(json_encode(['Error' => 'Method not allowed']));
+        }
+        if ((isset($queryData['student_id']) && !empty($queryData['student_id'])) &&
+            (isset($queryData['class_id']) && !empty($queryData['class_id']))
+        ) {
+            $currentSession = Setting::read('Application.current_session');
+            $studentPublishedResultSessions = $this->StudentPublishResults->query()
+                ->select(['session_id'])
+                ->distinct(['session_id'])
+                ->contain(['Sessions' => function($query) {
+                    $query->select(['id', 'session']);
+                    return $query;
+                }])
+                ->where([
+                    'student_id' => $queryData['student_id'],
+                    'class_id' => $queryData['class_id'],
+                    'status' => 1
+                ])
+                //->orderDesc('StudentPublishResults.created')
+                ->all()
+                ->map(function($value) use ($currentSession) {
+                    if ($value->session->id === (int) $currentSession) {
+                        $value->session->session .= ' - Current Session';
+                    }
+                    return $value->session;
+                });
+            if ($studentPublishedResultSessions) {
+                return $this->response->withStatus(200)
+                    ->withStringBody(json_encode($studentPublishedResultSessions));
+            } else {
+                return $this->response->withStatus(404)
+                    ->withStringBody(json_encode(['Error' => 'Student Result Sessions Not Found!']));
+            }
+        } else {
+            return $this->response->withStatus(400)
+                ->withStringBody(json_encode(['Error' => 'Missing required detail']));
+        }
+    }
+
+
+    public function getStudentResultTerms()
+    {
+        $this->response = $this->response->withType('application/json');
+        $queryData = $this->request->getQuery();
+        if (!$this->request->is('get')) {
+            return $this->response->withStatus(405)->withStringBody(json_encode(['Error' => 'Method not allowed']));
+        }
+
+        if ((isset($queryData['student_id']) && !empty($queryData['student_id'])) &&
+            (isset($queryData['session_id']) && !empty($queryData['session_id']) )
+        ) {
+            $studentPublishedResultSessions = $this->StudentPublishResults->query()
+                ->select(['term_id'])
+                ->contain(['Terms' => function($query) {
+                    $query->select(['id', 'name']);
+                    return $query;
+                }])
+                ->where([
+                    'student_id' => $queryData['student_id'],
+                    'class_id' => $queryData['class_id'],
+                    'session_id' => $queryData['session_id'],
+                    'status' => 1
+                ])
+                ->all()
+                ->map(function($value) {
+                    return $value->term;
+                });
+            if ($studentPublishedResultSessions) {
+                return $this->response->withStatus(200)
+                    ->withStringBody(json_encode($studentPublishedResultSessions));
+            } else {
+                return $this->response->withStatus(404)
+                    ->withStringBody(json_encode(['Error' => 'Student Result Sessions Not Found!']));
+            }
+        } else {
+            return $this->response->withStatus(400)
+                ->withStringBody(json_encode(['Error' => 'Missing required detail']));
+        }
     }
 
 }
