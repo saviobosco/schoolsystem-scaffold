@@ -1,6 +1,7 @@
 <?php
 namespace Dashboard\Controller;
 
+use Cake\ORM\TableRegistry;
 use Dashboard\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\Filesystem\File;
@@ -23,6 +24,10 @@ class SettingsController extends AppController
             'name LIKE' => $key . '%',
             'editable' => 1,
         ])->order(['weight', 'id']);
+        $SessionsTable = TableRegistry::get('ResultSystem.Sessions');
+        $sessions = $SessionsTable->query()->find('list');
+        $TermsTable = TableRegistry::get('ResultSystem.Terms');
+        $terms = $TermsTable->query()->find('list');
         if ($this->request->is(['patch', 'post', 'put'])) {
             $settings = $this->Configurations->patchEntities($settings, $this->request->data);
             foreach ($settings as $setting) {
@@ -36,7 +41,7 @@ class SettingsController extends AppController
             Setting::autoLoad();
             //return $this->redirect([]);
         }
-        $this->set(compact('prefix', 'settings'));
+        $this->set(compact('prefix', 'settings', 'sessions', 'terms'));
 
     }
 

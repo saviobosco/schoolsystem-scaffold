@@ -47,25 +47,35 @@ class CheckResultController extends AppController
     {
         if ($this->request->is(['patch', 'post', 'put']) ) {
             $postData = $this->request->getData();
-            $pin = $this->Students->StudentResultPins->checkPin($postData['pin']);
-            /* checks if the variable contains a value */
-            if($pin !== null){
-                if($this->_checkRequestData($pin,$postData)) {
-                    $RequestSession = $this->request->getSession();
-                    $sessionData = $RequestSession->read('Student');
-                    return $this->redirect([
-                        'action' => 'viewStudentResult',
-                        '?' => [
-                            'id' => $sessionData['id'],
-                            'session_id' => $sessionData['session_id'],
-                            'class_id' => $sessionData['class_id'],
-                            'term_id' => $sessionData['term_id'],
-                            'ts' => $sessionData['ts']
-                        ]
-                    ]);
+            $admission_number = (isset($postData['admission_number']) && !empty($postData['admission_number'])) ? $postData['admission_number'] : false ;
+            $pin = (isset($postData['pin']) && !empty($postData['pin'])) ? $postData['pin'] : false ;
+            $class_id = (isset($postData['class_id']) && !empty($postData['class_id'])) ? $postData['class_id'] : false ;
+            $session_id = (isset($postData['session_id']) && !empty($postData['session_id'])) ? $postData['session_id'] : false ;
+            $term_id = (isset($postData['term_id']) && !empty($postData['term_id'])) ? $postData['term_id'] : false ;
+
+            if ($admission_number && $pin && $class_id && $session_id && $term_id) {
+                $pin = $this->Students->StudentResultPins->checkPin($postData['pin']);
+                /* checks if the variable contains a value */
+                if($pin !== null){
+                    if($this->_checkRequestData($pin,$postData)) {
+                        $RequestSession = $this->request->getSession();
+                        $sessionData = $RequestSession->read('Student');
+                        return $this->redirect([
+                            'action' => 'viewStudentResult',
+                            '?' => [
+                                'id' => $sessionData['id'],
+                                'session_id' => $sessionData['session_id'],
+                                'class_id' => $sessionData['class_id'],
+                                'term_id' => $sessionData['term_id'],
+                                'ts' => $sessionData['ts']
+                            ]
+                        ]);
+                    }
+                } else {
+                    $this->Flash->error(__('Invalid pin'));
                 }
             } else {
-                $this->Flash->error(__('Incorrect registration number or Invalid pin'));
+                // missing required data
             }
         }
         return $this->redirect($this->request->referer());
@@ -75,7 +85,6 @@ class CheckResultController extends AppController
      * @param StudentResultPin $pin
      * @param $postData
      * @return bool
-     * This function is the used to authenticate the students without terms
      */
     protected function _checkRequestData(StudentResultPin $pin,$postData)
     {

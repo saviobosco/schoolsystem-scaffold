@@ -8,8 +8,8 @@ return [
         'Motto' => 'delivering the best technologies to you!!',
         'Version' => '0.1',
         'Author' => 'Saviobosco',
-        'Company' => 'Upsilion Technologies',
+        'Company' => 'Griffon Technologies Nig',
         'logo' => 'system-images/school-system-logo.png',
-        'href_link' => 'https://www.upsitech.com/'
+        'Href_link' => 'https://www.griffonteknologies.com'
     ]
 ];

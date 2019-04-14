@@ -17,11 +17,10 @@ $this->Form->templates($edittemplates)
     <div class="col-sm-12">
         <h3> Welcome to <?= $app_name ?> Result Checking Portal </h3>
         <hr>
-        <p> <?= $app_name ?> Family welcomes you to our result checking portal.
-            Here is the part of our school website responsible for students' results
-            processing and checking.
-            Here our students can check their results, print it and even download transcript after
-            graduation .</p>
+        <div>
+            School Write up here.
+        </div>
+
         <p> Feel free to call or text us in case of any difficulty for swift support. For Support Call us on <i class="fa fa-phone"></i> 07012572570 or chat with our live customer support. </p>
     </div>
 </div>

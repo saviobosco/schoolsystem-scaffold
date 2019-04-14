@@ -6,6 +6,8 @@ use ResultSystem\Controller\AppController;
 /**
  * PublishResults Controller
  * @property \ResultSystem\Model\Table\StudentPublishResultsTable $StudentPublishResults
+ * @property \ResultSystem\Model\Table\StudentTermlyResultsTable $StudentTermlyResults
+ * @property \ResultSystem\Model\Table\StudentAnnualResultsTable $StudentAnnualResults
  * @property \ResultSystem\Model\Table\StudentsTable $Students
  * @property \ResultSystem\Model\Table\TermsTable $Terms
  */
@@ -17,6 +19,8 @@ class PublishResultsController extends AppController
         $this->loadModel('ResultSystem.Students');
         $this->loadModel('ResultSystem.Terms');
         $this->loadModel('ResultSystem.StudentPublishResults');
+        $this->loadModel('ResultSystem.StudentTermlyResults');
+        $this->loadModel('ResultSystem.StudentAnnualResults');
     }
     public function index()
     {
@@ -32,7 +36,36 @@ class PublishResultsController extends AppController
             return;
         }
         $queryData = $this->request->getQuery();
-        $students = $this->Students->find('all')
+        $studentsWithResult = null;
+        if ($queryData['term_id'] === 4 ) {
+            $studentsWithResult = $this->StudentAnnualResults->query()
+                ->select(['student_id'])
+                ->distinct(['student_id'])
+                ->where([
+                    'session_id' => $queryData['session_id'],
+                    'class_id' => $queryData['class_id'],
+                ])
+                ->enableHydration(false)
+                ->all()
+                ->combine('student_id', 'student_id')
+                ->toArray();
+        } else {
+            $studentsWithResult = $this->StudentTermlyResults->query()
+                ->select(['student_id'])
+                ->distinct(['student_id'])
+                ->where([
+                    'session_id' => $queryData['session_id'],
+                    'class_id' => $queryData['class_id'],
+                    'term_id' => $queryData['term_id'],
+                ])
+                ->enableHydration(false)
+                ->all()
+                ->combine('student_id', 'student_id')
+                ->toArray();
+        }
+        // get student results
+        $students = $this->Students->query()
+            ->select(['id', 'first_name', 'last_name'])
             ->contain([
                 'StudentPublishResults' => function ($q) use ($queryData) {
                     return $q->where([
@@ -42,8 +75,13 @@ class PublishResultsController extends AppController
                     ]);
                 }
             ])->where(['Students.status'=>1,'Students.class_id'=>$queryData['class_id']])
+            ->filter(function($student) use ($studentsWithResult) {
+                return $student['id'] === @$studentsWithResult[$student['id']];
+            })
             ->toArray();
-        $this->set(compact('students'));
+        dd($students);
+        // loop through the students
+        $this->set(compact('students', 'studentsWithResult'));
         $this->set('_serialize', ['students']);
     }
 

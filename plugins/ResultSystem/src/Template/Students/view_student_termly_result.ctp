@@ -11,7 +11,12 @@ $edittemplates = [
 $this->Form->templates($edittemplates);
 $this->assign('title',$sessions[$this->request->session()->read('Student.session_id')].' '.$terms[@$this->SearchParameter->getDefaultValue($this->request->query['term_id'],$this->request->session()->read('Student.term_id'))].' Result');
 ?>
-<div class="container-fluid m-t-20">
+<div style="width: 900px;
+    border: 1px solid black;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;" class="container-fluid m-t-20">
 
     <?php
     // including the search parameter element if the Student.term_id session is 3

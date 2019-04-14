@@ -30,13 +30,13 @@ use Settings\Core\Setting;
     );
     ?>
     <?php
-    echo $this->Plugins->css('jquery-ui/themes/base/minified/jquery-ui.min.css');
+    //echo $this->Plugins->css('jquery-ui/themes/base/minified/jquery-ui.min.css');
     echo $this->Plugins->css('bootstrap/css/bootstrap.min.css');
-    echo $this->Html->css('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
-    echo $this->Plugins->css('select2/dist/css/select2.min.css');
+    //echo $this->Html->css('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+    //echo $this->Plugins->css('select2/dist/css/select2.min.css');
     echo $this->Html->css('print.css');
     echo $this->Plugins->script('jquery/jquery-1.9.1.min.js');
-    echo $this->Plugins->script('jquery/jquery-migrate-1.1.0.min.js');
+    //echo $this->Plugins->script('jquery/jquery-migrate-1.1.0.min.js');
     ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
@@ -44,45 +44,35 @@ use Settings\Core\Setting;
 <body>
 
 <div class="container body">
-    <header class=" navbar navbar-static-top m-b-20 ">
-        <nav class=" navbar-default m-b-0 p-20">
-            <div class="container">
+    <header>
+        <nav class=" navbar-inverse m-b-0 p-20">
+            <div class="container-fluid">
                 <div class="navbar-header">
                     <?= $this->Html->link(Setting::read('Application.school_name'),'/',['class'=>'navbar-brand']) ?>
                 </div>
+                <?php if(empty($this->request->session()->read('Auth.User.id'))): ?>
+                    <ul class="nav navbar-nav navbar-right ">
+                        <li><?= $this->Html->link(__('Login'),'/login') ?></li>
+                    </ul>
+                <?php endif; ?>
+                <?php if(!empty($this->request->session()->read('Auth.User.id'))): ?>
+                    <ul class="nav navbar-nav navbar-right" style="margin-right: 0;">
+                        <li><?= $this->Html->link(__('Dashboard'),['plugin'=>null,'controller'=>'Dashboard','action'=>'index']) ?></li>
+                        <li><?= $this->Html->link(__('logout'),['plugin'=>null,'controller'=>'MyUsers','action'=>'logout']) ?></li>
+                    </ul>
+                <?php endif; ?>
+            </div>
+        </nav>
 
-            </div>
-        </nav>
-        <nav class=" navbar-inverse">
-            <div class="container">
-                <div>
-                    <?php if(empty($this->request->session()->read('Auth.User.id'))): ?>
-                        <ul class="nav navbar-nav ">
-                            <li><?= $this->Html->link(__('Login'),'/login') ?></li>
-                        </ul>
-                    <?php endif; ?>
-                    <?php if(!empty($this->request->session()->read('Auth.User.id'))): ?>
-                        <ul class="nav navbar-nav navbar-right" style="margin-right: 0;">
-                            <li><?= $this->Html->link(__('Dashboard'),['plugin'=>null,'controller'=>'Dashboard','action'=>'index']) ?></li>
-                            <li><?= $this->Html->link(__('logout'),['plugin'=>null,'controller'=>'MyUsers','action'=>'logout']) ?></li>
-                        </ul>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </nav>
     </header>
     <div >
         <?= $this->Flash->render() ?>
         <?= $this->fetch('content') ?>
     </div>
+    <hr>
+    <?= $this->Element('footer'); ?>
 </div>
-<?= $this->Element('footer'); ?>
 <?= $this->Site->script('select2/dist/js/select2.full.min.js') ?>
-<script>
-    $(document).ready(function() {
-        $('select').select2();
-    });
-</script>
 <script type="text/javascript">
     var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
     (function(){
