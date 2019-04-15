@@ -27,6 +27,15 @@
             ]) ?>
         </li>
         <li>
+            <?= $this->html->link('Upload Logo',[
+                'plugin'=>'Dashboard',
+                'controller'=>'Settings',
+                'action' => 'uploadSchoolLogo'
+            ],[
+                'escape' => false
+            ]) ?>
+        </li>
+        <li>
             <?= $this->html->link('Update App',[
                 'plugin'=>'Dashboard',
                 'controller'=>'Updater',

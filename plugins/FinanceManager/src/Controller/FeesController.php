@@ -23,7 +23,9 @@ class FeesController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['FeeCategories', 'Terms', 'Classes', 'Sessions']
+            'contain' => ['FeeCategories', 'Terms', 'Classes', 'Sessions'],
+            'limit' => 1000,
+            'maxLimit' => 1000
         ];
         $fees = $this->paginate($this->Fees);
 

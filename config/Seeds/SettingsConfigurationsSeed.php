@@ -34,7 +34,7 @@ class SettingsConfigurationsSeed extends AbstractSeed
             [
                 'id' => '2',
                 'name' => 'Application.motto',
-                'value' => 'Civitas Dei',
+                'value' => '',
                 'description' => 'School Motto',
                 'type' => 'text',
                 'editable' => '1',
@@ -46,7 +46,7 @@ class SettingsConfigurationsSeed extends AbstractSeed
             [
                 'id' => '5',
                 'name' => 'Application.address',
-                'value' => '11 Chukwu street',
+                'value' => '',
                 'description' => NULL,
                 'type' => '',
                 'editable' => '1',
