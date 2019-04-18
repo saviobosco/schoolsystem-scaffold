@@ -92,7 +92,7 @@ class CheckResultController extends AppController
     {
         if(!empty($pin->student_id)){
             // the submitted number against the stored number
-            if ($pin->student_id !== $postData['reg_number']) {
+            if ($pin->student_id !== $postData['admission_number']) {
                 $this->Flash->error(__('Sorry this pin has been used by another student.'));
                 return false;
             }
@@ -124,7 +124,7 @@ class CheckResultController extends AppController
             return true;
 
         }else{
-            $student = $this->Students->find()->where(['id'=>$postData['reg_number']])->first();
+            $student = $this->Students->find()->where(['id'=>$postData['admission_number']])->first();
             if (empty($student)){
                 $this->Flash->error(__('The registration number does not exist.'));
                 return false;
