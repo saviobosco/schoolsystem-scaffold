@@ -13,7 +13,7 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-$cakeDescription = 'School System';
+$cakeDescription = Settings\Core\Setting::read('Application.school_name');
 ?>
 <!DOCTYPE html>
 <html>
@@ -27,21 +27,18 @@ $cakeDescription = 'School System';
 
     <?= $this->Html->meta(
         'favicon.ico',
-        'img/systemfiles/sasco-favico.png',
+        WWW_ROOT.'img/school-logo.png',
         ['type' => 'icon']
     );
     ?>
 
     <?php
     echo $this->Plugins->css('bootstrap/css/bootstrap.min.css');
-    echo $this->Site->css('select2/dist/css/select2.min.css');
-    echo $this->Html->css('custom.css');
     echo $this->Html->css('result.css');
     echo $this->Html->css('print.css');
 
 
     echo $this->Plugins->script('jquery/jquery-1.9.1.min.js');
-    echo $this->Site->script('bootstrap/js/bootstrap.min.js');
     ?>
 
     <?= $this->fetch('meta') ?>
@@ -55,8 +52,6 @@ $cakeDescription = 'School System';
     <?= $this->fetch('content') ?>
 </div>
 
-
-<?= $this->Site->script('select2/dist/js/select2.full.min.js') ?>
 <?= $this->Html->script('app.js') ?>
 
 <script>
