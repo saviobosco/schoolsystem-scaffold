@@ -1,6 +1,7 @@
 <?php
 namespace ResultSystem\Controller;
 
+use Cake\Datasource\ConnectionManager;
 use ResultSystem\Controller\AppController;
 
 /**
@@ -36,6 +37,7 @@ class PublishResultsController extends AppController
             return;
         }
         $queryData = $this->request->getQuery();
+        //variable for students with results for the specified session, term and class
         $studentsWithResult = null;
         if ($queryData['term_id'] === 4 ) {
             $studentsWithResult = $this->StudentAnnualResults->query()
@@ -65,7 +67,8 @@ class PublishResultsController extends AppController
         }
         // get student results
         $students = $this->Students->query()
-            ->select(['id', 'first_name', 'last_name'])
+            ->select(['id', 'first_name', 'last_name', 'class_id'])
+            ->enableHydration(false)
             ->contain([
                 'StudentPublishResults' => function ($q) use ($queryData) {
                     return $q->where([
@@ -75,17 +78,23 @@ class PublishResultsController extends AppController
                     ]);
                 }
             ])->where(['Students.status'=>1,'Students.class_id'=>$queryData['class_id']])
+            ->orderAsc('first_name')
+            ->all();
+
+        $studentsResultPublish = $students
             ->filter(function($student) use ($studentsWithResult) {
-                return $student['id'] === @$studentsWithResult[$student['id']];
+                return in_array($student['id'], $studentsWithResult);
             })
             ->toArray();
-        dd($students);
-        // loop through the students
-        $this->set(compact('students', 'studentsWithResult'));
+
+        $this->set(['studentsCount' => count($students),
+            'studentsWithResultCount' => count($studentsResultPublish),
+            'students' => $studentsResultPublish
+        ]);
         $this->set('_serialize', ['students']);
     }
 
-    // Todo: work on this
+
     public function processPublishResults()
     {
         $queryData = $this->request->getQuery();
