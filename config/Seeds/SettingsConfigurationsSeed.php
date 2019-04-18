@@ -118,7 +118,13 @@ class SettingsConfigurationsSeed extends AbstractSeed
         ];
 
         $table = $this->table('settings_configurations');
-        $table->truncate();
-        $table->insert($data)->save();
+        $table->insert($data);
+        foreach($table->getData() as $data) {
+            try {
+                $table->getAdapter()->insert($table, $data);
+            } catch (PDOException $exception) {
+                continue;
+            }
+        }
     }
 }
