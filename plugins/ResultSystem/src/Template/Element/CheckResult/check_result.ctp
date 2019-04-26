@@ -19,7 +19,7 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h4> Result Checker </h4>
+        <h2 class="text-center"> Result Checker </h2>
     </div>
     <div class="panel-body">
         <div id="result-checker" class="result-checker">
@@ -40,7 +40,7 @@
                 ]) ?>
                 <fieldset>
                     <?php
-                    echo $this->Form->input('admission_number',['id' => 'admission_number','class'=>'input-sm form-control','required'=>true,'label' => ['class'=> 'control-label col-sm-4', 'text'=>['Admission No.']]]);
+                    echo $this->Form->input('admission_number',['id' => 'admission_number','class'=>'input-sm form-control','required'=>true,'label' => ['class'=> 'control-label col-sm-4', 'text'=>['Admission No.']], 'placeholder' => 'Admission Number']);
                     ?>
                     <div>
                         <div class="row">
@@ -50,14 +50,14 @@
                     </div>
 
                     <?php
-                    echo $this->Form->input('class_id', [ 'id' => 'result-checker-class', 'class' => 'form-control','required'=>true,'empty'=>true,'options' => null,'label'=>['class'=> 'control-label col-sm-4','text'=>'Class']]);
+                    echo $this->Form->input('class_id', [ 'id' => 'result-checker-class', 'class' => 'form-control','required'=>true,'empty'=>true,'options' => null,'label'=>['class'=> 'control-label col-sm-4','text'=>'Class'], 'placeholder' => 'Select Class']);
                     echo $this->Form->input('session_id', ['id' => 'result-checker-session', 'class' => 'form-control','required'=>true,'empty'=>true,'options' => null,'label'=>['class'=> 'control-label col-sm-4','text'=>'Session']]);
                     echo $this->Form->input('term_id', ['id' => 'result-checker-term', 'class' => 'form-control','required'=>true,'empty'=>true,'options' => null,'label' => ['class'=> 'control-label col-sm-4','text' => 'Term']]);
-                    echo $this->Form->input('pin',['class'=>'form-control input-sm','required'=>true,'label' => ['class'=> 'control-label col-sm-4', 'text'=>['Pin']]]);
+                    echo $this->Form->input('pin',['class'=>'form-control input-sm','required'=>true,'label' => ['class'=> 'control-label col-sm-4', 'text'=>['Card Pin']],'placeholder'=> 'Card Pin Number']);
 
                     ?>
                 </fieldset>
-                <?= $this->Form->button(__('Check Result'),['class'=>'btn btn-primary btn-sm pull-right']) ?>
+                <?= $this->Form->button(__('Check Result'),['class'=>'btn btn-primary  pull-right']) ?>
                 <?= $this->Form->end() ?>
             </div>
         </div>

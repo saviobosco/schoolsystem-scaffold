@@ -14,9 +14,7 @@ $this->Form->templates($edittemplates)
 ?>
 <div class="row">
     <div class="col-sm-12">
-        <hr>
-
-        <?= $this->Html->image('image-banner.png',['width'=>'100%' , 'height' => '150px']) ?>
+        <?php /* $this->Html->image('image-banner.png',['width'=>'100%' , 'height' => '150px'])*/ ?>
         <hr>
 <!--        <div>-->
 <!--            School Write up here.-->
@@ -27,19 +25,23 @@ $this->Form->templates($edittemplates)
 </div>
 
 <div class="row ">
-    <div class="col-sm-6">
+    <div class="col-sm-7">
         <div class="well">
-            <h5> Steps on how to check your result</h5>
-            <ul>
-                <li> Enter your Admission Number</li>
-                <li> Enter the scratch card pin number</li>
-                <li> Select the class, session and term respectively </li>
-                <li class="text-danger">Please cross check your details well before proceeding </li>
-                <li> click the <kbd class="bg-primary">Check Result</kbd> button</li>
-            </ul>
+            <h2>
+                GUIDELINES
+            </h2>
+            <h5> To check your result, follow the simple steps listed below. After checking your result, you can save it or print immediately.
+            </h5>
+            <ol>
+                <li> Enter your Admission Number. This will be provided to you by your school as your "Admission Number", "Registration Number" or any other similar name.</li>
+                <li> Select the session in which you want to check your result. </li>
+                <li> Select the term. </li>
+                <li> Scratch the hidden area at the back of the scratch card and enter the revealed pin as your card pin number </li>
+                <li> Click the Check Result button.</li>
+            </ol>
         </div>
     </div>
-    <div class="col-sm-6 m-b-20">
+    <div class="col-sm-5 m-b-20">
         <?= $this->CheckResult->showCheckResultForm() ?>
     </div>
 </div>
