@@ -40,6 +40,7 @@ $this->assign('title', ( !empty($this->request->getQuery()) ) ? $sessions[$this-
                 <div class="col-sm-9">
 
                     <?= $this->element('ResultSystem.StudentResult/TermlyResult/termly_result') ?>
+                    <?= $this->cell('ResultSystem.ResultGrades') ?>
 
                     <?= $this->element('ResultSystem.StudentResult/Shared/result_remarks') ?>
                     <!-- <div class="col-sm-3 col-xs-3">

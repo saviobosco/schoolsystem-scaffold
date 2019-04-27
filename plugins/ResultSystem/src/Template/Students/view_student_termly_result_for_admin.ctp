@@ -7,7 +7,12 @@ $edittemplates = [
 $this->Form->templates($edittemplates);
 $this->assign('title', ( !empty($this->request->getQuery()) ) ? $sessions[$this->request->query['session_id']].' > '.$classes[$this->request->query['class_id']].' > '.$terms[$this->request->query['term_id']].' Result' : 'Please select a parameter');
 ?>
-<div class="container-fluid m-t-20">
+<div style="width: 900px;
+    border: 1px solid black;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;" class="container-fluid m-t-20">
     <?= $this->element('searchParametersSessionClassTerm') ?>
 
     <?php if ( isset($student) ) : ?>
@@ -31,15 +36,14 @@ $this->assign('title', ( !empty($this->request->getQuery()) ) ? $sessions[$this-
             <?= $this->element('ResultSystem.StudentResult/TermlyResult/result_detail') ?>
         </div>
     </div>
-    <div class="row ">
+    <div class="row">
         <div class="col-sm-9">
 
             <?= $this->element('ResultSystem.StudentResult/TermlyResult/termly_result') ?>
+            <?= $this->cell('ResultSystem.ResultGrades') ?>
 
             <?= $this->element('ResultSystem.StudentResult/Shared/result_remarks') ?>
-            <!-- <div class="col-sm-3 col-xs-3">
-                    <?php //$this->Result->displayFees($fees) ?>
-                </div> -->
+
         </div>
         <div class="col-sm-3">
             <div class="row">

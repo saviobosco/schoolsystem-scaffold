@@ -8,7 +8,12 @@ $this->Form->templates($edittemplates);
 $this->assign('title',$sessions[$this->request->query['session_id']].' '.$terms[1].' Result');
 ?>
 
-<div class="container-fluid m-t-20">
+<div style="width: 900px;
+    border: 1px solid black;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;" class="container-fluid m-t-20">
 
     <?php
     echo $this->element('searchParametersSessionClassTerm');
@@ -45,6 +50,7 @@ $this->assign('title',$sessions[$this->request->query['session_id']].' '.$terms[
                 <div class="col-sm-12">
 
                     <?= $this->element('ResultSystem.StudentResult/AnnualResult/annual_result') ?>
+                    <?= $this->cell('ResultSystem.ResultGrades') ?>
 
                     <?= $this->element('ResultSystem.StudentResult/Shared/result_remarks') ?>
 
