@@ -1,12 +1,11 @@
 <?php
+use Settings\Core\Setting;
 $this->extend('/Common/view');
 $this->assign('title','Upload Banner Image');
 ?>
-<?php if(!empty($file)) : ?>
     <div>
-        <?=  $this->Html->image($file[0],['class'=>'img-responsive']) ?>
+        <?=  $this->Html->image(Setting::read('Application.image_banner'),['class'=>'img-responsive']) ?>
     </div>
-<?php endif; ?>
     <p> Upload the school Image Banner</p>
 <?= $this->Form->create(null, [
     'url'=>[

@@ -1,1 +1,4 @@
-<?=  $this->Html->image('image-banner.png') ?>
+<?php
+use Settings\Core\Setting;
+?>
+<?=  $this->Html->image(Setting::read('Application.image_banner')) ?>

@@ -6,7 +6,7 @@
 .env
 /webroot/img/student-pictures/*
 /webroot/img/student-photos/*
-/webroot/img/image-banner.png
+/webroot/img/image-banner.*
 /webroot/img/school-logo.png
 /config/Migrations/schema-dump-default.lock
 config/Seeds/StudentsSeed.php
