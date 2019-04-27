@@ -45,7 +45,7 @@ class SettingsController extends AppController
     public function uploadBannerImage()
     {
         if (!Setting::check('Application.image_banner')) {
-            Setting::register('Application.image_banner', '');
+            Setting::register('Application.image_banner', '',['editable' => 0]);
         }
         if ( $this->request->is(['patch', 'post', 'put'])) {
             $settingsTable = Setting::model();
