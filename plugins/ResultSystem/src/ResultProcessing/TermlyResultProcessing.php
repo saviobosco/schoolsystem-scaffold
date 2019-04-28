@@ -134,6 +134,11 @@ class TermlyResultProcessing
     {
         // Initializes the All required tables
         $termlyPositionTable = TableRegistry::get('ResultSystem.StudentTermlyPositions');
+        $termlyPositionTableSchema = $termlyPositionTable->getSchema()->setColumnType('total', 'string');
+        TableRegistry::clear();
+        $termlyPositionTable = TableRegistry::get('ResultSystem.StudentTermlyPositions', [
+            'schema' => $termlyPositionTableSchema
+        ]);
 
         $studentsGroupByTotal = $termlyPositionTable->find('all')
             ->select(['id','class_id','term_id','session_id','student_id','total','position'])
@@ -162,9 +167,14 @@ class TermlyResultProcessing
     public function calculateStudentTermlySubjectPosition($class_id,$term_id,$session_id)
     {
         //Initialize all required Tables
+        $termlyResultTable = TableRegistry::get('ResultSystem.StudentTermlyResults');
+        $termlyResultTableSchema = $termlyResultTable->getSchema()->setColumnType('total', 'string');
+        TableRegistry::clear();
+        $termlyResultTable = TableRegistry::get('ResultSystem.StudentTermlyResults', [
+            'schema' => $termlyResultTableSchema
+        ]);
         $classTable = TableRegistry::get('ResultSystem.Classes');
         $subjectTable = TableRegistry::get('ResultSystem.Subjects');
-        $termlyResultTable = TableRegistry::get('ResultSystem.StudentTermlyResults');
         $termlySubjectPositionTable = TableRegistry::get('ResultSystem.StudentTermlySubjectPositions');
 
         // find the block the class_id is under. Either junior or senior

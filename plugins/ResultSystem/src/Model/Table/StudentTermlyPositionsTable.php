@@ -73,14 +73,14 @@ class StudentTermlyPositionsTable extends Table
      * @param \Cake\Database\Schema\TableSchema $schema The table definition fetched from database.
      * @return \Cake\Database\Schema\TableSchema the altered schema
      */
-    protected function _initializeSchema(TableSchema $schema)
+    /*protected function _initializeSchema(TableSchema $schema)
     {
         // total is type float in database but converted to string here
         //So as to Group the students results based on their total
         // eg . 80.9 > 80.
         $schema->setColumnType('total', 'string');
         return $schema;
-    }
+    }*/
 
     /**
      * Default validation rules.

@@ -5,6 +5,7 @@ use Cake\Collection\Collection;
 use Cake\Core\Plugin;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Exception\MissingControllerException;
 use ResultSystem\Controller\Traits\SearchParameterTrait;
 use ResultSystem\Controller\AppController;
 use ResultSystem\Model\Entity\StudentResultPin;
@@ -282,19 +283,21 @@ class StudentsController extends AppController
         if (empty($queryData) ) {
             return $this->redirect($this->referer());
         }
-        if ( 4 === (int)$queryData['session_id'] ) {
+        if ( 4 === (int)$queryData['term_id'] ) {
             $student = $this->Students->getStudentAnnualResult($id,$queryData);
         }else {
-            $student = $this->Students->getStudentAnnualResult($id,$queryData);
+            $student = $this->Students->getStudentTermlyResult($id,$queryData);
         }
         if ($this->request->is(['patch', 'post', 'put'])) {
             $student = $this->Students->patchEntity($student, $this->request->getData());
-            if ($this->Students->save($student)) {
-                $this->Flash->success(__('The student has been saved.'));
-                return $this->redirect($this->referer());
-            } else {
-                $this->Flash->error(__('The student could not be saved. Please, try again.'));
-                return $this->redirect($this->referer());
+            try {
+                if ($this->Students->save($student)) {
+                    $this->Flash->success(__('The student has been saved.'));
+                } else {
+                    $this->Flash->error(__('The student could not be saved. Please, try again.'));
+                }
+            } catch (\PDOException $exception) {
+                $this->Flash->error(__($exception->getMessage()));
             }
         }
         return $this->redirect($this->referer());

@@ -24,6 +24,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\HasMany $StudentTermlySubjectPositions
  * @property \Cake\ORM\Association\HasMany $StudentResultPins
  * @property \Cake\ORM\Association\HasMany $StudentGeneralRemarks
+ * @property \Cake\ORM\Association\HasMany $StudentPublishResults
  *
  * @method \ResultSystem\Model\Entity\Student get($primaryKey, $options = [])
  * @method \ResultSystem\Model\Entity\Student newEntity($data = null, array $options = [])
@@ -203,8 +204,9 @@ class StudentsTable extends Table
     public function getStudentAnnualResult($id,$queryData)
     {
         return $this->get($id, [
+            'fields' => ['id','first_name', 'last_name', 'class_id','photo_dir', 'photo'],
             'contain' => [
-                'Classes',
+                'Classes' => ['fields' => ['id', 'class']],
                 'StudentAnnualResults' => ['conditions' => [
                     'StudentAnnualResults.session_id' => ($queryData['session_id']) ? $queryData['session_id'] : 1,
                     'StudentAnnualResults.class_id' => ($queryData['class_id']) ? $queryData['class_id'] : 1 ,

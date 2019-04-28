@@ -56,7 +56,7 @@ class AnnualResultProcessing
             try {
                 for($num = 0; $num < $subjectsCount; $num++) {
                     // deleting empty columns.
-                    if (!$studentAnnualTotalForASubject[$num]['first_term'] AND ! $studentAnnualTotalForASubject[$num]['second_term'] AND ! $studentAnnualTotalForASubject[$num]['third_term'] ) {
+                    if (empty($studentAnnualTotalForASubject[$num]['first_term']) AND empty($studentAnnualTotalForASubject[$num]['second_term']) AND empty($studentAnnualTotalForASubject[$num]['third_term']) ) {
                         $annualResultTable->delete($studentAnnualTotalForASubject[$num]);
                         continue;
                     }
@@ -102,6 +102,12 @@ class AnnualResultProcessing
     {
         // Initializes the All required tables
         $annualPositionTable = TableRegistry::get('ResultSystem.StudentAnnualPositions');
+        // change the total column type to string
+        $annualPositionTableSchema = $annualPositionTable->getSchema()->setColumnType('total', 'string');
+        TableRegistry::clear();
+        $annualPositionTable = TableRegistry::get('ResultSystem.StudentAnnualPositions', [
+            'schema' => $annualPositionTableSchema
+        ]);
         $annualResultsTotal = $annualPositionTable->find('all')
             ->select(['total','class_id','session_id','student_id'])
             ->where([
@@ -128,9 +134,14 @@ class AnnualResultProcessing
     public function calculateStudentAnnualSubjectPosition($class_id,$session_id)
     {
         //Initialize all required Tables
+        $annualResultTable = TableRegistry::get('ResultSystem.StudentAnnualResults');
+        $annualResultTableSchema = $annualResultTable->getSchema()->setColumnType('total', 'string');
+        TableRegistry::clear();
+        $annualResultTable = TableRegistry::get('ResultSystem.StudentAnnualResults', [
+            'schema' => $annualResultTableSchema
+        ]);
         $classTable = TableRegistry::get('ResultSystem.Classes');
         $subjectTable = TableRegistry::get('ResultSystem.Subjects');
-        $annualResultTable = TableRegistry::get('ResultSystem.StudentAnnualResults');
         $annualSubjectPositionTable = TableRegistry::get('ResultSystem.StudentAnnualSubjectPositions');
         // find the block the class_id is under. Either junior or senior
         $classDetail = $classTable->find('all')->where(['id'=>$class_id])->first();
@@ -173,7 +184,12 @@ class AnnualResultProcessing
         return true;
     }
 
-
+    /**
+     * @param $class_id
+     * @param $session_id
+     * @return bool
+     * @deprecated
+     */
     public function calculateAnnualPositionBasedOnClassDemarcation($class_id,$session_id)
     {
         // Initializes the required tables
@@ -239,6 +255,12 @@ class AnnualResultProcessing
         return true;
     }
 
+    /**
+     * @param $class_id
+     * @param $session_id
+     * @return bool
+     * @deprecated
+     */
     public function calculateAnnualSubjectPositionOnClassDemarcation( $class_id,$session_id )
     {
         //Initialize all required Tables

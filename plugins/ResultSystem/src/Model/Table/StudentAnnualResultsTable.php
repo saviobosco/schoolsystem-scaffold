@@ -61,14 +61,14 @@ class StudentAnnualResultsTable extends Table
         ]);
     }
 
-    protected function _initializeSchema(TableSchema $schema)
+    /*protected function _initializeSchema(TableSchema $schema)
     {
         // total is type float in database but converted to string here
         //So as to Group the students results based on their total
         // eg . 80.9 > 80.
         $schema->setColumnType('total', 'string');
         return $schema;
-    }
+    }*/
 
     /**
      * Default validation rules.
