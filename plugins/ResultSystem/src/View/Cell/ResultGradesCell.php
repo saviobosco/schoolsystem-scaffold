@@ -1,6 +1,7 @@
 <?php
 namespace ResultSystem\View\Cell;
 
+use Cake\Core\Plugin;
 use Cake\View\Cell;
 use Cake\ORM\TableRegistry;
 
@@ -25,8 +26,10 @@ class ResultGradesCell extends Cell
      */
     public function display()
     {
-        $resultGradingTable = TableRegistry::get('GradingSystem.ResultGradingSystems');
-        $resultGradings = $resultGradingTable->query()->select(['grade', 'score'])->orderAsc('cal_order')->combine('grade', 'score')->toArray();
-        $this->set(compact('resultGradings'));
+        if (Plugin::loaded('GradingSystem')) {
+            $resultGradingTable = TableRegistry::get('GradingSystem.ResultGradingSystems');
+            $resultGradings = $resultGradingTable->query()->select(['grade', 'score'])->orderAsc('cal_order')->combine('grade', 'score')->toArray();
+            $this->set(compact('resultGradings'));
+        }
     }
 }

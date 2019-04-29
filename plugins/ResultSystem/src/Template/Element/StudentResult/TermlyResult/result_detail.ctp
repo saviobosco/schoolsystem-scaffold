@@ -18,7 +18,7 @@
             <th> <?= __('Grade') ?></th>
             <td> <?= @$studentPosition['grade'] ?></td>
             <th><?= __('Next term begins') ?></th>
-            <td><?= $this->Result->nextTermDate(@$nextTerm->start_date) ?></td>
+            <td><?= $this->cell('ResultSystem.SchoolTermTimeTable') ?></td>
         </tr>
     <?php endif; ?>
 

@@ -1,3 +1,4 @@
+<?php if ($resultGradings) : ?>
 <div>
     <table class="table table-bordered">
         <tr>
@@ -7,3 +8,4 @@
         </tr>
     </table>
 </div>
+<?php endif; ?>

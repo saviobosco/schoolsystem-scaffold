@@ -53,7 +53,19 @@ class TermTimeTablesController extends AppController
     {
         $termTimeTable = $this->TermTimeTables->newEntity();
         if ($this->request->is('post')) {
-            $termTimeTable = $this->TermTimeTables->patchEntity($termTimeTable, $this->request->data);
+            $postData = $this->request->getData();
+            if ($postData['start_date'] === $postData['end_date'] || $postData['start_date'] > $postData['end_date'] || $postData['end_date'] < $postData['start_date']) {
+                $this->Flash->error('Error in starting or ending term dates.');
+                return $this->redirect($this->referer());
+            }
+            if ($this->TermTimeTables->query()->where([
+                'session_id' => $postData['session_id'],
+                'term_id' => $postData['term_id']])->first()) {
+                $this->Flash->error('Record for the selected session and term already exist!');
+                return $this->redirect($this->referer());
+            }
+            $termTimeTable = $this->TermTimeTables->patchEntity($termTimeTable, $postData);
+
             if ($this->TermTimeTables->save($termTimeTable)) {
                 $this->Flash->success(__('The term time table has been saved.'));
 

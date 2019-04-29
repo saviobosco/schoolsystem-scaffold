@@ -61,7 +61,12 @@
             </ul>
         </li>
         <?= $this->element('ClassManager.Links/sidebar') ?>
-
+        <li class="has-sub">
+            <?= $this->Html->link('<b class="caret pull-right"></b><i class="fa fa-calendar"></i> <span>'.__('TimeTable').'</span>','javascript:;',['escape'=>false,'title'=>'TimeTable']) ?>
+            <ul class="sub-menu">
+                <li><?= $this->Html->link(__('TermTimeTable'),['plugin'=>'TimesTable','controller'=>'TermTimeTables','action'=>'index'],['escape'=>false]) ?></li>
+            </ul>
+        </li>
     </ul>
 </li>
 <?= $this->element('UsersManager.Links/sidebar') ?>

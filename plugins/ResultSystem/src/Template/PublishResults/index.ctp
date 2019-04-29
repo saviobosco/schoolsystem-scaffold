@@ -26,7 +26,7 @@ $queryData = $this->request->getQuery();
                     <td><?= h($student['first_name']. ' '.$student['last_name']) ?></td>
                     <td>
                         <?php
-                        $checkboxConfig = ['type'=>'checkbox','label'=>''];
+                        $checkboxConfig = ['type'=>'checkbox','label'=>'', 'class' => 'checkbox1'];
                         if ( empty($student['student_publish_results']) OR 0 === (int)$student['student_publish_results'][0]['status'] ) {
                             $checkboxConfig['checked'] = false;
                         } else {

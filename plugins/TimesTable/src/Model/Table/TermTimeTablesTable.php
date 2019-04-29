@@ -33,9 +33,9 @@ class TermTimeTablesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('term_time_tables');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('term_time_tables');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->belongsTo('Terms', [
             'foreignKey' => 'term_id',
@@ -70,6 +70,16 @@ class TermTimeTablesTable extends Table
             ->date('end_date')
             ->requirePresence('end_date', 'create')
             ->notEmpty('end_date');
+
+        $validator
+            ->integer('session_id')
+            ->requirePresence('session_id', 'create')
+            ->notEmpty('session_id');
+
+        $validator
+            ->integer('term_id')
+            ->requirePresence('term_id', 'create')
+            ->notEmpty('term_id');
 
         return $validator;
     }

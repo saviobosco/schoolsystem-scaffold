@@ -52,7 +52,8 @@
             "FinanceManager\\": "./plugins/FinanceManager/src",
             "BankSystem\\": "./plugins/BankSystem/src",
             "Saviobosco\\Core\\": "./plugins/Saviobosco/Core/src",
-            "Dashboard\\": "./plugins/Dashboard/src"
+            "Dashboard\\": "./plugins/Dashboard/src",
+            "TimesTable\\": "./plugins/TimesTable/src"
         }
     },
     "autoload-dev": {
@@ -73,7 +74,8 @@
             "FinanceManager\\Test\\": "./plugins/FinanceManager/tests",
             "BankSystem\\Test\\": "./plugins/BankSystem/tests",
             "Saviobosco\\Core\\Test\\": "./plugins/Saviobosco/Core/tests",
-            "Dashboard\\Test\\": "./plugins/Dashboard/tests"
+            "Dashboard\\Test\\": "./plugins/Dashboard/tests",
+            "TimesTable\\Test\\": "./plugins/TimesTable/tests"
         }
     },
     "scripts": {

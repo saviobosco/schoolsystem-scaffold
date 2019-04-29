@@ -1,0 +1,1 @@
+<?= ($opening_date) ? $opening_date : '' ?>

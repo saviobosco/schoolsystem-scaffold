@@ -1,9 +1,15 @@
 <?php
 use Cake\I18n\Time;
+/**
+ * @var \App\View\AppView $this
+ */
+$this->extend('/Common/view');
+$this->assign('title','School Term Opening and Closing Dates');
 ?>
 <div class="row">
     <div class="col-sm-12">
         <h3><?= __('Term Time Tables') ?></h3>
+        <?= $this->Html->link('Add New Record', ['controller' => 'TermTimeTables', 'action' => 'add',], ['class' => 'btn btn-primary btn-sm']) ?>
         <table class="table table-bordered">
             <thead>
             <tr>

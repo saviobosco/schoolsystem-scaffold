@@ -262,8 +262,6 @@ try {
     Log::alert('user_roles configuration file could not be loaded');
 }
 Configure::write('Users.config', ['users']);
-//Plugin::load('Alaxos', ['bootstrap' => true]);
-//Plugin::load('Alaxos/BootstrapTheme');
 Plugin::load('UsersManager', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('Settings', ['bootstrap' => true, 'routes' => true]);
 Plugin::load('SkillsGradingSystem', ['bootstrap' => false, 'routes' => true]);
@@ -282,6 +280,7 @@ Plugin::load('Muffin/Footprint');
 Plugin::load('BankSystem', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('Saviobosco/Core', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('Dashboard', ['bootstrap' => false, 'routes' => true]);
+Plugin::load('TimesTable', ['bootstrap' => false, 'routes' => true]);
 if (!Configure::read('debug')) {
     Plugin::load('Connehito/CakeSentry', ['bootstrap' => true]);
 }
