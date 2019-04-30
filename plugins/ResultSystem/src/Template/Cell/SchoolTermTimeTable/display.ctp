@@ -1,1 +1,1 @@
-<?= ($opening_date) ? $opening_date : '' ?>
+<?= (isset($opening_date)) ? $opening_date : '' ?>
