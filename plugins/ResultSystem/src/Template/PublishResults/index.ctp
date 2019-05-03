@@ -9,7 +9,7 @@ $queryData = $this->request->getQuery();
 <?= $this->element('searchParametersSessionClassTerm') ?>
 <div class="m-t-20">
     <?php if ( isset($students)) : ?>
-        <?= $this->Form->create() ?>
+        <?= $this->Form->create(null, ['type' => 'PUT']) ?>
         <table  class="table table-bordered table-responsive ">
             <thead>
             <tr>

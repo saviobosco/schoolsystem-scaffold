@@ -21,7 +21,7 @@ $this->assign('title',$sessions[$this->request->query['session_id']].' '.$terms[
         </div>
         <div class="col-sm-2">
             <div class="profile-picture">
-                <?= $this->Html->image('student-pictures/students/photo/'.$student['photo_dir'].'/'.$student['photo'],['alt' => $student['id']]) ?>
+                <?= $this->Html->image('student-photos/'.$student['id'] . '.jpg',['alt' => $student['id']]) ?>
             </div>
         </div>
     </div>
