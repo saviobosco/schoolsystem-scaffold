@@ -121,7 +121,6 @@ class StudentsController extends AppController
         $sessions = $this->Sessions->find('list');
         $classes = $this->Students->Classes->find('list');
         $religions = $this->Religions->find('list');
-        $classDemarcations = $this->Students->ClassDemarcations->find('list');
         $states = $this->States->find('list');
         $this->set(compact('student', 'sessions', 'classes', 'classDemarcations','states','religions'));
         $this->set('_serialize', ['student']);

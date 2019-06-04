@@ -58,7 +58,6 @@
                         echo $this->Form->input('home_residence');
                         echo $this->Form->input('session_id', ['options' => $sessions,'empty'=>true,'label'=>'Session','required'=>true]);
                         echo $this->Form->input('class_id', ['options' => $classes,'empty'=>'Select Class','required'=>true]);
-                        echo $this->Form->input('class_demarcation_id', ['options' => $classDemarcations,'empty'=>true]);
 
                         echo '<h2>Guardian Information </h2>';
 
