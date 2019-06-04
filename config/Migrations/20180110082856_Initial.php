@@ -45,36 +45,7 @@ class Initial extends AbstractMigration
                 ])
                 ->create();
         }
-
-        if ( $this->table('class_demarcations')->exists() === false ) {
-            $this->table('class_demarcations')
-                ->addColumn('name', 'string', [
-                    'default' => null,
-                    'limit' => 10,
-                    'null' => false,
-                ])
-                ->addColumn('class_id', 'integer', [
-                    'default' => null,
-                    'limit' => 10,
-                    'null' => false,
-                ])
-                ->addColumn('capacity', 'integer', [
-                    'default' => null,
-                    'limit' => 5,
-                    'null' => false,
-                ])
-                ->addColumn('created', 'datetime', [
-                    'default' => null,
-                    'limit' => null,
-                    'null' => false,
-                ])
-                ->addColumn('modified', 'datetime', [
-                    'default' => null,
-                    'limit' => null,
-                    'null' => false,
-                ])
-                ->create();
-        }
+        
 
         if ( $this->table('classes')->exists() === false) {
             $this->table('classes')
@@ -674,50 +645,6 @@ class Initial extends AbstractMigration
                 ->create();
         }
 
-        if ( $this->table('student_annual_position_on_class_demarcations')->exists() === false) {
-            $this->table('student_annual_position_on_class_demarcations')
-                ->addColumn('student_id', 'string', [
-                    'default' => null,
-                    'limit' => 30,
-                    'null' => false,
-                ])
-                ->addColumn('total', 'float', [
-                    'default' => null,
-                    'limit' => null,
-                    'null' => false,
-                ])
-                ->addColumn('average', 'float', [
-                    'default' => null,
-                    'limit' => null,
-                    'null' => false,
-                ])
-                ->addColumn('grade', 'string', [
-                    'default' => null,
-                    'limit' => 20,
-                    'null' => true,
-                ])
-                ->addColumn('position', 'integer', [
-                    'default' => null,
-                    'limit' => 10,
-                    'null' => true,
-                ])
-                ->addColumn('class_id', 'integer', [
-                    'default' => null,
-                    'limit' => 3,
-                    'null' => false,
-                ])
-                ->addColumn('class_demarcation_id', 'integer', [
-                    'default' => null,
-                    'limit' => 3,
-                    'null' => false,
-                ])
-                ->addColumn('session_id', 'integer', [
-                    'default' => null,
-                    'limit' => 3,
-                    'null' => false,
-                ])
-                ->create();
-        }
 
         if ( $this->table('student_annual_positions')->exists() === false) {
             $this->table('student_annual_positions')
@@ -761,6 +688,7 @@ class Initial extends AbstractMigration
                     'limit' => 3,
                     'null' => false,
                 ])
+                ->addIndex(['student_id', 'session_id', 'class_id'])
                 ->create();
         }
 
@@ -771,9 +699,9 @@ class Initial extends AbstractMigration
                     'limit' => 30,
                     'null' => false,
                 ])
-                ->addColumn('subject_id', 'string', [
+                ->addColumn('subject_id', 'integer', [
                     'default' => null,
-                    'limit' => 30,
+                    'limit' => 11,
                     'null' => false,
                 ])
                 ->addColumn('first_term', 'float', [
@@ -821,54 +749,16 @@ class Initial extends AbstractMigration
                     'limit' => 10,
                     'null' => true,
                 ])
+                ->addIndex(['student_id', 'subject_id', 'session_id', 'class_id'])
                 ->create();
         }
 
-        if ( $this->table('student_annual_subject_position_on_class_demarcations')->exists() === false) {
-            $this->table('student_annual_subject_position_on_class_demarcations')
-                ->addColumn('subject_id', 'integer', [
-                    'default' => null,
-                    'limit' => 3,
-                    'null' => false,
-                ])
-                ->addColumn('student_id', 'string', [
-                    'default' => null,
-                    'limit' => 30,
-                    'null' => false,
-                ])
-                ->addColumn('total', 'float', [
-                    'default' => null,
-                    'limit' => null,
-                    'null' => false,
-                ])
-                ->addColumn('position', 'integer', [
-                    'default' => null,
-                    'limit' => 10,
-                    'null' => true,
-                ])
-                ->addColumn('class_id', 'integer', [
-                    'default' => null,
-                    'limit' => 3,
-                    'null' => false,
-                ])
-                ->addColumn('class_demarcation_id', 'integer', [
-                    'default' => null,
-                    'limit' => 3,
-                    'null' => false,
-                ])
-                ->addColumn('session_id', 'integer', [
-                    'default' => null,
-                    'limit' => 3,
-                    'null' => false,
-                ])
-                ->create();
-        }
 
         if ( $this->table('student_annual_subject_positions')->exists() === false ) {
             $this->table('student_annual_subject_positions')
                 ->addColumn('subject_id', 'integer', [
                     'default' => null,
-                    'limit' => 3,
+                    'limit' => 11,
                     'null' => false,
                 ])
                 ->addColumn('student_id', 'string', [
@@ -896,6 +786,7 @@ class Initial extends AbstractMigration
                     'limit' => 3,
                     'null' => false,
                 ])
+                ->addIndex(['student_id', 'subject_id', 'session_id', 'class_id'])
                 ->create();
         }
 
@@ -921,6 +812,7 @@ class Initial extends AbstractMigration
                     'limit' => 3,
                     'null' => false,
                 ])
+                ->addIndex(['session_id', 'class_id', 'term_id'])
                 ->create();
         }
 
@@ -1114,6 +1006,7 @@ class Initial extends AbstractMigration
                     'limit' => 3,
                     'null' => false,
                 ])
+                ->addIndex(['student_id', 'session_id', 'class_id', 'term_id'])
                 ->create();
         }
 
@@ -1144,6 +1037,7 @@ class Initial extends AbstractMigration
                     'limit' => 3,
                     'null' => false,
                 ])
+                ->addIndex(['student_id', 'session_id', 'class_id', 'term_id'])
                 ->create();
         }
 
@@ -1170,6 +1064,11 @@ class Initial extends AbstractMigration
                     'limit' => 3,
                     'null' => true,
                 ])
+                ->addColumn('class_id', 'integer', [
+                    'default' => null,
+                    'limit' => 11,
+                    'null' => true,
+                ])
                 ->addColumn('session_id', 'integer', [
                     'default' => null,
                     'limit' => 3,
@@ -1185,63 +1084,11 @@ class Initial extends AbstractMigration
                     'limit' => null,
                     'null' => true,
                 ])
-                ->addColumn('class_id', 'integer', [
-                    'default' => null,
-                    'limit' => 11,
-                    'null' => true,
-                ])
+                ->addIndex(['student_id', 'session_id', 'class_id', 'term_id'])
+                ->addIndex(['pin'])
                 ->create();
         }
 
-        if ( $this->table('student_termly_position_on_class_demarcations')->exists() === false) {
-            $this->table('student_termly_position_on_class_demarcations')
-                ->addColumn('student_id', 'string', [
-                    'default' => null,
-                    'limit' => 30,
-                    'null' => false,
-                ])
-                ->addColumn('total', 'float', [
-                    'default' => null,
-                    'limit' => null,
-                    'null' => false,
-                ])
-                ->addColumn('average', 'float', [
-                    'default' => null,
-                    'limit' => null,
-                    'null' => false,
-                ])
-                ->addColumn('grade', 'string', [
-                    'default' => null,
-                    'limit' => 20,
-                    'null' => true,
-                ])
-                ->addColumn('position', 'integer', [
-                    'default' => null,
-                    'limit' => 10,
-                    'null' => true,
-                ])
-                ->addColumn('class_id', 'integer', [
-                    'default' => null,
-                    'limit' => 3,
-                    'null' => false,
-                ])
-                ->addColumn('class_demarcation_id', 'integer', [
-                    'default' => null,
-                    'limit' => 3,
-                    'null' => false,
-                ])
-                ->addColumn('term_id', 'integer', [
-                    'default' => null,
-                    'limit' => 3,
-                    'null' => false,
-                ])
-                ->addColumn('session_id', 'integer', [
-                    'default' => null,
-                    'limit' => 3,
-                    'null' => false,
-                ])
-                ->create();
-        }
 
         if ( $this->table('student_termly_positions')->exists() === false) {
             $this->table('student_termly_positions')
@@ -1285,6 +1132,7 @@ class Initial extends AbstractMigration
                     'limit' => 3,
                     'null' => false,
                 ])
+                ->addIndex(['student_id', 'session_id', 'class_id', 'term_id'])
                 ->create();
         }
 
@@ -1295,9 +1143,9 @@ class Initial extends AbstractMigration
                     'limit' => 30,
                     'null' => false,
                 ])
-                ->addColumn('subject_id', 'string', [
+                ->addColumn('subject_id', 'integer', [
                     'default' => null,
-                    'limit' => 30,
+                    'limit' => 11,
                     'null' => false,
                 ])
                 ->addColumn('first_test', 'float', [
@@ -1372,74 +1220,9 @@ class Initial extends AbstractMigration
                 ])
                 ->addIndex(
                     [
-                        'student_id',
+                        'student_id','subject_id', 'session_id', 'class_id', 'term_id'
                     ]
                 )
-                ->addIndex(
-                    [
-                        'subject_id',
-                    ]
-                )
-                ->addIndex(
-                    [
-                        'class_id',
-                    ]
-                )
-                ->addIndex(
-                    [
-                        'term_id',
-                    ]
-                )
-                ->addIndex(
-                    [
-                        'session_id',
-                    ]
-                )
-                ->create();
-        }
-
-        if ( $this->table('student_termly_subject_position_on_class_demarcations')->exists() === false) {
-            $this->table('student_termly_subject_position_on_class_demarcations')
-                ->addColumn('subject_id', 'integer', [
-                    'default' => null,
-                    'limit' => 3,
-                    'null' => false,
-                ])
-                ->addColumn('student_id', 'string', [
-                    'default' => null,
-                    'limit' => 30,
-                    'null' => false,
-                ])
-                ->addColumn('total', 'float', [
-                    'default' => null,
-                    'limit' => null,
-                    'null' => false,
-                ])
-                ->addColumn('position', 'integer', [
-                    'default' => null,
-                    'limit' => 10,
-                    'null' => true,
-                ])
-                ->addColumn('class_id', 'integer', [
-                    'default' => null,
-                    'limit' => 3,
-                    'null' => false,
-                ])
-                ->addColumn('class_demarcation_id', 'integer', [
-                    'default' => null,
-                    'limit' => 3,
-                    'null' => false,
-                ])
-                ->addColumn('term_id', 'integer', [
-                    'default' => null,
-                    'limit' => 3,
-                    'null' => false,
-                ])
-                ->addColumn('session_id', 'integer', [
-                    'default' => null,
-                    'limit' => 3,
-                    'null' => false,
-                ])
                 ->create();
         }
 
@@ -1447,7 +1230,7 @@ class Initial extends AbstractMigration
             $this->table('student_termly_subject_positions')
                 ->addColumn('subject_id', 'integer', [
                     'default' => null,
-                    'limit' => 3,
+                    'limit' => 11,
                     'null' => false,
                 ])
                 ->addColumn('student_id', 'string', [
@@ -1480,6 +1263,9 @@ class Initial extends AbstractMigration
                     'limit' => 3,
                     'null' => false,
                 ])
+                ->addIndex(
+                    ['student_id','subject_id', 'session_id', 'class_id', 'term_id']
+                )
                 ->create();
         }
 
@@ -1635,6 +1421,9 @@ class Initial extends AbstractMigration
                     'limit' => null,
                     'null' => false,
                 ])
+                ->addIndex(
+                    ['student_id', 'session_id', 'class_id', 'term_id']
+                )
                 ->create();
         }
 
@@ -1680,6 +1469,9 @@ class Initial extends AbstractMigration
                     'limit' => null,
                     'null' => false,
                 ])
+                ->addIndex(
+                    ['student_id', 'session_id', 'class_id', 'term_id']
+                )
                 ->create();
         }
 
@@ -1687,7 +1479,7 @@ class Initial extends AbstractMigration
             $this->table('subject_class_averages')
                 ->addColumn('subject_id', 'integer', [
                     'default' => null,
-                    'limit' => 5,
+                    'limit' => 11,
                     'null' => false,
                 ])
                 ->addColumn('student_count', 'integer', [
@@ -1714,6 +1506,9 @@ class Initial extends AbstractMigration
                     'default' => null,
                     'limit' => 3,
                     'null' => false,
+                ])
+                ->addIndex([
+                    'class_id', 'term_id', 'session_id'
                 ])
                 ->create();
         }
@@ -1848,6 +1643,232 @@ class Initial extends AbstractMigration
                 ->create();
         }
 
+        /**
+         * Adding foreign keys for Result system
+         */
+        // student termly subject position
+        $this->table('student_termly_subject_positions')
+            ->addForeignKey(
+                'student_id',
+                'students',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION',
+                ]
+            )->addForeignKey(
+                'subject_id',
+                'subjects',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->addForeignKey(
+                'class_id',
+                'classes',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->addForeignKey(
+                'term_id',
+                'terms',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->addForeignKey(
+                'session_id',
+                'sessions',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->update();
+
+        // student annual results
+        $this->table('student_annual_results')
+            ->addForeignKey(
+                'student_id',
+                'students',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION',
+                ]
+            )->addForeignKey(
+                'subject_id',
+                'subjects',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->addForeignKey(
+                'class_id',
+                'classes',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->addForeignKey(
+                'session_id',
+                'sessions',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->update();
+
+        // student annual positions
+        $this->table('student_annual_positions')
+            ->addForeignKey(
+                'student_id',
+                'students',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION',
+                ]
+            )->addForeignKey(
+                'class_id',
+                'classes',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->addForeignKey(
+                'session_id',
+                'sessions',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->update();
+
+        // student annual subject positions
+        $this->table('student_annual_subject_positions')
+            ->addForeignKey(
+                'student_id',
+                'students',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION',
+                ]
+            )->addForeignKey(
+                'subject_id',
+                'subjects',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->addForeignKey(
+                'class_id',
+                'classes',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->addForeignKey(
+                'session_id',
+                'sessions',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->update();
+
+        // student termly positions
+        $this->table('student_termly_positions')
+            ->addForeignKey(
+                'student_id',
+                'students',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->addForeignKey(
+                'session_id',
+                'sessions',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->addForeignKey(
+                'class_id',
+                'classes',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->addForeignKey(
+                'term_id',
+                'terms',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->update();
+
+
+        $this->table('student_termly_results')
+            ->addForeignKey(
+                'student_id',
+                'students',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION',
+                ]
+            )->addForeignKey(
+                'subject_id',
+                'subjects',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->addForeignKey(
+                'class_id',
+                'classes',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->addForeignKey(
+                'term_id',
+                'terms',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->addForeignKey(
+                'session_id',
+                'sessions',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'NO_ACTION'
+                ]
+            )->update();
 
         $this->table('classes')
             ->addForeignKey(
@@ -1861,6 +1882,9 @@ class Initial extends AbstractMigration
             )
             ->update();
 
+        /**
+         * Adding foreign keys for Finance Manager.
+         */
         $this->table('expenditures')
             ->addForeignKey(
                 'expenditure_category_id',

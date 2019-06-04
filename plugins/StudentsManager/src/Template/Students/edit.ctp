@@ -20,7 +20,7 @@
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <div class="fileinput fileinput-new" data-provides="fileinput"><input type="hidden" value="" name="...">
-                                    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px; line-height: 150px;"> <?= ( $student->photo ) ? $this->Html->image('student-pictures/students/photo/'.$student->photo_dir.'/'.$student->photo,[
+                                    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px; line-height: 150px;"> <?= ( $student->photo ) ? $this->Html->image('student-photos/'.$student->id.'.jpg',[
                                             'alt' => $student->full_name
                                         ]) : 'No Image' ?> </div>
                                     <div>
@@ -104,6 +104,13 @@
                 <?= $this->Form->input('new_admission_number',['id' => 'new_admission_number',
                     'class'=>'form-control','label'=>['text'=>'New Admission Number'],'required'=>true]); ?>
                 <i class="fa fa-info-circle text-primary" data-toggle="tooltip" title="New Admission Number"></i>
+                <div>
+                    <h4 class="text-danger"> Please Note that the following will be affected  </h4>
+                    <ol>
+                        <li> The student results records. </li>
+                        <li> The student fees records. </li>
+                    </ol>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

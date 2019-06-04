@@ -21,7 +21,7 @@ use Cake\I18n\Time;
                         <div class="profile-left">
                             <!-- begin profile-image -->
                             <div class="profile-image">
-                                <?= $this->Html->image('student-pictures/students/photo/'.$student->photo_dir.'/'.$student->photo,[
+                                <?= $this->Html->image('student-photos/'.$student->id.'.jpg',[
                                     'alt' => $student->full_name
                                 ]) ?>
                                 <i class="fa fa-user hide"></i>

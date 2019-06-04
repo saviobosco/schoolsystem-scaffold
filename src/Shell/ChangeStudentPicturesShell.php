@@ -57,7 +57,8 @@ class ChangeStudentPicturesShell extends Shell
                     $this->width  = imagesx($this->image);
                     $this->height = imagesy($this->image);
                     $this->resizeImage(700, 500, "portrait");
-                    $this->saveImage($destFolder. $destFileName, 50);
+                    $this->autoRotateImage($sourceFileName);
+                    $this->saveImage($destFolder. $destFileName);
                     // update image location
                 }
             }
@@ -271,5 +272,23 @@ class ChangeStudentPicturesShell extends Shell
         }
 
         imagedestroy($this->imageResized);
+    }
+
+    protected function autoRotateImage($sourceFilename)
+    {
+        $exif = exif_read_data($sourceFilename);
+        if (!empty($exif['Orientation'])) {
+            switch ($exif['Orientation']) {
+                case 3:
+                    $this->imageResized = imagerotate($this->imageResized, 180, 0);
+                    break;
+                case 6:
+                    $this->imageResized = imagerotate($this->imageResized, -90, 0);
+                    break;
+                case 8:
+                    $this->imageResized = imagerotate($this->imageResized, 90, 0);
+                    break;
+            }
+        }
     }
 }

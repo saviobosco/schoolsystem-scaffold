@@ -281,6 +281,6 @@ Plugin::load('BankSystem', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('Saviobosco/Core', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('Dashboard', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('TimesTable', ['bootstrap' => false, 'routes' => true]);
-if (!Configure::read('debug')) {
+if (Configure::read('debug') === false) {
     Plugin::load('Connehito/CakeSentry', ['bootstrap' => true]);
 }
