@@ -8,13 +8,16 @@
 
 namespace UsersManager\Controller;
 
+use Cake\Core\Plugin;
 use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
 use CakeDC\Users\Controller\Traits\LoginTrait;
 use CakeDC\Users\Controller\Traits\ProfileTrait;
 use CakeDC\Users\Controller\Traits\ReCaptchaTrait;
 use CakeDC\Users\Controller\Traits\RegisterTrait;
 use CakeDC\Users\Controller\Traits\SimpleCrudTrait;
 use CakeDC\Users\Controller\Component\UsersAuthComponent;
+use Cake\Network\Exception\NotFoundException;
 
 /**
  * MyUsers Controller
@@ -136,5 +139,84 @@ class AccountsController extends AppController
                 return $this->redirect($url);
             }
         }
+    }
+
+    /**
+     * Edit method
+     *
+     * @param string|null $id User id.
+     * @return mixed Redirects on successful edit, renders view otherwise.
+     * @throws NotFoundException When record not found.
+     */
+    public function edit($id = null)
+    {
+        $table = $this->loadModel();
+        $tableAlias = $table->alias();
+        $entity = $table->get($id, [
+            'contain' => []
+        ]);
+        $this->set($tableAlias, $entity);
+        $this->set('tableAlias', $tableAlias);
+        $this->set('_serialize', [$tableAlias, 'tableAlias']);
+        // if the user is teacher, load the subjects
+        if ($entity['role'] === 'teacher') {
+            if (Plugin::loaded('SubjectsManager')) {
+                $subjectsTable = TableRegistry::get('SubjectsManager.Subjects');
+                $subjects = $subjectsTable->query()
+                    ->contain(['Blocks'])
+                    ->map(function($row) {
+                        $row->subject_name = $row->name . ' ('.$row->block->name.') ';
+                        return $row;
+                    });
+                $teachersSubjectTable = TableRegistry::get('TeachersSubjects');
+                $teacherSubjects = $teachersSubjectTable->query()
+                    ->enableHydration(false)
+                    ->where(['teacher_id' => $id])
+                    ->extract('subject_id')
+                    ->toArray();
+                $this->set(compact('subjects','teacherSubjects'));
+            }
+
+            if (Plugin::loaded('ClassManager')) {
+                $classTable = TableRegistry::get('ClassManager.Classes');
+                $classes = $classTable->query()
+                    ->find('all');
+
+                $teachersClassesTable = TableRegistry::get('TeachersClasses');
+                $teacherClasses = $teachersClassesTable->query()
+                    ->enableHydration(false)
+                    ->where(['teacher_id' => $id])
+                    ->extract('class_id')
+                    ->toArray();
+                $this->set(compact('classes', 'teacherClasses'));
+            }
+            $termsTable = TableRegistry::get('Terms');
+            $terms = $termsTable->find('list');
+            $sessionsTable = TableRegistry::get('Sessions');
+            $sessions = $sessionsTable->find('list');
+            $this->set(compact('terms', 'sessions'));
+
+            // get teachers permissions
+            $teacherPermissionsTable = TableRegistry::get('UsersManager.TeachersSubjectsClassesPermissions');
+            //dd($teacherPermissionsTable->getSchema());
+            $teacherPermissions = $teacherPermissionsTable->query()
+                ->enableHydration(false)
+                ->select(['class_id','subjects', 'terms', 'sessions'])
+                ->where(['teacher_id' => $id])
+                ->indexBy('class_id')
+                ->toArray();
+            $this->set(compact('teacherPermissions'));
+        }
+        if (!$this->request->is(['patch', 'post', 'put'])) {
+            return;
+        }
+        $entity = $table->patchEntity($entity, $this->request->getData());
+        $singular = Inflector::singularize(Inflector::humanize($tableAlias));
+        if ($table->save($entity)) {
+            $this->Flash->success(__d('CakeDC/Users', 'The {0} has been saved', $singular));
+
+            return $this->redirect(['action' => 'index']);
+        }
+        $this->Flash->error(__d('CakeDC/Users', 'The {0} could not be saved', $singular));
     }
 }

@@ -42,6 +42,27 @@ class AccountsTable extends UsersTable
     {
         parent::initialize($config);
 
+        $this->belongsToMany('Subjects', [
+            'className' => 'SubjectsManager.Subjects',
+            'joinTable' => 'teachers_subjects',
+            'foreignKey' => 'teacher_id',
+            'bindingKey' => 'id',
+            'saveStrategy' => 'replace'
+        ]);
+
+        $this->belongsToMany('Classes', [
+            'className' => 'ClassManager.Classes',
+            'joinTable' => 'teachers_classes',
+            'foreignKey' => 'teacher_id',
+            'bindingKey' => 'id',
+            'saveStrategy' => 'replace'
+        ]);
+
+        $this->hasMany('TeachersSubjectsClassesPermissions',[
+            'className' => 'UsersManager.TeachersSubjectsClassesPermissions',
+            'foreignKey' => 'teacher_id',
+            'saveStrategy' => 'replace'
+        ]);
     }
 
     public function getRoles()

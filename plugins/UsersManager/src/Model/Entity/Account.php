@@ -56,7 +56,10 @@ class Account extends User
         'created' => true,
         'modified' => true,
         'record' => true,
-        'social_accounts' => true
+        'social_accounts' => true,
+        'subjects' => true,
+        'classes' => true,
+        'teachers_subjects_classes_permissions' => true,
     ];
 
     /**
