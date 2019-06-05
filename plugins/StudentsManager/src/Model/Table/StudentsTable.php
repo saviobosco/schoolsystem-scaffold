@@ -1,13 +1,17 @@
 <?php
 namespace StudentsManager\Model\Table;
 
+use Cake\Core\Plugin;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\I18n\Date;
+use Cake\ORM\Entity;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 use StudentsManager\Model\Entity\Student;
+use UsersManager\Exception\UserExistsException;
 
 /**
  * Students Model
@@ -176,8 +180,24 @@ class StudentsTable extends Table
         //a hack to make the id unique validation work
         // because the id is same as the primary key, $rules->add($rules->isUnique(['id'])); will not work fine
         $this->setPrimaryKey('created');
+        // check if that student id is as username in the users table
+        $userTable = TableRegistry::get('UsersManager.Accounts');
+        $studentUser = $userTable->query()->where(['username' => $student['id']])->first();
+        if ($studentUser instanceof Entity) {
+            // throw user exist error
+            throw new UserExistsException(['username' => $student['id']]);
+        }
         $savedStudent = $this->save($student);
         if ( $savedStudent) {
+            // create new user record
+            $userTable->save($userTable->newEntity([
+                'username'=> $student['id'],
+                'password' => $student['id'],
+                'first_name' => $student['first_name'],
+                'last_name' => $student['last_name'],
+                'role' => 'student',
+                'active' => 1
+            ]));
             $event = new Event(self::EVENT_ADDED_STUDENT,$this,['student'=>$student]);
             $this->getEventManager()->dispatch($event);
             return $savedStudent;

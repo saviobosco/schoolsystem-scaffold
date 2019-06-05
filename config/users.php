@@ -147,10 +147,10 @@ $config = [
         ],
         'authenticate' => [
             'all' => [
-                'finder' => 'auth',
+                'finder' => 'all',
             ],
-            'CakeDC/Auth.ApiKey',
-            'CakeDC/Auth.RememberMe',
+            //'CakeDC/Auth.ApiKey',
+            'App.RememberMe',
             'Form',
         ],
         'authorize' => [

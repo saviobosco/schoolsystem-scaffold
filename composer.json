@@ -53,7 +53,8 @@
             "BankSystem\\": "./plugins/BankSystem/src",
             "Saviobosco\\Core\\": "./plugins/Saviobosco/Core/src",
             "Dashboard\\": "./plugins/Dashboard/src",
-            "TimesTable\\": "./plugins/TimesTable/src"
+            "TimesTable\\": "./plugins/TimesTable/src",
+            "StudentAccount\\": "./plugins/StudentAccount/src"
         }
     },
     "autoload-dev": {
@@ -75,7 +76,8 @@
             "BankSystem\\Test\\": "./plugins/BankSystem/tests",
             "Saviobosco\\Core\\Test\\": "./plugins/Saviobosco/Core/tests",
             "Dashboard\\Test\\": "./plugins/Dashboard/tests",
-            "TimesTable\\Test\\": "./plugins/TimesTable/tests"
+            "TimesTable\\Test\\": "./plugins/TimesTable/tests",
+            "StudentAccount\\Test\\": "./plugins/StudentAccount/tests"
         }
     },
     "scripts": {

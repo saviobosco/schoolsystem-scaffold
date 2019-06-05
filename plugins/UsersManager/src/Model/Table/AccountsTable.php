@@ -29,6 +29,7 @@ class AccountsTable extends UsersTable
         'student' => 'Student',
         'teacher' => 'Teacher',
         'admin' => 'Admin',
+        'parent' => 'Parent'
     ];
 
     /**

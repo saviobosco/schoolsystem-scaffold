@@ -5,6 +5,8 @@ use Cake\Event\Event;
 use Cake\Http\Client;
 use StudentsManager\Controller\AppController;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use UsersManager\Exception\UserExistsException;
+
 /**
  * Students Controller
  *
@@ -105,24 +107,32 @@ class StudentsController extends AppController
     {
         $student = $this->Students->newEntity();
         if ($this->request->is('post')) {
-            $student = $this->Students->patchEntity($student, $this->request->getData());
-            $savedStudent = $this->Students->addStudent($student);
-            if ($savedStudent) {
-                $this->Flash->success(__('The student has been saved.'));
-                $this->Flash->set('Last student id:'.$savedStudent->id);
+            try {
+                $student = $this->Students->patchEntity($student, $this->request->getData());
+                $savedStudent = $this->Students->addStudent($student);
+                if ($savedStudent) {
+                    $this->Flash->success(__('The student has been saved.'));
+                    $this->Flash->set('Last student id:'.$savedStudent->id);
+                } else {
+                    $this->Flash->error(__('The student could not be saved. Please, try again.'));
+                }
+            } catch (UserExistsException $exception) {
+                $this->Flash->error(__('A User with the Admission No as username already exists!'));
+            }
+            if (isset($savedStudent) and $savedStudent !== false) {
                 if ( $this->request->getData('return_here')) {
-                    return $this->redirect(['action' => 'add']);
+                    if (isset($savedStudent) and $savedStudent !== false) {
+                        return $this->redirect(['action' => 'add']);
+                    }
                 }
                 return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The student could not be saved. Please, try again.'));
             }
         }
         $sessions = $this->Sessions->find('list');
         $classes = $this->Students->Classes->find('list');
         $religions = $this->Religions->find('list');
         $states = $this->States->find('list');
-        $this->set(compact('student', 'sessions', 'classes', 'classDemarcations','states','religions'));
+        $this->set(compact('student', 'sessions', 'classes','states','religions'));
         $this->set('_serialize', ['student']);
     }
 

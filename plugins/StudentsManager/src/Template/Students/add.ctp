@@ -68,6 +68,18 @@
                         if (\Cake\Core\Plugin::loaded('FinanceManager')){
                             echo $this->Form->input('add_student_fee',['type'=>'checkbox','label'=>'Add the student Fees Automatically','checked'=>true]);
                         }
+                        ?>
+                        <hr>
+                        Login Information
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <?= $this->Form->input('username');  ?>
+                            </div>
+                            <div class="col-sm-6">
+                                <?= $this->Form->input('password'); ?>
+                            </div>
+                        </div>
+                        <?php
                         echo $this->Form->input('return_here',['type'=>'checkbox','checked'=>true])
                         ?>
                     </fieldset>

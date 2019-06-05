@@ -10,6 +10,6 @@ return [
         'Author' => 'Saviobosco',
         'Company' => 'Griffon Technologies Nig',
         'logo' => 'system-images/school-system-logo.png',
-        'Href_link' => 'https://www.griffonteknologies.com'
+        'Href_link' => 'https://www.thegriffontechnology.com'
     ]
 ];
