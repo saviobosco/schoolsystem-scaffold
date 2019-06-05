@@ -19,7 +19,7 @@ use Cake\I18n\Time;
                         <div class="profile-left">
                             <!-- begin profile-image -->
                             <div class="profile-image">
-                                <?= $this->Html->image('student-pictures/students/photo/'.$student->photo_dir.'/'.$student->photo,[
+                                <?= $this->Html->image('student-pictures/'.$student->photo,[
                                     'alt' => $student->full_name
                                 ]) ?>
                                 <i class="fa fa-user hide"></i>
@@ -51,7 +51,7 @@ use Cake\I18n\Time;
                                         </tr>
                                         <tr>
                                             <th><?= __('Date Of Birth') ?></th>
-                                            <td><?php echo (new Time($student->date_of_birth))->format('l jS \\of F, Y'); ?></td>
+                                            <td><?= ($student->date_of_birth) ? (new Time($student->date_of_birth))->format('l jS \\of F, Y') : ''; ?></td>
                                         </tr>
                                         <tr>
                                             <th><?= __('State Of Origin') ?></th>
@@ -67,7 +67,7 @@ use Cake\I18n\Time;
                                         </tr>
                                         <tr>
                                             <th><?= __('Class') ?></th>
-                                            <td><?= $classes[$student->class_id] ?></td>
+                                            <td><?= $student->class->class ?></td>
                                         </tr>
                                     </table>
 

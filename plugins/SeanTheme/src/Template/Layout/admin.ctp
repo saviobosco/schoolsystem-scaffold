@@ -72,17 +72,26 @@ $application_detail = Configure::read('Application');
 
 <!-- begin #page-container -->
 <div id="page-container" class=" page-sidebar-fixed page-header-fixed">
-
-    <?php if(empty($this->request->session()->read('Auth.User.id'))): ?>
-        <?= $this->element('notLoggedInHeader'); ?>
-    <?php endif; ?>
     <?php if(!empty($this->request->session()->read('Auth.User.id'))): ?>
         <?= $this->element('loggedInHeader'); ?>
     <?php endif; ?>
 
     <?php $renderPluginSidebar = false; ( $this->request->session()->read('Auth.User.role') === 'superuser' ) ?: $renderPluginSidebar = true;  ?>
-
-    <?= $this->element('sidebar',[],['plugin'=>$renderPluginSidebar]) ?>
+    <?php
+    switch($this->request->session()->read('Auth.User.role')) {
+        case 'superuser':
+        case 'admin':
+        case 'bursar':
+        case 'user':
+            echo $this->element('sidebar', [], ['plugin'=>$renderPluginSidebar]);
+            break;
+        case 'student':
+            echo $this->element('Sidebar/student');
+            break;
+        default:
+            echo $this->element('sidebar', [], ['plugin'=>$renderPluginSidebar]);
+    }
+    ?>
 
     <!-- begin #content -->
     <div id="content" class="content">

@@ -36,12 +36,11 @@ use Settings\Core\Setting;
                 </a>
                 <ul class="dropdown-menu animated fadeInLeft">
                     <li class="arrow"></li>
-                    <li><?= $this->Html->link('Profile',['plugin'=>'UsersManager','controller'=>'Accounts','action'=>'profile']) ?></li>
                     <!--<li><a href="javascript:;"><span class="badge badge-danger pull-right">2</span> Inbox</a></li>
                     <li><a href="javascript:;">Calendar</a></li>
                     <li><a href="javascript:;">Setting</a></li>
                     <li class="divider"></li>-->
-                    <li><?= $this->Html->link('logout',['plugin'=>'UsersManager','controller'=>'Accounts','action'=>'logout']) ?></li>
+                    <li><?= $this->Html->link('logout',$this->Url->build(['_name' => 'users:logout'])) ?></li>
                 </ul>
             </li>
         </ul>

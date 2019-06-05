@@ -12,21 +12,21 @@ Router::plugin(
         $routes->get('/dashboard', [
             'controller' => 'Dashboard',
             'action' => 'index'
-        ],['_name' => 'student:dashboard']);
+        ],'student:dashboard');
 
         $routes->get('/profile', [
             'controller' => 'Profile',
             'action' => 'index'
-        ],['_name' => 'student:profile']);
+        ],'student:profile');
 
         $routes->get('/my_results', [
             'controller' => 'StudentResults',
             'action' => 'index'
-        ],['_name' => 'student:my_results']);
+        ],'student:my_results');
 
         $routes->get('/my_pins', [
             'controller' => 'ResultPins',
             'action' => 'index'
-        ],['_name' => 'student:my_pins']);
+        ],'student:my_pins');
     }
 );

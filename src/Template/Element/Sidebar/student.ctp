@@ -48,7 +48,7 @@ $studentSessionData = $this->request->session()->read('Auth.User');
         <ul class="nav">
             <li class="nav-profile">
                 <div class="image">
-                    <?= $this->Html->image('student-pictures/students/photo/'.$studentSessionData['photo_dir'].'/'.$studentSessionData['photo'], ['alt' => $studentSessionData['first_name'].' '.$studentSessionData['last_name']]) ?>
+                    <?= $this->Html->image('student-pictures/'.$studentSessionData['photo'], ['alt' => $studentSessionData['first_name'].' '.$studentSessionData['last_name']]) ?>
                     <a href="javascript:;"><img src="" alt="" /></a>
                 </div>
                 <div class="info">

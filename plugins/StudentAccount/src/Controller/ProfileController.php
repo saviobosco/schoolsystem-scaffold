@@ -1,6 +1,8 @@
 <?php
 namespace StudentAccount\Controller;
 
+use Cake\Core\Plugin;
+use Cake\ORM\TableRegistry;
 use StudentAccount\Controller\AppController;
 use StudentAccount\Model\Entity\Student;
 
@@ -26,11 +28,12 @@ class ProfileController extends AppController
      */
     public function index()
     {
-        $student = new Student($this->Auth->user());
-        $classes = $this->Classes->find()
-            ->select(['id', 'class'])
-            ->combine('id', 'class')
-            ->toArray();
-        $this->set(compact('student', 'classes'));
+        // check if studentManager is loaded
+        if (Plugin::loaded('StudentsManager')) {
+            $studentsTable = TableRegistry::get('StudentsManager.Students');
+            $student = $studentsTable->get($this->Auth->user('username'),
+                ['contain' => 'Classes']);
+        }
+        $this->set(compact('student'));
     }
 }
