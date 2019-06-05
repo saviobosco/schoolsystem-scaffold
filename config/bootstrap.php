@@ -287,3 +287,5 @@ if (Configure::read('debug') === false) {
 Plugin::load('StudentAccount', ['bootstrap' => false, 'routes' => true]);
 
 Plugin::load('ParentAccount', ['bootstrap' => true, 'routes' => true]);
+
+Plugin::load('TeacherAccount', ['bootstrap' => true, 'routes' => true]);

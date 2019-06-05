@@ -55,7 +55,8 @@
             "Dashboard\\": "./plugins/Dashboard/src",
             "TimesTable\\": "./plugins/TimesTable/src",
             "StudentAccount\\": "./plugins/StudentAccount/src",
-            "ParentAccount\\": "./plugins/ParentAccount/src"
+            "ParentAccount\\": "./plugins/ParentAccount/src",
+            "TeacherAccount\\": "./plugins/TeacherAccount/src"
         }
     },
     "autoload-dev": {
@@ -79,7 +80,8 @@
             "Dashboard\\Test\\": "./plugins/Dashboard/tests",
             "TimesTable\\Test\\": "./plugins/TimesTable/tests",
             "StudentAccount\\Test\\": "./plugins/StudentAccount/tests",
-            "ParentAccount\\Test\\": "./plugins/ParentAccount/tests"
+            "ParentAccount\\Test\\": "./plugins/ParentAccount/tests",
+            "TeacherAccount\\Test\\": "./plugins/TeacherAccount/tests"
         }
     },
     "scripts": {
