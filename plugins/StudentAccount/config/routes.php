@@ -12,22 +12,21 @@ Router::plugin(
         $routes->get('/dashboard', [
             'controller' => 'Dashboard',
             'action' => 'index'
-        ]);
+        ],['_name' => 'student:dashboard']);
 
-        $routes->get('/login',
-            [
-                'plugin' => 'StudentAccount',
-                'controller'=>'Login',
-                'action'=>'index'
-            ]
-        );
+        $routes->get('/profile', [
+            'controller' => 'Profile',
+            'action' => 'index'
+        ],['_name' => 'student:profile']);
 
-        $routes->post('/login',
-            [
-                'plugin' => 'StudentAccount',
-                'controller'=>'Login',
-                'action'=>'login'
-            ]
-        );
+        $routes->get('/my_results', [
+            'controller' => 'StudentResults',
+            'action' => 'index'
+        ],['_name' => 'student:my_results']);
+
+        $routes->get('/my_pins', [
+            'controller' => 'ResultPins',
+            'action' => 'index'
+        ],['_name' => 'student:my_pins']);
     }
 );
