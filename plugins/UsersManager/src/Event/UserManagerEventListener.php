@@ -24,7 +24,7 @@ class UserManagerEventListener implements EventListenerInterface
                     return ['plugin' => 'TeacherAccount', 'controller' => 'Dashboard', 'action' => 'index'];
                     break;
                 case 'parent':
-                    return ['plugin' => 'StudentAccount', 'controller' => 'Dashboard', 'action' => 'index'];
+                    return ['plugin' => 'ParentAccount', 'controller' => 'Dashboard', 'action' => 'index'];
                     break;
                 default:
                     return null;

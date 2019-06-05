@@ -54,7 +54,8 @@
             "Saviobosco\\Core\\": "./plugins/Saviobosco/Core/src",
             "Dashboard\\": "./plugins/Dashboard/src",
             "TimesTable\\": "./plugins/TimesTable/src",
-            "StudentAccount\\": "./plugins/StudentAccount/src"
+            "StudentAccount\\": "./plugins/StudentAccount/src",
+            "ParentAccount\\": "./plugins/ParentAccount/src"
         }
     },
     "autoload-dev": {
@@ -77,7 +78,8 @@
             "Saviobosco\\Core\\Test\\": "./plugins/Saviobosco/Core/tests",
             "Dashboard\\Test\\": "./plugins/Dashboard/tests",
             "TimesTable\\Test\\": "./plugins/TimesTable/tests",
-            "StudentAccount\\Test\\": "./plugins/StudentAccount/tests"
+            "StudentAccount\\Test\\": "./plugins/StudentAccount/tests",
+            "ParentAccount\\Test\\": "./plugins/ParentAccount/tests"
         }
     },
     "scripts": {

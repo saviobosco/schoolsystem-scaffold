@@ -88,6 +88,9 @@ $application_detail = Configure::read('Application');
         case 'student':
             echo $this->element('Sidebar/student');
             break;
+        case 'parent':
+            echo $this->element('Sidebar/parent');
+            break;
         default:
             echo $this->element('sidebar', [], ['plugin'=>$renderPluginSidebar]);
     }

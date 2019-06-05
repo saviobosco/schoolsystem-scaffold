@@ -285,3 +285,5 @@ if (Configure::read('debug') === false) {
     Plugin::load('Connehito/CakeSentry', ['bootstrap' => true]);
 }
 Plugin::load('StudentAccount', ['bootstrap' => false, 'routes' => true]);
+
+Plugin::load('ParentAccount', ['bootstrap' => true, 'routes' => true]);
