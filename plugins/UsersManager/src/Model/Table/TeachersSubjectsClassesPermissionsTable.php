@@ -36,15 +36,10 @@ class TeachersSubjectsClassesPermissionsTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('Users', [
-            'foreignKey' => 'teacher_id',
-            'joinType' => 'INNER',
-            'className' => 'UsersManager.Users'
-        ]);
         $this->belongsTo('Classes', [
             'foreignKey' => 'class_id',
             'joinType' => 'INNER',
-            'className' => 'UsersManager.Classes'
+            'className' => 'ClassManager.Classes'
         ]);
     }
 
