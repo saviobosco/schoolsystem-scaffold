@@ -146,7 +146,7 @@ class SubjectsController extends AppController
         } catch ( \Exception $e) {
             $this->Flash->error('The following error occurred:'.$e->getMessage());
         }
-        $this->redirect($this->referer());
+        return $this->redirect($this->referer());
     }
 
     /**
