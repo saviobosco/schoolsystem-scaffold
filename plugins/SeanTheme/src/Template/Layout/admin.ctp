@@ -91,6 +91,9 @@ $application_detail = Configure::read('Application');
         case 'parent':
             echo $this->element('Sidebar/parent');
             break;
+        case 'teacher':
+            echo $this->element('Sidebar/teacher');
+            break;
         default:
             echo $this->element('sidebar', [], ['plugin'=>$renderPluginSidebar]);
     }
@@ -115,7 +118,6 @@ $application_detail = Configure::read('Application');
         ?>
         <!-- end breadcrumb -->
         <!-- begin page-header -->
-        <h1 class="page-header"><?= Setting::read('Application.school_name') ?> Administrative Panel <small>...</small></h1>
         <div id="ajax-request-feedback">
 
         </div>

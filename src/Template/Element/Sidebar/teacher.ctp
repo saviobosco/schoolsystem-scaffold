@@ -20,6 +20,12 @@ $teacherSessionData = $this->request->session()->read('Auth.User');
         ]) ?>
 </li>
 <li>
+    <?= $this->html->link('<i class="fa fa-book"></i> <span>Add Student Results</span>',
+        $this->Url->build(['_name' => 'teacher:students_results:add']),[
+            'escape' => false
+        ]) ?>
+</li>
+<li>
     <?= $this->html->link('<i class="fa fa-power-off"></i> <span>Log Out</span>',
         $this->Url->build(['_name' => 'users:logout']),[
             'escape' => false
@@ -41,7 +47,7 @@ $teacherSessionData = $this->request->session()->read('Auth.User');
                 </div>
                 <div class="info">
                     <?= $teacherSessionData['first_name'] .' '.$teacherSessionData['last_name'] ?>
-                    <small> parent </small>
+                    <small> Teacher </small>
                 </div>
             </li>
         </ul>
