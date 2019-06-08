@@ -18,6 +18,7 @@ use CakeDC\Users\Controller\Traits\RegisterTrait;
 use CakeDC\Users\Controller\Traits\SimpleCrudTrait;
 use CakeDC\Users\Controller\Component\UsersAuthComponent;
 use Cake\Network\Exception\NotFoundException;
+use Cake\Utility\Inflector;
 
 /**
  * MyUsers Controller

@@ -41,6 +41,12 @@ class TeachersSubjectsClassesPermissionsTable extends Table
             'joinType' => 'INNER',
             'className' => 'ClassManager.Classes'
         ]);
+
+        $this->belongsTo('Users', [
+            'foreignKey' => 'teacher_id',
+            'joinType' => 'INNER',
+            'className' => 'UsersManager.Accounts'
+        ]);
     }
 
     /**

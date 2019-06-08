@@ -85,7 +85,8 @@ $this->assign('title', 'Teacher Dashboard')
                                     <?= $assignedClasses[$permission['class_id']]['class'] ?>
                                     <p>
                                         <?= $this->Html->link('Add Results',['_name' => 'teacher:students_results:add','?' => ['class_id' => $permission['class_id']]]) ?> |
-                                        <?= $this->Html->link('Edit Results',['_name' => 'teacher:students_results:edit','?' => ['class_id' => $permission['class_id']]]) ?>
+                                        <?= $this->Html->link('Edit Results',['_name' => 'teacher:students_results:edit','?' => ['class_id' => $permission['class_id']]]) ?>|
+                                        <?= $this->Html->link('View Results',['_name' => 'teacher:students_results:view','?' => ['class_id' => $permission['class_id']]]) ?>
                                     </p>
                                 </td>
                                 <td>
@@ -100,7 +101,7 @@ $this->assign('title', 'Teacher Dashboard')
                                 <td>
                                     <?php foreach($permission['terms'] as $term_id): ?>
                                         <?php if (0 === (int) $term_id): ?>
-                                            <p> All </p>
+                                            <p> Current Term </p>
                                         <?php else: ?>
                                             <?= $terms[$term_id] . ',' ?>
                                         <?php endif; ?>
@@ -109,7 +110,7 @@ $this->assign('title', 'Teacher Dashboard')
                                 <td>
                                     <?php foreach($permission['sessions'] as $session_id): ?>
                                         <?php if (0 === (int) $session_id): ?>
-                                            <p> All </p>
+                                            <p> Current Session </p>
                                         <?php else: ?>
                                             <?= $sessions[$session_id] . ',' ?>
                                         <?php endif; ?>

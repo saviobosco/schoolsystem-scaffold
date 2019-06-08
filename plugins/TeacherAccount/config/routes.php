@@ -34,9 +34,14 @@ Router::plugin(
             'action' => 'edit'
         ],'teacher:students_results:edit');
 
-        $routes->post('/students-results/edit', [
+        $routes->put('/students-results/edit', [
             'controller' => 'StudentsResults',
-            'action' => 'edit'
+            'action' => 'update'
         ],'teacher:students_results:update');
+
+        $routes->get('/students-results/view', [
+            'controller' => 'StudentsResults',
+            'action' => 'view'
+        ],'teacher:students_results:view');
     }
 );

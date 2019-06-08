@@ -9,25 +9,25 @@ $parentSessionData = $this->request->session()->read('Auth.User');
 <?php $this->start('sidebar');  ?>
 <li>
     <?= $this->html->link('<i class="fa fa-laptop"></i> <span>Dashboard</span>',
-        $this->Url->build(['_name' => 'parent:dashboard']),[
+        ['_name' => 'parent:dashboard'],[
             'escape' => false
         ]) ?>
 </li>
 <li>
     <?= $this->html->link('<i class="fa fa-user"></i> <span>My Profile</span>',
-        $this->Url->build(['_name' => 'parent:profile']),[
+        ['_name' => 'parent:profile'],[
             'escape' => false
         ]) ?>
 </li>
 <li>
     <?= $this->html->link('<i class="fa fa-paper"></i> <span>My Children</span>',
-        $this->Url->build(['_name' => 'parent:my_wards']),[
+        ['_name' => 'parent:my_wards'],[
             'escape' => false
         ]) ?>
 </li>
 <li>
     <?= $this->html->link('<i class="fa fa-power-off"></i> <span>Log Out</span>',
-        $this->Url->build(['_name' => 'users:logout']),[
+        ['_name' => 'users:logout'],[
             'escape' => false
         ]) ?>
 </li>

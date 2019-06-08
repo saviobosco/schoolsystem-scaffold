@@ -1,5 +1,5 @@
 <?php
-$this->assign('title', 'Teacher: Edit Students Results');
+$this->assign('title', 'Teacher: Edit Students Termly Results');
 //$this->extend('/Common/view');
 $formTemplates = [
     'submitContainer' => '{{content}}'

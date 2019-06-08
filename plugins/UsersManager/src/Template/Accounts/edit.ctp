@@ -78,13 +78,13 @@ $this->assign('title','Edit Account');
                                         <?php endforeach; ?>
                                     </td>
                                     <td>
-                                        <label><input type="checkbox" name="permissions[<?= $class['id'] ?>][terms][]" <?= (isset($teacherPermissions[$class['id']]) && (in_array(0, $teacherPermissions[$class['id']]['terms'])) ) ? 'checked' : '' ?> value="0" > All </label>
+                                        <label><input type="checkbox" name="permissions[<?= $class['id'] ?>][terms][]" <?= (isset($teacherPermissions[$class['id']]) && (in_array(0, $teacherPermissions[$class['id']]['terms'])) ) ? 'checked' : '' ?> value="0" > Current Term</label>
                                         <?php foreach($terms as $term_id => $term) : ?>
                                             <label><input type="checkbox" name="permissions[<?= $class['id'] ?>][terms][]" <?= (isset($teacherPermissions[$class['id']]) && (in_array($term_id, $teacherPermissions[$class['id']]['terms'])) ) ? 'checked' : '' ?>  value="<?= $term_id ?>" > <?= $term ?></label>
                                         <?php endforeach; ?>
                                     </td>
                                     <td>
-                                        <label><input type="checkbox" name="permissions[<?= $class['id'] ?>][sessions][]" <?= (isset($teacherPermissions[$class['id']]) && (in_array(0, $teacherPermissions[$class['id']]['sessions'])) ) ? 'checked' : '' ?> value="0" > All </label>
+                                        <label><input type="checkbox" name="permissions[<?= $class['id'] ?>][sessions][]" <?= (isset($teacherPermissions[$class['id']]) && (in_array(0, $teacherPermissions[$class['id']]['sessions'])) ) ? 'checked' : '' ?> value="0" > Current Session </label>
                                         <?php foreach($sessions as $session_id => $session) : ?>
                                             <label><input type="checkbox" name="permissions[<?= $class['id'] ?>][sessions][]" <?= (isset($teacherPermissions[$class['id']]) && (in_array($session_id, $teacherPermissions[$class['id']]['sessions'])) ) ? 'checked' : '' ?> value="<?= $session_id ?>" > <?= $session ?></label>
                                         <?php endforeach; ?>

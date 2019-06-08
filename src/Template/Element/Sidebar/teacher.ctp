@@ -9,25 +9,25 @@ $teacherSessionData = $this->request->session()->read('Auth.User');
 <?php $this->start('sidebar');  ?>
 <li>
     <?= $this->html->link('<i class="fa fa-laptop"></i> <span>Dashboard</span>',
-        $this->Url->build(['_name' => 'teacher:dashboard']),[
+        ['_name' => 'teacher:dashboard'],[
             'escape' => false
         ]) ?>
 </li>
 <li>
     <?= $this->html->link('<i class="fa fa-user"></i> <span>My Profile</span>',
-        $this->Url->build(['_name' => 'teacher:profile']),[
+        ['_name' => 'teacher:profile'],[
             'escape' => false
         ]) ?>
 </li>
 <li>
     <?= $this->html->link('<i class="fa fa-book"></i> <span>Add Student Results</span>',
-        $this->Url->build(['_name' => 'teacher:students_results:add']),[
+        ['_name' => 'teacher:students_results:add'],[
             'escape' => false
         ]) ?>
 </li>
 <li>
     <?= $this->html->link('<i class="fa fa-power-off"></i> <span>Log Out</span>',
-        $this->Url->build(['_name' => 'users:logout']),[
+        ['_name' => 'users:logout'],[
             'escape' => false
         ]) ?>
 </li>
