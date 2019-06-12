@@ -26,8 +26,8 @@ class PublishResultsController extends AppController
     public function index()
     {
         // set the required variables for selecting parameters
-        $sessions = $this->Students->Sessions->find('list',['limit' => 200]);
-        $classes = $this->Students->Classes->find('list',['limit' => 200]);
+        $sessions = $this->Students->Sessions->find('list');
+        $classes = $this->Students->Classes->find('list');
         $terms = $this->Terms->find('list');
         $this->set(compact('sessions','classes','terms'));
         // checking if their is any $_GET parameter specified

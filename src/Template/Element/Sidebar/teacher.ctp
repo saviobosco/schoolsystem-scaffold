@@ -15,13 +15,7 @@ $teacherSessionData = $this->request->session()->read('Auth.User');
 </li>
 <li>
     <?= $this->html->link('<i class="fa fa-user"></i> <span>My Profile</span>',
-        ['_name' => 'teacher:profile'],[
-            'escape' => false
-        ]) ?>
-</li>
-<li>
-    <?= $this->html->link('<i class="fa fa-book"></i> <span>Add Student Results</span>',
-        ['_name' => 'teacher:students_results:add'],[
+        ['_name' => 'teacher:profile:edit'],[
             'escape' => false
         ]) ?>
 </li>

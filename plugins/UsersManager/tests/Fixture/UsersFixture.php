@@ -72,5 +72,24 @@ class UsersFixture extends TestFixture
             'created' => '2017-10-05 15:51:21',
             'modified' => '2017-10-05 15:51:21'
         ],
+        [
+            'id' => '2',
+            'username' => 'Lorem ipsum dolor sit amet',
+            'email' => 'Lorem ipsum dolor sit amet',
+            'password' => 'Lorem ipsum dolor sit amet',
+            'first_name' => 'Lorem ipsum dolor sit amet',
+            'last_name' => 'Lorem ipsum dolor sit amet',
+            'token' => 'Lorem ipsum dolor sit amet',
+            'token_expires' => '2017-10-05 15:51:21',
+            'api_token' => 'Lorem ipsum dolor sit amet',
+            'activation_date' => '2017-10-05 15:51:21',
+            'tos_date' => '2017-10-05 15:51:21',
+            'active' => 1,
+            'is_superuser' => 0,
+            'role' => 'teacher',
+            'record_id' => 'Lorem ipsum dolor sit amet',
+            'created' => '2017-10-05 15:51:21',
+            'modified' => '2017-10-05 15:51:21'
+        ],
     ];
 }

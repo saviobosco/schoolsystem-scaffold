@@ -23,6 +23,7 @@ class StudentsControllerTest extends IntegrationTestCase
         'plugin.students_manager.class_demarcations',
         'plugin.students_manager.states',
         'plugin.students_manager.religions',
+        'plugin.users_manager.users'
     ];
 
     public function setUp()
@@ -41,6 +42,7 @@ class StudentsControllerTest extends IntegrationTestCase
             ]
         ]);
         $this->enableRetainFlashMessages();
+        $this->disableErrorHandlerMiddleware();
     }
 
     /**

@@ -44,9 +44,10 @@ class CheckResultControllerTest extends IntegrationTestCase
         'plugin.result_system.result_grade_inputs',
         'plugin.result_system.result_remark_inputs',
         'plugin.grading_system.result_grading_systems',
-        //'plugin.result_system.student_publish_results',
+        'plugin.result_system.student_publish_results',
         'plugin.skills_grading_system.affective_dispositions',
-        'plugin.skills_grading_system.psychomotor_skills'
+        'plugin.skills_grading_system.psychomotor_skills',
+        'plugin.result_system.settings_configurations'
     ];
 
     public function setUp()
@@ -66,13 +67,14 @@ class CheckResultControllerTest extends IntegrationTestCase
         ]);
         $this->enableRetainFlashMessages();
         $this->enableCsrfToken();
+        $this->disableErrorHandlerMiddleware();
     }
 
     public function testCheckResult()
     {
         $postData = [
             'pin' => 123456,
-            'reg_number' => '001',
+            'admission_number' => '001',
             'class_id' => 1,
             'session_id' => 1,
             'term_id' => 1
@@ -86,7 +88,7 @@ class CheckResultControllerTest extends IntegrationTestCase
     {
         $postData = [
             'pin' => 123457,
-            'reg_number' => '002',
+            'admission_number' => '002',
             'class_id' => 1,
             'session_id' => 1,
             'term_id' => 1
@@ -114,7 +116,7 @@ class CheckResultControllerTest extends IntegrationTestCase
     {
         $postData = [
             'pin' => 123457,
-            'reg_number' => '001',
+            'admission_number' => '001',
             'class_id' => 1,
             'session_id' => 2,
             'term_id' => 1
@@ -129,7 +131,7 @@ class CheckResultControllerTest extends IntegrationTestCase
     {
         $postData = [
             'pin' => 123457,
-            'reg_number' => '001',
+            'admission_number' => '001',
             'class_id' => 2,
             'session_id' => 1,
             'term_id' => 1
@@ -145,7 +147,7 @@ class CheckResultControllerTest extends IntegrationTestCase
         Configure::write('ResultPin.allTerms', true);
         $postData = [
             'pin' => 123457,
-            'reg_number' => '001',
+            'admission_number' => '001',
             'class_id' => 1,
             'session_id' => 1,
             'term_id' => 2
@@ -155,12 +157,12 @@ class CheckResultControllerTest extends IntegrationTestCase
         $this->assertResponseCode(302);
     }
 
-    public function testCheckResultFailedCauseOfWrongSelectedTerm2()
+    public function testCheckResultFailedCauseOfWrongTermSelected()
     {
         Configure::write('ResultPin.allTerms', false);
         $postData = [
             'pin' => 123457,
-            'reg_number' => '001',
+            'admission_number' => '001',
             'class_id' => 1,
             'session_id' => 1,
             'term_id' => 2
@@ -175,7 +177,7 @@ class CheckResultControllerTest extends IntegrationTestCase
     {
         $postData = [
             'pin' => 123456,
-            'reg_number' => '1000',
+            'admission_number' => '1000',
             'class_id' => 1,
             'session_id' => 1,
             'term_id' => 2
@@ -184,6 +186,54 @@ class CheckResultControllerTest extends IntegrationTestCase
         $this->assertRedirect('/');
         $this->assertResponseCode(302);
         $this->assertSession('The registration number does not exist.', 'Flash.flash.0.message');
+    }
+
+    public function testGetStudent()
+    {
+        $this->get('/result-system/check-result/get-student?student_id=001');
+        $this->assertResponseCode(200);
+        $this->assertContentType('application/json');
+        $this->assertResponseContains('001');
+    }
+
+    public function testGetStudentFailedBecauseNoStudentIdQuery()
+    {
+        $this->get('/result-system/check-result/get-student?student_id=');
+        $this->assertResponseCode(400);
+        $this->assertContentType('application/json');
+        $this->assertResponseContains('Missing required detail');
+    }
+
+    public function testGetStudentResultSessions()
+    {
+        $this->get('/result-system/check-result/get-student-result-sessions?student_id=001&class_id=1');
+        $this->assertResponseCode(200);
+        $this->assertContentType('application/json');
+        $this->assertResponseContains('1');
+    }
+
+    public function testGetStudentResultSessionsFailed()
+    {
+        $this->get('/result-system/check-result/get-student-result-sessions?student_id=001&class_id=');
+        $this->assertResponseCode(400);
+        $this->assertContentType('application/json');
+        $this->assertResponseContains('Missing required detail');
+    }
+
+    public function testGetStudentResultTerms()
+    {
+        $this->get('/result-system/check-result/get-student-result-terms?student_id=001&class_id=1&session_id=1');
+        $this->assertResponseCode(200);
+        $this->assertContentType('application/json');
+        $this->assertResponseContains('1');
+    }
+
+    public function testGetStudentResultTermsFailed()
+    {
+        $this->get('/result-system/check-result/get-student-result-terms?student_id=001&class_id=1&session_id=');
+        $this->assertResponseCode(400);
+        $this->assertContentType('application/json');
+        $this->assertResponseContains('Missing required detail');
     }
 
 }

@@ -24,8 +24,8 @@ class TeachersSubjectsClassesPermissionsFixture extends TestFixture
         'terms' => ['type' => 'text', 'length' => null, 'null' => false, 'default' => null, 'collate' => 'utf8mb4_0900_ai_ci', 'comment' => '', 'precision' => null],
         'sessions' => ['type' => 'text', 'length' => null, 'null' => false, 'default' => null, 'collate' => 'utf8mb4_0900_ai_ci', 'comment' => '', 'precision' => null],
         '_indexes' => [
-            'teacher_id' => ['type' => 'index', 'columns' => ['teacher_id'], 'length' => []],
-            'class_id' => ['type' => 'index', 'columns' => ['class_id'], 'length' => []],
+            'teachers_subjects_classes_teacher_id' => ['type' => 'index', 'columns' => ['teacher_id'], 'length' => []],
+            'teachers_subjects_classes_class_id' => ['type' => 'index', 'columns' => ['class_id'], 'length' => []],
         ],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
@@ -47,11 +47,11 @@ class TeachersSubjectsClassesPermissionsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'teacher_id' => 'Lorem ipsum dolor sit amet',
+            'teacher_id' => '2',
             'class_id' => 1,
-            'subjects' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-            'terms' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-            'sessions' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.'
+            'subjects' => 'a:2:{i:0;s:1:"0";i:1;s:1:"2";}',
+            'terms' => 'a:4:{i:0;s:1:"1";i:1;s:1:"2";i:2;s:1:"3";i:3;s:1:"4";}',
+            'sessions' => 'a:1:{i:0;s:1:"0";}'
         ],
     ];
 }

@@ -18,6 +18,7 @@ class AppController extends BaseController
         if ($this->Auth->user('role') === 'teacher') {
             return true;
         }
+        $this->Flash->error('You are not authorised to access this section.');
         return false;
     }
 

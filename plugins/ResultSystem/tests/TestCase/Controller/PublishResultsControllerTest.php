@@ -17,6 +17,8 @@ class PublishResultsControllerTest extends IntegrationTestCase
      */
     public $fixtures = [
         'plugin.result_system.student_publish_results',
+        'plugin.result_system.student_termly_results',
+        'plugin.result_system.student_annual_results',
         'plugin.result_system.students',
         'plugin.result_system.sessions',
         'plugin.result_system.classes',
@@ -40,6 +42,7 @@ class PublishResultsControllerTest extends IntegrationTestCase
         ]);
         $this->enableRetainFlashMessages();
         $this->enableCsrfToken();
+        $this->disableErrorHandlerMiddleware();
     }
 
 

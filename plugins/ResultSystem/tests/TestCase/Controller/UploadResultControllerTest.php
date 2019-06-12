@@ -6,6 +6,7 @@ use ResultSystem\Controller\UploadResultController;
 
 /**
  * ResultSystem\Controller\UploadResultController Test Case
+ *
  */
 class UploadResultControllerTest extends IntegrationTestCase
 {
@@ -54,6 +55,7 @@ class UploadResultControllerTest extends IntegrationTestCase
 
     public function testUploadResult()
     {
+        $this->markTestSkipped('deprecated');
         $data = [
             'type' => 'first_test',
             'class_id' => '1',
@@ -74,6 +76,7 @@ class UploadResultControllerTest extends IntegrationTestCase
 
     public function testUploadResultSubjectFailed()
     {
+        $this->markTestSkipped('deprecated.');
         $data = [
             'type' => 'first_test',
             'class_id' => '1',
@@ -94,6 +97,7 @@ class UploadResultControllerTest extends IntegrationTestCase
 
     public function testUploadResultStudentFailed()
     {
+        $this->markTestSkipped('deprecated.');
         $data = [
             'type' => 'first_test',
             'class_id' => '1',

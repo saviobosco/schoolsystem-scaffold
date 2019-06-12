@@ -32,6 +32,7 @@ class StudentsTableTest extends TestCase
         'plugin.students_manager.classes',
         'plugin.students_manager.class_demarcations',
         'plugin.students_manager.states',
+        'plugin.users_manager.users',
     ];
 
     /**

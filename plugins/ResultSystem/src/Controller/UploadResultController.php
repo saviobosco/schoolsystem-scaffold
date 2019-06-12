@@ -7,6 +7,8 @@ use ResultSystem\Form\ResultUploadForm;
 use Cake\Form\Form;
 /**
  * UploadResult Controller
+ * @deprecated
+ * This feature is for backward compatibility
  * @property \ResultSystem\Controller\Component\ResultSystemComponent $ResultSystem
  * @property \ResultSystem\Model\Table\StudentTermlyResultsTable $StudentTermlyResults
  * @property \ResultSystem\Model\Table\ResultGradeInputsTable $ResultGradeInputs

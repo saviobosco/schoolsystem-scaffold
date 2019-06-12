@@ -43,5 +43,15 @@ Router::plugin(
             'controller' => 'StudentsResults',
             'action' => 'view'
         ],'teacher:students_results:view');
+
+        $routes->get('/profile/edit', [
+            'controller' => 'Profile',
+            'action' => 'edit'
+        ],'teacher:profile:edit');
+
+        $routes->put('/profile/edit', [
+            'controller' => 'Profile',
+            'action' => 'update'
+        ],'teacher:profile:edit:put');
     }
 );

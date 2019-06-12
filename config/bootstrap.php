@@ -275,7 +275,7 @@ Plugin::load('Saviobosco/Excel', ['bootstrap' => true, 'routes' => true]);
 Plugin::load('StudentsManager', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('SubjectsManager', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('ClassManager', ['bootstrap' => false, 'routes' => true]);
-//Plugin::load('FinanceManager', ['bootstrap' => true, 'routes' => true]);
+Plugin::load('FinanceManager', ['bootstrap' => true, 'routes' => true]);
 Plugin::load('Muffin/Footprint');
 Plugin::load('BankSystem', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('Saviobosco/Core', ['bootstrap' => false, 'routes' => true]);
