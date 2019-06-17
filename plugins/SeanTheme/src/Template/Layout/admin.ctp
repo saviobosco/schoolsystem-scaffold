@@ -176,7 +176,7 @@ echo $this->Html->script('table-manage-default.demo.js');
         <?php if ($this->request->params['controller'] === 'Dashboard' and $this->request->params['action'] === 'index') : /*echo 'DashboardV2.init();';*/ endif; ?>
         TableManageDefault.init();
         $('[data-toggle="tooltip"]').tooltip();
-        $('select').select2();
+        //$('select').select2();
         $("#multiple-select2").select2({ placeholder: "Select a student" });
 
     });
