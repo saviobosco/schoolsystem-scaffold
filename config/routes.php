@@ -43,8 +43,8 @@ use App\Middleware\DisableCacheMiddleware;
 Router::defaultRouteClass('DashedRoute');
 
 Router::scope('/', function (RouteBuilder $routes) {
-    $routes->registerMiddleware('disableCache', new DisableCacheMiddleware());
-    $routes->applyMiddleware('disableCache');
+    //$routes->registerMiddleware('disableCache', new DisableCacheMiddleware());
+    //$routes->applyMiddleware('disableCache');
     /**
      * Here, we are connecting '/' (base path) to a controller called 'Pages',
      * its action called 'display', and we pass a param to select the view file
