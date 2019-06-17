@@ -15,6 +15,7 @@ class SettingsController extends AppController
 {
     public function index()
     {
+        $selectOptions = []; // Initialised the form select options
         //Setting::write('Application.school_motto', '');
         $this->loadModel('Settings.Configurations');
         $this->prefixes = Configure::read('Settings.Prefixes');
@@ -22,26 +23,38 @@ class SettingsController extends AppController
         $settings = $this->Configurations->find('all')->where([
             'name LIKE' => $key . '%',
             'editable' => 1,
-        ])->order(['weight', 'id']);
-        $SessionsTable = TableRegistry::get('ResultSystem.Sessions');
-        $sessions = $SessionsTable->query()->find('list');
-        $TermsTable = TableRegistry::get('ResultSystem.Terms');
-        $terms = $TermsTable->query()->find('list');
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $settings = $this->Configurations->patchEntities($settings, $this->request->data);
-            foreach ($settings as $setting) {
-                //$this->Flash->success('The settings has been saved.');
-                if (!$this->Configurations->save($setting)) {
-                    $this->Flash->error('The settings could not be saved. Please, try again.');
+        ])->order(['weight', 'id'])->toArray();
+        $sessions = TableRegistry::get('ResultSystem.Sessions')->query()->find('list')->toArray();
+        $terms = TableRegistry::get('ResultSystem.Terms')->query()->find('list',['limit' => 3])->toArray();
+        foreach ($settings as $setting) {
+            if ($setting->type === 'select') {
+                $nameArray = explode('.',$setting->name);
+                $name = end($nameArray);
+                switch($name) {
+                    case 'current_session':
+                        $selectOptions[$setting->id] = $sessions;
+                        break;
+                    case 'current_term':
+                        $selectOptions[$setting->id] = $terms;
+                        break;
+                    default: // do nothing
                 }
             }
-            $this->Flash->success('The settings has been saved.');
+        }
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $settings = $this->Configurations->patchEntities($settings, $this->request->getData());
+            if (!$this->Configurations->saveMany($settings)) {
+                $this->Flash->error('The settings could not be saved. Please, try again.');
+            } else {
+                $this->Flash->success('The settings has been saved.');
+            }
             Setting::clear(true);
             Setting::autoLoad();
-            //return $this->redirect([]);
         }
-        $this->set(compact('prefix', 'settings', 'sessions', 'terms'));
+        $this->set(compact('prefix', 'settings', 'sessions', 'terms','selectOptions'));
     }
+
+
     public function uploadBannerImage()
     {
         if (!Setting::check('Application.image_banner')) {

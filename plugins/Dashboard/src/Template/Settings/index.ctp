@@ -17,32 +17,38 @@ foreach ($settings as $id => $setting) {
         'value' => $setting->id,
     ]);
     $name = explode('.', $setting->name);
-    if (end($name) === 'current_session') {
+    /*if (end($name) === 'current_session') {
         echo $this->Form->input($id . '.value', [
             'type' => (($setting->type) ? $setting->type : 'text'),
             'label' => Inflector::humanize(ucfirst(end($name))),
             'options' => $sessions,
             'value' => $setting->value,
             'templates' => [
-                'input' => '<div class="col-sm-10"> <input class="form-control" type="{{type}}" name="{{name}}"{{attrs}}/> </div>',
+                'select' => '<div class="col-sm-10"> <select class="form-control" name="{{name}}"{{attrs}}>{{content}}</select> </div>',
             ],
             'templateVars' => ['title' => (($setting->description) ? $setting->description : '')]
 
         ]);
-    } else if (end($name) === 'current_term') {
+    } else*/ if ($setting->type === 'select') {
         echo $this->Form->input($id . '.value', [
             'type' => (($setting->type) ? $setting->type : 'text'),
             'label' => Inflector::humanize(ucfirst(end($name))),
-            'options' => $terms,
+            'options' => (isset($selectOptions[$setting->id])) ? $selectOptions[$setting->id] : [],
             'value' => $setting->value,
             'templates' => [
-                'input' => '<div class="col-sm-10"> <input class="form-control" type="{{type}}" name="{{name}}"{{attrs}}/> </div>',
+                'select' => '<div class="col-sm-10"> <select class="form-control" name="{{name}}"{{attrs}}>{{content}}</select> </div>',
             ],
             'templateVars' => ['title' => (($setting->description) ? $setting->description : '')]
 
         ]);
-    }
-    else {
+    } else if ($setting->type === 'checkbox') {
+        $name = Inflector::humanize(ucfirst(end($name)));
+        echo "<input name='{$id}[value]' type='hidden' value='0' />";
+        ?>
+        <div class='col-sm-12'> <label> <?= $name ?>  <input name='<?= $id.'[value]' ?>' type='checkbox' value='1' <?= ($setting->value) ? 'checked' : ''  ?>  /> </label></div>
+
+        <?php
+    } else {
         echo $this->Form->input($id . '.value', [
             'type' => (($setting->type) ? $setting->type : 'text'),
             'label' => Inflector::humanize(ucfirst(end($name))),
