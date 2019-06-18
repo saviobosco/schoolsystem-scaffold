@@ -20,7 +20,7 @@ $this->Form->templates($edittemplates)
 <!--            School Write up here.-->
 <!--        </div>-->
 
-        <p> Feel free to call or text us in case of any difficulty for swift support. For Support Call us on <i class="fa fa-phone"></i> 07012572570 or chat with our live customer support. </p>
+        <p> Feel free to call or text us in case of any difficulty for swift support. For Support Call us on <i class="fa fa-phone"></i> 08068865957 or chat with our live customer support. </p>
     </div>
 </div>
 
