@@ -30,6 +30,9 @@ class CreateTeachersSubjectsClassesPermissions extends AbstractMigration
             ->addColumn('sessions', 'text',[
                 'null' => false
             ])
+            ->addColumn('teacher_class_id','integer',[
+                'null' => true,
+            ])
         ->create();
 
         $this->table('teachers_subjects_classes_permissions')
@@ -49,6 +52,14 @@ class CreateTeachersSubjectsClassesPermissions extends AbstractMigration
                     'update' => 'CASCADE',
                     'delete' => 'CASCADE'
                 ]
+            )->addForeignKey(
+                'teacher_class_id',
+                'teachers_classes',
+                'id',
+                [
+                    'update' => 'CASCADE',
+                    'delete' => 'CASCADE'
+                ]
             )->update();
     }
 
@@ -58,7 +69,8 @@ class CreateTeachersSubjectsClassesPermissions extends AbstractMigration
             ->dropForeignKey(
                 'teacher_id'
             )
-            ->dropForeignKey('class_id');
+            ->dropForeignKey('class_id')
+            ->dropForeignKey('teacher_class_id');
 
         $this->table('teachers_classes')->drop();
     }
