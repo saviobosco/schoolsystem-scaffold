@@ -19,11 +19,24 @@ $teacherSessionData = $this->request->session()->read('Auth.User');
             'escape' => false
         ]) ?>
 </li>
+
 <li>
-    <?= $this->html->link('<i class="fa fa-power-off"></i> <span>Log Out</span>',
-        ['_name' => 'users:logout'],[
-            'escape' => false
-        ]) ?>
+    <?= $this->html->link('<i class="fa fa-key"></i> <span>Change Password</span>',[
+        'plugin'=>'UsersManager',
+        'controller'=>'Accounts',
+        'action' => 'changePassword'
+    ],[
+        'escape' => false
+    ]) ?>
+</li>
+<li>
+    <?= $this->html->link('<i class="fa fa-power-off"></i> <span>Log Out</span>',[
+        'plugin'=>'UsersManager',
+        'controller'=>'Accounts',
+        'action' => 'logout'
+    ],[
+        'escape' => false
+    ]) ?>
 </li>
 <!-- user sidebar -->
 <?php $this->end() ?>

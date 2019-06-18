@@ -83,9 +83,6 @@ if ( $is_superUser OR $this->request->session()->read('Auth.User.role') === 'use
             // fetch the sidebars
             echo $this->fetch('sidebar')
             ?>
-            <!-- begin sidebar minify button -->
-            <li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>
-            <!-- end sidebar minify button -->
         </ul>
         <!-- end sidebar nav -->
     </div>
