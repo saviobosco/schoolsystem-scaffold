@@ -36,7 +36,8 @@ class TeacherPermissionsController extends AppController
                             'class_id' => $class,
                             'subjects' => serialize($postDataPermissions[$class]['subjects']),
                             'terms' => serialize($postDataPermissions[$class]['terms']),
-                            'sessions' => serialize($postDataPermissions[$class]['sessions'])
+                            'sessions' => serialize($postDataPermissions[$class]['sessions']),
+                            'teacher_class_id' => $postDataPermissions[$class]['teacher_class_id']
                         ];
                     }
                 }

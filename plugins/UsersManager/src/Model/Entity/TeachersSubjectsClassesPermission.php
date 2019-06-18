@@ -35,6 +35,7 @@ class TeachersSubjectsClassesPermission extends Entity
         'terms' => true,
         'sessions' => true,
         'user' => true,
-        'class' => true
+        'class' => true,
+        'teacher_class_id' => true
     ];
 }

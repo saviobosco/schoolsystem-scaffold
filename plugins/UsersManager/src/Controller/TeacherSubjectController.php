@@ -23,11 +23,20 @@ class TeacherSubjectController extends AppController
                 'contain' => ['Subjects']
             ]);
             if ($this->request->is('post')) {
-                $teacher = $usersTable->patchEntity($teacher, $this->request->getData());
-                if ($usersTable->save($teacher)) {
+                // if the data was passed in the request.
+                // Remove any subject attached to the teacher
+                if (empty($this->request->getData())) {
+                    foreach($teacher->subjects as $subject) {
+                        TableRegistry::get('TeachersSubjects')->delete($subject->_joinData);
+                    }
                     $this->Flash->success('Teacher subjects were successfully saved');
                 } else {
-                    $this->Flash->error('Teacher subjects could not be saved!. Please try again');
+                    $teacher = $usersTable->patchEntity($teacher, $this->request->getData());
+                    if ($usersTable->save($teacher)) {
+                        $this->Flash->success('Teacher subjects were successfully saved');
+                    } else {
+                        $this->Flash->error('Teacher subjects could not be saved!. Please try again');
+                    }
                 }
             }
         } catch (RecordNotFoundException $exception) {

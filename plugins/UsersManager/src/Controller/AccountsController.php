@@ -8,6 +8,7 @@
 
 namespace UsersManager\Controller;
 
+use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
@@ -33,6 +34,7 @@ class AccountsController extends AppController
     use RegisterTrait;
     use SimpleCrudTrait;
 
+
     public function initialize()
     {
         parent::initialize();
@@ -47,7 +49,7 @@ class AccountsController extends AppController
             'requestResetPassword',
             'changePassword',
         ]);
-        $this->Auth->deny(['register']);
+        $this->Auth->deny(['register']); // block account registration from the frontend
 
         if ( $this->request->getParam('action') === 'login') {
             $this->viewBuilder()->setLayout('login');
@@ -187,7 +189,7 @@ class AccountsController extends AppController
                 $teacherClasses = $teachersClassesTable->query()
                     ->enableHydration(false)
                     ->where(['teacher_id' => $id])
-                    ->extract('class_id')
+                    ->combine('id','class_id')
                     ->toArray();
                 $this->set(compact('classes', 'teacherClasses'));
             }
@@ -219,5 +221,70 @@ class AccountsController extends AppController
             return $this->redirect(['action' => 'index']);
         }
         $this->Flash->error(__d('CakeDC/Users', 'The {0} could not be saved', $singular));
+    }
+
+    public function view($id = null)
+    {
+        $user = $this->Accounts->get($id);
+        if ($user->role === 'teacher') {
+            $this->loadTeacherDetails($id);
+        }
+        $this->set('user', $user );
+        $this->set('_serialize', [$user, 'user']);
+    }
+
+    protected function loadTeacherDetails($id)
+    {
+        if (!$id) {
+            return;
+        }
+        $assignedSubjectsIds = TableRegistry::get('TeachersSubjects')->query()
+            ->where(['teacher_id' => $id])
+            ->extract('subject_id')
+            ->toArray();
+        $subjectsTable = TableRegistry::get('SubjectsManager.Subjects');
+
+        if (! empty($assignedSubjectsIds)) {
+            $assignedSubjects = $subjectsTable->query()
+                ->enableHydration(false)
+                ->contain(['Blocks'])
+                ->where(['Subjects.id IN' => $assignedSubjectsIds])
+                ->toArray();
+            $this->set(compact('assignedSubjects'));
+        }
+
+        // loading the classes
+        $teachersClassesTable = TableRegistry::get('TeachersClasses');
+        $assignedClassesIds = $teachersClassesTable->query()
+            ->where(['teacher_id' => $id])
+            ->extract('class_id')->toArray();
+        if (! empty($assignedClassesIds)) {
+            $classesTable = TableRegistry::get('ClassManager.Classes');
+            $assignedClasses = $classesTable->query()
+                ->enableHydration(false)
+                ->select(['id', 'class'])
+                ->where(['id IN' => $assignedClassesIds])->indexBy('id')->toArray();
+            $this->set(compact('assignedClasses'));
+        }
+
+
+        // load permissions
+        $permissions = TableRegistry::get('UsersManager.TeachersSubjectsClassesPermissions')->query()
+            ->enableHydration(false)
+            ->select(['class_id','subjects', 'terms', 'sessions'])
+            ->where(['teacher_id' => $id])
+            ->indexBy('class_id')
+            ->toArray();
+        $subjects = $subjectsTable->query()
+            ->contain(['Blocks'])
+            ->map(function($row) {
+                $row->subject_name = $row->name . ' ('.$row->block->name.') ';
+                return $row;
+            })
+            ->combine('id', 'subject_name')
+            ->toArray();
+        $terms = TableRegistry::get('Terms')->find('list')->toArray();
+        $sessions = TableRegistry::get('Sessions')->find('list')->toArray();
+        $this->set(compact('permissions', 'terms', 'sessions', 'subjects'));
     }
 }

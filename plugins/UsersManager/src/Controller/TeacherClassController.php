@@ -23,11 +23,18 @@ class TeacherClassController extends AppController
                 'contain' => ['Classes']
             ]);
             if ($this->request->is('post')) {
-                $teacher = $usersTable->patchEntity($teacher, $this->request->getData());
-                if ($usersTable->save($teacher)) {
+                if (empty($this->request->getData())) {
+                    foreach($teacher->classes as $class) {
+                        TableRegistry::get('TeachersClasses')->delete($class->_joinData);
+                    }
                     $this->Flash->success('Teacher classes were successfully saved');
                 } else {
-                    $this->Flash->error('Teacher classes could not be saved!. Please try again');
+                    $teacher = $usersTable->patchEntity($teacher, $this->request->getData());
+                    if ($usersTable->save($teacher)) {
+                        $this->Flash->success('Teacher classes were successfully saved');
+                    } else {
+                        $this->Flash->error('Teacher classes could not be saved!. Please try again');
+                    }
                 }
             }
         } catch (RecordNotFoundException $exception) {
