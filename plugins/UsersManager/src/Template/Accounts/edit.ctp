@@ -32,7 +32,7 @@ $this->assign('title','Edit Account');
                 <hr>
                 <?php if ($user['role'] === 'teacher') : ?>
                     <h5> Assign Teachers to Subjects </h5>
-                    <?= $this->Form->create(null, ['url' => $this->Url->build(['_name' => 'users:teacher:assign_subjects:post', $user['id']])]) ?>
+                    <?= $this->Form->create(null, ['url' => ['_name' => 'users:teacher:assign_subjects:post', $user['id']] ]) ?>
                     <fieldset>
                         <?php $subjectsGroupArray = $subjects->combine('id', 'subject_name', 'block_id')->toArray(); ?>
                         <?php foreach($subjectsGroupArray as $subjectsArray): ?>
@@ -54,7 +54,7 @@ $this->assign('title','Edit Account');
                     <?= $this->Form->end() ?>
 
                     <h5> Assign Teachers to Classes </h5>
-                    <?= $this->Form->create(null, ['url' => $this->Url->build(['_name' => 'users:teacher:assign_classes:post', $user['id']])]) ?>
+                    <?= $this->Form->create(null, ['url' => ['_name' => 'users:teacher:assign_classes:post', $user['id']]]) ?>
                     <fieldset>
                         <?php $classesArray = $classes->combine('id', 'class')->toArray() ?>
                         <?php foreach($classesArray as $id => $name ) :?>
@@ -64,7 +64,7 @@ $this->assign('title','Edit Account');
                     <?= $this->Form->button(__('Assign Classes'),['class'=>'btn btn-primary']) ?>
                     <?= $this->Form->end() ?>
                     <h5> Assign Teachers Subject Permissions </h5>
-                    <?= $this->Form->create(null, ['url' => $this->Url->build(['_name' => 'users:teacher:assign_permissions:post', $user['id']])]) ?>
+                    <?= $this->Form->create(null, ['url' => ['_name' => 'users:teacher:assign_permissions:post', $user['id']]]) ?>
                     <table class="table table-responsive table-bordered">
                         <thead>
                         <tr>
