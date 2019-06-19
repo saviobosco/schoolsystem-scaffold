@@ -34,9 +34,20 @@ $this->assign('title','Edit Account');
                     <h5> Assign Teachers to Subjects </h5>
                     <?= $this->Form->create(null, ['url' => $this->Url->build(['_name' => 'users:teacher:assign_subjects:post', $user['id']])]) ?>
                     <fieldset>
-                        <?php $subjectsArray = $subjects->combine('id', 'subject_name')->toArray() ?>
-                        <?php foreach($subjectsArray as $id => $name ) :?>
-                            <label><input type="checkbox" name="subjects[_ids][]" value="<?= $id ?>" <?= (in_array($id, $teacherSubjects)) ? 'checked':'' ?> > <?= $name ?></label>
+                        <?php $subjectsGroupArray = $subjects->combine('id', 'subject_name', 'block_id')->toArray(); ?>
+                        <?php foreach($subjectsGroupArray as $subjectsArray): ?>
+                            <div class="m-b-10">
+                                <table class="table table-bordered">
+                                    <?php foreach($subjectsArray as $id => $name ) :?>
+                                        <tr>
+                                            <td>
+                                                <label><input type="checkbox" name="subjects[_ids][]" value="<?= $id ?>" <?= (in_array($id, $teacherSubjects)) ? 'checked':'' ?> > <?= $name ?></label>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </table>
+
+                            </div>
                         <?php endforeach; ?>
                     </fieldset>
                     <?= $this->Form->button(__('Assign Subjects'),['class'=>'btn btn-primary']) ?>

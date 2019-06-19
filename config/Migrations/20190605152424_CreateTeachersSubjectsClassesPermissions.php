@@ -12,8 +12,8 @@ class CreateTeachersSubjectsClassesPermissions extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('teachers_subjects_classes_permissions');
-            /*->addForeignKey(
+        $table = $this->table('teachers_subjects_classes_permissions')
+            ->addForeignKey(
                 'teacher_id',
                 'users',
                 'id',
@@ -37,7 +37,7 @@ class CreateTeachersSubjectsClassesPermissions extends AbstractMigration
                     'update' => 'CASCADE',
                     'delete' => 'CASCADE'
                 ]
-            );*/
+            );
         $table->addColumn('teacher_id', 'string',[
             'limit' => 36,
             'null' => false
@@ -64,12 +64,12 @@ class CreateTeachersSubjectsClassesPermissions extends AbstractMigration
 
     public function down()
     {
-        /*$this->table('teachers_subjects_classes_permissions')
+        $this->table('teachers_subjects_classes_permissions')
             ->dropForeignKey(
                 'teacher_id'
             )
             ->dropForeignKey('class_id')
-            ->dropForeignKey('teacher_class_id');*/
+            ->dropForeignKey('teacher_class_id');
 
         $this->table('teachers_classes')->drop();
     }

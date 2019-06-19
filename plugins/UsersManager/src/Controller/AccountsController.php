@@ -171,6 +171,7 @@ class AccountsController extends AppController
                         $row->subject_name = $row->name . ' ('.$row->block->name.') ';
                         return $row;
                     });
+
                 $teachersSubjectTable = TableRegistry::get('TeachersSubjects');
                 $teacherSubjects = $teachersSubjectTable->query()
                     ->enableHydration(false)

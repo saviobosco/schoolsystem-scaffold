@@ -12,8 +12,8 @@ class CreateTeachersClasses extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('teachers_classes');
-            /*->addForeignKey(
+        $table = $this->table('teachers_classes')
+            ->addForeignKey(
                 'teacher_id',
                 'users',
                 'id',
@@ -29,7 +29,7 @@ class CreateTeachersClasses extends AbstractMigration
                     'update' => 'CASCADE',
                     'delete' => 'CASCADE'
                 ]
-            );*/
+            );
         $table->addColumn('teacher_id', 'string',[
             'limit' => 36,
             'null' => false
@@ -44,10 +44,10 @@ class CreateTeachersClasses extends AbstractMigration
 
     public function down()
     {
-        /*$this->table('teachers_classes')
+        $this->table('teachers_classes')
             ->dropForeignKey(
                 'teacher_id'
-            )->dropForeignKey('class_id');*/
+            )->dropForeignKey('class_id');
 
         $this->table('teachers_classes')->drop();
     }

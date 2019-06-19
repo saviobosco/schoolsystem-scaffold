@@ -12,8 +12,8 @@ class CreateTeachersSubjects extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('teachers_subjects');
-            /*->addForeignKey(
+        $table = $this->table('teachers_subjects')
+            ->addForeignKey(
                 'teacher_id',
                 'users',
                 'id',
@@ -29,7 +29,7 @@ class CreateTeachersSubjects extends AbstractMigration
                     'update' => 'CASCADE',
                     'delete' => 'CASCADE'
                 ]
-            );*/
+            );
         $table->addColumn('teacher_id', 'uuid',[
             'limit' => null,
             'default' => null,
@@ -45,10 +45,10 @@ class CreateTeachersSubjects extends AbstractMigration
 
     public function down()
     {
-        /*$this->table('teachers_subjects')
+        $this->table('teachers_subjects')
             ->dropForeignKey(
                 'teacher_id'
-            )->dropForeignKey('subject_id');*/
+            )->dropForeignKey('subject_id');
 
         $this->table('teachers_subjects')->drop();
     }
