@@ -12,31 +12,35 @@ class DashboardController extends AppController
 {
     public function index()
     {
-        $teachersSubjectsTable = TableRegistry::get('TeachersSubjects');
-        $assignedSubjectsIds = $teachersSubjectsTable->query()
-            ->where(['teacher_id' => $this->Auth->user('id')])
+        $id = $this->Auth->user('id');
+        $assignedSubjectsIds = TableRegistry::get('TeachersSubjects')->query()
+            ->where(['teacher_id' => $id])
             ->extract('subject_id')
             ->toArray();
         $subjectsTable = TableRegistry::get('SubjectsManager.Subjects');
 
-        $assignedSubjects = $subjectsTable->query()
-            ->enableHydration(false)
-            ->contain(['Blocks'])
-            ->where(['Subjects.id IN' => $assignedSubjectsIds])
-            ->toArray();
+        if (! empty($assignedSubjectsIds)) {
+            $assignedSubjects = $subjectsTable->query()
+                ->enableHydration(false)
+                ->contain(['Blocks'])
+                ->where(['Subjects.id IN' => $assignedSubjectsIds])
+                ->toArray();
+            $this->set(compact('assignedSubjects'));
+        }
 
         // loading the classes
         $teachersClassesTable = TableRegistry::get('TeachersClasses');
         $assignedClassesIds = $teachersClassesTable->query()
-            ->where(['teacher_id' => $this->Auth->user('id')])
+            ->where(['teacher_id' => $id])
             ->extract('class_id')->toArray();
-
-        $classesTable = TableRegistry::get('ClassManager.Classes');
-        $assignedClasses = $classesTable->query()
-            ->enableHydration(false)
-            ->select(['id', 'class'])
-            ->where(['id IN' => $assignedClassesIds])->indexBy('id')->toArray();
-        $this->set(compact('assignedSubjects', 'assignedClasses'));
+        if (! empty($assignedClassesIds)) {
+            $classesTable = TableRegistry::get('ClassManager.Classes');
+            $assignedClasses = $classesTable->query()
+                ->enableHydration(false)
+                ->select(['id', 'class'])
+                ->where(['id IN' => $assignedClassesIds])->indexBy('id')->toArray();
+            $this->set(compact('assignedClasses'));
+        }
 
         // load permissions
         $permissions = TableRegistry::get('UsersManager.TeachersSubjectsClassesPermissions')->query()
