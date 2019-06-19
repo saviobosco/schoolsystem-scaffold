@@ -13,30 +13,7 @@ class CreateTeachersSubjectsClassesPermissions extends AbstractMigration
     public function change()
     {
         $table = $this->table('teachers_subjects_classes_permissions');
-        $table->addColumn('teacher_id', 'string',[
-            'limit' => 36,
-            'null' => false
-            ])
-            ->addColumn('class_id', 'integer', [
-                'limit' => 11,
-                'null' => false
-            ])
-            ->addColumn('subjects', 'text', [
-                'null' => false
-            ])
-            ->addColumn('terms', 'text',[
-                'null' => false
-            ])
-            ->addColumn('sessions', 'text',[
-                'null' => false
-            ])
-            ->addColumn('teacher_class_id','integer',[
-                'null' => true,
-            ])
-        ->create();
-
-        $this->table('teachers_subjects_classes_permissions')
-            ->addForeignKey(
+            /*->addForeignKey(
                 'teacher_id',
                 'users',
                 'id',
@@ -60,17 +37,39 @@ class CreateTeachersSubjectsClassesPermissions extends AbstractMigration
                     'update' => 'CASCADE',
                     'delete' => 'CASCADE'
                 ]
-            )->update();
+            );*/
+        $table->addColumn('teacher_id', 'string',[
+            'limit' => 36,
+            'null' => false
+            ])
+            ->addColumn('class_id', 'integer', [
+                'limit' => 11,
+                'null' => false
+            ])
+            ->addColumn('subjects', 'text', [
+                'null' => false
+            ])
+            ->addColumn('terms', 'text',[
+                'null' => false
+            ])
+            ->addColumn('sessions', 'text',[
+                'null' => false
+            ])
+            ->addColumn('teacher_class_id','integer',[
+                'null' => true,
+            ])
+            ->addIndex(['teacher_id', 'class_id'])
+            ->create();
     }
 
     public function down()
     {
-        $this->table('teachers_subjects_classes_permissions')
+        /*$this->table('teachers_subjects_classes_permissions')
             ->dropForeignKey(
                 'teacher_id'
             )
             ->dropForeignKey('class_id')
-            ->dropForeignKey('teacher_class_id');
+            ->dropForeignKey('teacher_class_id');*/
 
         $this->table('teachers_classes')->drop();
     }
