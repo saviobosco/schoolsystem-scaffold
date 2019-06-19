@@ -84,9 +84,11 @@ $this->assign('title','Edit Account');
                                 </td>
                                 <td>
                                     <label><input type="checkbox" name="permissions[<?= $class_id ?>][subjects][]" value="0" <?= (isset($teacherPermissions[$class_id]) && (in_array(0, $teacherPermissions[$class_id]['subjects'])) ) ? 'checked' : '' ?> > All </label>
-                                    <?php foreach($subjects[$classes[$class_id]['block_id']] as $id => $name) : ?>
-                                        <label><input type="checkbox" name="permissions[<?= $class_id ?>][subjects][]" <?= (isset($teacherPermissions[$class_id]) && (in_array($id, $teacherPermissions[$class_id]['subjects'])) ) ? 'checked' : '' ?>  value="<?= $id ?>" > <?= $name ?></label>
+                                    <?php if (isset($teacherSubjects) && !empty($teacherSubjects)) : ?>
+                                    <?php foreach($teacherSubjects as $id ) : ?>
+                                        <label><input type="checkbox" name="permissions[<?= $class_id ?>][subjects][]" <?= (isset($teacherPermissions[$class_id]) && (in_array($id, $teacherPermissions[$class_id]['subjects'])) ) ? 'checked' : '' ?>  value="<?= $id ?>" > <?= $subjects[$classes[$class_id]['block_id']][$id] ?></label>
                                     <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <label><input type="checkbox" name="permissions[<?= $class_id ?>][terms][]" <?= (isset($teacherPermissions[$class_id]) && (in_array(0, $teacherPermissions[$class_id]['terms'])) ) ? 'checked' : '' ?> value="0" > Current Term</label>
