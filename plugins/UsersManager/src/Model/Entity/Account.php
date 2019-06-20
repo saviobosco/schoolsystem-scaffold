@@ -60,6 +60,7 @@ class Account extends User
         'subjects' => true,
         'classes' => true,
         'teachers_subjects_classes_permissions' => true,
+        'logins' => true
     ];
 
     /**

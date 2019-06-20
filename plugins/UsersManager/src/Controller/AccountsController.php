@@ -57,6 +57,22 @@ class AccountsController extends AppController
     }
 
     /**
+     * Index method
+     *
+     * @return void
+     */
+    public function index()
+    {
+        $table = $this->loadModel();
+        $tableAlias = $table->alias();
+        $userLogins = TableRegistry::get('UsersManager.Logins')->query()->select(['created'])->where(['user_id = Accounts.id'])->orderDesc('created')->limit(1);
+        $users = $this->paginate($table->query()->select($table)->select(['last_seen' => $userLogins ])->orderDesc('role'));
+        $this->set($tableAlias, $users);
+        $this->set('tableAlias', $tableAlias);
+        $this->set('_serialize', [$tableAlias, 'tableAlias']);
+    }
+
+    /**
      * Add method
      *
      * @return mixed Redirects on successful add, renders view otherwise.
@@ -91,9 +107,9 @@ class AccountsController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Accounts->get($id);
         if ($this->Accounts->delete($user)) {
-            $this->Flash->success(__('The Admin has been deleted.'));
+            $this->Flash->success(__('The Account has been deleted.'));
         } else {
-            $this->Flash->error(__('The Admin could not be deleted. Please, try again.'));
+            $this->Flash->error(__('The Account could not be deleted. Please, try again.'));
         }
         return $this->redirect(['action' => 'index']);
     }
@@ -226,7 +242,7 @@ class AccountsController extends AppController
 
     public function view($id = null)
     {
-        $user = $this->Accounts->get($id);
+        $user = $this->Accounts->get($id,['contain' => ['Logins']]);
         if ($user->role === 'teacher') {
             $this->loadTeacherDetails($id);
         }

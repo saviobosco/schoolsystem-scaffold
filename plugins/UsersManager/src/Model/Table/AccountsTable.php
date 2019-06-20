@@ -63,6 +63,8 @@ class AccountsTable extends UsersTable
             'foreignKey' => 'teacher_id',
             'saveStrategy' => 'replace'
         ]);
+
+        $this->hasMany('Logins');
     }
 
     public function getRoles()

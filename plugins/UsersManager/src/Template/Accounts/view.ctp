@@ -162,6 +162,36 @@
 
         <?php endif; ?>
 
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-inverse">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"> Login Records </h4>
+                    </div>
+                    <div class="panel-body">
+                        <?php if ($user->logins) : ?>
+                        <table class="table table-bordered table-responsive">
+                            <thead>
+                            <tr>
+                                <th>Ip Address </th>
+                                <th> Date </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach($user->logins as $login): ?>
+                                <tr>
+                                    <td> <?= $login['ip_address'] ?> </td>
+                                    <td> <?= $login->created->format('M j, Y \a\t g:i a') ?> </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

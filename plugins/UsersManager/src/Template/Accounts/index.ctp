@@ -19,7 +19,7 @@ $this->assign('title','All Users');
                         <th><?= $this->Paginator->sort('role') ?></th>
                         <th><?= __('is superuser') ?></th>
                         <th><?= __('is active') ?></th>
-                        <!--<th><?= __('Last seen') ?></th> -->
+                        <th><?= __('Last seen') ?></th>
                         <th class="actions"><?= __('Actions') ?></th>
                     </tr>
                     </thead>
@@ -31,9 +31,7 @@ $this->assign('title','All Users');
                             <td><?= h(Configure::read('UserRoles')[$user->role]) ?></td>
                             <th><?php if ($user->is_superuser) {echo '<i class="text-success">Yes</i>';}else{ echo '<span class="text-danger">No</span>';} ?></th>
                             <th><?php if ($user->active) {echo '<i class="text-success">Yes</i>';}else{ echo '<span class="text-danger">No</span>';} ?></th>
-                            <!--<td><?php $time = new Time($user->last_seen); echo $time->timeAgoInWords([
-                                'accuracy' => ['month' => 'month'],
-                                'end' => '1 year'])?></td> -->
+                            <td><?= ($user->last_seen) ? (new Time($user->last_seen))->format('M j, Y \a\t g:i a') : 'Never' ?></td>
                             <td class="actions">
                                 <?= $this->Html->link('<i class="fa fa-eye"></i>'.__('view'), ['action' => 'view' ,$user->id],['escape'=>false,'class'=>'text-primary']) ?>
                                 <?= $this->Html->link('<span class="glyphicon glyphicon-edit"></span> Edit ', ['action' => 'edit', $user->id],['escape'=>false,'class'=>'text-info']) ?>
