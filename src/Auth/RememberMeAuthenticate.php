@@ -5,6 +5,7 @@ use Cake\Auth\BaseAuthenticate;
 use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
+use CakeDC\Users\Controller\Component\UsersAuthComponent;
 
 class RememberMeAuthenticate extends BaseAuthenticate
 {
@@ -45,8 +46,7 @@ class RememberMeAuthenticate extends BaseAuthenticate
                 $this->_registry->getController()->Flash->error('Your Account is Unactive.');
                 return false;
             }
-            // check if user is active
-            // use the user role to redirect the user
+            $this->_registry->getController()->dispatchEvent(UsersAuthComponent::EVENT_AFTER_LOGIN, ['user' => $user]);
             return $user;
         }
 
