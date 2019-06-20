@@ -40,7 +40,7 @@ use Settings\Core\Setting;
                     <li><a href="javascript:;">Calendar</a></li>
                     <li><a href="javascript:;">Setting</a></li>
                     <li class="divider"></li>-->
-                    <li><?= $this->Html->link('logout',$this->Url->build(['_name' => 'users:logout'])) ?></li>
+                    <li><?= $this->Html->link('logout',['_name' => 'users:logout']) ?></li>
                 </ul>
             </li>
         </ul>
