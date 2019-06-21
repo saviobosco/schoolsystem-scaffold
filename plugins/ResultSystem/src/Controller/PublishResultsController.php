@@ -39,7 +39,7 @@ class PublishResultsController extends AppController
         $queryData = $this->request->getQuery();
         //variable for students with results for the specified session, term and class
         $studentsWithResult = null;
-        if ($queryData['term_id'] === 4 ) {
+        if (4 === (int) $queryData['term_id'] ) {
             $studentsWithResult = $this->StudentAnnualResults->query()
                 ->select(['student_id'])
                 ->distinct(['student_id'])
