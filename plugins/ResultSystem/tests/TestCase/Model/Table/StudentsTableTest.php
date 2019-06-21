@@ -2,6 +2,7 @@
 namespace ResultSystem\Test\TestCase\Model\Table;
 
 use Cake\ORM\Entity;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use ResultSystem\Model\Table\StudentsTable;
@@ -211,8 +212,7 @@ class StudentsTableTest extends TestCase
                 'exam' => 8,
             ]
         ];
-        $this->assertEquals($expected[0]['student_id'], $actual[0]['student_id']);
-        $this->assertEquals($expected[0]['first_test'], $actual[0]['first_test']);
+        $this->assertInstanceOf(Query::class, $actual);
     }
 
     /**
@@ -231,8 +231,7 @@ class StudentsTableTest extends TestCase
                 'first_term' => 92
             ]
         ];
-        $this->assertEquals($expected[0]['student_id'], $actual[0]['student_id']);
-        $this->assertEquals($expected[0]['first_term'], $actual[0]['first_term']);
+        $this->assertInstanceOf(Query::class, $actual);
     }
 
     /**

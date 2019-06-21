@@ -65,15 +65,6 @@ class StudentsTable extends Table
             'joinType' => 'INNER',
             'className' => 'ResultSystem.Classes'
         ]);
-        $this->belongsTo('ClassDemarcations', [
-            'foreignKey' => 'class_demarcation_id',
-            'joinType' => 'INNER',
-            'className' => 'App.ClassDemarcations'
-        ]);
-        $this->hasMany('StudentAnnualPositionOnClassDemarcations', [
-            'foreignKey' => 'student_id',
-            'className' => 'ResultSystem.StudentAnnualPositionOnClassDemarcations'
-        ]);
         $this->hasMany('StudentAnnualPositions', [
             'foreignKey' => 'student_id',
             'className' => 'ResultSystem.StudentAnnualPositions'
@@ -82,17 +73,9 @@ class StudentsTable extends Table
             'foreignKey' => 'student_id',
             'className' => 'ResultSystem.StudentAnnualResults'
         ]);
-        $this->hasMany('StudentAnnualSubjectPositionOnClassDemarcations', [
-            'foreignKey' => 'student_id',
-            'className' => 'ResultSystem.StudentAnnualSubjectPositionOnClassDemarcations'
-        ]);
         $this->hasMany('StudentAnnualSubjectPositions', [
             'foreignKey' => 'student_id',
             'className' => 'ResultSystem.StudentAnnualSubjectPositions'
-        ]);
-        $this->hasMany('StudentTermlyPositionOnClassDemarcations', [
-            'foreignKey' => 'student_id',
-            'className' => 'ResultSystem.StudentTermlyPositionOnClassDemarcations'
         ]);
         $this->hasMany('StudentTermlyPositions', [
             'foreignKey' => 'student_id',
@@ -101,10 +84,6 @@ class StudentsTable extends Table
         $this->hasMany('StudentTermlyResults', [
             'foreignKey' => 'student_id',
             'className' => 'ResultSystem.StudentTermlyResults'
-        ]);
-        $this->hasMany('StudentTermlySubjectPositionOnClassDemarcations', [
-            'foreignKey' => 'student_id',
-            'className' => 'ResultSystem.StudentTermlySubjectPositionOnClassDemarcations'
         ]);
         $this->hasMany('StudentTermlySubjectPositions', [
             'foreignKey' => 'student_id',
@@ -151,7 +130,6 @@ class StudentsTable extends Table
     {
         $rules->add($rules->existsIn(['session_id'], 'Sessions'));
         $rules->add($rules->existsIn(['class_id'], 'Classes'));
-        $rules->add($rules->existsIn(['class_demarcation_id'], 'ClassDemarcations'));
 
         return $rules;
     }
@@ -278,13 +256,13 @@ class StudentsTable extends Table
         return $this->StudentTermlyResults
             ->find()
             ->enableHydration(false)
+            ->contain(['Subjects' => ['fields' => ['id', 'name']]])
             ->where([
                 'StudentTermlyResults.student_id' => $id,
                 'StudentTermlyResults.session_id' => @$queryData['session_id'],
                 'StudentTermlyResults.class_id' => @$queryData['class_id'],
                 'StudentTermlyResults.term_id' => @$queryData['term_id']
-            ])
-            ->toArray();
+            ]);
     }
 
     public function getStudentAnnualResultOnly($id, $queryData)
@@ -292,12 +270,12 @@ class StudentsTable extends Table
         return $this->StudentAnnualResults
             ->find()
             ->enableHydration(false)
+            ->contain(['Subjects' => ['fields' => ['id', 'name']]])
             ->where([
                 'StudentAnnualResults.student_id' => $id,
                 'StudentAnnualResults.session_id' => @$queryData['session_id'],
                 'StudentAnnualResults.class_id' => @$queryData['class_id'],
-            ])
-            ->toArray();
+            ]);
     }
 
     public function getStudentAnnualPosition($id,$queryData)

@@ -143,24 +143,28 @@ class CheckResultController extends AppController
         }
     }
 
+    /**
+     * Todo: optimize code. Get only student Current Term, Session and term
+     */
     public function viewStudentResult()
     {
         $queryData = $this->request->getQuery();
-        $session = Cache::read(@$queryData['id'].'-'.@$queryData['ts']);
+        $session = Cache::read(@$queryData['id'].'-'.@$queryData['ts']); // Used the cache to store the session data.
         if (!$session) {
             return $this->redirect($this->request->referer());
         }
-
+        // if the user is in third term result, the system can also show the annual result
+        // if the user changes the term from the query
+        if (3 === (int) $session['term_id'] && 4 === (int) $queryData['term_id']) {
+            $session['term_id'] = 4;
+        }
         try {
             $sessions = $this->Students->Sessions->find('list')->toArray();
             $terms = $this->Terms->find('list')->toArray();
             $classes = $this->Students->Classes->find('list')->toArray();
             $this->set(compact('sessions','terms','classes'));
 
-            $subjects = $this->Subjects->find('list')->toArray();
-            $resultGradeInputs = $this->ResultGradeInputs->getResultGradeInputs();
-            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($resultGradeInputs);
-            $gradeInputsForTableHead = $this->ResultGradeInputs->getValidGradeInputsWithAllData($resultGradeInputs);
+
             $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs();
             $this->loadModel('ResultSystem.StudentClassCounts');
             $studentsCount = $this->StudentClassCounts->getStudentsClassCount($session['session_id'], $session['class_id'], $session['term_id']);
@@ -180,8 +184,8 @@ class CheckResultController extends AppController
                 // setting the variables
                 $this->set(compact('studentAffectiveDispositions','studentPsychomotorSkills'));
             }
-            if (isset($session['term_id']) && 4 === (int)$session['term_id']) {
-
+            if ((isset($session['term_id']) && 4 === (int)$session['term_id']) ) {
+                $session['term_id'] = 4;
                 $student = $this->Students
                     ->find()
                     ->enableHydration(false)
@@ -195,8 +199,6 @@ class CheckResultController extends AppController
                 $studentSubjectPositions = $this->Students->getStudentAnnualSubjectPositions($student['id'],$session['session_id'],$session['class_id']);
                 //get the student remark
                 $studentRemark = $this->Students->getStudentGeneralRemark($student['id'],$session['session_id'],$session['class_id'],$session['term_id']);
-                //$fees = $this->_getSchoolFees($this->request->query['session_id'],$this->request->query['term_id']);
-                //$nextTerm = $this->_getTermTimeTable($this->request->query['session_id'],$this->request->query['term_id']);
                 $this->set(compact('student',
                     'studentAnnualResults',
                     'remarkInputs',
@@ -219,15 +221,16 @@ class CheckResultController extends AppController
                     ->where(['id' => $session['id'] ])
                     ->first();
                 $studentTermlyResults = $this->Students->getStudentTermlyResultOnly($student['id'], $session);
+                //dd($studentTermlyResults);
                 //get the student remark
                 $studentRemark = $this->Students->getStudentGeneralRemark($student['id'],$session['session_id'], $session['class_id'], $session['term_id']);
                 // get the student position
                 $studentPosition = $this->Students->getStudentTermlyPosition($student['id'], $session['session_id'], $session['class_id'], $session['term_id']);
                 // gets the student subject positions
                 $studentSubjectPositions = $this->Students->getStudentTermlySubjectPositions($student['id'], $session['session_id'], $session['class_id'], $session['term_id']);
-                //$fees = $this->_getSchoolFees($this->request->query['session_id'],$this->request->query['term_id']);
-                // Next Term
-                //$nextTerm = $this->_getTermTimeTable($this->request->query['session_id'],$this->request->query['term_id']);
+                $resultGradeInputs = $this->ResultGradeInputs->getResultGradeInputs();
+                $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($resultGradeInputs);
+                $gradeInputsForTableHead = $this->ResultGradeInputs->getValidGradeInputsWithAllData($resultGradeInputs);
                 $this->set(compact('student',
                     'studentTermlyResults',
                     'gradeInputs',
