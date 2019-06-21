@@ -17,20 +17,19 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php for ($num = 0 ; $num < count($studentTermlyResults) ; $num++ ): ?>
+                <?php foreach ($studentTermlyResults as $studentTermlyResult): ?>
                     <tr>
-                        <td><?= h($subjects[$studentTermlyResults[$num]['subject_id']]) ?></td>
+                        <td><?= h($studentTermlyResult['subject']['name']) ?></td>
                         <?php foreach( $gradeInputs as $key => $value ) : ?>
-                            <td><?= h($studentTermlyResults[$num][$key]) ?></td>
+                            <td><?= h($studentTermlyResult[$key]) ?></td>
                         <?php endforeach; ?>
-                        <td><?= h($studentTermlyResults[$num]['total']) ?></td>
-                        <td><?= h($studentTermlyResults[$num]['grade']) ?></td>
-                        <td><?= h($studentTermlyResults[$num]['remark']) ?></td>
-                        <td><?= h(@$subjectClassAverages[$studentTermlyResults[$num]['subject_id']])?></td>
-                        <td><?= @$this->Position->formatPositionOutput($studentSubjectPositions[$studentTermlyResults[$num]['subject_id']])?></td>
-
+                        <td><?= h($studentTermlyResult['total']) ?></td>
+                        <td><?= h($studentTermlyResult['grade']) ?></td>
+                        <td><?= h($studentTermlyResult['remark']) ?></td>
+                        <td><?= h(@$subjectClassAverages[$studentTermlyResult['subject_id']])?></td>
+                        <td><?= @$this->Position->formatPositionOutput($studentSubjectPositions[$studentTermlyResult['subject_id']])?></td>
                     </tr>
-                <?php endfor; ?>
+                <?php endforeach; ?>
                 </tbody>
             </table>
         <?php else: ?>

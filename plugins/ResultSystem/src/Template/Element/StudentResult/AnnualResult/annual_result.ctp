@@ -15,7 +15,7 @@
         </thead>
         <?php foreach ($studentAnnualResults as $studentAnnualResult): ?>
             <tr>
-                <td><?= h($subjects[$studentAnnualResult['subject_id']]) ?></td>
+                <td><?= h($studentAnnualResult['subject']['name']) ?></td>
                 <td><?= h($studentAnnualResult['first_term']) ?></td>
                 <td><?= h($studentAnnualResult['second_term']) ?></td>
                 <td><?= h($studentAnnualResult['third_term']) ?></td>
