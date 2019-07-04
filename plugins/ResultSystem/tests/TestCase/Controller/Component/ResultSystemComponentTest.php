@@ -142,4 +142,15 @@ class ResultSystemComponentTest extends TestCase
         ];
         $this->assertEquals($expected,$this->component->processSubmittedResults($postData,$grade));
     }
+
+    public function testProcessSubmittedResultsWithNullPassed()
+    {
+        $grade = [
+            'first_test' => 'In House Assesment (10%)',
+            'second_test' => 'Hosue Assesment (10%)',
+            'third_test' => 'Third Test (10%)',
+            'exam' => 'Examination (60%)'
+        ];
+        $this->assertEquals([],$this->component->processSubmittedResults([],$grade));
+    }
 }
