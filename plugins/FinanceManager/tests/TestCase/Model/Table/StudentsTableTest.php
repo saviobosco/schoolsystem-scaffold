@@ -216,4 +216,10 @@ class StudentsTableTest extends TestCase
         $studentFees = $studentFeeTable->find()->where(['student_id' => '002'])->toArray();
         $this->assertEquals(1, $studentFees[0]['fee_id']);
     }
+
+    public function testGetReceipts()
+    {
+        $receipts = $this->Students->getReceipts('001');
+        $this->assertCount(2, $receipts);
+    }
 }

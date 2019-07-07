@@ -127,12 +127,20 @@ class ReceiptsTable extends Table
 
     public function getReceiptDetails($receipt_id)
     {
-        $receipt = $this->find('all')->contain([
-            'StudentFeePayments.StudentFees.Fees.FeeCategories' => function($q) {
+        $receipt = $this->find('all')
+            ->contain([
+                'StudentFeePayments' => ['fields' => ['student_fee_id','receipt_id', 'amount_paid', 'amount_remaining']],
+                'StudentFeePayments.StudentFees.Fees.FeeCategories' => function($q) {
                 $q->select(['FeeCategories.id','FeeCategories.type']);
                 $q->orderDesc('Fees.created');
                 return $q;
-            }
+            },
+                'StudentFeePayments.StudentFees' => ['fields' => ['id', 'fee_id', 'amount_remaining']],
+                'StudentFeePayments.StudentFees.Fees' => ['fields' => ['Fees.id',
+                'Fees.fee_category_id', 'Fees.class_id','Fees.term_id', 'Fees.session_id']],
+                'StudentFeePayments.StudentFees.Fees.Sessions' => ['fields' => ['id', 'session']],
+                'StudentFeePayments.StudentFees.Fees.Classes' => ['fields' => ['id', 'class']],
+                'StudentFeePayments.StudentFees.Fees.Terms' => ['fields' => ['id', 'name']],
         ])
             ->select(['Receipts.id'])
             ->where(['Receipts.id'=>$receipt_id])
@@ -140,8 +148,10 @@ class ReceiptsTable extends Table
             ->first();
         // getting the student special fees
         $specialFees = $this->find('all')->contain([
+            'StudentFeePayments' => ['fields' => ['student_fee_id','receipt_id','amount_paid', 'amount_remaining']],
             'StudentFeePayments.StudentFees'=>function($q){
-                $q->where(['StudentFees.fee_id IS NULL']);
+                $q->select(['id', 'fee_id', 'amount_remaining','purpose'])
+                ->where(['StudentFees.fee_id IS NULL']);
                 return $q;
             }
         ])->enableHydration(false)->where(['Receipts.id'=>$receipt_id])->first();

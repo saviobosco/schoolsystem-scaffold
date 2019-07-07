@@ -74,6 +74,9 @@ class StudentFeesControllerTest extends IntegrationTestCase
         $this->get('/finance-manager/get-student-bills/001');
         $this->assertResponseOk();
         $this->assertResponseContains('Omebe');
+        $this->assertResponseContains('<td>JSS 1</td>');
+        $this->assertResponseContains('<td>2018/2019</td>');
+        $this->assertResponseContains('<td> First Term </td>');
     }
 
     /**

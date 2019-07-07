@@ -170,6 +170,7 @@ class StudentsTable extends Table
     public function getStudentFees($student_id,$queryData = [])
     {
         $studentFees = $this->StudentFees->find('all')
+            ->enableHydration(false)
             ->contain(['Fees.FeeCategories'=> function ($q) use ($queryData) {
                     $q->select(['FeeCategories.id','FeeCategories.type']);
                     if ( isset($queryData['session_id']) && !empty($queryData['session_id'])) {
@@ -183,7 +184,14 @@ class StudentsTable extends Table
                     }
                     $q->orderDesc('Fees.created');
                 return $q;
-            }])->where(['student_id'=>$student_id,'paid'=>0])->enableHydration(false);
+            },
+                'Fees.Classes',
+                'Fees.Terms',
+                'Fees.Sessions'
+            ])->where(['student_id'=>$student_id,'paid'=>0])
+            ->orderDesc('session_id')
+            ->orderDesc('class_id')
+            ->orderDesc('term_id');
             $collection = collection($studentFees->toArray()); // make fee a collection
             $mergedFees = $collection->append($this->getStudentSpecialFees($student_id)); // gets student special fee if any.
         return $mergedFees->toList();
@@ -306,5 +314,14 @@ class StudentsTable extends Table
                 $this->StudentFees->Fees->save($fee);
             }
         }
+    }
+
+    public function getReceipts($student_id)
+    {
+        return $this->Receipts->find('all')
+            ->enableHydration(false)
+            ->where(['student_id' => $student_id])
+            ->orderDesc('created')
+            ->toArray();
     }
 }

@@ -95,10 +95,13 @@ $this->assign('title','Student Fees');
                     }
                     ?>
                 </td>
-                <td><?= h(@$classes[$studentFees[$num]['fee']['class_id']]) ?></td>
-                <td><?= h(@$sessions[$studentFees[$num]['fee']['session_id']] ) ?></td>
-                <td> <?= ' - ('. ( @$studentFees[$num]['fee']['term_id'] ) ? @$terms[$studentFees[$num]['fee']['term_id']] : 'All Terms' .')' ?> </td>
-
+                <?php if (isset($studentFees[$num]['fee'])) : ?>
+                    <td><?= h($studentFees[$num]['fee']['class']['class']) ?></td>
+                    <td><?= h($studentFees[$num]['fee']['session']['session'] ) ?></td>
+                    <td> <?= ' - ('. ( @$studentFees[$num]['fee']['term_id'] ) ? @$studentFees[$num]['fee']['term']['name'] : 'All Terms' .')' ?> </td>
+                <?php else: ?>
+                    <td colspan="3"> </td>
+                <?php endif; ?>
             </tr>
         <?php endfor; ?>
     </table>

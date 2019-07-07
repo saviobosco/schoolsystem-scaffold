@@ -31,6 +31,7 @@ class ReceiptsTableTest extends TestCase
         'plugin.finance_manager.student_fees',
         'plugin.finance_manager.students',
         'plugin.finance_manager.classes',
+        'plugin.finance_manager.sessions',
         'plugin.finance_manager.fees',
         'plugin.finance_manager.fee_categories',
         'plugin.finance_manager.terms',
@@ -98,19 +99,11 @@ class ReceiptsTableTest extends TestCase
             0 => [
                 'id' => 1,
                 'student_fee_id' => 1,
-                'amount_paid' => 1000,
-                'amount_remaining' => 24000,
                 'receipt_id' => 1,
-                'fee_id' => 1,
-                'fee_category_id' => 1,
-                'created' => new FrozenTime('2018-02-13 21:21:02'),
-                'modified' => new FrozenTime('2018-02-13 21:21:02'),
-                'created_by' => '01b552f3-9310-4c4c-8b99-0d9ebe44eb13',
-                'modified_by' => '86740652-16c4-4683-8468-4af7912ae956'
             ]
         ];
         $result = $this->Receipts->getReceiptDetails(1);
-        $this->assertEquals($expected[0]['id'],$result[0]['id']);
+        $this->assertEquals($expected[0]['receipt_id'],$result[0]['receipt_id']);
         $this->assertEquals(2,count($result));
     }
 }
