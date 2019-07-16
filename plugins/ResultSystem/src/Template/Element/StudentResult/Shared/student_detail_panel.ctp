@@ -15,11 +15,11 @@
         </tr>
         <tr>
             <th><?= __('Term') ?></th>
-            <td colspan=""><?= h($terms[$this->request->query['term_id']])?></td>
+            <td colspan=""><?= h($terms[$term_id])?></td>
             <th><?= __('Session') ?></th>
-            <td colspan=""><?= h($sessions[$this->request->query['session_id']]) ?></td>
+            <td colspan=""><?= h($sessions[$session_id]) ?></td>
             <th><?= __('Class') ?></th>
-            <td colspan=""><?= h($classes[$this->request->query['class_id']]) ?></td>
+            <td colspan=""><?= h($classes[$class_id]) ?></td>
         </tr>
         </tbody>
     </table>

@@ -34,7 +34,11 @@ $this->assign('title',$sessions[$this->request->query['session_id']].' '.$terms[
     <h5 class="text-center m-t-10 m-b-10" style="text-decoration: underline;font-weight: 700"> Student Annual Result </h5>
     <div class="row m-t-5">
         <div class="col-sm-6">
-            <?= $this->element('ResultSystem.StudentResult/Shared/student_detail_panel') ?>
+            <?= $this->element('ResultSystem.StudentResult/Shared/student_detail_panel',[
+                'session_id' => $this->request->query['session_id'],
+                'class_id' => $this->request->query['class_id'],
+                'term_id' => $this->request->query['term_id']
+            ]) ?>
         </div>
 
         <div class="col-sm-6">

@@ -47,7 +47,11 @@ $this->assign('title', ( !empty($this->request->getQuery()) ) ? $sessions[$this-
         <?php else : ?>
             <div class="row m-t-5">
                 <div class="col-sm-6">
-                    <?= $this->element('ResultSystem.StudentResult/Shared/student_detail_panel') ?>
+                    <?= $this->element('ResultSystem.StudentResult/Shared/student_detail_panel',[
+                        'session_id' => $this->request->query['session_id'],
+                        'class_id' => $this->request->query['class_id'],
+                        'term_id' => $this->request->query['term_id']
+                    ]) ?>
                 </div>
                 <div class="col-sm-6">
                     <?= $this->element('ResultSystem.StudentResult/TermlyResult/result_detail') ?>
