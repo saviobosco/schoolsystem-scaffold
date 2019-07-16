@@ -10,6 +10,7 @@ $this->assign('title','All Users');
                 <h4 class="panel-title"> <?= __('Users') ?> </h4>
             </div>
             <div class="panel-body">
+                <?= $this->Html->link('New User',['action' => 'add'],['class' => 'btn btn-primary']) ?>
 
                 <table id="data-table" class="table table-responsive table-striped ">
                     <thead>
