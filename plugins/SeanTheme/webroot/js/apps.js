@@ -678,12 +678,6 @@ var App = function () {
 			handleSidebarMinify();
 			handleMobileSidebar();
 		},
-		initSidebarSelection: function() {
-		    handleClearSidebarSelection();
-		},
-		initSidebarMobileSelection: function() {
-		    handleClearSidebarMobileSelection();
-		},
 		initTopMenu: function() {
 			handleUnlimitedTopMenuRender();
 			handleTopMenuSubMenu();
