@@ -116,7 +116,7 @@ class ResultSystemComponent extends Component
      * processSubmittedResults filters through a result and removes the students
      * with an empty result set
      */
-    public function processSubmittedResults(array $results ,array $inputGrades)
+    public function processSubmittedResults( $results ,array $inputGrades)
     {
         // processing the resultTotal
         if (is_null($results) || empty($results)) {
