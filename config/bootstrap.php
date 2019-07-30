@@ -27,6 +27,11 @@ if (!extension_loaded('intl')) {
 if (!extension_loaded('mbstring')) {
     trigger_error('You must enable the mbstring extension to use CakePHP.', E_USER_ERROR);
 }
+/**
+ * Extending the session lifetime of the application
+ */
+ini_set('session.gc_maxlifetime', 24*60*60);
+ini_set('session.cookie_lifetime', 24*60*60);
 
 /**
  * Configure paths required to find CakePHP + general filepath

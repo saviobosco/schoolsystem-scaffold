@@ -151,6 +151,6 @@ class ResultSystemComponentTest extends TestCase
             'third_test' => 'Third Test (10%)',
             'exam' => 'Examination (60%)'
         ];
-        $this->assertEquals([],$this->component->processSubmittedResults([],$grade));
+        $this->assertEquals([],$this->component->processSubmittedResults( null,$grade));
     }
 }

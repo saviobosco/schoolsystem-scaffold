@@ -36,16 +36,30 @@ class StudentsController extends AppController
      */
     public function index()
     {
+        $StudentsQuery = $this->Students->query();
+        $getQuery = $this->request->getQuery();
+        if (isset($getQuery['_name']) && !empty($getQuery['_name'])) {
+            @list($first_name, $last_name) = explode(' ', $getQuery['_name']);
+            if ($first_name) {
+                $StudentsQuery = $StudentsQuery
+                    ->where(['first_name LIKE ' => '%'.$first_name.'%'])
+                    ->orWhere(['last_name LIKE ' => '%'. $first_name.'%']);
+            }
+            if ($last_name) {
+                $StudentsQuery = $StudentsQuery
+                    ->orwhere(['first_name LIKE' => '%'.$last_name.'%'])
+                    ->orWhere(['last_name LIKE ' => '%'.$last_name.'%']);
+            }
+        }
         $this->paginate = [
+            'fields' => ['id', 'first_name', 'last_name', 'gender','class_id','status'],
             'limit' => 1000,
             'maxLimit' => 1000,
-            'contain' => ['Classes'],
-            'conditions' => [
-                'Students.status'   => 1,
-            ],
+            'contain' => ['Classes'=>['fields' => ['id', 'class']]],
             // Place the result in ascending order according to the class.
             'order' => [
-                'class_id' => 'asc'
+                'class_id' => 'asc',
+                'status' => 'desc'
             ]
         ];
         if ( !empty($this->request->getQuery('class_id'))) {
@@ -55,8 +69,7 @@ class StudentsController extends AppController
                 ]
             ]);
         }
-        $students = $this->paginate($this->Students);
-        $sessions = $this->Sessions->find('list',['limit' => 200]);
+        $students = $this->paginate($StudentsQuery);
         $classes = $this->Students->Classes->find('list',['limit' => 200]);
         $this->set(compact('students','sessions','classes'));
         $this->set('_serialize', ['students']);

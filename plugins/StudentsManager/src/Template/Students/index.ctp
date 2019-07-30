@@ -12,7 +12,15 @@ $this->append('sidebar',$this->element('Links/sidebar'));
             </div>
             <div class="panel-body">
                 <div class="m-b-20">
-                    <?= $this->element('searchParametersClass'); ?>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <?= $this->element('searchParametersClass'); ?>
+                        </div>
+                        <div class="col-sm-6">
+                            <?= $this->element('searchStudentWithName') ?>
+                        </div>
+                    </div>
+
                 </div>
 
                 <?= $this->element('Links/mainLinks') ?>
@@ -24,6 +32,7 @@ $this->append('sidebar',$this->element('Links/sidebar'));
                         <th><?= Inflector::humanize('full_name') ?></th>
                         <th><?= Inflector::humanize('gender') ?></th>
                         <th><?= Inflector::humanize('class') ?></th>
+                        <th><?= Inflector::humanize('status') ?></th>
                         <th class="actions"><?= __('Actions') ?></th>
                     </tr>
                     </thead>
@@ -34,6 +43,18 @@ $this->append('sidebar',$this->element('Links/sidebar'));
                             <td><?= h($student->full_name) ?></td>
                             <td><?= h($student->gender) ?></td>
                             <td><?= $student->class->class ?></td>
+                            <td><?php
+                                switch($student->status):
+                                    case 1:
+                                        echo '<span class="label label-success"> active </span>';
+                                        break;
+                                    case 0:
+                                        echo '<span class="label label-danger"> unactive </span>';
+                                        break;
+                                    default:
+                                        echo '<span class="label label-success"> unknown </span>';
+                                endswitch
+                                ?> </td>
                             <td class="actions-link">
                                 <?= $this->Html->link('<i class="fa fa-eye"></i>'.__('View profile'), ['action' => 'view', $student->id],['class'=>'text-primary','escape'=>false]) ?>
                                 <?= $this->Html->link('<i class="fa fa-edit"></i>'.__('Edit profile'), ['action' => 'edit', $student->id],['class'=>'text-primary','escape'=>false]) ?>

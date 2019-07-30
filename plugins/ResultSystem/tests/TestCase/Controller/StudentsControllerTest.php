@@ -77,6 +77,20 @@ class StudentsControllerTest extends IntegrationTestCase
         $this->assertResponseContains('Students');
     }
 
+    public function testSearchByStudentNameInIndex()
+    {
+        $this->get('/result-system/students?_name=Omebe');
+        $this->assertResponseContains('Johnbosco');
+        $this->assertResponseContains('Ifeanyi');
+    }
+
+    public function testSearchByClass()
+    {
+        $this->get('/result-system/students?class_id=1');
+        $this->assertResponseContains('Omebe');
+    }
+
+
     /**
      * Test view method
      *

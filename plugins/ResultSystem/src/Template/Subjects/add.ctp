@@ -30,12 +30,6 @@ if ( isset($subjectContainsResult) AND !empty($subjectContainsResult)) {
                     </tr>
                 </table>
 
-                <?php if ( isset($subjectContainsResult) AND $subjectContainsResult === true) : ?>
-                    <div class="alert alert-danger">
-                        <i class="fa fa-exclamation fa-2x"></i> This subject contains some results for the select values!. Please Consider using the edit result link or adding a particular student result.
-                    </div>
-                <?php endif; ?>
-
                 <div class="related">
                     <h4><?= __(' Student Termly Results') ?></h4>
                     <?php if (isset($students) AND !empty($students)): ?>

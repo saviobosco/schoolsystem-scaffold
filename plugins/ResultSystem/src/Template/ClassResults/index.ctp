@@ -63,7 +63,9 @@ $queryData = $this->request->getQuery();
         <?php endif; ?>
     </div>
 </div>
-<?php $this->start('tableCombineJs');
+<?php
+echo $this->Site->script('DataTables/media/js/jquery.dataTables.js');
+echo $this->Site->script('DataTables/media/js/dataTables.bootstrap.min.js');
 echo $this->Site->script('DataTables/extensions/Buttons/js/dataTables.buttons.min.js');
 echo $this->Site->script('DataTables/extensions/Buttons/js/buttons.bootstrap.min.js');
 echo $this->Site->script('DataTables/extensions/Buttons/js/buttons.flash.min.js');
@@ -72,4 +74,11 @@ echo $this->Site->script('DataTables/extensions/Buttons/js/pdfmake.min.js');
 echo $this->Site->script('DataTables/extensions/Buttons/js/vfs_fonts.min.js');
 echo $this->Site->script('DataTables/extensions/Buttons/js/buttons.html5.min.js');
 echo $this->Site->script('DataTables/extensions/Buttons/js/buttons.print.min.js');
- $this->end() ?>
+echo $this->Site->script('DataTables/extensions/Responsive/js/dataTables.responsive.min.js');
+echo $this->Html->script('table-manage-default.demo.js');
+?>
+<script>
+    $(document).ready(function() {
+        TableManageDefault.init();
+    });
+</script>
