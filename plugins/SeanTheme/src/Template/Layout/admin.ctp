@@ -35,14 +35,14 @@ $application_detail = Configure::read('Application');
     ?>
     <!-- ================== BEGIN BASE CSS STYLE ================== -->
     <?php
-    echo $this->Plugins->css('jquery-ui/themes/base/minified/jquery-ui.min.css');
+    //echo $this->Plugins->css('jquery-ui/themes/base/minified/jquery-ui.min.css');
     echo $this->Plugins->css('bootstrap/css/bootstrap.min.css');
     //echo $this->Html->css('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
     echo $this->Html->css('animate.css');
     echo $this->Html->css('style.css');
     echo $this->Html->css('style-responsive.min.css');
     echo $this->Plugins->css('select2/dist/css/select2.min.css');
-    echo $this->Plugins->css('switchery/switchery.min.css');
+    //echo $this->Plugins->css('switchery/switchery.min.css');
 
     echo $this->Plugins->css('DataTables/media/css/dataTables.bootstrap.min.css');
     echo $this->Plugins->css('DataTables/extensions/Responsive/css/responsive.bootstrap.min.css');
@@ -55,21 +55,15 @@ $application_detail = Configure::read('Application');
             <?= $this->fetch('topScripts') ?>
     <!-- ================== END PAGE LEVEL CSS STYLE ================== -->
     <!-- ================== BEGIN BASE JS ================== -->
-    <?= $this->Site->script('pace/pace.min.js')  ?>
     <?php
     echo $this->Plugins->script('jquery/jquery-1.9.1.min.js');
-    echo $this->Plugins->script('jquery/jquery-migrate-1.1.0.min.js');
-
+    //echo $this->Plugins->script('jquery/jquery-migrate-1.1.0.min.js');
     ?>
     <!-- ================== END BASE JS ================== -->
     <?= $this->fetch('meta') ?>
 </head>
 
 <body>
-<!-- begin #page-loader -->
-<!--<div id="page-loader" class="fade in"><span class="spinner"></span></div> -->
-<!-- end #page-loader -->
-
 <!-- begin #page-container -->
 <div id="page-container" class=" page-sidebar-fixed page-header-fixed">
     <?php if(!empty($this->request->session()->read('Auth.User.id'))): ?>
@@ -139,7 +133,7 @@ $application_detail = Configure::read('Application');
 
 <!-- ================== BEGIN BASE JS ================== -->
 <?php
-echo $this->Site->script('jquery-ui/ui/minified/jquery-ui.min.js');
+//echo $this->Site->script('jquery-ui/ui/minified/jquery-ui.min.js');
 echo $this->Site->script('bootstrap/js/bootstrap.min.js');
 ?>
 <!--[if lt IE 9]>
@@ -158,12 +152,7 @@ echo $this->Site->script('switchery/switchery.min.js');
 
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
 <?php
-echo $this->Site->script('DataTables/media/js/jquery.dataTables.js');
-echo $this->Site->script('DataTables/media/js/dataTables.bootstrap.min.js');
-echo $this->fetch('tableCombineJs');
-echo $this->Site->script('DataTables/extensions/Responsive/js/dataTables.responsive.min.js');
 echo $this->Site->script('bootstrap-datepicker/js/bootstrap-datepicker.js');
-echo $this->Html->script('table-manage-default.demo.js');
 ?>
 <?= $this->fetch('script') ?>
 <?= $this->fetch('bottomScripts') ?>
@@ -173,12 +162,9 @@ echo $this->Html->script('table-manage-default.demo.js');
 <script>
     $(document).ready(function() {
         App.init();
-        <?php if ($this->request->params['controller'] === 'Dashboard' and $this->request->params['action'] === 'index') : /*echo 'DashboardV2.init();';*/ endif; ?>
-        TableManageDefault.init();
         $('[data-toggle="tooltip"]').tooltip();
         //$('select').select2();
         $("#multiple-select2").select2({ placeholder: "Select a student" });
-
     });
 </script>
 </body>
