@@ -27,11 +27,6 @@ if (!extension_loaded('intl')) {
 if (!extension_loaded('mbstring')) {
     trigger_error('You must enable the mbstring extension to use CakePHP.', E_USER_ERROR);
 }
-/**
- * Extending the session lifetime of the application
- */
-ini_set('session.gc_maxlifetime', 24*60*60);
-ini_set('session.cookie_lifetime', 24*60*60);
 
 /**
  * Configure paths required to find CakePHP + general filepath
@@ -255,7 +250,15 @@ Type::build('date')
     ->useImmutable();
 Type::build('datetime')
     ->useImmutable();
-
+Configure::write('Session', [
+    'timeout' => 24,
+    'ini' => [
+    // Invalidate the cookie after 30 minutes without visiting
+    // any page on the site.
+        'session.cookie_lifetime' => 24*60*60,
+        'session.gc_maxlifetime' => 24*60*60
+    ]
+]);
 try {
     Configure::load('application', 'default');
 } catch (\Exception $e) {

@@ -18,6 +18,7 @@
         <li><?= $this->Html->link(__('Class Results'),['plugin'=>'ResultSystem','controller'=>'ClassResults','action'=>'index'],['escape'=>false]) ?></li>
         <li><?= $this->Html->link(__('View Positions'),['plugin'=>'ResultSystem','controller'=>'StudentsPositions','action'=>'index']) ?></li>
         <li><?= $this->Html->link(__('Publish Results'),['plugin'=>'ResultSystem','controller'=>'PublishResults','action'=>'index']) ?></li>
+        <li><?= $this->Html->link(__('Annual Students Promotion'),['plugin'=>'ResultSystem','controller'=>'StudentsAnnualPromotion','action'=>'index']) ?></li>
         <li><?= $this->Html->link(__('Upload Result'),['plugin'=>'ResultSystem','controller'=>'UploadResult','action'=>'uploadResult']) ?></li>
         <li><?= $this->Html->link(__('Result Processing'),['plugin'=>'ResultSystem','controller'=>'ResultProcessing','action'=>'index']) ?></li>
         <li><?= $this->Html->link(__('Students Class Count'),['plugin'=>'ResultSystem','controller'=>'StudentClassCounts','action'=>'index']) ?></li>

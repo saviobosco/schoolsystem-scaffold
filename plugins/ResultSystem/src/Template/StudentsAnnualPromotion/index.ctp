@@ -3,7 +3,7 @@ $this->extend('/Common/view');
 $this->assign('title','Annual Promotion');
 ?>
 <?= $this->element('searchParametersSessionClass') ?>
-    <h3><?= __('Students') ?></h3>
+    <h3><?= __('Students Annual Promotion') ?></h3>
 <?php if ( isset($students) AND !empty($students) ) : ?>
     <?= $this->Form->create()?>
     <table class="table table-bordered table-responsive ">
@@ -16,7 +16,7 @@ $this->assign('title','Annual Promotion');
             <th><?= h('Average') ?></th>
             <th><?= h('Grade') ?></th>
             <th><?= h('Position') ?></th>
-            <td> Promoted? </td> <?php // Todo : add a widget to activate all checkboxes at once ?>
+            <td> Promoted <label for="selectall"><input type="checkbox" id="selectall"> select all</label>  </td>
         </tr>
         </thead>
         <tbody>
@@ -34,7 +34,7 @@ $this->assign('title','Annual Promotion');
                     <td><?= h(@$students[$num]['student_annual_positions'][0]['position']) ?></td>
                     <td class="actions">
                         <?php
-                        $checkboxConfig = ['type'=>'checkbox','label'=>''];
+                        $checkboxConfig = ['type'=>'checkbox','label'=>'', 'class' => 'checkbox1'];
                         //$checkboxConfig['value'] = $students[$num]['student_annual_positions'][0]['promoted'];
                         if (@$students[$num]['student_annual_positions'][0]['promoted'] === null OR 0 === (int)@$students[$num]['student_annual_positions'][0]['promoted'] ) {
                             $checkboxConfig['checked'] = false;
