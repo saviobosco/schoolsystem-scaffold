@@ -99,7 +99,7 @@ Router::plugin(
             'controller' => 'StudentsAnnualPromotion',
             'action' => 'processAnnualPromotion'
         ]);
-        $routes->connect('/students-annual-promotion',[
+        $routes->get('/students-annual-promotion',[
             'controller' => 'StudentsAnnualPromotion',
             'action' => 'index'
         ]);

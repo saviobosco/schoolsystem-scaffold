@@ -6,6 +6,7 @@ $this->assign('title','Annual Promotion');
     <h3><?= __('Students Annual Promotion') ?></h3>
 <?php if ( isset($students) AND !empty($students) ) : ?>
     <?= $this->Form->create()?>
+    <?= $this->Form->submit(__('Submit'),['class' => 'btn btn-primary m-b-20']) ?>
     <table class="table table-bordered table-responsive ">
         <thead>
         <tr>
@@ -21,37 +22,31 @@ $this->assign('title','Annual Promotion');
         </thead>
         <tbody>
         <?php
-        $studentCounts = count($students);
-        for ($num = 0; $num < $studentCounts ; $num++): ?>
+        foreach ($students as $num => $student): ?>
             <tr>
-                <td><?= h($students[$num]['id']) ?></td>
-                <td><?= h($students[$num]['first_name']) ?></td>
-                <td><?= h($students[$num]['last_name']) ?></td>
-                <?php if (!empty( $students[$num]['student_annual_positions'] )) : ?>
-                    <td><?= h(@$students[$num]['student_annual_positions'][0]['total']) ?></td>
-                    <td><?= h(@$students[$num]['student_annual_positions'][0]['average']) ?></td>
-                    <td><?= h(@$students[$num]['student_annual_positions'][0]['grade']) ?></td>
-                    <td><?= h(@$students[$num]['student_annual_positions'][0]['position']) ?></td>
-                    <td class="actions">
-                        <?php
-                        $checkboxConfig = ['type'=>'checkbox','label'=>'', 'class' => 'checkbox1'];
-                        //$checkboxConfig['value'] = $students[$num]['student_annual_positions'][0]['promoted'];
-                        if (@$students[$num]['student_annual_positions'][0]['promoted'] === null OR 0 === (int)@$students[$num]['student_annual_positions'][0]['promoted'] ) {
-                            $checkboxConfig['checked'] = false;
-                        } else {
-                            $checkboxConfig['checked'] = true;
-                        }
-                        ?>
-                        <?= $this->Form->input('student_annual_positions.'.$num.'.promoted',$checkboxConfig)  ?>
-                        <?= $this->Form->hidden('student_annual_positions.'.$num.'.student_id',['value' => $students[$num]['id'] ]) ?>
-                        <?= $this->Form->hidden('student_annual_positions.'.$num.'.class_id',['value' => @$students[$num]['student_annual_positions'][0]['session_id']]) ?>
-                        <?= $this->Form->hidden('student_annual_positions.'.$num.'.session_id',['value' => @$students[$num]['student_annual_positions'][0]['class_id']]) ?>
-                    </td>
-                <?php else : ?>
-                    <td colspan="5"> The student does not have an annual result</td>
-                <?php endif; ?>
+                <td><?= h($student['student_id']) ?></td>
+                <td><?= h($student['student']['first_name']) ?></td>
+                <td><?= h($student['student']['last_name']) ?></td>
+                <td><?= h(@$student['total']) ?></td>
+                <td><?= h(@$student['average']) ?></td>
+                <td><?= h(@$student['grade']) ?></td>
+                <td><?= h(@$student['position']) ?></td>
+                <td class="actions">
+                    <?php
+                    $checkboxConfig = ['type'=>'checkbox','label'=>'', 'class' => 'checkbox1'];
+                    if (@$student['promoted'] === null OR 0 === (int)@$student['promoted'] ) {
+                        $checkboxConfig['checked'] = false;
+                    } elseif($student['promoted'] === true OR 1 === (int)$student['promoted']) {
+                        $checkboxConfig['checked'] = true;
+                    }
+                    ?>
+                    <?= $this->Form->input('student_annual_positions.'.$num.'.promoted',$checkboxConfig)  ?>
+                    <?= $this->Form->hidden('student_annual_positions.'.$num.'.student_id',['value' => $student['student_id'] ]) ?>
+                    <?= $this->Form->hidden('student_annual_positions.'.$num.'.class_id',['value' => @$student['class_id']]) ?>
+                    <?= $this->Form->hidden('student_annual_positions.'.$num.'.session_id',['value' => @$student['session_id']]) ?>
+                </td>
             </tr>
-        <?php endfor; ?>
+        <?php endforeach; ?>
         </tbody>
     </table>
     <?= $this->Form->submit(__('Submit'),['class' => 'btn btn-primary']) ?>
