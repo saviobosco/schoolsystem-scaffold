@@ -36,7 +36,6 @@ $defaultSession = array_key_last($sessions);
                             echo $this->Form->input('cal_student_position',['type'=>'checkbox','label'=>['text'=>'Calculate the student\'s positions ','data-toggle' =>'tooltip','trigger' =>'hover','title'=>'Calculate the student\'s positions for the selected class']]);
                             echo $this->Form->input('cal_subject_position',['type'=>'checkbox','label'=>['text'=>'Calculate the student\'s subject positions ','data-toggle' =>'tooltip','trigger' =>'hover','title'=>'Calculate the student\'s subject positions for the selected class']]);
                             echo $this->Form->input('cal_class_average',['type'=>'checkbox','label'=>['text'=>'Calculate the subjects Average ','data-toggle' =>'tooltip','trigger' =>'hover','title'=>'Calculate the subjects average for the selected class']]);
-                            echo $this->Form->input('cal_class_count', ['type'=>'checkbox','label'=>'Count the students under the class','data-toggle' =>'tooltip','trigger' =>'focus','title'=>'This is used to calculate the students  number in a class.']);
                             ?>
                         </fieldset>
                         <?= $this->Form->button(__('Submit'),['class'=>'btn btn-primary']) ?>
@@ -55,7 +54,6 @@ $defaultSession = array_key_last($sessions);
                             echo $this->Form->input('cal_student_position',['id' => 'cal-student-position-session', 'type'=>'checkbox','label'=>['text'=>'Calculate the student\'s positions ','data-toggle' =>'tooltip','trigger' =>'hover','title'=>'Calculate the student\'s positions for the selected class']]);
                             echo $this->Form->input('cal_subject_position',['id' => 'cal-subject-position-session', 'type'=>'checkbox','label'=>['text'=>'Calculate the student\'s subject positions ','data-toggle' =>'tooltip','trigger' =>'hover','title'=>'Calculate the student\'s subject positions for the selected class']]);
                             echo $this->Form->input('cal_class_average',['id' => 'cal-class-average-session', 'type'=>'checkbox','label'=>['text'=>'Calculate the subjects Average ','data-toggle' =>'tooltip','trigger' =>'hover','title'=>'Calculate the subjects average for the selected class']]);
-                            echo $this->Form->input('cal_class_count',['id' => 'cal-class-count-session', 'type'=>'checkbox','label'=>'Count the students under the class','data-toggle' =>'tooltip','trigger' =>'focus','title'=>'This is used to calculate the students  number in a class.']);
                             ?>
                         </fieldset>
                         <?= $this->Form->button(__('Submit'),['class'=>'btn btn-primary']) ?>

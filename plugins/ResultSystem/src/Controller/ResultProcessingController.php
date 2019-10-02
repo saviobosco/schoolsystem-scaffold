@@ -37,7 +37,7 @@ class ResultProcessingController extends AppController
     {
         $sessions = $this->Sessions->find('list');
         $classes = $this->Classes->find('list');
-        $terms = $this->Terms->find('list');
+        $terms = $this->Terms->find('list')->limit(3);
         $this->set(compact('sessions','classes','terms'));
     }
 

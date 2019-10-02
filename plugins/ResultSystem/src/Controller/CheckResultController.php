@@ -107,7 +107,7 @@ class CheckResultController extends AppController
                 return false;
             }
 
-            if (! Configure::read('ResultPin.allTerms')){
+            if (! Setting::read('Application.use_result_pin_for_all_terms')){
                 // Check if the term is Ok
                 if ($pin->term_id !== (int) $postData['term_id']) {
                     $this->Flash->error(__('This pin has been used by you, but the term selected is incorrect. Please try again'));
