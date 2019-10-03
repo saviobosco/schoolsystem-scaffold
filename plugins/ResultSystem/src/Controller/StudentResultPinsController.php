@@ -61,7 +61,7 @@ class StudentResultPinsController extends AppController
     {
         if ( $this->request->is(['post']) ) {
             $applicationPins = $this->StudentResultPins->find('all')
-                ->select(['id','pin'])
+                ->select(['serial_number','pin'])
                 ->where([
                     'student_id IS NULL',
                     [

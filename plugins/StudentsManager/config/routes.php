@@ -85,6 +85,21 @@ Router::plugin(
             ]
         );
 
+        $routes->get('/class-list',
+            [
+                'controller'=>'ClassLists',
+                'action'=>'index'
+            ],'class-lists'
+        );
+
+        $routes->post('/class-list',
+            [
+                'controller'=>'ClassLists',
+                'action'=>'create',
+                '_ext' => 'xlsx'
+            ],'class-lists:create'
+        );
+
         $routes->fallbacks('DashedRoute');
     }
 );
