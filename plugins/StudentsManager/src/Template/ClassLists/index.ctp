@@ -8,7 +8,7 @@
                 <div class="m-b-20">
                     <div class="row">
                         <div class="col-sm-12">
-                            <?= $this->Form->create(null, ['url' => 'students-manager/class-lists/create.xlsx']) ?>
+                            <?= $this->Form->create(null, ['url' => ['controller' => 'ClassLists', 'action'=>'create', '_ext' => 'xlsx']]) ?>
 
                             <?= $this->Form->input('class_id',[
                                 'empty' => 'Select Class',
