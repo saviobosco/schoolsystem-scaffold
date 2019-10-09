@@ -16,6 +16,31 @@ Router::plugin(
             'action' => 'index'
         ]);
 
+        $routes->get('/medical_issues',[
+            'controller' => 'MedicalIssues',
+            'action' => 'index'
+        ], 'medical_issues:index');
+
+        $routes->post('/medical_issues',[
+            'controller' => 'MedicalIssues',
+            'action' => 'store'
+        ], 'medical_issues:store');
+
+        $routes->get('/religions',[
+            'controller' => 'Religions',
+            'action' => 'index'
+        ], 'religions:index');
+
+        $routes->post('/nationalities',[
+            'controller' => 'Nationalities',
+            'action' => 'store'
+        ], 'nationalities:index');
+
+        $routes->post('/nationalities',[
+            'controller' => 'Nationalities',
+            'action' => 'store'
+        ], 'nationalities:store');
+
         $routes->fallbacks(DashedRoute::class);
     }
 );

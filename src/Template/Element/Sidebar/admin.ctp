@@ -1,15 +1,16 @@
 <?= $this->element('SubjectsManager.Links/sidebar') ?>
+
 <li class="has-sub">
     <?= $this->Html->link('<i class="fa fa-institution"> </i> <span><b class="caret pull-right"></b>'.__('Academics ').' </span>','javascript:;',['escape'=>false]) ?>
     <ul class="sub-menu">
         <li class="has-sub">
-            <?= $this->Html->link('<i class="fa fa-gears"> </i> <span><b class="caret pull-right"></b>'.__('Settings').'</span>','javascript:;',['escape'=>false]) ?>
+            <?= $this->Html->link('<b class="caret pull-right"></b>'.__('Settings').'</span>','javascript:;',['escape'=>false]) ?>
             <ul class="sub-menu">
                 <li>
-                    <?= $this->Html->link(__('Grade Input Settings'),['plugin'=>'ResultSystem','controller'=>'Dashboard','action'=>'gradeInputs'],['escape'=>false]) ?>
+                    <?= $this->Html->link(__('Result Inputs'),['plugin'=>'ResultSystem','controller'=>'ResultInputs','action'=>'index'],['escape'=>false]) ?>
                 </li>
                 <li>
-                    <?= $this->Html->link(__('Remark Input Settings'),['plugin'=>'ResultSystem','controller'=>'Dashboard','action'=>'remarkInputs'],['escape'=>false]) ?>
+                    <?= $this->Html->link(__('Remark Inputs'),['plugin'=>'ResultSystem','controller'=>'RemarkInputs','action'=>'index'],['escape'=>false]) ?>
                 </li>
             </ul>
         </li>
@@ -24,6 +25,7 @@
         <li><?= $this->Html->link(__('Students Class Count'),['plugin'=>'ResultSystem','controller'=>'StudentClassCounts','action'=>'index']) ?></li>
     </ul>
 </li>
+
 <li class="has-sub">
     <?= $this->Html->link('<b class="caret pull-right"></b>'.__('Student Skills System'),'javascript:;',['escape'=>false]) ?>
     <ul class="sub-menu">

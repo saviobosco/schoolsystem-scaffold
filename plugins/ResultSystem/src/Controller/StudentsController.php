@@ -217,7 +217,7 @@ class StudentsController extends AppController
                 if (!empty($studentResultExists)) {
                     $this->set('studentResultExists',$studentResultExists);
                 }
-                $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
+                $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs($queryData['session_id']));
                 $classBlock = $this->Students->Classes->find()->select(['id','block_id'])->where(['id'=>$queryData['class_id']])->enableHydration(false)->first();
                 $subjects = $this->Subjects->find('all')->where(['block_id'=>$classBlock['block_id']])->combine('id','name')->toArray();
                 $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs();
@@ -235,9 +235,10 @@ class StudentsController extends AppController
 
     public function store()
     {
+        $queryData = $this->request->getQuery();
         if ($this->request->is(['patch', 'post', 'put'])) {
             try {
-                $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
+                $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs($queryData['session_id']));
                 $processedResults = $this->ResultSystem->processSubmittedResults($this->request->getData('student_termly_results'),$gradeInputs);
                 $studentResults = $this->Students->StudentTermlyResults->newEntities($processedResults);
                 $studentRemark = $this->Students->StudentGeneralRemarks->newEntity($this->request->getData('student_general_remarks')[0]);

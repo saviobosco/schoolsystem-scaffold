@@ -36,10 +36,22 @@
             ]) ?>
         </li>
         <li>
-            <?= $this->html->link('Update App',[
-                'plugin'=>'Dashboard',
-                'controller'=>'Updater',
-                'action' => 'index'
+            <?= $this->html->link('Medical Issues',[
+                '_name' => 'medical_issues:index'
+            ],[
+                'escape' => false
+            ]) ?>
+        </li>
+        <li>
+            <?= $this->html->link('Religions',[
+                '_name' => 'religions:index'
+            ],[
+                'escape' => false
+            ]) ?>
+        </li>
+        <li>
+            <?= $this->html->link('Nationalities',[
+                '_name' => 'nationalities:index'
             ],[
                 'escape' => false
             ]) ?>

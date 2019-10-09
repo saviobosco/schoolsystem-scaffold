@@ -134,9 +134,12 @@ class StudentTermlyResultsTable extends Table
         if ($event->isStopped()) {
             return false;
         }
+        // get the session_id from the entity session
+        $session_id = $entity->session_id;
+
         // getting the gradeInput to process the total
         $resultGradeInputsTable = TableRegistry::get('ResultSystem.ResultGradeInputs');
-        $gradeInputs = $resultGradeInputsTable->getValidGradeInputs($resultGradeInputsTable->getResultGradeInputs());
+        $gradeInputs = $resultGradeInputsTable->getValidGradeInputs($resultGradeInputsTable->getResultGradeInputs($session_id));
         $total = 0;
         foreach($gradeInputs as $gradeKey => $gradeValue){
             $total += (int)$entity->{$gradeKey};

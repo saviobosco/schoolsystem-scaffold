@@ -20,16 +20,10 @@ class BlocksSeed extends AbstractSeed
     {
         $data = [
             [
-                'id' => '1',
                 'name' => 'Junior',
-                'created' => '2016-09-02 11:55:19',
-                'modified' => '2016-09-02 11:55:19',
             ],
             [
-                'id' => '2',
                 'name' => 'Senior',
-                'created' => '2016-09-02 11:55:19',
-                'modified' => '2016-09-02 11:55:19',
             ],
         ];
 

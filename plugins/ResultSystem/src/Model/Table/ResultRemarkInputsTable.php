@@ -71,4 +71,16 @@ class ResultRemarkInputsTable extends Table
             ->combine('main_value','replacement')->toArray();
         return $data;
     }
+
+    public function getColumnValues()
+    {
+        return [
+            'remark_1' => 'Remark_1',
+            'remark_2' => 'Remark_2',
+            'remark_3' => 'remark_3',
+            'remark_4' => 'remark_4',
+            'remark_5' => 'remark_5',
+            'remark_6' => 'remark_6',
+        ];
+    }
 }

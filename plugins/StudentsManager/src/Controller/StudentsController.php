@@ -13,7 +13,9 @@ use UsersManager\Exception\UserExistsException;
  * @property \StudentsManager\Model\Table\StudentsTable $Students
  * @property \StudentsManager\Model\Table\StatesTable $States
  * @property \StudentsManager\Model\Table\SessionsTable $Sessions
- * @property \StudentsManager\Model\Table\ReligionsTable $Religions
+ * @property \App\Model\Table\ReligionsTable $Religions
+ * @property \App\Model\Table\NationalitiesTable $Nationalities
+ * @property \App\Model\Table\MedicalIssuesTable $MedicalIssues
  */
 class StudentsController extends AppController
 {
@@ -21,7 +23,9 @@ class StudentsController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->loadModel('StudentsManager.Religions');
+        $this->loadModel('App.Religions');
+        $this->loadModel('App.MedicalIssues');
+        $this->loadModel('App.Nationalities');
     }
 
     public function beforeFilter(Event $event)
@@ -112,20 +116,23 @@ class StudentsController extends AppController
     }
 
     /**
-     * Add method
+     * Registration method
      *
-     * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
+     * @return \Cake\Network\Response|void
      */
     public function add()
     {
         $student = $this->Students->newEntity();
-        if ($this->request->is('post')) {
+        if ($this->request->is(['post'])) {
+            $studentData = $this->request->getData();
+            $studentData['url'] = $this->request->scheme().'://'.$this->request->host();
+            $student = $this->Students->patchEntity($student, $studentData);
             try {
-                $student = $this->Students->patchEntity($student, $this->request->getData());
                 $savedStudent = $this->Students->addStudent($student);
                 if ($savedStudent) {
                     $this->Flash->success(__('The student has been saved.'));
                     $this->Flash->set('Last student id:'.$savedStudent->id);
+                    $this->redirect($this->referer());
                 } else {
                     $this->Flash->error(__('The student could not be saved. Please, try again.'));
                 }
@@ -138,14 +145,22 @@ class StudentsController extends AppController
                         return $this->redirect(['action' => 'add']);
                     }
                 }
-                return $this->redirect(['action' => 'index']);
             }
         }
         $sessions = $this->Sessions->find('list');
         $classes = $this->Students->Classes->find('list');
-        $religions = $this->Religions->find('list');
         $states = $this->States->find('list');
-        $this->set(compact('student', 'sessions', 'classes','states','religions'));
+        $religions = $this->Religions->find('list');
+        $nationalities = $this->Nationalities->find('list');
+        $default_nationality = $this->Nationalities->find()->select('id')->where('default_selection', 1)->first()['id'];
+        $default_religion = $this->Religions->find()->select('id')->where('default_selection', 1)->first()['id'];
+        $medicalIssues = $this->MedicalIssues->find('list');
+        $bloodGroups = $this->Students->getBloodGroups();
+        $genotypes = $this->Students->getGenotypes();
+        $sponsorRelationships = $this->Students->getSponsorRelations();
+        $this->set(compact('student', 'sessions', 'classes','states', 'religions',
+            'nationalities','medicalIssues', 'bloodGroups', 'genotypes',
+            'default_nationality', 'default_religion', 'sponsorRelationships'));
         $this->set('_serialize', ['student']);
     }
 
@@ -175,13 +190,21 @@ class StudentsController extends AppController
                     $this->Flash->error(__('The student could not be saved. Please, try again.'));
                 }
             }
+            $sessions = $this->Sessions->find('list');
+            $classes = $this->Students->Classes->find('list');
             $states = $this->States->find('list');
             $religions = $this->Religions->find('list');
-            $classes = $this->Students->Classes->find('list');
-            $classDemarcations = $this->Students->ClassDemarcations->find('list');
-            $this->set(compact('student', 'sessions', 'classes', 'classDemarcations','states','religions'));
+            $nationalities = $this->Nationalities->find('list');
+            $default_nationality = $this->Nationalities->find()->select('id')->where('default_selection', 1)->first()['id'];
+            $default_religion = $this->Religions->find()->select('id')->where('default_selection', 1)->first()['id'];
+            $medicalIssues = $this->MedicalIssues->find('list');
+            $bloodGroups = $this->Students->getBloodGroups();
+            $genotypes = $this->Students->getGenotypes();
+            $sponsorRelationships = $this->Students->getSponsorRelations();
+            $this->set(compact('student', 'sessions', 'classes','states', 'religions',
+                'nationalities','medicalIssues', 'bloodGroups', 'genotypes',
+                'default_nationality', 'default_religion', 'sponsorRelationships'));
             $this->set('_serialize', ['student']);
-
         } catch ( RecordNotFoundException $e ) {
             $this->render('/Element/Error/studentRecordNotFound');
         }

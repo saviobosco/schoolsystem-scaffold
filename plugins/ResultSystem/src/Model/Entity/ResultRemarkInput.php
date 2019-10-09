@@ -28,6 +28,7 @@ class ResultRemarkInput extends Entity
         'main_value' => true,
         'replacement' => true,
         'output_order' => true,
-        'visibility' => true
+        'visibility' => true,
+        'session_id' => true,
     ];
 }

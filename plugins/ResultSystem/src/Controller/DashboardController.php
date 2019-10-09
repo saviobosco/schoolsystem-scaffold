@@ -21,24 +21,11 @@ use Cake\Database\Schema\TableSchema;
  */
 class DashboardController extends AppController
 {
-    public function settings()
-    {
-//        //$schema = new TableSchema('student_termly_results');
-//        //debug($schema->getColumn('student_id')); exit;
-//        $db = ConnectionManager::get('default');
-//        // Create a schema collection.
-//        $collection = $db->schemaCollection();
-//        // Get the table names
-//        $tables = $collection->listTables();
-//        $tables = $collection->describe('student_termly_results')->columns();
-//        debug($tables); exit;
-
-
-    }
 
     public function gradeInputs()
     {
         $this->loadModel('ResultGradeInputs');
+
         $resultGradeInputs = $this->ResultGradeInputs->find()->toArray();
         if ( $this->request->is(['put','patch','post'])) {
             $resultGradeInputs = $this->ResultGradeInputs->patchEntities($resultGradeInputs,$this->request->getData());

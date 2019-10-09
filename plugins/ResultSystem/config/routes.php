@@ -144,9 +144,28 @@ Router::plugin(
             'action' => 'index'
         ]);
 
-        $routes->fallbacks('DashedRoute');
+        $routes->get('/result-inputs', [
+            'controller' => 'ResultInputs',
+            'action' => 'index'
+        ], 'result-inputs:index');
 
-        $routes->applyMiddleware('disableCache');
+        $routes->post('/result-inputs', [
+            'controller' => 'ResultInputs',
+            'action' => 'store'
+        ], 'result-inputs:store');
+
+        $routes->get('/remark-inputs', [
+            'controller' => 'RemarkInputs',
+            'action' => 'index'
+        ], 'remark-inputs:index');
+
+        $routes->post('/remark-inputs', [
+            'controller' => 'RemarkInputs',
+            'action' => 'store'
+        ], 'remark-inputs:store');
+
+        $routes->fallbacks('DashedRoute');
+        //$routes->applyMiddleware('disableCache');
         $routes->connect('/view-student-result-sheet',[
             'controller' => 'CheckResult',
             'action' => 'viewStudentResult'

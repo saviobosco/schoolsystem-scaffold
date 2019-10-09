@@ -23,7 +23,8 @@
         "muffin/FootPrint": "^1.1",
         "dereuromark/cakephp-databaselog": "^2.3",
         "sentry/sentry": "^1.10",
-        "connehito/cake-sentry": "^1.0"
+        "connehito/cake-sentry": "^1.0",
+        "burzum/file-storage": "^1.1.0"
     },
     "require-dev": {
         "psy/psysh": "@stable",
@@ -41,7 +42,6 @@
             "SavioboscoSubscription\\": "./plugins/SavioboscoSubscription/src",
             "SkillsGradingSystem\\": "./plugins/SkillsGradingSystem/src",
             "ResultSystem\\": "./plugins/ResultSystem/src",
-            "SeanTheme\\": "./plugins/SeanTheme/src",
             "FrontEnd\\": "./plugins/FrontEnd/src",
             "GradingSystem\\": "./plugins/GradingSystem/src",
             "Saviobosco\\Excel\\": "./plugins/Saviobosco/Excel/src",
@@ -66,7 +66,6 @@
             "SavioboscoSubscription\\Test\\": "./plugins/SavioboscoSubscription/tests",
             "SkillsGradingSystem\\Test\\": "./plugins/SkillsGradingSystem/tests",
             "ResultSystem\\Test\\": "./plugins/ResultSystem/tests",
-            "SeanTheme\\Test\\": "./plugins/SeanTheme/tests",
             "FrontEnd\\Test\\": "./plugins/FrontEnd/tests",
             "GradingSystem\\Test\\": "./plugins/GradingSystem/tests",
             "Saviobosco\\Excel\\Test\\": "./plugins/Saviobosco/Excel/tests",

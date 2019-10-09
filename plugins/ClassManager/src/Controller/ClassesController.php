@@ -55,7 +55,7 @@ class ClassesController extends AppController
     {
         $class = $this->Classes->newEntity();
         if ($this->request->is('post')) {
-            $class = $this->Classes->patchEntity($class, $this->request->data);
+            $class = $this->Classes->patchEntity($class, $this->request->getData());
             if ($this->Classes->save($class)) {
                 $this->Flash->success(__('The class has been saved.'));
 
@@ -64,8 +64,9 @@ class ClassesController extends AppController
                 $this->Flash->error(__('The class could not be saved. Please, try again.'));
             }
         }
-        $blocks = $this->Classes->Blocks->find('list', ['limit' => 200]);
-        $this->set(compact('class', 'blocks'));
+        $blocks = $this->Classes->Blocks->find('list');
+        $classes = $this->Classes->find('list');
+        $this->set(compact('class', 'blocks', 'classes'));
         $this->set('_serialize', ['class']);
     }
 

@@ -30,7 +30,8 @@ class ResultGradeInput extends Entity
         'main_value' => true,
         'replacement' => true,
         'percentage' => true,
-        'order' => true,
-        'visibility' => true
+        'output_order' => true,
+        'visibility' => true,
+        'session_id' => true
     ];
 }

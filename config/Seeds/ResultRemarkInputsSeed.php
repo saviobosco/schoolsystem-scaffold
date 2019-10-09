@@ -18,7 +18,7 @@ class ResultRemarkInputsSeed extends AbstractSeed
      */
     public function run()
     {
-        $data = [
+        /*$data = [
             [
                 'id' => '1',
                 'main_value' => 'remark_1',
@@ -64,6 +64,6 @@ class ResultRemarkInputsSeed extends AbstractSeed
         ];
 
         $table = $this->table('result_remark_inputs');
-        $table->insert($data)->save();
+        $table->insert($data)->save();*/
     }
 }

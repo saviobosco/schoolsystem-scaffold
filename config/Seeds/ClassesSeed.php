@@ -16,7 +16,7 @@ class ClassesSeed extends AbstractSeed
      *
      * @return void
      */
-    public function run()
+    /*public function run()
     {
         $data = [
             [
@@ -71,5 +71,5 @@ class ClassesSeed extends AbstractSeed
 
         $table = $this->table('classes');
         $table->insert($data)->save();
-    }
+    }*/
 }

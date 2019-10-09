@@ -74,8 +74,8 @@ class AppController extends Controller
     protected function _findlayout()
     {
         if(!empty($this->request->getSession()->read('Auth.User.id'))) {
-            return $this->viewBuilder()->setTheme('SeanTheme')->setLayout('admin');
+            return $this->viewBuilder()->setLayout('admin');
         }
-        return $this->viewBuilder()->setTheme('SeanTheme')->setLayout('custom');
+        return $this->viewBuilder()->setLayout('custom');
     }
 }

@@ -33,6 +33,7 @@ class ResultGradeInputsTable extends Table
         $this->setTable('result_grade_inputs');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
+        $this->addBehavior('Timestamp');
     }
 
     /**
@@ -46,13 +47,19 @@ class ResultGradeInputsTable extends Table
         $validator
             ->integer('id')
             ->allowEmpty('id', 'create');
+
+        $validator->requirePresence('main_value', true, 'Main Value is required')
+            ->requirePresence('replacement', true, 'Replacement is required')
+            ->requirePresence('percentage', true, 'Percentage is required')
+            ->requirePresence('output_order', true, 'Output Order is required')
+            ->requirePresence('session_id', true, 'Session is required');
         return $validator;
     }
 
-    public function getResultGradeInputs()
+    public function getResultGradeInputs($session_id)
     {
         return  $this->find('all')
-            ->where(['visibility'=>1])
+            ->where(['session_id'=> $session_id])
             ->orderAsc('output_order')
             ->all();
     }
@@ -74,6 +81,7 @@ class ResultGradeInputsTable extends Table
         $data = $query
             ->map(function($row){ $row->details = $row->replacement.' ('.$row->percentage.'%)'; return $row;})
             ->combine('main_value','details')->toArray();
+        $data['exam'] = 'Examination';
         return $data;
     }
 
@@ -87,5 +95,19 @@ class ResultGradeInputsTable extends Table
         $data = $query
             ->toArray();
         return $data;
+    }
+
+    public function getColumnValues()
+    {
+        return [
+            'first_test' => 'first_test',
+            'second_test' => 'second_test',
+            'third_test' => 'third_test',
+            'fourth_test' => 'fourth_test',
+            'fifth_test' => 'fifth_test',
+            'sixth_test' => 'sixth_test',
+            'seventh_test' => 'seventh_test',
+            'eight_test' => 'eight_test',
+        ];
     }
 }

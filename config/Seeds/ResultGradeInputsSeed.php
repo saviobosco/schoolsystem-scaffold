@@ -18,7 +18,7 @@ class ResultGradeInputsSeed extends AbstractSeed
      */
     public function run()
     {
-        $data = [
+        /*$data = [
             [
                 'id' => '1',
                 'main_value' => 'first_test',
@@ -70,6 +70,6 @@ class ResultGradeInputsSeed extends AbstractSeed
         ];
 
         $table = $this->table('result_grade_inputs');
-        $table->insert($data)->save();
+        $table->insert($data)->save();*/
     }
 }

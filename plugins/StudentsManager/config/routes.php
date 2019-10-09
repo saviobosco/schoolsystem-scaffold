@@ -2,15 +2,6 @@
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 
-Router::connect('/students',['plugin'=>'StudentsManager','controller'=>'Students','action'=>'index']);
-Router::connect('/students/add',['plugin'=>'StudentsManager','controller'=>'Students','action'=>'add']);
-Router::connect('/students/view/**',['plugin'=>'StudentsManager','controller'=>'Students','action'=>'view']);
-Router::connect('/students/edit/**',['plugin'=>'StudentsManager','controller'=>'Students','action'=>'edit']);
-Router::connect('/students/delete/**',['plugin'=>'StudentsManager','controller'=>'Students','action'=>'delete']);
-Router::connect('/students/activate/**',['plugin'=>'StudentsManager','controller'=>'Students','action'=>'activate']);
-Router::connect('/students/deactivate/**',['plugin'=>'StudentsManager','controller'=>'Students','action'=>'deactivate']);
-Router::connect('/students/un-active-students',['plugin'=>'StudentsManager','controller'=>'Students','action'=>'unActiveStudents']);
-Router::connect('/students/change-students-class',['plugin'=>'StudentsManager','controller'=>'StudentsClass','action'=>'changeClass']);
 
 // routing for the states
 Router::connect('/states/add',['plugin'=>'StudentsManager','controller'=>'States','action'=>'add']);
@@ -33,8 +24,11 @@ Router::plugin(
             [
                 'controller'=>'Students',
                 'action'=>'add'
+            ],[
+                '_name' => 'students:create'
             ]
         );
+
 
         $routes->connect('/view/**',
             [

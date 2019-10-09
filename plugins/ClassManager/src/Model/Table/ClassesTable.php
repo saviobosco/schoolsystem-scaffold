@@ -76,11 +76,6 @@ class ClassesTable extends Table
             ->requirePresence('class', 'create')
             ->notEmpty('class');
 
-        $validator
-            ->integer('no_of_subjects')
-            ->requirePresence('no_of_subjects', 'create')
-            ->notEmpty('no_of_subjects');
-
         return $validator;
     }
 

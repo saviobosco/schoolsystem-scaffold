@@ -274,16 +274,15 @@ Plugin::load('UsersManager', ['bootstrap' => true, 'routes' => true]);
 Plugin::load('Settings', ['bootstrap' => true, 'routes' => true]);
 Plugin::load('SkillsGradingSystem', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('ResultSystem', ['bootstrap' => false, 'routes' => true]);
-Plugin::load('Proffer');
+//Plugin::load('Proffer');
 Plugin::load('CakeDC/Users', ['routes' => true, 'bootstrap' => false]);
 Plugin::load('FrontEnd', ['bootstrap' => false, 'routes' => true]);
-Plugin::load('SeanTheme', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('GradingSystem', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('Saviobosco/Excel', ['bootstrap' => true, 'routes' => true]);
 Plugin::load('StudentsManager', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('SubjectsManager', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('ClassManager', ['bootstrap' => false, 'routes' => true]);
-Plugin::load('FinanceManager', ['bootstrap' => true, 'routes' => true]);
+//Plugin::load('FinanceManager', ['bootstrap' => true, 'routes' => true]);
 Plugin::load('Muffin/Footprint');
 Plugin::load('BankSystem', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('Saviobosco/Core', ['bootstrap' => false, 'routes' => true]);
@@ -292,11 +291,11 @@ Plugin::load('TimesTable', ['bootstrap' => false, 'routes' => true]);
 if (Configure::read('debug') === false) {
     Plugin::load('Connehito/CakeSentry', ['bootstrap' => true]);
 }
-Plugin::load('StudentAccount', ['bootstrap' => false, 'routes' => true]);
+/*Plugin::load('StudentAccount', ['bootstrap' => false, 'routes' => true]);
 
 Plugin::load('ParentAccount', ['bootstrap' => true, 'routes' => true]);
 
-Plugin::load('TeacherAccount', ['bootstrap' => true, 'routes' => true]);
+Plugin::load('TeacherAccount', ['bootstrap' => true, 'routes' => true]);*/
 
 // This is placed here to override the CakeDC/User default configurations
 collection((array)Configure::read('Users.config'))->each(function ($file) {

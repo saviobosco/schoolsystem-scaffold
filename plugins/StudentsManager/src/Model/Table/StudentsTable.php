@@ -5,6 +5,7 @@ use Cake\Core\Plugin;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\I18n\Date;
+use Cake\I18n\Time;
 use Cake\ORM\Entity;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -12,6 +13,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 use StudentsManager\Model\Entity\Student;
 use UsersManager\Exception\UserExistsException;
+use Cake\Database\Type;
 
 /**
  * Students Model
@@ -54,6 +56,10 @@ class StudentsTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        Type::map('file', 'App\Database\Type\FileType');
+        Type::map('serialize', 'App\Database\Type\SerializeType');
+        $this->getSchema()->setColumnType('photo', 'file');
+        $this->getSchema()->setColumnType('medical_issues', 'serialize');
 
         // loads the Proffer behaviour for picture upload .
         /*$this->addBehavior('Proffer.Proffer', [
@@ -117,9 +123,6 @@ class StudentsTable extends Table
             ->requirePresence('class_id', 'create')
             ->notEmpty('class_id');
 
-        $validator
-            ->requirePresence('session_id', 'create')
-            ->notEmpty('session_id');
 
         $validator
             ->allowEmpty('date_of_birth');
@@ -136,25 +139,6 @@ class StudentsTable extends Table
 
         $validator
             ->allowEmpty('home_residence');
-
-        $validator
-            ->allowEmpty('guardian');
-
-        $validator
-            ->allowEmpty('relationship_to_guardian');
-
-        $validator
-            ->allowEmpty('occupation_of_guardian');
-
-        $validator
-            ->allowEmpty('guardian_phone_number');
-
-        $validator
-            ->allowEmpty('photo');
-
-        $validator
-            ->allowEmpty('photo_dir');
-
         return $validator;
     }
 
@@ -169,10 +153,30 @@ class StudentsTable extends Table
     {
         $rules->add($rules->isUnique(['id']));
         $rules->add($rules->existsIn(['class_id'], 'Classes'));
-        //$rules->add($rules->existsIn(['class_demarcation_id'], 'ClassDemarcations'));
-        //$rules->add($rules->existsIn(['state_id'], 'States'));
-
         return $rules;
+    }
+
+    public function beforeMarshal(Event $event, $data, $options)
+    {
+
+    }
+
+    public function beforeSave(Event $event, $entity, $options)
+    {
+        /*if (is_array($entity['photo'])) {
+            if (!empty($entity['photo']['name'])) {
+                $imageDetails = pathinfo($entity['photo']['name']);
+                if (!in_array( $imageDetails['extension'], ['png', 'jpg', 'jpeg'])) {
+                    $event->stopPropagation();
+                    return false;
+                }
+                $photo_name = Time::now()->timestamp.'.'.$imageDetails['extension'];
+                $destination = WWW_ROOT.'img/student-pictures/'.$photo_name;
+                if ( move_uploaded_file($entity['photo']['tmp_name'], $destination) ) {
+                    $entity->photo = $entity->url.'/img/student-pictures/'.$photo_name;
+                }
+            }
+        }*/
     }
 
     public function addStudent(EntityInterface $student)
@@ -181,14 +185,14 @@ class StudentsTable extends Table
         // because the id is same as the primary key, $rules->add($rules->isUnique(['id'])); will not work fine
         $this->setPrimaryKey('created');
         // check if that student id is as username in the users table
-        $userTable = TableRegistry::get('UsersManager.Accounts');
-        $studentUser = $userTable->query()->where(['username' => $student['id']])->first();
+        //$userTable = TableRegistry::get('UsersManager.Accounts');
+        /*$studentUser = $userTable->query()->where(['username' => $student['id']])->first();
         if ($studentUser instanceof Entity) {
             // throw user exist error
             throw new UserExistsException(['username' => $student['id']]);
-        }
-        $savedStudent = $this->save($student);
-        if ( $savedStudent) {
+        }*/
+        return $this->save($student);
+        /*if ( $savedStudent) {
             // create new user record
             $userTable->save($userTable->newEntity([
                 'username'=> $student['id'],
@@ -201,8 +205,8 @@ class StudentsTable extends Table
             $event = new Event(self::EVENT_ADDED_STUDENT,$this,['student'=>$student]);
             $this->getEventManager()->dispatch($event);
             return $savedStudent;
-        }
-        return false;
+        }*/
+        //return false;
     }
 
 
@@ -263,5 +267,45 @@ class StudentsTable extends Table
             $this->save($student, ['checkRules' => false]);
         }
         return $returnData;
+    }
+
+    public function getBloodGroups()
+    {
+        return [
+            'A-' => 'A Negative (A-)',
+            'A+' => 'A Positive (A+)',
+            'AB-' => 'AB Negative (AB-)',
+            'AB+' => 'AB Positive (AB+)',
+            'B-' => 'B Negative (B-)',
+            'B+' => 'B Positive (B+)',
+            'O-' => 'O Negative (O-)',
+            'O+' => 'O Positive (O+)',
+        ];
+    }
+
+    public function getGenotypes()
+    {
+        return [
+            'AS' => 'AS',
+            'AA' => 'AA',
+            'SS' => 'SS'
+        ];
+    }
+
+    public function getSponsorRelations()
+    {
+        return [
+            'AUNT' => 'AUNT',
+            'BROTHER' => 'BROTHER',
+            'DAUGHTER' => 'DAUGHTER',
+            'FATHER' => 'FATHER',
+            'HUSBAND' => 'HUSBAND',
+            'MOTHER' => 'MOTHER',
+            'SELF' => 'SELF',
+            'SISTER' => 'SISTER',
+            'SON' => 'SON',
+            'UNCLE' => 'UNCLE',
+            'WIFE' => 'WIFE'
+        ];
     }
 }

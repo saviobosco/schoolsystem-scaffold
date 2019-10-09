@@ -19,6 +19,7 @@ use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use App\Middleware\MultiTenancyMiddleware;
 /**
  * Application setup class.
  *
@@ -43,6 +44,8 @@ class Application extends BaseApplication
             // Handle plugin/theme assets like CakePHP normally does.
             ->add(AssetMiddleware::class)
 
+            // chained the multitenancy middleware.
+            ->add(MultiTenancyMiddleware::class)
             // Apply routing
             ->add(RoutingMiddleware::class);
 
