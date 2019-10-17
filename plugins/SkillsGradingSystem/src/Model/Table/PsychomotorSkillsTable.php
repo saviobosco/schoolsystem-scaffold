@@ -35,8 +35,6 @@ class PsychomotorSkillsTable extends Table
         $this->table('psychomotor_skills');
         $this->displayField('name');
         $this->primaryKey('id');
-
-        $this->addBehavior('Timestamp');
     }
 
     /**

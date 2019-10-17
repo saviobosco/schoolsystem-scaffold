@@ -35,8 +35,6 @@ class AffectiveDispositionsTable extends Table
         $this->table('affective_dispositions');
         $this->displayField('name');
         $this->primaryKey('id');
-
-        $this->addBehavior('Timestamp');
     }
 
     /**

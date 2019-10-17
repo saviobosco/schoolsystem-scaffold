@@ -30,18 +30,10 @@
 <li class="has-sub">
     <?= $this->Html->link('<b class="caret pull-right"></b>'.__('Student Skills System'),'javascript:;',['escape'=>false]) ?>
     <ul class="sub-menu">
-        <li class="has-sub"><?= $this->Html->link('<b class="caret pull-right"></b>'.__('Affective Dispositions'),'javascript:;',['escape'=>false]) ?>
-            <ul class="sub-menu">
-                <li><?= $this->Html->link(__('All Affective Skills'),['plugin'=>'SkillsGradingSystem','controller'=>'AffectiveDispositions','action'=>'index'],['escape'=>false]) ?></li>
-                <li><?= $this->Html->link(__('New Affective Skills'),['plugin'=>'SkillsGradingSystem','controller'=>'AffectiveDispositions','action'=>'add'],['escape'=>false]) ?></li>
-            </ul>
+        <li><?= $this->Html->link(__('Affective Dispositions'), ['plugin'=>'SkillsGradingSystem','controller'=>'AffectiveDispositions','action'=>'index']) ?>
         </li>
 
-        <li class="has-sub"><?= $this->Html->link('<b class="caret pull-right"></b>'.__('Psychomotor Skills'),'javascript:;',['escape'=>false]) ?>
-            <ul class="sub-menu">
-                <li><?= $this->Html->link(__('All Psychomotor Skills'),['plugin'=>'SkillsGradingSystem','controller'=>'PsychomotorSkills','action'=>'index'],['escape'=>false]) ?></li>
-                <li><?= $this->Html->link(__('New Psychomotor Skill'),['plugin'=>'SkillsGradingSystem','controller'=>'PsychomotorSkills','action'=>'add'],['escape'=>false]) ?></li>
-            </ul>
+        <li><?= $this->Html->link(__('Psychomotor Skills'), ['plugin'=>'SkillsGradingSystem','controller'=>'PsychomotorSkills','action'=>'index']) ?>
         </li>
         <li><?= $this->Html->link(__("Students" ),['plugin'=>'SkillsGradingSystem','controller'=>'Students','action'=>'index'],['escape'=>false]) ?></li>
     </ul>

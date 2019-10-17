@@ -1,47 +1,48 @@
 <?php
-// including the search parameter element
-echo $this->element('searchParametersClass');
+$this->extend('/Common/view');
+$this->assign('title','Add student skills');
 ?>
 
-<div class="row m-t-30">
-    <div class="col-sm-12">
-        <div class="panel panel-inverse">
-            <div class="panel-heading">
-                <h4 class="panel-title"> All Students </h4>
-            </div>
-            <div class="panel-body">
-                <table id="data-table" class="table table-bordered ">
-                    <thead>
-                    <tr>
-                        <th><?= $this->Paginator->sort('id') ?></th>
-                        <th><?= $this->Paginator->sort('full_name') ?></th>
-                        <th><?= $this->Paginator->sort('class_id') ?></th>
-                        <th class="actions"><?= __('Actions') ?></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($students as $student): ?>
-                        <tr>
-                            <td><?= h($student->id) ?></td>
-                            <td><?= h($student->full_name) ?></td>
-                            <td><?= $student->class->class ?></td>
-                            <td class="actions">
-                                <?= $this->Html->link(__('View Skill'), ['action' => 'view', $student->id]) ?>
-                                <?= $this->Html->link(__('Edit Skill'), ['action' => 'edit', $student->id]) ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
-                <div class="paginator">
-                    <ul class="pagination">
-                        <?= $this->Paginator->prev('< ' . __('previous')) ?>
-                        <?= $this->Paginator->numbers() ?>
-                        <?= $this->Paginator->next(__('next') . ' >') ?>
-                    </ul>
-                    <p><?= $this->Paginator->counter() ?></p>
-                </div>
-            </div>
-        </div>
+<div class="row">
+    <div class="col-sm-3">
+        <?= $this->Form->create() ?>
+        <?= $this->Form->input('session_id', ['options' => $sessions, 'id' => 'session-input'])  ?>
+        <?= $this->Form->input('class_id', ['options' => $classes, 'empty' => 'Select Class', 'id' => 'class-input'])  ?>
+        <?= $this->Form->input('term_id', ['options' => $terms, 'id' => 'term-input'])  ?>
+        <?= $this->Form->input('student_id', ['options' => [], 'empty' => '', 'id' => 'student-input', 'size' => 5, 'label' => 'Students'])  ?>
+    </div>
+    <div id="general-remark-content" class="col-sm-9">
+
     </div>
 </div>
+
+<script>
+    (function(){
+        function loadStudents()
+        {
+            var selectedSession = $('#session-input').val();
+            var selectedClass = $('#class-input').val();
+            var selectedTerm = $('#term-input').val();
+            if (selectedSession !== "" && selectedClass !== "" && selectedTerm !== "") {
+                $('#student-input').load(window.location.origin + '/result-system/student-general-remarks/get-students?class_id=' + selectedClass, null, function()
+                {});
+            } else {
+
+            }
+        }
+
+        $('#class-input').change(loadStudents);
+
+        $('#student-input').change(function (event) {
+            var selectedSession = $('#session-input').val();
+            var selectedClass = $('#class-input').val();
+            var selectedTerm = $('#term-input').val();
+            var selectedStudent = $('#student-input').val();
+            $('#general-remark-content').load(window.location.origin +
+                '/skills-grading-system/students/get-skill-view?session_id='+
+                selectedSession + '&class_id=' + selectedClass + '&term_id=' + selectedTerm +
+                '&student_id=' + selectedStudent);
+        })
+    })();
+
+</script>
