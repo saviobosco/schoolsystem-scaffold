@@ -5,7 +5,7 @@ use ResultSystem\Controller\AppController;
 
 /**
  * StudentsPositions Controller
- * @property \ResultSystem\Model\Table\StudentTermlyPositionsTable $StudentTermlyPositions
+ * @property \ResultSystem\Model\Table\StudentPositionsTable $StudentPositions
  * @property \ResultSystem\Model\Table\StudentAnnualPositionsTable $StudentAnnualPositions
  * @property \ResultSystem\Model\Table\StudentTermlyResultsTable $StudentTermlyResults
  * @property \ResultSystem\Model\Table\SessionsTable $Sessions
@@ -19,8 +19,7 @@ class StudentsPositionsController extends AppController
         $this->loadModel('ResultSystem.Sessions');
         $this->loadModel('ResultSystem.Classes');
         $this->loadModel('ResultSystem.Terms');
-        $this->loadModel('ResultSystem.StudentAnnualPositions');
-        $this->loadModel('ResultSystem.StudentTermlyPositions');
+        $this->loadModel('ResultSystem.StudentPositions');
     }
     /**
      * Index method
@@ -31,22 +30,13 @@ class StudentsPositionsController extends AppController
     {
         $queryData = $this->request->getQuery();
         if ( !empty($queryData)) {
-            if (  isset($queryData['term_id']) && $queryData['term_id'] == 4 ) {
-                $studentPositions = $this->StudentAnnualPositions->find('all')
-                    ->where(['StudentAnnualPositions.session_id' => $queryData['session_id'],
-                        'StudentAnnualPositions.class_id'  => $queryData['class_id'],
-                    ])
-                    ->contain(['Students'])
-                    ->orderDesc('total');
-            } else {
-                $studentPositions = $this->StudentTermlyPositions->find('all')
-                    ->where(['StudentTermlyPositions.session_id' => $queryData['session_id'],
-                        'StudentTermlyPositions.class_id'  => $queryData['class_id'],
-                        'StudentTermlyPositions.term_id'  => $queryData['term_id'],
-                    ])
-                    ->contain(['Students'])
-                    ->orderDesc('total');
-            }
+            $studentPositions = $this->StudentPositions->find('all')
+                ->where(['session_id' => $queryData['session_id'],
+                    'StudentPositions.class_id'  => $queryData['class_id'],
+                    'term_id'  => $queryData['term_id'],
+                ])
+                ->contain(['Students' => ['fields' => ['id', 'first_name', 'last_name']]])
+                ->orderDesc('total');
         }
         $sessions = $this->Sessions->find('list')->toArray();
         $classes  = $this->Classes->find('list')->toArray();

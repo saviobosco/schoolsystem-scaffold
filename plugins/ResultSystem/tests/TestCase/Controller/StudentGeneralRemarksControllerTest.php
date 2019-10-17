@@ -2,12 +2,12 @@
 namespace ResultSystem\Test\TestCase\Controller;
 
 use Cake\TestSuite\IntegrationTestCase;
-use ResultSystem\Controller\RemarkInputsController;
+use ResultSystem\Controller\StudentGeneralRemarksController;
 
 /**
- * ResultSystem\Controller\RemarkInputsController Test Case
+ * ResultSystem\Controller\StudentGeneralRemarksController Test Case
  */
-class RemarkInputsControllerTest extends IntegrationTestCase
+class StudentGeneralRemarksControllerTest extends IntegrationTestCase
 {
 
     /**
@@ -16,7 +16,7 @@ class RemarkInputsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.result_system.result_remark_inputs'
+        'plugin.result_system.student_general_remarks'
     ];
 
     /**

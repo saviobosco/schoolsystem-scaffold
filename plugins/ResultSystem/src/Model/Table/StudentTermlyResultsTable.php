@@ -214,7 +214,7 @@ class StudentTermlyResultsTable extends Table
         }
         $studentAnnualResultTable->save($studentAnnualResult);
         // delete position in subject positions table
-        $termlySubjectPositionTable = TableRegistry::get('ResultSystem.StudentTermlySubjectPositions');
+        $termlySubjectPositionTable = TableRegistry::get('ResultSystem.StudentSubjectPositions');
         $studentTermlySubjectPosition = $termlySubjectPositionTable->find()
             ->where([
                 'student_id' => $event->data['entity']['student_id'],

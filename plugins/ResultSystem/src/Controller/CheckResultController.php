@@ -106,7 +106,6 @@ class CheckResultController extends AppController
                 $this->Flash->error(__('This pin has been used by you, but the class selected is incorrect. Please try again'));
                 return false;
             }
-
             if (! Setting::read('Application.use_result_pin_for_all_terms')){
                 // Check if the term is Ok
                 if ($pin->term_id !== (int) $postData['term_id']) {
@@ -165,7 +164,7 @@ class CheckResultController extends AppController
             $this->set(compact('sessions','terms','classes'));
 
 
-            $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs();
+            $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs($session['session_id']);
             $this->loadModel('ResultSystem.StudentClassCounts');
             $studentsCount = $this->StudentClassCounts->getStudentsClassCount($session['session_id'], $session['class_id'], $session['term_id']);
             $this->loadModel('ResultSystem.Subjects');
@@ -194,9 +193,9 @@ class CheckResultController extends AppController
                     ->first();
                 $studentAnnualResults = $this->Students->getStudentAnnualResultOnly($student['id'],$session);
                 // get student annual position
-                $studentPosition = $this->Students->getStudentAnnualPosition($student['id'],$session);
+                $studentPosition = $this->Students->getStudentPosition($student['id'],$session['session_id'], $session['class_id'], $session['term_id']);
                 // get student annual subject positions
-                $studentSubjectPositions = $this->Students->getStudentAnnualSubjectPositions($student['id'],$session['session_id'],$session['class_id']);
+                $studentSubjectPositions = $this->Students->getStudentSubjectPositions($student['id'],$session['session_id'],$session['class_id'], $session['term_id']);
                 //get the student remark
                 $studentRemark = $this->Students->getStudentGeneralRemark($student['id'],$session['session_id'],$session['class_id'],$session['term_id']);
                 $this->set(compact('student',
@@ -225,10 +224,10 @@ class CheckResultController extends AppController
                 //get the student remark
                 $studentRemark = $this->Students->getStudentGeneralRemark($student['id'],$session['session_id'], $session['class_id'], $session['term_id']);
                 // get the student position
-                $studentPosition = $this->Students->getStudentTermlyPosition($student['id'], $session['session_id'], $session['class_id'], $session['term_id']);
+                $studentPosition = $this->Students->getStudentPosition($student['id'], $session['session_id'], $session['class_id'], $session['term_id']);
                 // gets the student subject positions
-                $studentSubjectPositions = $this->Students->getStudentTermlySubjectPositions($student['id'], $session['session_id'], $session['class_id'], $session['term_id']);
-                $resultGradeInputs = $this->ResultGradeInputs->getResultGradeInputs();
+                $studentSubjectPositions = $this->Students->getStudentSubjectPositions($student['id'], $session['session_id'], $session['class_id'], $session['term_id']);
+                $resultGradeInputs = $this->ResultGradeInputs->getResultGradeInputs($session['session_id']);
                 $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($resultGradeInputs);
                 $gradeInputsForTableHead = $this->ResultGradeInputs->getValidGradeInputsWithAllData($resultGradeInputs);
                 $this->set(compact('student',

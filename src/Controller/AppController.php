@@ -55,6 +55,9 @@ class AppController extends Controller
          * logic to be applied before Controller Action Comes in here.
          */
         $this->_findlayout();
+        if ($this->request->is('ajax')) {
+            $this->viewBuilder()->setLayout('ajax');
+        }
     }
     /**
      * Before render callback.

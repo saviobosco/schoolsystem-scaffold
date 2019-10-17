@@ -16,7 +16,7 @@ class ResultInputsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.result_system.result_inputs'
+        'plugin.result_system.result_grade_inputs'
     ];
 
     /**

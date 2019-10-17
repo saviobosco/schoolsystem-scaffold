@@ -120,7 +120,7 @@ class ResultProcessingController extends AppController
         $annualResultProcessing->startProcessing();
 
         if (isset($postData['cal_student_total']) && !empty($postData['cal_student_total'])) {
-            $returnData = $annualResultProcessing->calculateAnnualTotals($postData['class_id'], $postData['session_id']);
+            $returnData = $annualResultProcessing->calculateAnnualTotals($postData['class_id'], $postData['session_id'], $postData['term_id']);
             if (is_array($returnData)) {
                 if ( !empty($returnData['subjectCountIssues'])) {
                     $list = '<ol>';
@@ -138,7 +138,7 @@ class ResultProcessingController extends AppController
             }
         }
         if (isset($postData['cal_student_position']) && !empty($postData['cal_student_position'])) {
-            if ($annualResultProcessing->calculateAnnualPosition($postData['class_id'], $postData['session_id'])){
+            if ($annualResultProcessing->calculateAnnualPosition($postData['class_id'], $postData['session_id'], $postData['term_id'])){
                 $this->Flash->success(__('Successfully calculated the students positions'));
             } else {
                 $this->Flash->error(__('Seems you have not calculated the students total. Please calculate the students total and try again.'));
@@ -147,7 +147,7 @@ class ResultProcessingController extends AppController
             }
         }
         if (isset($postData['cal_subject_position']) && !empty($postData['cal_subject_position'])) {
-            if($annualResultProcessing->calculateStudentAnnualSubjectPosition($postData['class_id'], $postData['session_id'])) {
+            if($annualResultProcessing->calculateStudentAnnualSubjectPosition($postData['class_id'], $postData['session_id'], $postData['term_id'])) {
                 $this->Flash->success(__('Successfully calculated the students subject positions'));
             }
         }

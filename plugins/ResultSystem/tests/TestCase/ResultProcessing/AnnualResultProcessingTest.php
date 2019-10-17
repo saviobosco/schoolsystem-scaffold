@@ -31,12 +31,9 @@ class AnnualResultProcessingTest extends IntegrationTestCase
         'plugin.result_system.classes',
         'plugin.result_system.subjects',
         'plugin.result_system.terms',
-        //'plugin.result_system.class_demarcations',
         'plugin.result_system.student_annual_results',
-        //'plugin.result_system.student_annual_position_on_class_demarcations',
-        'plugin.result_system.student_annual_positions',
-        'plugin.result_system.student_annual_subject_position_on_class_demarcations',
-        'plugin.result_system.student_annual_subject_positions',
+        'plugin.result_system.student_positions',
+        'plugin.result_system.student_subject_positions',
         'plugin.grading_system.result_grading_systems',
     ];
 
@@ -55,7 +52,7 @@ class AnnualResultProcessingTest extends IntegrationTestCase
     /** @test */
     public function testCalculateAnnualTotals()
     {
-        $return = $this->annualResultProcessing->calculateAnnualTotals(1, 1);
+        $return = $this->annualResultProcessing->calculateAnnualTotals(1, 1, 1);
         $this->assertNull($return);
         $annualResultTable = TableRegistry::get('ResultSystem.StudentAnnualResults');
         $firstRow = $annualResultTable->find()->first();
@@ -83,25 +80,25 @@ class AnnualResultProcessingTest extends IntegrationTestCase
         $annualResultTable->save($newRecord);
         $danglingRow = $annualResultTable->find()->enableHydration(false)->where(['id' => 10])->first();
         $this->assertEquals($newRecord['student_id'],$danglingRow['student_id']);
-        $this->annualResultProcessing->calculateAnnualTotals(1, 1);
+        $this->annualResultProcessing->calculateAnnualTotals(1, 1, 1);
         $this->assertNull($annualResultTable->find()->enableHydration(false)->where(['id' => 10])->first()['id']);
     }
 
     /** @test */
     public function testCalculateAnnualPosition()
     {
-        $return = $this->annualResultProcessing->calculateAnnualPosition(1, 1);
+        $return = $this->annualResultProcessing->calculateAnnualPosition(1, 1, 1);
         $this->assertEquals(true, $return);
-        $annualPositionsTable = TableRegistry::get('ResultSystem.StudentAnnualPositions');
+        $annualPositionsTable = TableRegistry::get('ResultSystem.StudentPositions');
         $annualPositions = $annualPositionsTable->find()->enableHydration(false)->combine('student_id','position')->toArray();
-        $this->assertEquals($annualPositions['001'], 1);
-        $this->assertEquals($annualPositions['002'], 2);
+        $this->assertEquals($annualPositions['001'], 2);
+        $this->assertEquals($annualPositions['002'], 1);
     }
 
     public function testCalculateStudentAnnualSubjectPosition()
     {
-        $this->annualResultProcessing->calculateStudentAnnualSubjectPosition(1, 1);
-        $annualSubjectPositionsTable = TableRegistry::get('ResultSystem.StudentAnnualSubjectPositions');
+        $this->annualResultProcessing->calculateStudentAnnualSubjectPosition(1, 1, 1);
+        $annualSubjectPositionsTable = TableRegistry::get('ResultSystem.StudentSubjectPositions');
         $annualSubjectPositions = $annualSubjectPositionsTable->find()->combine('student_id','position','subject_id')->toArray();
         $expected = [
             1 => [

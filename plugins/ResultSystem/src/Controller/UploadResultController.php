@@ -31,13 +31,15 @@ class UploadResultController extends AppController
         $terms = $this->StudentTermlyResults->Terms->find('list', ['limit' => 3]);
         $sessions = $this->StudentTermlyResults->Sessions->find('list', ['limit' => 200]);
         $this->loadModel('ResultSystem.ResultGradeInputs');
-        $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
+        $gradeInputs = [];
         $this->set(compact('classes', 'terms', 'sessions','gradeInputs'));
         $this->set('_serialize', ['studentTermlyResult']);
     }
 
     public function processUploadResult()
     {
+        $this->Flash->error('This function is deprecated!');
+        return $this->redirect($this->referer());
         $postData = $this->request->getData();
         $resultUploadValidator = new ResultUploadForm();
         if ($this->request->is('ajax')) {

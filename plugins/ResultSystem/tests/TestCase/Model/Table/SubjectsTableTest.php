@@ -27,16 +27,13 @@ class SubjectsTableTest extends TestCase
     public $fixtures = [
         'plugin.result_system.subjects',
         'plugin.result_system.classes',
-        'plugin.result_system.class_demarcations',
         'plugin.result_system.student_annual_results',
         'plugin.result_system.student_termly_results',
         'plugin.result_system.students',
         'plugin.result_system.sessions',
-        'plugin.result_system.student_annual_subject_position_on_class_demarcations',
-        'plugin.result_system.student_annual_subject_positions',
-        'plugin.result_system.student_termly_subject_position_on_class_demarcations',
+        'plugin.result_system.student_subject_positions',
         'plugin.result_system.terms',
-        'plugin.result_system.student_termly_subject_positions',
+        'plugin.result_system.student_subject_positions',
         'plugin.result_system.subject_class_averages'
     ];
 
@@ -107,17 +104,6 @@ class SubjectsTableTest extends TestCase
     }
 
     /**
-     * Test getAnnualSubjectPositions method
-     *
-     * @return void
-     */
-    public function testGetAnnualSubjectPositions()
-    {
-        $expected = ['001' => 1];
-        $this->assertEquals($expected,$this->Subjects->getAnnualSubjectPositions(1, ['class_id'=>1, 'session_id'=>1]));
-    }
-
-    /**
      * Test getTermlyResults method
      *
      * @return void
@@ -157,10 +143,10 @@ class SubjectsTableTest extends TestCase
      *
      * @return void
      */
-    public function testGetTermlySubjectPositions()
+    public function testGetSubjectPositions()
     {
         $expected = ['001' => 1];
-        $this->assertEquals($expected,$this->Subjects->getTermlySubjectPositions(1, ['class_id'=>1, 'session_id'=>1, 'term_id'=>1]));
+        $this->assertEquals($expected,$this->Subjects->getSubjectPositions(1, ['class_id'=>1, 'session_id'=>1, 'term_id'=>1]));
     }
 
     /**

@@ -29,23 +29,16 @@ class StudentsTableTest extends TestCase
         'plugin.result_system.students',
         'plugin.result_system.sessions',
         'plugin.result_system.classes',
-        'plugin.result_system.class_demarcations',
-        'plugin.result_system.student_annual_position_on_class_demarcations',
-        'plugin.result_system.student_annual_subject_position_on_class_demarcations',
         'plugin.result_system.subjects',
         'plugin.result_system.student_annual_results',
-        'plugin.result_system.student_annual_subject_positions',
+        'plugin.result_system.student_subject_positions',
         'plugin.result_system.student_termly_results',
         'plugin.result_system.terms',
-        'plugin.result_system.student_termly_subject_position_on_class_demarcations',
-        'plugin.result_system.student_termly_subject_positions',
         'plugin.result_system.subject_class_averages',
-        'plugin.result_system.student_termly_position_on_class_demarcations',
-        'plugin.result_system.student_annual_positions',
         'plugin.result_system.student_class_counts',
         'plugin.result_system.student_general_remarks',
         'plugin.result_system.student_publish_results',
-        'plugin.result_system.student_termly_positions',
+        'plugin.result_system.student_positions',
     ];
 
     /**
@@ -77,14 +70,12 @@ class StudentsTableTest extends TestCase
      *
      * @return void
      */
-    public function testGetStudentAnnualSubjectPositions()
+    public function testGetStudentSubjectPositions()
     {
         $expected = [
-            1 => 1,
-            2 => 1,
-            3 => 1
+            1 => 1
         ];
-        $this->assertEquals($expected,$this->Students->getStudentAnnualSubjectPositions('001', 1, 1));
+        $this->assertEquals($expected,$this->Students->getStudentSubjectPositions('001', 1, 1, 1));
     }
 
     /**
@@ -115,7 +106,7 @@ class StudentsTableTest extends TestCase
      *
      * @return void
      */
-    public function testGetStudentTermlyPosition()
+    public function testGetStudentPosition()
     {
         $expected = [
             'id' => 1,
@@ -128,22 +119,7 @@ class StudentsTableTest extends TestCase
             'term_id' => 1,
             'session_id' => 1
         ];
-        $this->assertEquals($expected,$this->Students->getStudentTermlyPosition('001',1,1,1));
-    }
-
-    /**
-     * Test getStudentTermlySubjectPositions method
-     *
-     * @return void
-     */
-    public function testGetStudentTermlySubjectPositions()
-    {
-        $expected = [
-            1 => 1,
-            2 => 1,
-            3 => 1
-        ];
-        $this->assertEquals($expected,$this->Students->getStudentTermlySubjectPositions('001',1,1,1));
+        $this->assertEquals($expected,$this->Students->getStudentPosition('001',1,1,1));
     }
 
     /**
@@ -223,32 +199,17 @@ class StudentsTableTest extends TestCase
     public function testGetStudentAnnualResultOnly()
     {
         $actual = $this->Students->getStudentAnnualResultOnly('001',['term_id'=>1,'session_id'=>1,'class_id'=>1]);
-        $expected = [
+        /*$expected = [
             [
                 'id' => 1,
                 'student_id' => '001',
                 'subject_id' => 1,
                 'first_term' => 92
             ]
-        ];
+        ];*/
         $this->assertInstanceOf(Query::class, $actual);
     }
 
-    /**
-     * Test getStudentAnnualPosition method
-     *
-     * @return void
-     */
-    public function testGetStudentAnnualPosition()
-    {
-        $expected = [
-            'id' => 1,
-            'student_id' => '001',
-            'total' => '85',
-        ];
-        $actual = $this->Students->getStudentAnnualPosition('001',['term_id'=>1,'session_id'=>1,'class_id'=>1]);
-        $this->assertEquals($expected['student_id'], $actual['student_id']);
-    }
 
     /**
      * Test getStudentAnnualPromotions method

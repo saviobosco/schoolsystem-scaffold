@@ -11,17 +11,10 @@ use Cake\Validation\Validator;
  *
  * @property \Cake\ORM\Association\BelongsTo $Sessions
  * @property \Cake\ORM\Association\BelongsTo $Classes
- * @property \Cake\ORM\Association\BelongsTo $ClassDemarcations
- * @property \Cake\ORM\Association\HasMany $StudentAnnualPositionOnClassDemarcations
- * @property \Cake\ORM\Association\HasMany $StudentAnnualPositions
  * @property \Cake\ORM\Association\HasMany $StudentAnnualResults
- * @property \Cake\ORM\Association\HasMany $StudentAnnualSubjectPositionOnClassDemarcations
- * @property \Cake\ORM\Association\HasMany $StudentAnnualSubjectPositions
- * @property \Cake\ORM\Association\HasMany $StudentTermlyPositionOnClassDemarcations
- * @property \Cake\ORM\Association\HasMany $StudentTermlyPositions
+ * @property \Cake\ORM\Association\HasMany $StudentPositions
  * @property \Cake\ORM\Association\HasMany $StudentTermlyResults
- * @property \Cake\ORM\Association\HasMany $StudentTermlySubjectPositionOnClassDemarcations
- * @property \Cake\ORM\Association\HasMany $StudentTermlySubjectPositions
+ * @property \Cake\ORM\Association\HasMany $StudentSubjectPositions
  * @property \Cake\ORM\Association\HasMany $StudentResultPins
  * @property \Cake\ORM\Association\HasMany $StudentGeneralRemarks
  * @property \Cake\ORM\Association\HasMany $StudentPublishResults
@@ -65,29 +58,21 @@ class StudentsTable extends Table
             'joinType' => 'INNER',
             'className' => 'ResultSystem.Classes'
         ]);
-        $this->hasMany('StudentAnnualPositions', [
-            'foreignKey' => 'student_id',
-            'className' => 'ResultSystem.StudentAnnualPositions'
-        ]);
         $this->hasMany('StudentAnnualResults', [
             'foreignKey' => 'student_id',
             'className' => 'ResultSystem.StudentAnnualResults'
         ]);
-        $this->hasMany('StudentAnnualSubjectPositions', [
+        $this->hasMany('StudentPositions', [
             'foreignKey' => 'student_id',
-            'className' => 'ResultSystem.StudentAnnualSubjectPositions'
-        ]);
-        $this->hasMany('StudentTermlyPositions', [
-            'foreignKey' => 'student_id',
-            'className' => 'ResultSystem.StudentTermlyPositions'
+            'className' => 'ResultSystem.StudentPositions'
         ]);
         $this->hasMany('StudentTermlyResults', [
             'foreignKey' => 'student_id',
             'className' => 'ResultSystem.StudentTermlyResults'
         ]);
-        $this->hasMany('StudentTermlySubjectPositions', [
+        $this->hasMany('StudentSubjectPositions', [
             'foreignKey' => 'student_id',
-            'className' => 'ResultSystem.StudentTermlySubjectPositions'
+            'className' => 'ResultSystem.StudentSubjectPositions'
         ]);
 
         $this->hasMany('StudentResultPins',[
@@ -134,13 +119,16 @@ class StudentsTable extends Table
         return $rules;
     }
 
-    public function getStudentAnnualSubjectPositions($student_id,$session,$class)
+    public function getStudentSubjectPositions($student_id,$session_id, $class_id, $term_id)
     {
-        return $this->StudentAnnualSubjectPositions->find()
-            ->where(['student_id' => $student_id,
-                'session_id' => @$session,
-                'class_id' => @$class,
-            ])->combine('subject_id','position')->toArray();
+        return $this->StudentSubjectPositions->find()
+            ->where([
+                'student_id' => $student_id,
+                'session_id' => $session_id,
+                'class_id' => $class_id,
+                'term_id' => $term_id,
+            ])->combine('subject_id','position')
+            ->toArray();
     }
 
     public function getStudentGeneralRemark($student_id,$session,$class,$term)
@@ -154,24 +142,15 @@ class StudentsTable extends Table
             ])->enableHydration(false)->first();
     }
 
-    public function getStudentTermlyPosition($student_id,$session,$class,$term)
+    public function getStudentPosition($student_id,$session_id, $class_id, $term_id)
     {
-        return $this->StudentTermlyPositions->find('all')
+        return $this->StudentPositions->find('all')
             ->where(['student_id' => $student_id,
-                'session_id' => @$session,
-                'class_id' => @$class,
-                'term_id'    => @$term
-            ])->enableHydration(false)->first();
-    }
-
-    public function getStudentTermlySubjectPositions($student_id,$session,$class,$term)
-    {
-        return $this->StudentTermlySubjectPositions->find('all')
-            ->where(['student_id' => $student_id,
-                'session_id' => @$session,
-                'class_id' => @$class,
-                'term_id'    => @$term
-            ])->combine('subject_id','position')->toArray();
+                'session_id' => $session_id,
+                'class_id' => $class_id,
+                'term_id'    => $term_id
+            ])->enableHydration(false)
+            ->first();
     }
 
     public function getStudentsWithIdAndNameByClassId($class_id)
@@ -182,7 +161,7 @@ class StudentsTable extends Table
     public function getStudentAnnualResult($id,$queryData)
     {
         return $this->get($id, [
-            'fields' => ['id','first_name', 'last_name', 'class_id','photo_dir', 'photo'],
+            'fields' => ['id','first_name', 'last_name', 'class_id'],
             'contain' => [
                 'Classes' => ['fields' => ['id', 'class']],
                 'StudentAnnualResults' => ['conditions' => [
@@ -197,10 +176,11 @@ class StudentsTable extends Table
                         'StudentGeneralRemarks.term_id' => ($queryData['term_id']) ? $queryData['term_id'] : 1
                     ]
                 ],
-                'StudentAnnualPositions' =>  [
+                'StudentPositions' =>  [
                     'conditions' => [
-                        'StudentAnnualPositions.session_id' => ($queryData['session_id']) ? $queryData['session_id'] : 1,
-                        'StudentAnnualPositions.class_id' => ($queryData['class_id']) ? $queryData['class_id'] : 1
+                        'StudentPositions.session_id' => $queryData['session_id'],
+                        'StudentPositions.class_id' => $queryData['class_id'],
+                        'StudentPositions.term_id' => $queryData['term_id']
                     ]
                 ],
                 'StudentPublishResults' => [
@@ -233,11 +213,11 @@ class StudentsTable extends Table
                         'StudentGeneralRemarks.term_id' => ($queryData['term_id']) ? $queryData['term_id'] : 1,
                     ]
                 ],
-                'StudentTermlyPositions' =>  [
+                'StudentPositions' =>  [
                     'conditions' => [
-                        'StudentTermlyPositions.session_id' => ($queryData['session_id']) ? $queryData['session_id'] : 1,
-                        'StudentTermlyPositions.class_id' => ($queryData['class_id']) ? $queryData['class_id'] : 1,
-                        'StudentTermlyPositions.term_id' => ($queryData['term_id']) ? $queryData['term_id'] : 1
+                        'StudentPositions.session_id' => $queryData['session_id'],
+                        'StudentPositions.class_id' => $queryData['class_id'],
+                        'StudentPositions.term_id' => $queryData['term_id']
                     ]
                 ],
                 'StudentPublishResults' => [
@@ -278,26 +258,25 @@ class StudentsTable extends Table
             ]);
     }
 
-    public function getStudentAnnualPosition($id,$queryData)
-    {
-        return $this->StudentAnnualPositions->find('all')
-            ->where(['student_id' => $id,
-                'session_id' => @$queryData['session_id'],
-                'class_id' => @$queryData['class_id'],
-            ])->enableHydration(false)->first();
-    }
-
     public function getStudentAnnualPromotions($queryData)
     {
         return $this->find('all')
             ->select(['Students.id','Students.first_name','Students.last_name'])
             ->contain([
-                'StudentAnnualPositions' => function($q) use ($queryData) {
-                    return $q->where(['StudentAnnualPositions.session_id'=>$queryData['session_id'],'StudentAnnualPositions.class_id'=>$queryData['class_id']]);
+                'StudentPositions' => function($q) use ($queryData) {
+                    return $q->where([
+                        'StudentPositions.session_id'=>$queryData['session_id'],
+                        'StudentPositions.class_id'=>$queryData['class_id'],
+                        'StudentPositions.term_id'=>$queryData['term_id']
+                    ]);
                 }
             ])
-            ->where(['Students.status'=>1,'Students.class_id'=>$queryData['class_id']])
-            ->enableHydration(false)->toArray();
+            ->where([
+                'Students.status'=>1,
+                'Students.class_id'=>$queryData['class_id']
+            ])
+            ->enableHydration(false)
+            ->toArray();
     }
 
     public function deleteTermlyResults($id, $queryData)
@@ -312,7 +291,7 @@ class StudentsTable extends Table
 
     public function deleteTermlyPosition($id, $queryData)
     {
-        return $this->StudentTermlyPositions->deleteAll([
+        return $this->StudentPositions->deleteAll([
             'student_id' => $id,
             'session_id' => $queryData['session_id'],
             'class_id' => $queryData['class_id'],
@@ -322,7 +301,7 @@ class StudentsTable extends Table
 
     public function deleteTermlySubjectPositions($id, $queryData)
     {
-        return $this->StudentTermlySubjectPositions->deleteAll([
+        return $this->StudentSubjectPositions->deleteAll([
             'student_id' => $id,
             'session_id' => $queryData['session_id'],
             'class_id' => $queryData['class_id'],

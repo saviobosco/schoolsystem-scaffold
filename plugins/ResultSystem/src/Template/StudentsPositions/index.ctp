@@ -4,8 +4,7 @@
  */
 $this->extend('/Common/view');
 $queryData = $this->request->getQuery();
-$title = (isset($queryData['term_id']) && (int)$queryData['term_id'] === 4) ? __('Student Annual Positions') : __('Student Termly Positions');
-$this->assign('title',$title);
+$this->assign('title', 'Students Position');
 ?>
 <?= $this->element('searchParametersSessionClassTerm'); ?>
 <table id="data-table" class="table table-bordered ">

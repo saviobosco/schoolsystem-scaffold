@@ -26,6 +26,11 @@ class SetUpDatabaseShell extends Shell
         return $parser;
     }
 
+    public function initialize()
+    {
+        parent::initialize();
+    }
+
     /**
      * main() method.
      *
@@ -44,7 +49,30 @@ class SetUpDatabaseShell extends Shell
         if(is_null($sub_domain)) {
             return false;
         }
-        $schoolAccountDetail = $this->getSchoolAccountDetails($sub_domain);
+        if (!$this->getDatabase($sub_domain)) {
+            return false;
+        }
+        try {
+            $migrations = new Migrations();
+            $this->out('Beginning migration');
+            $migrate = $migrations->migrate();
+            if ($migrate) {
+                $this->out('Successfully migrated files');
+                $this->out('Executing seed operation...');
+                $migrations->seed();
+                $this->out('Successfully ran the seed operation.');
+                return true;
+            }
+        } catch (\Exception $exception) {
+            $this->out($exception->getMessage());
+            return false;
+        }
+        return false;
+    }
+
+    private function getDatabase($name)
+    {
+        $schoolAccountDetail = $this->getSchoolAccountDetails($name);
         if (!$schoolAccountDetail) {
             return false;
         }
@@ -66,24 +94,8 @@ class SetUpDatabaseShell extends Shell
         ];
         ConnectionManager::drop('default');
         ConnectionManager::setConfig($dataSource);
-        try {
-            $migrations = new Migrations();
-            $this->out('Beginning migration');
-            $migrate = $migrations->migrate();
-            if ($migrate) {
-                $this->out('Successfully migrated files');
-                $this->out('Executing seed operation...');
-                $migrations->seed();
-                $this->out('Successfully ran the seed operation.');
-                return true;
-            }
-        } catch (\Exception $exception) {
-            $this->out($exception->getMessage());
-            return false;
-        }
-        return false;
+        return true;
     }
-
 
 
     private function getSchoolAccountDetails($subDomain)
@@ -94,5 +106,27 @@ class SetUpDatabaseShell extends Shell
             ->where(['sub_domain'=>$subDomain])
             ->enableHydration(false)
             ->first();
+    }
+
+    public function migrate($sub_domain)
+    {
+        if(is_null($sub_domain)) {
+            return false;
+        }
+        if (!$this->getDatabase($sub_domain)) {
+            return false;
+        }
+        try {
+            $migrations = new Migrations();
+            $this->out('Beginning migration');
+            $migrate = $migrations->migrate();
+            if ($migrate) {
+                $this->out('Successfully migrated files');
+                return true;
+            }
+        } catch (\Exception $exception) {
+            $this->out($exception->getMessage());
+            return false;
+        }
     }
 }

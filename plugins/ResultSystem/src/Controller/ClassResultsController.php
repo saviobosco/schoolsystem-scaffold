@@ -11,11 +11,10 @@ namespace ResultSystem\Controller;
 /**
  * Class ClassSubjectsController
  * @package ResultSystem\Controller
- * @property \ResultSystem\Model\Table\StudentTermlySubjectPositionsTable $StudentTermlySubjectPositions
+ * @property \ResultSystem\Model\Table\StudentSubjectPositionsTable $StudentSubjectPositions
  * @property \ResultSystem\Model\Table\StudentsTable $Students
  * @property \ResultSystem\Model\Table\SubjectsTable $Subjects
- * @property \ResultSystem\Model\Table\StudentTermlyPositionsTable $StudentTermlyPositions
- * @property \ResultSystem\Model\Table\StudentAnnualPositionsTable $StudentAnnualPositions
+ * @property \ResultSystem\Model\Table\StudentTermlyPositionsTable $StudentPositions
  * @property \ResultSystem\Model\Table\StudentTermlyResultsTable $StudentTermlyResults
  * @property \ResultSystem\Model\Table\StudentAnnualResultsTable $StudentAnnualResults
  * @property \ResultSystem\Model\Table\SessionsTable $Sessions
@@ -30,10 +29,8 @@ class ClassResultsController extends AppController
         parent::initialize();
         $this->loadModel('ResultSystem.StudentTermlyResults');
         $this->loadModel('ResultSystem.StudentAnnualResults');
-        $this->loadModel('ResultSystem.StudentTermlySubjectPositions');
-        $this->loadModel('ResultSystem.StudentTermlyPositions');
-        $this->loadModel('ResultSystem.StudentAnnualPositions');
-        $this->loadModel('ResultSystem.StudentAnnualResults');
+        $this->loadModel('ResultSystem.StudentSubjectPositions');
+        $this->loadModel('ResultSystem.StudentPositions');
         $this->loadModel('ResultSystem.Students');
         $this->loadModel('ResultSystem.Subjects');
         $this->loadModel('ResultSystem.Sessions');
@@ -70,12 +67,13 @@ class ClassResultsController extends AppController
                     }
                 )->toArray();
             if (isset($queryData['include_positions']) && (int)$queryData['include_positions'] === 1) {
-                $students = $this->StudentAnnualPositions->query()
+                $students = $this->StudentPositions->query()
                     ->enableHydration(false)
                     ->select(['student_id','total','position','Students.first_name','Students.last_name'])
                     ->where([
-                        'StudentAnnualPositions.session_id' => $queryData['session_id'],
-                        'StudentAnnualPositions.class_id' => $queryData['class_id'],
+                        'StudentPositions.session_id' => $queryData['session_id'],
+                        'StudentPositions.class_id' => $queryData['class_id'],
+                        'StudentPositions.term_id' => $queryData['term_id'],
                     ])
                     ->contain(['Students'])
                     ->orderAsc('position')
@@ -115,13 +113,13 @@ class ClassResultsController extends AppController
                     }
                 )->toArray();
             if (isset($queryData['include_positions']) && (int)$queryData['include_positions'] === 1) {
-                $students = $this->StudentTermlyPositions->query()
+                $students = $this->StudentPositions->query()
                     ->enableHydration(false)
                     ->select(['student_id','total','position','Students.first_name','Students.last_name'])
                     ->where([
-                        'StudentTermlyPositions.session_id' => $queryData['session_id'],
-                        'StudentTermlyPositions.class_id' => $queryData['class_id'],
-                        'StudentTermlyPositions.term_id' => $queryData['term_id'],
+                        'StudentPositions.session_id' => $queryData['session_id'],
+                        'StudentPositions.class_id' => $queryData['class_id'],
+                        'StudentPositions.term_id' => $queryData['term_id'],
                     ])
                     ->contain(['Students'])
                     ->orderAsc('position')

@@ -45,16 +45,16 @@ $this->assign('title','Edit Termly Results');
     <div class="col-sm-5">
         <?php if (!empty($student->student_termly_results)): ?>
             <table class="table table-responsive table-bordered">
-                <?= $this->Form->hidden('student_termly_positions.0.student_id',['value' => $student->id ]) ?>
-                <?= $this->Form->hidden('student_termly_positions.0.class_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['class_id'],1)]) ?>
-                <?= $this->Form->hidden('student_termly_positions.0.term_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['term_id'],1)]) ?>
-                <?= $this->Form->hidden('student_termly_positions.0.session_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['session_id'],1)]) ?>
+                <?= $this->Form->hidden('student_positions.0.student_id',['value' => $student->id ]) ?>
+                <?= $this->Form->hidden('student_positions.0.class_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['class_id'],1)]) ?>
+                <?= $this->Form->hidden('student_positions.0.term_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['term_id'],1)]) ?>
+                <?= $this->Form->hidden('student_positions.0.session_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['session_id'],1)]) ?>
                 <tr>
                     <td>
                         Total
                     </td>
                     <td>
-                        <?= $this->Form->input('student_termly_positions.0.total',['class' => 'form-control','label'=>['text'=> 'Total']])  ?>
+                        <?= $this->Form->input('student_positions.0.total',['class' => 'form-control','label'=>['text'=> 'Total']])  ?>
                     </td>
                 </tr>
                 <tr>
@@ -62,7 +62,7 @@ $this->assign('title','Edit Termly Results');
                         Average
                     </td>
                     <td>
-                        <?= $this->Form->input('student_termly_positions.0.average',['class' => 'form-control','label'=>['text'=> 'Average']])  ?>
+                        <?= $this->Form->input('student_positions.0.average',['class' => 'form-control','label'=>['text'=> 'Average']])  ?>
                     </td>
                 </tr>
                 <tr>
@@ -70,7 +70,7 @@ $this->assign('title','Edit Termly Results');
                         Grade
                     </td>
                     <td>
-                        <?= $this->Form->input('student_termly_positions.0.grade',['class' => 'form-control','label'=>['text'=> 'Grade']])  ?>
+                        <?= $this->Form->input('student_positions.0.grade',['class' => 'form-control','label'=>['text'=> 'Grade']])  ?>
                     </td>
                 </tr>
                 <tr>
@@ -78,7 +78,7 @@ $this->assign('title','Edit Termly Results');
                         Position
                     </td>
                     <td>
-                        <?= $this->Form->input('student_termly_positions.0.position',['class' => 'form-control','label'=>['text'=> 'Position']])  ?>
+                        <?= $this->Form->input('student_positions.0.position',['class' => 'form-control','label'=>['text'=> 'Position']])  ?>
                     </td>
                 </tr>
 
@@ -114,7 +114,10 @@ $this->assign('title','Edit Termly Results');
                 </tr>
             <?php endfor; ?>
         </table>
-
+    <?php endif; ?>
+</fieldset>
+    <fieldset>
+        <legend>General Remarks </legend>
         <!-- This is for the student remark -->
         <?= $this->Form->hidden('student_general_remarks.0.student_id',['value' => $student->id ]) ?>
         <?= $this->Form->hidden('student_general_remarks.0.class_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['class_id'],1)]) ?>
@@ -124,7 +127,9 @@ $this->assign('title','Edit Termly Results');
             <label for="<?= $remarkInputKey ?>"> <?= h($remarkInputValue) ?> </label>
             <?= $this->Form->input("student_general_remarks.0.$remarkInputKey",['class' => 'form-control','label'=>['text'=> 'Result Remark']])  ?>
         <?php endforeach; ?>
-
+    </fieldset>
+    <fieldset>
+        <legend> Publish Result</legend>
         <label for="result status">Result Publish Status </label>
         <?php $publishResultConfig = ['type'=>'checkbox']; if (empty($student->student_publish_results)) {
             $publishResultConfig['checked'] = false;
@@ -134,9 +139,9 @@ $this->assign('title','Edit Termly Results');
         <?= $this->Form->hidden('student_publish_results.0.class_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['class_id'],1)]) ?>
         <?= $this->Form->hidden('student_publish_results.0.term_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['term_id'],1)]) ?>
         <?= $this->Form->hidden('student_publish_results.0.session_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['session_id'],1)]) ?>
-    <?php endif; ?>
-</fieldset>
-<?= $this->Form->button(__('Submit'),['class' => 'btn btn-primary']) ?>
+
+    </fieldset>
+    <?= $this->Form->button(__('Submit'),['class' => 'btn btn-primary']) ?>
 <?= $this->Form->end() ?>
 <?= $this->Form->postLink(__('Delete Result'), ['action' => 'delete', $student->id,'?' => $this->request->getQuery()], ['escape'=> false, 'class' => 'pull-right btn btn-danger', 'confirm' => __('Are you sure you want to delete all results for student {0} in the selected term?', $student->id)]) ?>
 <?php endif; ?>

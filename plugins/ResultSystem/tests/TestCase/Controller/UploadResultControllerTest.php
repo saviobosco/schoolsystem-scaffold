@@ -49,14 +49,15 @@ class UploadResultControllerTest extends IntegrationTestCase
 
     public function testIndex()
     {
-        $this->get('/result-system/upload-result');
-        $this->assertResponseOk();
+        $this->markTestSkipped('deprecated');
+        /*$this->get('/result-system/upload-result');
+        $this->assertResponseOk();*/
     }
 
     public function testUploadResult()
     {
         $this->markTestSkipped('deprecated');
-        $data = [
+        /*$data = [
             'type' => 'first_test',
             'class_id' => '1',
             'term_id' => '1',
@@ -69,15 +70,15 @@ class UploadResultControllerTest extends IntegrationTestCase
                 'size' => (int) 6144
             ]
         ];
-        $this->put('/result-system/upload-result',$data);
+        $this->put('/result-system/upload-result?session_id=1',$data);
         $this->assertRedirect();
-        $this->assertSession('2 records were successfully read and uploaded.', 'Flash.flash.0.message');
+        $this->assertSession('2 records were successfully read and uploaded.', 'Flash.flash.0.message');*/
     }
 
     public function testUploadResultSubjectFailed()
     {
         $this->markTestSkipped('deprecated.');
-        $data = [
+        /*$data = [
             'type' => 'first_test',
             'class_id' => '1',
             'term_id' => '1',
@@ -92,13 +93,13 @@ class UploadResultControllerTest extends IntegrationTestCase
         ];
         $this->put('/result-system/upload-result',$data);
         $this->assertRedirect();
-        $this->assertSession('The result could not be uploaded because the following subjects does not exist in the database Igbo. This might be caused by improper subject naming, wrong character cases and wrong spacings. Please cross check and try again', 'Flash.flash.0.message');
+        $this->assertSession('The result could not be uploaded because the following subjects does not exist in the database Igbo. This might be caused by improper subject naming, wrong character cases and wrong spacings. Please cross check and try again', 'Flash.flash.0.message');*/
     }
 
     public function testUploadResultStudentFailed()
     {
         $this->markTestSkipped('deprecated.');
-        $data = [
+        /*$data = [
             'type' => 'first_test',
             'class_id' => '1',
             'term_id' => '1',
@@ -114,5 +115,5 @@ class UploadResultControllerTest extends IntegrationTestCase
         $this->put('/result-system/upload-result',$data);
         $this->assertRedirect();
         $this->assertSession('3 records were successfully read and uploaded.', 'Flash.flash.0.message');
-    }
+ */ }
 }

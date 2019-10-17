@@ -36,7 +36,7 @@ if ( isset($studentResultExists) AND !empty($studentResultExists)) {
                 <td> <?= $student->full_name ?></td>
             </tr>
             <tr>
-                <th>Class :</th>
+                <th> Current Class :</th>
                 <td><?= $student->class->class ?> </td>
             </tr>
         </table>
@@ -75,11 +75,11 @@ if ( isset($studentResultExists) AND !empty($studentResultExists)) {
         <p> Please select the session , class and term  </p>
     </div>
 <?php endif; ?>
+<?php if (!empty($subjects)): ?>
 
 <?= $this->Form->create(null,['method'=>'POST']) ?>
 <fieldset>
     <legend><?= __('Add Student Termly Result') ?></legend>
-    <?php if (!empty($subjects)): ?>
         <table  class="table table-bordered table-responsive ">
             <tr>
                 <th><?= __('Subject') ?></th>
@@ -101,7 +101,9 @@ if ( isset($studentResultExists) AND !empty($studentResultExists)) {
                 </tr>
             <?php endforeach; ?>
         </table>
-
+</fieldset>
+    <fieldset>
+        <legend>General Remarks </legend>
         <!-- This is for the student remark -->
         <?= $this->Form->hidden('student_general_remarks.0.student_id',['value' => $student->id ]) ?>
         <?= $this->Form->hidden('student_general_remarks.0.class_id',['value' => @$queryData['class_id']]) ?>
@@ -111,7 +113,7 @@ if ( isset($studentResultExists) AND !empty($studentResultExists)) {
             <label for="<?= $remarkInputKey ?>"> <?= h($remarkInputValue) ?> </label>
             <?= $this->Form->input("student_general_remarks.0.$remarkInputKey",['class' => 'form-control','label'=>['text'=> 'Result Remark']])  ?>
         <?php endforeach; ?>
-    <?php endif; ?>
-</fieldset>
+    </fieldset>
 <?= $this->Form->button(__('Submit'),['class' => 'btn btn-primary']) ?>
 <?= $this->Form->end() ?>
+<?php endif; ?>

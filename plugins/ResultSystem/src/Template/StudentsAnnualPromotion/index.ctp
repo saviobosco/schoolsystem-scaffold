@@ -42,8 +42,9 @@ $this->assign('title','Annual Promotion');
                     ?>
                     <?= $this->Form->input('student_annual_positions.'.$num.'.promoted',$checkboxConfig)  ?>
                     <?= $this->Form->hidden('student_annual_positions.'.$num.'.student_id',['value' => $student['student_id'] ]) ?>
-                    <?= $this->Form->hidden('student_annual_positions.'.$num.'.class_id',['value' => @$student['class_id']]) ?>
-                    <?= $this->Form->hidden('student_annual_positions.'.$num.'.session_id',['value' => @$student['session_id']]) ?>
+                    <?= $this->Form->hidden('student_annual_positions.'.$num.'.class_id',['value' => $student['class_id']]) ?>
+                    <?= $this->Form->hidden('student_annual_positions.'.$num.'.session_id',['value' => $student['session_id']]) ?>
+                    <?= $this->Form->hidden('student_annual_positions.'.$num.'.term_id',['value' => $student['term_id']]) ?>
                 </td>
             </tr>
         <?php endforeach; ?>

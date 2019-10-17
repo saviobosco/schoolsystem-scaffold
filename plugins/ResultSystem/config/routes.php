@@ -165,7 +165,7 @@ Router::plugin(
         ], 'remark-inputs:store');
 
         $routes->fallbacks('DashedRoute');
-        //$routes->applyMiddleware('disableCache');
+
         $routes->connect('/view-student-result-sheet',[
             'controller' => 'CheckResult',
             'action' => 'viewStudentResult'

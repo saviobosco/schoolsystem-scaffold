@@ -19,13 +19,14 @@ class StudentsAnnualPromotionController extends AppController
     {
         $queryData = $this->request->getQuery();
         if ( !empty($queryData) ) {
-            $students = $this->Students->StudentAnnualPositions
+            $students = $this->Students->StudentPositions
             ->query()
                 ->enableHydration(false)
                 ->contain(['Students' => ['fields' => ['id','first_name','last_name']]])
                 ->where([
-                    'session_id' => $queryData['session_id'],
-                    'StudentAnnualPositions.class_id' => $queryData['class_id']
+                    'StudentPositions.session_id' => $queryData['session_id'],
+                    'StudentPositions.class_id' => $queryData['class_id'],
+                    'StudentPositions.term_id' => 4,
                 ])
                 ->orderDesc('total')
                 ->toArray();
@@ -44,9 +45,18 @@ class StudentsAnnualPromotionController extends AppController
         }
         if ( $this->request->is(['put','patch','post'])) {
             // get student annual subject positions
-            $studentAnnualPositions = $this->Students->StudentAnnualPositions->find('all')->where(['session_id'=>$queryData['session_id'],'class_id'=>$queryData['class_id']])->toArray();
-            $studentAnnualPositions = $this->Students->StudentAnnualPositions->patchEntities($studentAnnualPositions,$this->request->getData('student_annual_positions'));
-            if ($this->Students->StudentAnnualPositions->saveMany($studentAnnualPositions)) {
+            $studentAnnualPositions = $this->Students->StudentPositions
+                ->find('all')
+                ->where([
+                    'session_id'=>$queryData['session_id'],
+                    'class_id'=>$queryData['class_id'],
+                    'term_id'=> 4,
+                ])
+                ->toArray();
+            $studentAnnualPositions = $this->Students->StudentPositions
+                ->patchEntities($studentAnnualPositions,$this->request->getData('student_annual_positions'));
+
+            if ($this->Students->StudentPositions->saveMany($studentAnnualPositions)) {
                 $this->Flash->success('The action was successful!');
             } else {
                 $this->Flash->error('The action was not successful!');

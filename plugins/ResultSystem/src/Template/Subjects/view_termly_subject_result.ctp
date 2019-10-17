@@ -10,7 +10,7 @@ $this->assign('title',$subject->name);
     </tr>
 </table>
 
-<div class="related">
+<div class="table-responsive">
     <h4><?= __(' Student Termly Results') ?></h4>
     <?php if (isset( $subjectTermlyResults) && !empty($subjectTermlyResults)): ?>
         <table class="table table-bordered table-responsive">

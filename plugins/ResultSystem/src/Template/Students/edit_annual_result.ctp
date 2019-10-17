@@ -33,9 +33,9 @@ $this->assign('title','Edit Annual Results');
     </div>
 
 <?= $this->Form->create($student) ?>
+<?php if (!empty($student->student_annual_results)): ?>
     <fieldset>
         <legend><?= __('Edit Student Annual Result') ?></legend>
-        <?php if (!empty($student->student_annual_results)): ?>
             <table class="table table-bordered table-responsive " data-toggle='tooltip' title=''>
                 <tr>
                     <th><?= __('Subject') ?></th>
@@ -62,45 +62,58 @@ $this->assign('title','Edit Annual Results');
                     </tr>
                 <?php endfor; ?>
             </table>
-
-            <?= $this->Form->hidden('student_annual_positions.0.student_id',['value' => $student->id ]) ?>
-            <?= $this->Form->hidden('student_annual_positions.0.class_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['class_id'],1)]) ?>
-            <?= $this->Form->hidden('student_annual_positions.0.session_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['session_id'],1)]) ?>
-
-            <label for="student total"> Total </label>
-            <?= $this->Form->input('student_annual_positions.0.total',['class' => 'form-control','label'=>['text'=> 'Total']])  ?>
-
-            <label for="student average"> Average </label>
-            <?= $this->Form->input('student_annual_positions.0.average',['class' => 'form-control','label'=>['text'=> 'Average']])  ?>
-
-            <label for="student grade"> Grade </label>
-            <?= $this->Form->input('student_annual_positions.0.grade',['class' => 'form-control','label'=>['text'=> 'Grade']])  ?>
-
-            <label for="student position"> Position </label>
-            <?= $this->Form->input('student_annual_positions.0.position',['class' => 'form-control','label'=>['text'=> 'Position']])  ?>
-
-            <label for="student promoted"> Promoted ?  </label>
-            <?= $this->Form->input('student_annual_positions.0.promoted',[ 'type'=>'checkbox'])  ?>
-
-            <?= $this->Form->hidden('student_general_remarks.0.student_id',['value' => $student->id ]) ?>
-            <?= $this->Form->hidden('student_general_remarks.0.class_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['class_id'],1)]) ?>
-            <?= $this->Form->hidden('student_general_remarks.0.term_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['term_id'],1)]) ?>
-            <?= $this->Form->hidden('student_general_remarks.0.session_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['session_id'],1)]) ?>
-            <?php foreach($remarkInputs as $remarkInputKey => $remarkInputValue ) : ?>
-                <label for="<?= $remarkInputKey ?>"> <?= h($remarkInputValue) ?> </label>
-                <?= $this->Form->input("student_general_remarks.0.$remarkInputKey",['class' => 'form-control','label'=>['text'=> 'Result Remark']])  ?>
-            <?php endforeach; ?>
-
-            <label for="result status"> Publish Status </label>
-            <?php $publishResultConfig = ['type'=>'checkbox']; if (empty($student->student_publish_results)) {
-                $publishResultConfig['checked'] = false;
-            } ?>
-            <?= $this->Form->input('student_publish_results.0.status',$publishResultConfig) ?>
-            <?= $this->Form->hidden('student_publish_results.0.student_id',['value' => $student->id ]) ?>
-            <?= $this->Form->hidden('student_publish_results.0.class_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['class_id'],1)]) ?>
-            <?= $this->Form->hidden('student_publish_results.0.term_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['term_id'],1)]) ?>
-            <?= $this->Form->hidden('student_publish_results.0.session_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['session_id'],1)]) ?>
-        <?php endif; ?>
     </fieldset>
+
+    <fieldset>
+        <legend> Position Details </legend>
+        <?= $this->Form->hidden('student_positions.0.student_id',['value' => $student->id ]) ?>
+        <?= $this->Form->hidden('student_positions.0.class_id',['value' => $this->request->query['class_id']]) ?>
+        <?= $this->Form->hidden('student_positions.0.session_id',['value' => $this->request->query['session_id']]) ?>
+        <?= $this->Form->hidden('student_positions.0.term_id',['value' => $this->request->query['term_id']]) ?>
+
+        <label for="student total"> Total </label>
+        <?= $this->Form->input('student_positions.0.total',['class' => 'form-control','label'=>['text'=> 'Total']])  ?>
+
+        <label for="student average"> Average </label>
+        <?= $this->Form->input('student_positions.0.average',['class' => 'form-control','label'=>['text'=> 'Average']])  ?>
+
+        <label for="student grade"> Grade </label>
+        <?= $this->Form->input('student_positions.0.grade',['class' => 'form-control','label'=>['text'=> 'Grade']])  ?>
+
+        <label for="student position"> Position </label>
+        <?= $this->Form->input('student_positions.0.position',['class' => 'form-control','label'=>['text'=> 'Position']])  ?>
+
+        <label for="student promoted"> Promoted ?  </label>
+        <?= $this->Form->input('student_positions.0.promoted',[ 'type'=>'checkbox'])  ?>
+
+    </fieldset>
+    <fieldset>
+        <legend> General Remarks </legend>
+        <?= $this->Form->hidden('student_general_remarks.0.student_id',['value' => $student->id ]) ?>
+        <?= $this->Form->hidden('student_general_remarks.0.class_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['class_id'],1)]) ?>
+        <?= $this->Form->hidden('student_general_remarks.0.term_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['term_id'],1)]) ?>
+        <?= $this->Form->hidden('student_general_remarks.0.session_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['session_id'],1)]) ?>
+        <?php foreach($remarkInputs as $remarkInputKey => $remarkInputValue ) : ?>
+            <label for="<?= $remarkInputKey ?>"> <?= h($remarkInputValue) ?> </label>
+            <?= $this->Form->input("student_general_remarks.0.$remarkInputKey",['class' => 'form-control','label'=>['text'=> 'Result Remark']])  ?>
+        <?php endforeach; ?>
+    </fieldset>
+
+    <fieldset>
+        <legend> Publish Result </legend>
+        <label for="result status"> Publish Status </label>
+        <?php $publishResultConfig = ['type'=>'checkbox']; if (empty($student->student_publish_results)) {
+            $publishResultConfig['checked'] = false;
+        } ?>
+
+        <?= $this->Form->input('student_publish_results.0.status',$publishResultConfig) ?>
+        <?= $this->Form->hidden('student_publish_results.0.student_id',['value' => $student->id ]) ?>
+        <?= $this->Form->hidden('student_publish_results.0.class_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['class_id'],1)]) ?>
+        <?= $this->Form->hidden('student_publish_results.0.term_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['term_id'],1)]) ?>
+        <?= $this->Form->hidden('student_publish_results.0.session_id',['value' => @$this->SearchParameter->getDefaultValue($this->request->query['session_id'],1)]) ?>
+
+    </fieldset>
+
+<?php endif; ?>
 <?= $this->Form->button(__('Submit'),['class' => 'btn btn-primary']) ?>
 <?= $this->Form->end() ?>

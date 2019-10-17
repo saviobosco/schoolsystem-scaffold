@@ -27,12 +27,12 @@ class AnnualResultProcessing
      * @param $session_id
      * @return $returnData
      */
-    public function calculateAnnualTotals($class_id, $session_id)
+    public function calculateAnnualTotals($class_id, $session_id, $term_id)
     {
         $returnData = null;
         // Initialize the required tables
         $annualResultTable = TableRegistry::get('ResultSystem.StudentAnnualResults');
-        $annualPositionTable = TableRegistry::get('ResultSystem.StudentAnnualPositions');
+        $positionTable = TableRegistry::get('ResultSystem.StudentPositions');
 
         $StudentTotalForAllTermlySubjects = $annualResultTable->find('all')
             ->where([
@@ -78,17 +78,18 @@ class AnnualResultProcessing
                     $subjectCount++;
                 }
                 $subjectAverage = $this->_determineNumberPrecision($sumOfSubjectsAverage / $subjectCount);
-                $studentAnnualPosition = $annualPositionTable->newEntity(
+                $studentAnnualPosition = $positionTable->newEntity(
                     [
                         'student_id' => $student_id,
                         'total'      => $sumOfSubjectsTotal,
                         'average'    => $subjectAverage,
                         'grade'     => $this->remarks[$this->calculateGrade($subjectAverage,$this->grades)],
                         'class_id'  => $class_id,
-                        'session_id' => $session_id
+                        'session_id' => $session_id,
+                        'term_id' => $term_id,
                     ]
                 );
-                $annualPositionTable->save($studentAnnualPosition);
+                $positionTable->save($studentAnnualPosition);
 
             } catch (MissingScoreRangeException $exception) {
                 $returnData['subjectCountIssues'][] = $exception->getMessage();
@@ -98,21 +99,22 @@ class AnnualResultProcessing
         return $returnData;
     }
 
-    public function calculateAnnualPosition($class_id,$session_id)
+    public function calculateAnnualPosition($class_id,$session_id, $term_id)
     {
         // Initializes the All required tables
-        $annualPositionTable = TableRegistry::get('ResultSystem.StudentAnnualPositions');
+        $positionTable = TableRegistry::get('ResultSystem.StudentPositions');
         // change the total column type to string
-        $annualPositionTableSchema = $annualPositionTable->getSchema()->setColumnType('total', 'string');
+        $annualPositionTableSchema = $positionTable->getSchema()->setColumnType('total', 'string');
         TableRegistry::clear();
-        $annualPositionTable = TableRegistry::get('ResultSystem.StudentAnnualPositions', [
+        $positionTable = TableRegistry::get('ResultSystem.StudentPositions', [
             'schema' => $annualPositionTableSchema
         ]);
-        $annualResultsTotal = $annualPositionTable->find('all')
-            ->select(['total','class_id','session_id','student_id'])
+        $annualResultsTotal = $positionTable->find('all')
+            ->select(['total','class_id','session_id','student_id', 'term_id'])
             ->where([
             'class_id'=>$class_id,
-            'session_id' => $session_id
+            'session_id' => $session_id,
+            'term_id' => $term_id,
             ])
             ->order(['total'=>'DESC'])
             ->groupBy('total');
@@ -123,7 +125,7 @@ class AnnualResultProcessing
         foreach ($annualResultsTotal as  $totalGroup ) {
             foreach($totalGroup as $student) {
                 $student['position'] = $position ;
-                $annualPositionTable->save($student);
+                $positionTable->save($student);
             }
             // Increment the position variable .
             $position++;
@@ -131,7 +133,7 @@ class AnnualResultProcessing
         return true;
     }
 
-    public function calculateStudentAnnualSubjectPosition($class_id,$session_id)
+    public function calculateStudentAnnualSubjectPosition($class_id,$session_id, $term_id)
     {
         //Initialize all required Tables
         $annualResultTable = TableRegistry::get('ResultSystem.StudentAnnualResults');
@@ -142,7 +144,7 @@ class AnnualResultProcessing
         ]);
         $classTable = TableRegistry::get('ResultSystem.Classes');
         $subjectTable = TableRegistry::get('ResultSystem.Subjects');
-        $annualSubjectPositionTable = TableRegistry::get('ResultSystem.StudentAnnualSubjectPositions');
+        $subjectPositionTable = TableRegistry::get('ResultSystem.StudentSubjectPositions');
         // find the block the class_id is under. Either junior or senior
         $classDetail = $classTable->find('all')->where(['id'=>$class_id])->first();
         $subjects = $subjectTable->find('all')->where(['block_id'=>$classDetail['block_id']]);
@@ -166,17 +168,18 @@ class AnnualResultProcessing
             $position = 1;
             foreach ( $studentsStudyingTheSubject as $key => $value ) {
                 foreach ( $value as $studentStudyingTheSubject ) {
-                    $studentSubjectPosition = $annualSubjectPositionTable->newEntity(
+                    $studentSubjectPosition = $subjectPositionTable->newEntity(
                         [
                             'student_id' => $studentStudyingTheSubject['student_id'],
                             'subject_id' => $studentStudyingTheSubject['subject_id'],
                             'class_id'   => $class_id,
                             'session_id' => $session_id,
+                            'term_id' => $term_id,
                             'total'      => $studentStudyingTheSubject['total'],
                             'position'   => $position,
                         ]
                     );
-                    $annualSubjectPositionTable->save($studentSubjectPosition);
+                    $subjectPositionTable->save($studentSubjectPosition);
                 }
                 $position++;
             }

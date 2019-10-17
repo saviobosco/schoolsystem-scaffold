@@ -53,11 +53,7 @@ class ResultRemarkInputsTableTest extends TestCase
 
     public function testGetValidRemarkInputs()
     {
-        $expected = [
-          'remark_1' => 'Teacher 1',
-          'remark_2' => 'Teacher 2',
-        ];
-        $this->assertEquals($expected,$this->ResultRemarkInputs->getValidRemarkInputs());
+        $this->assertArrayHasKey('remark_1', $this->ResultRemarkInputs->getValidRemarkInputs(1));
     }
 
 }

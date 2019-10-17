@@ -107,7 +107,7 @@ class StudentsController extends AppController
             return ; // end the function execution here
         }
         try {
-            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
+            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs($queryData['session_id']));
 
             if (  isset($queryData['term_id'] ) && $queryData['term_id'] == 4 ) {
 
@@ -124,17 +124,19 @@ class StudentsController extends AppController
                 ]);
 
                 // get student annual position
-                $studentPosition = $this->Students->StudentAnnualPositions->find('all')
+                $studentPosition = $this->Students->StudentPositions->find('all')
                     ->where(['student_id' => $student->id,
                         'session_id' => $queryData['session_id'],
                         'class_id'   => $queryData['class_id'],
+                        'term_id'   => $queryData['term_id'],
                     ])->first();
 
                 // get student annual subject positions
-                $studentAnnualSubjectPositions = $this->Students->StudentAnnualSubjectPositions->find('all')
+                $studentAnnualSubjectPositions = $this->Students->StudentSubjectPositions->find('all')
                     ->where(['student_id' => $student->id,
                         'session_id' => $queryData['session_id'],
                         'class_id'   => $queryData['class_id'],
+                        'term_id'   => $queryData['term_id'],
                     ])->combine('subject_id','position')->toArray();
 
                 $sessions = $this->Students->Sessions->find('list',['limit' => 200])->toArray();
@@ -164,7 +166,7 @@ class StudentsController extends AppController
                     ]
                 ]);
                 // get the student position
-                $studentPosition = $this->Students->StudentTermlyPositions->find('all')
+                $studentPosition = $this->Students->StudentPositions->find('all')
                     ->where(['student_id' => $student->id,
                         'session_id' => $queryData['session_id'],
                         'class_id'   => $queryData['class_id'],
@@ -172,7 +174,7 @@ class StudentsController extends AppController
                     ])->first();
 
                 // gets the student subject positions
-                $studentSubjectPositions = $this->Students->StudentTermlySubjectPositions->find('all')
+                $studentSubjectPositions = $this->Students->StudentSubjectPositions->find('all')
                     ->where(['student_id' => $student->id,
                         'session_id' => $queryData['session_id'],
                         'class_id'   => $queryData['class_id'],
@@ -220,7 +222,7 @@ class StudentsController extends AppController
                 $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs($queryData['session_id']));
                 $classBlock = $this->Students->Classes->find()->select(['id','block_id'])->where(['id'=>$queryData['class_id']])->enableHydration(false)->first();
                 $subjects = $this->Subjects->find('all')->where(['block_id'=>$classBlock['block_id']])->combine('id','name')->toArray();
-                $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs();
+                $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs($queryData['session_id']);
             }
             $sessions = $this->Students->Sessions->find('list', ['limit' => 200])->toArray();
             $classes = $this->Students->Classes->find('list', ['limit' => 200])->toArray();
@@ -276,8 +278,8 @@ class StudentsController extends AppController
                 $this->render('edit_termly_result');
                 return;
             }
-            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
-            $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs();
+            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs($queryData['session_id']));
+            $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs($queryData['session_id']);
             if (isset($queryData['term_id']) && $queryData['term_id'] == 4) {
                 $student = $this->Students->getStudentAnnualResult($id, $queryData);
                 $this->set(compact('gradeInputs', 'remarkInputs', 'student', 'sessions', 'classes', 'subjects', 'terms'));
@@ -333,10 +335,10 @@ class StudentsController extends AppController
                 return;
             }
             $subjects = $this->Subjects->find('list')->toArray();
-            $resultGradeInputs = $this->ResultGradeInputs->getResultGradeInputs();
+            $resultGradeInputs = $this->ResultGradeInputs->getResultGradeInputs($queryData['session_id']);
             $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($resultGradeInputs);
             $gradeInputsForTableHead = $this->ResultGradeInputs->getValidGradeInputsWithAllData($resultGradeInputs);
-            $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs();
+            $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs($queryData['session_id']);
             $this->loadModel('ResultSystem.StudentClassCounts');
             $studentsCount = $this->StudentClassCounts->getStudentsClassCount($queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
             $this->loadModel('ResultSystem.Subjects');
@@ -365,13 +367,11 @@ class StudentsController extends AppController
                     ->first();
                 $studentAnnualResults = $this->Students->getStudentAnnualResultOnly($student['id'],$queryData);
                 // get student annual position
-                $studentPosition = $this->Students->getStudentAnnualPosition($student['id'],$queryData);
+                $studentPosition = $this->Students->getStudentPosition($student['id'], $queryData['session_id'], $queryData['class_id'], $queryData['term_id']);
                 // get student annual subject positions
-                $studentSubjectPositions = $this->Students->getStudentAnnualSubjectPositions($student['id'],$queryData['session_id'],$queryData['class_id']);
+                $studentSubjectPositions = $this->Students->getStudentSubjectPositions($student['id'], $queryData['session_id'], $queryData['class_id'], $queryData['term_id']);
                 //get the student remark
                 $studentRemark = $this->Students->getStudentGeneralRemark($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
-                //$fees = $this->_getSchoolFees($this->request->query['session_id'],$this->request->query['term_id']);
-                //$nextTerm = $this->_getTermTimeTable($this->request->query['session_id'],$this->request->query['term_id']);
                 $this->set(compact('student',
                     'studentAnnualResults',
                     'remarkInputs',
@@ -397,12 +397,9 @@ class StudentsController extends AppController
                 //get the student remark
                 $studentRemark = $this->Students->getStudentGeneralRemark($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
                 // get the student position
-                $studentPosition = $this->Students->getStudentTermlyPosition($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
+                $studentPosition = $this->Students->getStudentPosition($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
                 // gets the student subject positions
-                $studentSubjectPositions = $this->Students->getStudentTermlySubjectPositions($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
-                //$fees = $this->_getSchoolFees($this->request->query['session_id'],$this->request->query['term_id']);
-                // Next Term
-                //$nextTerm = $this->_getTermTimeTable($this->request->query['session_id'],$this->request->query['term_id']);
+                $studentSubjectPositions = $this->Students->getStudentSubjectPositions($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
                 $this->set(compact('student',
                     'studentTermlyResults',
                     'gradeInputs',
@@ -438,10 +435,10 @@ class StudentsController extends AppController
                 return;
             }
             $subjects = $this->Subjects->find('list')->toArray();
-            $resultGradeInputs = $this->ResultGradeInputs->getResultGradeInputs();
+            $resultGradeInputs = $this->ResultGradeInputs->getResultGradeInputs($queryData['session_id']);
             $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($resultGradeInputs);
             $gradeInputsForTableHead = $this->ResultGradeInputs->getValidGradeInputsWithAllData($resultGradeInputs);
-            $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs();
+            $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs($queryData['session_id']);
             $this->loadModel('ResultSystem.StudentClassCounts');
             $studentsCount = $this->StudentClassCounts->getStudentsClassCount($queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
             $subjectClassAverages = $this->Subjects->getSubjectClassAverages($queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
@@ -483,9 +480,9 @@ class StudentsController extends AppController
 
                     $studentsResults[$student['id']]['studentAnnualResults'] = $this->Students->getStudentAnnualResultOnly($student['id'],$queryData);
                     // get student annual position
-                    $studentsResults[$student['id']]['studentPosition'] = $this->Students->getStudentAnnualPosition($student['id'],$queryData);
+                    $studentsResults[$student['id']]['studentPosition'] = $this->Students->getStudentPosition($student['id'],$queryData['session_id'], $queryData['class_id'], $queryData['term_id']);
                     // get student annual subject positions
-                    $studentsResults[$student['id']]['studentSubjectPositions'] = $this->Students->getStudentAnnualSubjectPositions($student['id'],$queryData['session_id'],$queryData['class_id']);
+                    $studentsResults[$student['id']]['studentSubjectPositions'] = $this->Students->getStudentSubjectPositions($student['id'],$queryData['session_id'],$queryData['class_id'], $queryData['term_id']);
                     //get the student remark
                     $studentsResults[$student['id']]['studentRemark'] = $this->Students->getStudentGeneralRemark($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
                     //$fees = $this->_getSchoolFees($this->request->query['session_id'],$this->request->query['term_id']);
@@ -495,9 +492,9 @@ class StudentsController extends AppController
                     //get the student remark
                     $studentsResults[$student['id']]['studentRemark'] = $this->Students->getStudentGeneralRemark($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
                     // get the student position
-                    $studentsResults[$student['id']]['studentPosition'] = $this->Students->getStudentTermlyPosition($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
+                    $studentsResults[$student['id']]['studentPosition'] = $this->Students->getStudentPosition($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
                     // gets the student subject positions
-                    $studentsResults[$student['id']]['studentSubjectPositions'] = $this->Students->getStudentTermlySubjectPositions($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
+                    $studentsResults[$student['id']]['studentSubjectPositions'] = $this->Students->getStudentSubjectPositions($student['id'],$queryData['session_id'],$queryData['class_id'],$queryData['term_id']);
                     //$fees = $this->_getSchoolFees($this->request->query['session_id'],$this->request->query['term_id']);
                     // Next Term
                     //$nextTerm = $this->_getTermTimeTable($this->request->query['session_id'],$this->request->query['term_id']);

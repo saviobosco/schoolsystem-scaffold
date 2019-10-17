@@ -11,11 +11,8 @@ use Cake\Validation\Validator;
  *
  * @property \Cake\ORM\Association\BelongsTo $Blocks
  * @property \Cake\ORM\Association\HasMany $StudentAnnualResults
- * @property \Cake\ORM\Association\HasMany $StudentAnnualSubjectPositionOnClassDemacations
- * @property \Cake\ORM\Association\HasMany $StudentAnnualSubjectPositions
+ * @property \Cake\ORM\Association\HasMany $StudentSubjectPositions
  * @property \Cake\ORM\Association\HasMany $StudentTermlyResults
- * @property \Cake\ORM\Association\HasMany $StudentTermlySubjectPositionOnClassDemacations
- * @property \Cake\ORM\Association\HasMany $StudentTermlySubjectPositions
  * @property \Cake\ORM\Association\HasMany $SubjectClassAverages
  *
  * @method \ResultSystem\Model\Entity\Subject get($primaryKey, $options = [])
@@ -52,25 +49,13 @@ class SubjectsTable extends Table
             'foreignKey' => 'subject_id',
             'className' => 'ResultSystem.StudentAnnualResults'
         ]);
-        $this->hasMany('StudentAnnualSubjectPositionOnClassDemarcations', [
+        $this->hasMany('StudentSubjectPositions', [
             'foreignKey' => 'subject_id',
-            'className' => 'ResultSystem.StudentAnnualSubjectPositionOnClassDemarcations'
-        ]);
-        $this->hasMany('StudentAnnualSubjectPositions', [
-            'foreignKey' => 'subject_id',
-            'className' => 'ResultSystem.StudentAnnualSubjectPositions'
+            'className' => 'ResultSystem.StudentSubjectPositions'
         ]);
         $this->hasMany('StudentTermlyResults', [
             'foreignKey' => 'subject_id',
             'className' => 'ResultSystem.StudentTermlyResults'
-        ]);
-        $this->hasMany('StudentTermlySubjectPositionOnClassDemarcations', [
-            'foreignKey' => 'subject_id',
-            'className' => 'ResultSystem.StudentTermlySubjectPositionOnClassDemarcations'
-        ]);
-        $this->hasMany('StudentTermlySubjectPositions', [
-            'foreignKey' => 'subject_id',
-            'className' => 'ResultSystem.StudentTermlySubjectPositions'
         ]);
         $this->hasMany('SubjectClassAverages', [
             'foreignKey' => 'subject_id',
@@ -138,15 +123,6 @@ class SubjectsTable extends Table
             ->toArray();
     }
 
-    public function getAnnualSubjectPositions($id,$queryData)
-    {
-        return $this->StudentAnnualSubjectPositions->find('all')
-            ->where(['subject_id' => $id,
-                'session_id' => $queryData['session_id'],
-                'class_id'   => $queryData['class_id'],
-            ])->combine('student_id','position')->toArray();
-    }
-
     public function getTermlyResults($id,$queryData)
     {
         return $this->StudentTermlyResults->find('all')
@@ -165,14 +141,15 @@ class SubjectsTable extends Table
             ->toArray();
     }
 
-    public function getTermlySubjectPositions($id,$queryData)
+    public function getSubjectPositions($id,$queryData)
     {
-        return $this->StudentTermlySubjectPositions->find('all')
+        return $this->StudentSubjectPositions->find('all')
             ->where(['subject_id' => $id,
                 'session_id' => $queryData['session_id'],
                 'class_id'   => $queryData['class_id'],
                 'term_id'   => $queryData['term_id'],
-            ])->combine('student_id','position')->toArray();
+            ])->combine('student_id','position')
+            ->toArray();
     }
 
     public function getTermlyResultWithHydration($id,$queryData)

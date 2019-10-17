@@ -35,9 +35,8 @@ class TermlyResultProcessingTest extends IntegrationTestCase
         'plugin.result_system.student_termly_results',
         'plugin.result_system.student_annual_results',
         'plugin.result_system.student_result_pins',
-        'plugin.result_system.student_termly_positions',
-        'plugin.result_system.student_termly_subject_positions',
-        'plugin.result_system.student_termly_subject_position_on_class_demarcations',
+        'plugin.result_system.student_positions',
+        'plugin.result_system.student_subject_positions',
         'plugin.result_system.subject_class_averages',
         'plugin.grading_system.result_grading_systems',
         'plugin.result_system.result_grade_inputs',
@@ -91,7 +90,7 @@ class TermlyResultProcessingTest extends IntegrationTestCase
     {
         $return = $this->termlyResultProcessing->calculateTermlyPosition(1, 1, 1);
         $this->assertEquals(true, $return);
-        $termlyPositionTable = TableRegistry::get('ResultSystem.StudentTermlyPositions');
+        $termlyPositionTable = TableRegistry::get('ResultSystem.StudentPositions');
         $termlyPositions = $termlyPositionTable->find()
             ->select(['student_id','position'])
             ->combine('student_id','position')
@@ -103,7 +102,7 @@ class TermlyResultProcessingTest extends IntegrationTestCase
 
     public function testCalculateTermlyPositionFailed()
     {
-        $termlyPositionTable = TableRegistry::get('ResultSystem.StudentTermlyPositions');
+        $termlyPositionTable = TableRegistry::get('ResultSystem.StudentPositions');
         $termlyPositionTable->deleteAll(['class_id' => 1,'session_id' => 1,'term_id' => 1]);
         $return = $this->termlyResultProcessing->calculateTermlyPosition(1, 1, 1);
         $this->assertEquals(false, $return);
@@ -112,7 +111,7 @@ class TermlyResultProcessingTest extends IntegrationTestCase
     public function testCalculateStudentTermlySubjectPosition()
     {
         $this->termlyResultProcessing->calculateStudentTermlySubjectPosition(1, 1, 1);
-        $termlySubjectPositionsTable = TableRegistry::get('ResultSystem.StudentTermlySubjectPositions');
+        $termlySubjectPositionsTable = TableRegistry::get('ResultSystem.StudentSubjectPositions');
         $termlySubjectPositions = $termlySubjectPositionsTable->find()
             ->enableHydration(false)
             ->select(['student_id','position','subject_id'])

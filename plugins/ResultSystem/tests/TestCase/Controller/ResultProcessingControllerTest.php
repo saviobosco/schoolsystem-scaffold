@@ -25,21 +25,16 @@ class ResultProcessingControllerTest extends IntegrationTestCase
         'plugin.result_system.students',
         'plugin.result_system.sessions',
         'plugin.result_system.classes',
-        'plugin.result_system.class_demarcations',
         'plugin.result_system.subjects',
         'plugin.grading_system.result_grading_systems',
         'plugin.result_system.student_annual_results',
         'plugin.result_system.terms',
         'plugin.result_system.student_termly_results',
-        'plugin.result_system.student_termly_positions',
-        'plugin.result_system.student_termly_position_on_class_demarcations',
-        'plugin.result_system.student_termly_subject_positions',
-        'plugin.result_system.student_termly_subject_position_on_class_demarcations',
+        'plugin.result_system.student_positions',
+        'plugin.result_system.student_subject_positions',
         'plugin.result_system.student_class_counts',
         'plugin.result_system.subject_class_averages',
         'plugin.result_system.student_class_counts',
-        'plugin.result_system.student_annual_positions',
-        'plugin.result_system.student_annual_subject_positions',
     ];
 
     public function setUp()
@@ -59,6 +54,7 @@ class ResultProcessingControllerTest extends IntegrationTestCase
         ]);
         $this->enableRetainFlashMessages();
         $this->enableCsrfToken();
+        $this->disableErrorHandlerMiddleware();
     }
 
     /**

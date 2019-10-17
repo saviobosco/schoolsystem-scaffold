@@ -133,76 +133,6 @@ class ResultSystem extends AbstractMigration
 
 
 
-        $this->table('student_annual_positions')
-            ->addColumn('student_id', 'string', [
-                'default' => null,
-                'limit' => 30,
-                'null' => false,
-            ])
-            ->addColumn('total', 'float', [
-                'default' => null,
-                'limit' => null,
-                'null' => false,
-            ])
-            ->addColumn('average', 'float', [
-                'default' => null,
-                'limit' => null,
-                'null' => false,
-            ])
-            ->addColumn('grade', 'string', [
-                'default' => null,
-                'limit' => 20,
-                'null' => true,
-            ])
-            ->addColumn('position', 'integer', [
-                'default' => null,
-                'limit' => 10,
-                'null' => true,
-            ])
-            ->addColumn('promoted', 'boolean', [
-                'default' => null,
-                'null' => true,
-            ])
-            ->addColumn('class_id', 'integer', [
-                'default' => null,
-                'limit' =>11,
-                'null' => false,
-            ])
-            ->addColumn('session_id', 'integer', [
-                'default' => null,
-                'limit' => 11,
-                'null' => false,
-            ])
-            ->addIndex(['student_id', 'session_id', 'class_id'])
-            ->addForeignKey(
-                'student_id',
-                'students',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'CASCADE'
-                ])
-            ->addForeignKey(
-                'session_id',
-                'sessions',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'CASCADE'
-                ])
-            ->addForeignKey(
-                'class_id',
-                'classes',
-                'id',
-                [
-                    'update' => 'CASCADE',
-                    'delete' => 'CASCADE'
-                ])
-            ->create();
-
-
-
-
         /** Student Annual Results */
 
         $this->table('student_annual_results')
@@ -574,6 +504,10 @@ class ResultSystem extends AbstractMigration
             ->addColumn('position', 'integer', [
                 'default' => null,
                 'limit' => 10,
+                'null' => true,
+            ])
+            ->addColumn('promoted', 'boolean', [
+                'default' => null,
                 'null' => true,
             ])
             ->addColumn('class_id', 'integer', [

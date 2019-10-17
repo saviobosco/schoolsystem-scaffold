@@ -932,7 +932,7 @@ label {
 fieldset {
     border: 1px solid silver;
     padding: .35em .625em .75em;
-    margin: 0 2px;
+    margin: 0 2px 20px 2px;
 }
 
 legend {

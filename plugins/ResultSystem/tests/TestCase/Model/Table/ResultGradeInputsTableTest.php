@@ -53,17 +53,17 @@ class ResultGradeInputsTableTest extends TestCase
 
     public function testGetResultGradeInputs()
     {
-        $actual = $this->ResultGradeInputs->getResultGradeInputs();
-        $this->assertEquals(2,$actual->count());
+        $actual = $this->ResultGradeInputs->getResultGradeInputs(1);
+        $this->assertEquals(1,$actual->count());
     }
 
     public function testGetValidGradeInputs()
     {
         $expected = [
             'first_test' => 'First Test (10%)',
-            'exam' => 'Examination (70%)'
+            'exam' => 'Examination'
         ];
-        $query = $this->ResultGradeInputs->getResultGradeInputs();
+        $query = $this->ResultGradeInputs->getResultGradeInputs(1);
         $this->assertEquals($expected,$this->ResultGradeInputs->getValidGradeInputs($query));
     }
 
@@ -88,9 +88,8 @@ class ResultGradeInputsTableTest extends TestCase
                 'visibility' => 1
             ]
         ];
-        $query = $this->ResultGradeInputs->getResultGradeInputs();
+        $query = $this->ResultGradeInputs->getResultGradeInputs(1);
         $actual = $this->ResultGradeInputs->getValidGradeInputsWithAllData($query);
         $this->assertEquals($expected[0]['id'], $actual[0]['id']);
-        $this->assertEquals($expected[1]['id'], $actual[1]['id']);
     }
 }

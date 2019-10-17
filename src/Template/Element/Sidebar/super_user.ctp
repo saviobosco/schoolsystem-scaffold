@@ -65,19 +65,14 @@
         <span>School Administration</span>
     </a>
     <ul class="sub-menu">
-        <li class="has-sub">
-            <?= $this->Html->link('<b class="caret pull-right"></b><i class="fa fa-calendar"></i> <span>'.__('Academic Sessions').'</span>','javascript:;',['escape'=>false,'title'=>'Academic session']) ?>
-            <ul class="sub-menu">
-                <li><?= $this->Html->link(__('Sessions'),['plugin'=>null,'controller'=>'Sessions','action'=>'index'],['escape'=>false]) ?></li>
-                <li><?= $this->Html->link(__('Add New session'),['plugin'=>null,'controller'=>'Sessions','action'=>'add'],['escape'=>false]) ?></li>
-            </ul>
+        <li class="">
+            <?= $this->Html->link(__('Academic Sessions'),
+                ['plugin'=>null,'controller'=>'Sessions','action'=>'index'],
+                ['title'=>'Academic session']) ?>
         </li>
-        <?= $this->element('ClassManager.Links/sidebar') ?>
-        <li class="has-sub">
-            <?= $this->Html->link('<b class="caret pull-right"></b><i class="fa fa-calendar"></i> <span>'.__('TimeTable').'</span>','javascript:;',['escape'=>false,'title'=>'TimeTable']) ?>
-            <ul class="sub-menu">
-                <li><?= $this->Html->link(__('TermTimeTable'),['plugin'=>'TimesTable','controller'=>'TermTimeTables','action'=>'index'],['escape'=>false]) ?></li>
-            </ul>
+        <?= $this->element('ClassManager.sidebar') ?>
+        <li>
+            <?= $this->Html->link(__('TermTimeTable'),['plugin'=>'TimesTable','controller'=>'TermTimeTables','action'=>'index'],['title'=>'TermTimeTable']) ?>
         </li>
     </ul>
 </li>

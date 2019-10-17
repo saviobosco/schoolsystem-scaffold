@@ -18,17 +18,20 @@ class ResultGradeInputsFixture extends TestFixture
     // @codingStandardsIgnoreStart
     public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
-        'main_value' => ['type' => 'string', 'length' => 20, 'null' => false, 'default' => null, 'collate' => 'utf8_bin', 'comment' => '', 'precision' => null, 'fixed' => null],
-        'replacement' => ['type' => 'string', 'length' => 50, 'null' => true, 'default' => null, 'collate' => 'utf8_bin', 'comment' => '', 'precision' => null, 'fixed' => null],
-        'percentage' => ['type' => 'string', 'length' => 10, 'null' => true, 'default' => null, 'collate' => 'utf8_bin', 'comment' => '', 'precision' => null, 'fixed' => null],
-        'output_order' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => '0', 'comment' => '', 'precision' => null, 'autoIncrement' => null],
-        'visibility' => ['type' => 'boolean', 'length' => null, 'null' => true, 'default' => '0', 'comment' => '', 'precision' => null],
+        'main_value' => ['type' => 'string', 'length' => 30, 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
+        'replacement' => ['type' => 'string', 'length' => 50, 'null' => true, 'default' => null, 'collate' => 'utf8_unicode_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
+        'percentage' => ['type' => 'string', 'length' => 10, 'null' => true, 'default' => null, 'collate' => 'utf8_unicode_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
+        'output_order' => ['type' => 'integer', 'length' => 3, 'unsigned' => false, 'null' => true, 'default' => '0', 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'visibility' => ['type' => 'integer', 'length' => 3, 'unsigned' => false, 'null' => true, 'default' => '0', 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'session_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
+        'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
         ],
         '_options' => [
             'engine' => 'InnoDB',
-            'collation' => 'utf8_bin'
+            'collation' => 'utf8_unicode_ci'
         ],
     ];
     // @codingStandardsIgnoreEnd
@@ -45,31 +48,29 @@ class ResultGradeInputsFixture extends TestFixture
             'replacement' => 'First Test',
             'percentage' => '10',
             'output_order' => 1,
-            'visibility' => 1
+            'session_id' => 1,
+            'created' => '2019-10-16 01:27:35',
+            'modified' => '2019-10-16 01:27:35'
         ],
         [
             'id' => 2,
+            'main_value' => 'first_test',
+            'replacement' => 'First Test',
+            'percentage' => '10',
+            'output_order' => 1,
+            'session_id' => 2,
+            'created' => '2019-10-16 01:27:35',
+            'modified' => '2019-10-16 01:27:35'
+        ],
+        [
+            'id' => 3,
             'main_value' => 'second_test',
             'replacement' => 'Second Test',
             'percentage' => '10',
             'output_order' => 2,
-            'visibility' => 0
-        ],
-        [
-            'id' => 3,
-            'main_value' => 'third_test',
-            'replacement' => 'Third Test',
-            'percentage' => '10',
-            'output_order' => 3,
-            'visibility' => 0
-        ],
-        [
-            'id' => 4,
-            'main_value' => 'exam',
-            'replacement' => 'Examination',
-            'percentage' => '70',
-            'output_order' => 4,
-            'visibility' => 1
-        ],
+            'session_id' => 2,
+            'created' => '2019-10-16 01:27:35',
+            'modified' => '2019-10-16 01:27:35'
+        ]
     ];
 }

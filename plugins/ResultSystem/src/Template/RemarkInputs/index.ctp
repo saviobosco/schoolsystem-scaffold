@@ -12,7 +12,6 @@
                             <tr>
                                 <th> Main Value</th>
                                 <th> Actual Name</th>
-                                <th> Percent </th>
                                 <th> Sort Order </th>
                                 <th> Session </th>
                                 <th> Actions </th>
@@ -23,7 +22,6 @@
                                 <tr>
                                     <td> <?= $input->main_value ?> </td>
                                     <td> <?= $input->replacement ?> </td>
-                                    <td> <?= $input->percentage ?> </td>
                                     <td> <?= $input->output_order ?> </td>
                                     <td> <?= $sessions[$input->session_id] ?> </td>
                                     <td>

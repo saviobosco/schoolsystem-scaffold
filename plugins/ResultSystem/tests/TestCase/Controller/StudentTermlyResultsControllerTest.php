@@ -17,8 +17,6 @@ class StudentTermlyResultsControllerTest extends IntegrationTestCase
      */
     public $fixtures = [
         'plugin.result_system.student_termly_results',
-        'plugin.result_system.student_annual_results',
-        'plugin.result_system.student_termly_subject_positions',
     ];
 
     public function setUp()
@@ -38,6 +36,7 @@ class StudentTermlyResultsControllerTest extends IntegrationTestCase
         ]);
         $this->enableRetainFlashMessages();
         $this->enableCsrfToken();
+        $this->disableErrorHandlerMiddleware();
     }
 
     public function testDelete()

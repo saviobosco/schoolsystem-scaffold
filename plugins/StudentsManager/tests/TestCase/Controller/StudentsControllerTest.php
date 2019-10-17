@@ -20,7 +20,6 @@ class StudentsControllerTest extends IntegrationTestCase
         'plugin.students_manager.students',
         'plugin.students_manager.sessions',
         'plugin.students_manager.classes',
-        'plugin.students_manager.class_demarcations',
         'plugin.students_manager.states',
         'plugin.students_manager.religions',
         'plugin.users_manager.users'

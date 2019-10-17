@@ -7,9 +7,23 @@ use ResultSystem\Controller\AppController;
  * StudentGeneralRemarks Controller
  *
  * @property \ResultSystem\Model\Table\StudentGeneralRemarksTable $StudentGeneralRemarks
+ * @property \ResultSystem\Model\Table\SessionsTable $Sessions
+ * @property \ResultSystem\Model\Table\ClassesTable $Classes
+ * @property \ResultSystem\Model\Table\TermsTable $Terms
+ * @property \ResultSystem\Model\Table\StudentsTable $Students
+ * @property \ResultSystem\Model\Table\ResultRemarkInputsTable $ResultRemarkInputs
  */
 class StudentGeneralRemarksController extends AppController
 {
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadModel('ResultSystem.Students');
+        $this->loadModel('ResultSystem.Classes');
+        $this->loadModel('ResultSystem.Sessions');
+        $this->loadModel('ResultSystem.Terms');
+        $this->loadModel('ResultSystem.ResultRemarkInputs');
+    }
 
     /**
      * Index method
@@ -18,30 +32,10 @@ class StudentGeneralRemarksController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['Students', 'Classes', 'Terms', 'Sessions']
-        ];
-        $studentGeneralRemarks = $this->paginate($this->StudentGeneralRemarks);
-
-        $this->set(compact('studentGeneralRemarks'));
-        $this->set('_serialize', ['studentGeneralRemarks']);
-    }
-
-    /**
-     * View method
-     *
-     * @param string|null $id Student General Remark id.
-     * @return \Cake\Network\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $studentGeneralRemark = $this->StudentGeneralRemarks->get($id, [
-            'contain' => ['Students', 'Classes', 'Terms', 'Sessions']
-        ]);
-
-        $this->set('studentGeneralRemark', $studentGeneralRemark);
-        $this->set('_serialize', ['studentGeneralRemark']);
+        $classes = $this->Classes->find('list')->toArray();
+        $sessions = $this->Sessions->find('list')->toArray();
+        $terms = $this->Terms->find('list')->toArray();
+        $this->set(compact('classes', 'sessions', 'terms'));
     }
 
     /**
@@ -52,71 +46,63 @@ class StudentGeneralRemarksController extends AppController
     public function add()
     {
         $studentGeneralRemark = $this->StudentGeneralRemarks->newEntity();
-        if ($this->request->is('post')) {
-            $studentGeneralRemark = $this->StudentGeneralRemarks->patchEntity($studentGeneralRemark, $this->request->data);
+        if ($this->request->is(['post', 'put'])) {
+            $studentGeneralRemark = $this->StudentGeneralRemarks->patchEntity($studentGeneralRemark, $this->request->getData());
             if ($this->StudentGeneralRemarks->save($studentGeneralRemark)) {
                 $this->Flash->success(__('The student general remark has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The student general remark could not be saved. Please, try again.'));
             }
         }
-        $students = $this->StudentGeneralRemarks->Students->find('list', ['limit' => 200]);
-        $classes = $this->StudentGeneralRemarks->Classes->find('list', ['limit' => 200]);
-        $terms = $this->StudentGeneralRemarks->Terms->find('list', ['limit' => 200]);
-        $sessions = $this->StudentGeneralRemarks->Sessions->find('list', ['limit' => 200]);
-        $this->set(compact('studentGeneralRemark', 'students', 'classes', 'terms', 'sessions'));
-        $this->set('_serialize', ['studentGeneralRemark']);
     }
 
-    /**
-     * Edit method
-     *
-     * @param string|null $id Student General Remark id.
-     * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $studentGeneralRemark = $this->StudentGeneralRemarks->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $studentGeneralRemark = $this->StudentGeneralRemarks->patchEntity($studentGeneralRemark, $this->request->data);
-            if ($this->StudentGeneralRemarks->save($studentGeneralRemark)) {
-                $this->Flash->success(__('The student general remark has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The student general remark could not be saved. Please, try again.'));
-            }
-        }
-        $students = $this->StudentGeneralRemarks->Students->find('list', ['limit' => 200]);
-        $classes = $this->StudentGeneralRemarks->Classes->find('list', ['limit' => 200]);
-        $terms = $this->StudentGeneralRemarks->Terms->find('list', ['limit' => 200]);
-        $sessions = $this->StudentGeneralRemarks->Sessions->find('list', ['limit' => 200]);
-        $this->set(compact('studentGeneralRemark', 'students', 'classes', 'terms', 'sessions'));
-        $this->set('_serialize', ['studentGeneralRemark']);
+    public function getStudents()
+    {
+        $students = $this->Students->query()
+            ->select(['id' => 'id', 'name' => "concat(first_name,' ', last_name)"])
+            ->where(['class_id' => $this->request->getQuery('class_id')])
+            ->combine('id', 'name')
+            ->toArray();
+        $this->set(compact('students'));
     }
 
-    /**
-     * Delete method
-     *
-     * @param string|null $id Student General Remark id.
-     * @return \Cake\Network\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function delete($id = null)
+    public function getGeneralRemarkView()
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $studentGeneralRemark = $this->StudentGeneralRemarks->get($id);
-        if ($this->StudentGeneralRemarks->delete($studentGeneralRemark)) {
-            $this->Flash->success(__('The student general remark has been deleted.'));
+        $queryData = $this->request->getQuery();
+        if (isset($queryData['term_id']) && 4 === (int)$queryData['term_id']) {
+            $studentResults = $this->Students->StudentAnnualResults
+                ->query()
+                ->select(['first_term', 'second_term', 'third_term', 'average', 'subject_id', 'student_id',
+                    'session_id', 'class_id'])
+                ->contain(['Subjects' => ['fields' => ['id', 'name']]])
+                ->where([
+                    'session_id' => $queryData['session_id'],
+                    'class_id' => $queryData['class_id'],
+                    'student_id' => $queryData['student_id']
+                    ]);
         } else {
-            $this->Flash->error(__('The student general remark could not be deleted. Please, try again.'));
+            $studentResults = $this->Students->StudentTermlyResults
+                ->query()->select(['total', 'grade','subject_id', 'student_id',
+                    'session_id', 'class_id', 'term_id'])
+                ->contain(['Subjects' => ['fields' => ['id', 'name']]])
+                ->where([
+                    'session_id' => $queryData['session_id'],
+                    'class_id' => $queryData['class_id'],
+                    'term_id' => $queryData['term_id'],
+                    'student_id' => $queryData['student_id'],
+                ])->toArray();
         }
 
-        return $this->redirect(['action' => 'index']);
+        $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs($queryData['session_id']);
+        $studentGeneralRemark = $this->Students->StudentGeneralRemarks
+            ->query()
+            ->where([
+                'session_id' => $queryData['session_id'],
+                'class_id' => $queryData['class_id'],
+                'term_id' => $queryData['term_id'],
+                'student_id' => $queryData['student_id'],
+            ])->first();
+        $this->set(compact('studentResults', 'studentGeneralRemark', 'remarkInputs'));
     }
 }

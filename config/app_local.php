@@ -26,7 +26,7 @@ return [
             //'port' => 'non_standard_port_number',
             'username' => 'root',
             'password' => 'mypassword',
-            'database' => 'main_sms_controller',
+            'database' => 'main_sms_controller' /*'sasco_portal'*/,
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'flags' => [],

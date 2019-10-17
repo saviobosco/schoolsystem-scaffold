@@ -16,7 +16,7 @@ class ClassListsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.students_manager.class_lists'
+        'plugin.students_manager.students'
     ];
 
     /**

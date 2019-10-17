@@ -43,7 +43,7 @@ class TermlyResultProcessing
         $returnData = null; // this is the return value
         // Initializes the All required tables
         $termlyResultTable = TableRegistry::get('ResultSystem.StudentTermlyResults');
-        $termlyPositionTable = TableRegistry::get('ResultSystem.StudentTermlyPositions');
+        $positionTable = TableRegistry::get('ResultSystem.StudentPositions');
 
         $studentsTermlyResultsQuery = $termlyResultTable->find('all');
         $studentsTermlyResults = $studentsTermlyResultsQuery
@@ -82,7 +82,7 @@ class TermlyResultProcessing
                 // if null create new
                 // else patch and check if dirty
                 // else continue
-                $studentTotal = $termlyPositionTable->find('all')->where(['student_id' => $student_id,
+                $studentTotal = $positionTable->find('all')->where(['student_id' => $student_id,
                     'class_id' => $class_id,
                     'term_id' => $term_id,
                     'session_id' => $session_id
@@ -90,7 +90,7 @@ class TermlyResultProcessing
 
                 // if the record does not exist , Create a new record
                 if ($studentTotal == null ) {
-                    $studentTotal = $termlyPositionTable->newEntity(['student_id' => $student_id,
+                    $studentTotal = $positionTable->newEntity(['student_id' => $student_id,
                         'total' => $sum ,
                         'average' => $average,
                         'grade'   => $this->remarks[$this->calculateGrade($average,$this->grades)],
@@ -107,10 +107,10 @@ class TermlyResultProcessing
                         'term_id' => $term_id,
                         'session_id' => $session_id];
 
-                    $studentTotal = $termlyPositionTable->patchEntity($studentTotal,$newData);
+                    $studentTotal = $positionTable->patchEntity($studentTotal,$newData);
                 }
                 if ($studentTotal->isNew() || $studentTotal->isDirty()) {
-                    $termlyPositionTable->save($studentTotal);
+                    $positionTable->save($studentTotal);
                 }
             } catch (MissingScoreRangeException $exception) {
                 $returnData['subjectCountIssues'][] = $exception->getMessage();
@@ -133,14 +133,14 @@ class TermlyResultProcessing
     public function calculateTermlyPosition($class_id,$term_id,$session_id)
     {
         // Initializes the All required tables
-        $termlyPositionTable = TableRegistry::get('ResultSystem.StudentTermlyPositions');
-        $termlyPositionTableSchema = $termlyPositionTable->getSchema()->setColumnType('total', 'string');
+        $PositionTable = TableRegistry::get('ResultSystem.StudentPositions');
+        $termlyPositionTableSchema = $PositionTable->getSchema()->setColumnType('total', 'string');
         TableRegistry::clear();
-        $termlyPositionTable = TableRegistry::get('ResultSystem.StudentTermlyPositions', [
+        $PositionTable = TableRegistry::get('ResultSystem.StudentPositions', [
             'schema' => $termlyPositionTableSchema
         ]);
 
-        $studentsGroupByTotal = $termlyPositionTable->find('all')
+        $studentsGroupByTotal = $PositionTable->find('all')
             ->select(['id','class_id','term_id','session_id','student_id','total','position'])
             ->where([
                 'term_id' => $term_id,
@@ -154,9 +154,9 @@ class TermlyResultProcessing
         $position = 1;
         foreach ($studentsGroupByTotal as  $studentsWithSameTotal ) {
             foreach($studentsWithSameTotal as $student ) {
-                $student = $termlyPositionTable->patchEntity($student, ['position' => $position]);
+                $student = $PositionTable->patchEntity($student, ['position' => $position]);
                 if ($student->isDirty()) {
-                    $termlyPositionTable->save($student);
+                    $PositionTable->save($student);
                 }
             }
             $position += count($studentsWithSameTotal);
@@ -175,7 +175,7 @@ class TermlyResultProcessing
         ]);
         $classTable = TableRegistry::get('ResultSystem.Classes');
         $subjectTable = TableRegistry::get('ResultSystem.Subjects');
-        $termlySubjectPositionTable = TableRegistry::get('ResultSystem.StudentTermlySubjectPositions');
+        $subjectPositionTable = TableRegistry::get('ResultSystem.StudentSubjectPositions');
 
         // find the block the class_id is under. Either junior or senior
         $classDetail = $classTable->find('all')->where(['id'=>$class_id])->first();
@@ -205,7 +205,7 @@ class TermlyResultProcessing
             foreach ($studentsUnderTheSubject as  $totalGroup) {
                 foreach ($totalGroup as $studentStudyingTheSubject) {
 
-                    $studentSubjectPosition = $termlySubjectPositionTable->find('all')->where([
+                    $studentSubjectPosition = $subjectPositionTable->find('all')->where([
                         'student_id' => $studentStudyingTheSubject['student_id'],
                         'subject_id' => $studentStudyingTheSubject['subject_id'],
                         'class_id'   => $class_id,
@@ -214,7 +214,7 @@ class TermlyResultProcessing
                     ])->first();
 
                     if ( $studentSubjectPosition == null ) {
-                        $studentSubjectPosition = $termlySubjectPositionTable->newEntity(['student_id' => $studentStudyingTheSubject['student_id'],
+                        $studentSubjectPosition = $subjectPositionTable->newEntity(['student_id' => $studentStudyingTheSubject['student_id'],
                             'subject_id' => $studentStudyingTheSubject['subject_id'],
                             'total'      => $studentStudyingTheSubject['total'],
                             'position'   => $position,
@@ -227,10 +227,10 @@ class TermlyResultProcessing
                             'total'      => $studentStudyingTheSubject['total'],
                             'position'   => $position,
                         ]);
-                        $studentSubjectPosition = $termlySubjectPositionTable->patchEntity($studentSubjectPosition,$newData);
+                        $studentSubjectPosition = $subjectPositionTable->patchEntity($studentSubjectPosition,$newData);
                     }
                     if ($studentSubjectPosition->isNew() || $studentSubjectPosition->isDirty()) {
-                        $termlySubjectPositionTable->save($studentSubjectPosition);
+                        $subjectPositionTable->save($studentSubjectPosition);
                     }
                 }
                 // increment the position variable

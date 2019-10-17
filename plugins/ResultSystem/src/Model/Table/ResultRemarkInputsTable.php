@@ -56,6 +56,7 @@ class ResultRemarkInputsTable extends Table
     }
 
     /**
+     * @param $session_id
      * @return array
      * This method return the remarks with vissibility => 1 in this format
      * $array = [
@@ -63,10 +64,10 @@ class ResultRemarkInputsTable extends Table
      *  'remark_2' => 'Teacher 2'
      * ]
      */
-    public function getValidRemarkInputs()
+    public function getValidRemarkInputs( $session_id)
     {
         $data = $this->find('all')
-            ->where(['visibility'=>1])
+            ->where(['session_id' => $session_id])
             ->orderAsc('output_order')
             ->combine('main_value','replacement')->toArray();
         return $data;

@@ -88,7 +88,6 @@ class ResultGradeInputsTable extends Table
     /**
      * @param $query
      * @return array
-     * This method return all grade inputs with visibility => 1;
      */
     public function getValidGradeInputsWithAllData($query)
     {

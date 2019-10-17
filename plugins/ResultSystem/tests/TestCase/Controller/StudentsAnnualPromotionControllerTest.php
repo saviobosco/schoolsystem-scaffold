@@ -16,7 +16,7 @@ class StudentsAnnualPromotionControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.result_system.student_annual_positions',
+        'plugin.result_system.student_positions',
         'plugin.result_system.students',
         'plugin.result_system.sessions',
         'plugin.result_system.classes',
@@ -39,6 +39,7 @@ class StudentsAnnualPromotionControllerTest extends IntegrationTestCase
         ]);
         $this->enableRetainFlashMessages();
         $this->enableCsrfToken();
+        $this->disableErrorHandlerMiddleware();
     }
     /**
      * Test index method
@@ -47,7 +48,7 @@ class StudentsAnnualPromotionControllerTest extends IntegrationTestCase
      */
     public function testIndex()
     {
-        $this->get('/result-system/students-annual-promotion?session_id=1&class_id=1');
+        $this->get('/result-system/students-annual-promotion?session_id=1&class_id=1&term_id=1');
         $this->assertResponseOk();
     }
 
@@ -59,11 +60,12 @@ class StudentsAnnualPromotionControllerTest extends IntegrationTestCase
                     'promoted' => '1',
                     'student_id' => '001',
                     'class_id' => '1',
-                    'session_id' => '1'
+                    'session_id' => '1',
+                    'term_id' => '1'
                 ],
             ]
         ];
-        $this->post('/result-system/students-annual-promotion?session_id=1&class_id=1',$data);
+        $this->post('/result-system/students-annual-promotion?session_id=1&class_id=1&term_id=1',$data);
         $this->assertRedirect();
         $this->assertSession('The action was successful!', 'Flash.flash.0.message');
     }
