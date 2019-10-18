@@ -29,4 +29,14 @@ class ResultGradingSystem extends Entity
         '*' => true,
         'id' => false
     ];
+
+    public function _getMinScore()
+    {
+        return @explode('-',$this->_properties['score'])[0];
+    }
+
+    public function _getMaxScore()
+    {
+        return @explode('-',$this->_properties['score'])[1];
+    }
 }

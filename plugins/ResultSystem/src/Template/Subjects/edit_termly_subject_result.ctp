@@ -18,11 +18,11 @@ echo $this->element('searchParametersSessionClassTerm');
             <div class="panel-heading">
                 <h4 class="panel-title"> <?= h($subject->name) ?> </h4>
             </div>
-            <div class="panel-body">
+            <div class="panel-body table-responsive">
 
                 <?php if (!empty($subject->student_termly_results)): ?>
                     <?= $this->Form->create($subject) ?>
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" style="font-size: 12px;">
                         <tr>
                             <th><?= __('Student Admission No') ?></th>
                             <th><?= __('Full Name') ?></th>
@@ -30,6 +30,8 @@ echo $this->element('searchParametersSessionClassTerm');
                                 <th> <?= __($gradeInput) ?> </th>
                             <?php endforeach; ?>
                             <th><?= __('Total') ?></th>
+                            <th><?= __('Grade') ?></th>
+                            <th><?= __('Remark') ?></th>
 
                         </tr>
                         <?php $resultCounts = count($subject->student_termly_results);
@@ -40,7 +42,9 @@ echo $this->element('searchParametersSessionClassTerm');
                                 <?php foreach ($gradeInputs as $key => $value) : ?>
                                     <td><?= $this->Form->input('student_termly_results.' . $num . '.' . $key) ?></td>
                                 <?php endforeach; ?>
-                                <td><?= $this->Form->input('student_termly_results.' . $num . '.total', ['readonly']) ?></td>
+                                <td><?= $this->Form->input('student_termly_results.' . $num . '.total') ?></td>
+                                <td><?= $this->Form->input('student_termly_results.' . $num . '.grade') ?></td>
+                                <td><?= $this->Form->input('student_termly_results.' . $num . '.remark') ?></td>
                                 <td class="hidden"><?= $this->Form->hidden('student_termly_results.' . $num . '.student_id') ?></td>
                                 <td class="hidden"><?= $this->Form->hidden('student_termly_results.' . $num . '.subject_id') ?></td>
                                 <td class="hidden"><?= $this->Form->hidden('student_termly_results.' . $num . '.class_id') ?></td>

@@ -147,7 +147,7 @@ class StudentsController extends AppController
                 }
             }
         }
-        $sessions = $this->Sessions->find('list');
+        $sessions = $this->Sessions->find('list',['keyField' => 'session', 'valueField' => 'session']);
         $classes = $this->Students->Classes->find('list');
         $states = $this->States->find('list');
         $religions = $this->Religions->find('list');
@@ -190,7 +190,7 @@ class StudentsController extends AppController
                     $this->Flash->error(__('The student could not be saved. Please, try again.'));
                 }
             }
-            $sessions = $this->Sessions->find('list');
+            $sessions = $this->Sessions->find('list',['keyField' => 'session', 'valueField' => 'session']);
             $classes = $this->Students->Classes->find('list');
             $states = $this->States->find('list');
             $religions = $this->Religions->find('list');

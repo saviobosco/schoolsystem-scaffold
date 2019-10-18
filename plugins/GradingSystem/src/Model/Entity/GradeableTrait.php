@@ -27,7 +27,7 @@ trait GradeableTrait
                     }
                 }
                 if ($scoreGrade === null) {
-                    throw new MissingScoreRangeException(['widget' => $total ]);
+                    return null; //throw new MissingScoreRangeException(['widget' => $total ]);
                 }
                 return $scoreGrade;
             }

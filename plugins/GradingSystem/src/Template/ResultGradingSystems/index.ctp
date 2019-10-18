@@ -24,7 +24,6 @@
                             <td><?= h($resultGradingSystem->remark) ?></td>
                             <td><?= h($resultGradingSystem->cal_order) ?></td>
                             <td class="actions">
-                                <?= $this->Html->link(__('View'), ['action' => 'view', $resultGradingSystem->id]) ?>
                                 <?= $this->Html->link(__('Edit'), ['action' => 'edit', $resultGradingSystem->id]) ?>
                                 <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $resultGradingSystem->id], ['confirm' => __('Are you sure you want to delete # {0}?', $resultGradingSystem->id)]) ?>
                             </td>

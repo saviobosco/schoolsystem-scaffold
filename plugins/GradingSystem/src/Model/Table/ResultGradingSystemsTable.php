@@ -1,6 +1,7 @@
 <?php
 namespace GradingSystem\Model\Table;
 
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -58,7 +59,7 @@ class ResultGradingSystemsTable extends Table
             ->notEmpty('grade');
 
         $validator
-            ->allowEmpty('score');
+            ->notEmpty('score');
 
         $validator
             ->requirePresence('remark', 'create')
@@ -75,6 +76,13 @@ class ResultGradingSystemsTable extends Table
             ->notEmpty('cal_order');
 
         return $validator;
+    }
+
+    public function beforeMarshal(Event $event, $data, $options)
+    {
+        $data['score'] = $data['min_score']. '-'. $data['max_score'];
+        unset($data['min_score']);
+        unset($data['max_score']);
     }
 
     public function getGrades()

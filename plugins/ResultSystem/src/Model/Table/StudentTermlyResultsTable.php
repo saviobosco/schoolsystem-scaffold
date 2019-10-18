@@ -152,13 +152,11 @@ class StudentTermlyResultsTable extends Table
         $resultGradingTableQuery = $resultGradingTable->find('all')->all();
 
         $grades = $resultGradingTableQuery->combine('score','grade')->toArray();
-        if ( empty($grades)) { // if no grades found stop event and emit error
-            throw new MissingGradesException('Result could not be added because no Grading was found. Please Add grading and try again later');
-            $event->stopPropagation();
+        if (!empty($grades)) {
+            $entity->grade = $this->calculateGrade($entity->total,$grades); // if null notify the admin of the issue;
+            $remarks = $resultGradingTableQuery->combine('grade','remark')->toArray();
+            $entity->remark = isset($remarks[$entity->grade]) ? $remarks[$entity->grade] : null;
         }
-        $entity->grade = $this->calculateGrade($entity->total,$grades);
-        $remarks = $resultGradingTableQuery->combine('grade','remark')->toArray();
-        $entity->remark = @$remarks[$entity->grade];
     }
 
     /**

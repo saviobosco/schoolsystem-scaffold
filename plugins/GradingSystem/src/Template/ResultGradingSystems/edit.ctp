@@ -8,8 +8,15 @@
                 <?= $this->Form->create($resultGradingSystem) ?>
                 <fieldset>
                     <legend><?= __('Edit Result Grading System') ?></legend>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <?= $this->Form->input('min_score', [ 'required' => true]) ?>
+                        </div>
+                        <div class="col-sm-6">
+                            <?= $this->Form->input('max_score', [ 'required' => true]) ?>
+                        </div>
+                    </div>
                     <?php
-                    echo $this->Form->input('score');
                     echo $this->Form->input('grade');
                     echo $this->Form->input('remark');
                     echo $this->Form->input('cal_order',['type'=>'number']);
