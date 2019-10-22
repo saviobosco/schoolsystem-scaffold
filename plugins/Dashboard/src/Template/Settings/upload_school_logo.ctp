@@ -4,7 +4,7 @@ $this->assign('title','Upload School Logo');
 ?>
 <?php if(!empty($file)) : ?>
     <div>
-        <?=  $this->Html->image($file[0],['class'=>'img-responsive']) ?>
+        <?=  $this->Html->image('schools/'.Cake\Core\Configure::read('sub_domain').'/'.$file[0],['class'=>'img-responsive']) ?>
     </div>
 <?php endif; ?>
     <p> Upload the school Logo</p>

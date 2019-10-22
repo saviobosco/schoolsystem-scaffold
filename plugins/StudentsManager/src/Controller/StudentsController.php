@@ -124,9 +124,16 @@ class StudentsController extends AppController
     {
         $student = $this->Students->newEntity();
         if ($this->request->is(['post'])) {
-            $studentData = $this->request->getData();
-            $studentData['url'] = $this->request->scheme().'://'.$this->request->host();
-            $student = $this->Students->patchEntity($student, $studentData);
+            $postData = $this->request->getData();
+            $student = $this->Students->patchEntity($student, $postData);
+            if (isset($student['photo']) && is_array($student['photo'])) {
+                $photo_destination = $this->Students->uploadStudentPhoto($postData['photo'], $student->id);
+                if ($photo_destination) {
+                    $student['photo'] = $photo_destination;
+                } else {
+                    $student['photo'] = null;
+                }
+            }
             try {
                 $savedStudent = $this->Students->addStudent($student);
                 if ($savedStudent) {
@@ -138,13 +145,8 @@ class StudentsController extends AppController
                 }
             } catch (UserExistsException $exception) {
                 $this->Flash->error(__('A User with the Admission No as username already exists!'));
-            }
-            if (isset($savedStudent) and $savedStudent !== false) {
-                if ( $this->request->getData('return_here')) {
-                    if (isset($savedStudent) and $savedStudent !== false) {
-                        return $this->redirect(['action' => 'add']);
-                    }
-                }
+            } catch (\Exception $exception) {
+                $this->Flash->error($exception->getMessage());
             }
         }
         $sessions = $this->Sessions->find('list',['keyField' => 'session', 'valueField' => 'session']);
@@ -181,9 +183,17 @@ class StudentsController extends AppController
                 $this->redirect(['action' => 'index']);
             }
             $student = $this->Students->get($id);
-
             if ($this->request->is(['patch', 'post', 'put'])) {
-                $student = $this->Students->patchEntity($student, $this->request->getData());
+                $postData = $this->request->getData();
+                $student = $this->Students->patchEntity($student, $postData);
+                if (isset($student['photo']) && is_array($student['photo'])) {
+                    $photo_destination = $this->Students->uploadStudentPhoto($postData['photo'], $student->id);
+                    if ($photo_destination) {
+                        $student['photo'] = $photo_destination;
+                    } else {
+                        $student['photo'] = null;
+                    }
+                }
                 if ( $this->Students->save($student) ) {
                     $this->Flash->success(__('The student has been saved.'));
                 } else {

@@ -24,7 +24,8 @@
         "dereuromark/cakephp-databaselog": "^2.3",
         "sentry/sentry": "^1.10",
         "connehito/cake-sentry": "^1.0",
-        "burzum/file-storage": "^1.1.0"
+        "burzum/file-storage": "^1.1.0",
+        "league/flysystem": "^1.0"
     },
     "require-dev": {
         "psy/psysh": "@stable",

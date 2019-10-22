@@ -3,7 +3,9 @@ namespace App\Shell;
 
 use Cake\Console\Shell;
 use Cake\Filesystem\File;
-
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
+use Cake\Core\Configure;
 /**
  * ChangeStudentPictures shell command.
  * @property \ResultSystem\Model\Table\StudentsTable $Students
@@ -43,22 +45,23 @@ class ChangeStudentPicturesShell extends Shell
     public function main()
     {
         $students = $this->Students->query()
-            ->select(['id','photo', 'photo_dir'])
+            ->select(['id','photo'])
             ->all();
         // for all students,
         foreach ($students as $student ) {
-            if ($student['photo_dir'] && $student['photo']) {
-                // check if file exist
-                $sourceFileName = WWW_ROOT .'img'. DS . 'student-pictures/students/photo/'. $student['photo_dir'] . DS . $student['photo'];
-                if (file_exists($sourceFileName)) {
-                    $destFileName = $student['id'].'.jpg';
-                    $destFolder = WWW_ROOT. 'img'. DS. 'student-photos'. DS;
+            if ($student['photo']) {
+                $fileSystem = new Filesystem(new Local(WWW_ROOT.'img/schools/'. Configure::read('sub_domain') .'/student-pictures/'));
+                $pic = explode(DS, $student['photo']);
+                $count = count($pic);
+                $photo_name = $pic[$count -1];
+                $sourceFileName = WWW_ROOT.'img/schools/'. Configure::read('sub_domain') .'/student-pictures/'.$photo_name;
+                if ($fileSystem->has($photo_name)) {
                     $this->image = $this->openImage($sourceFileName);
                     $this->width  = imagesx($this->image);
                     $this->height = imagesy($this->image);
-                    $this->resizeImage(700, 500, "portrait");
+                    $this->resizeImage(200, 200, "portrait");
                     $this->autoRotateImage($sourceFileName);
-                    $this->saveImage($destFolder. $destFileName);
+                    $this->saveImage($sourceFileName);
                     // update image location
                 }
             }

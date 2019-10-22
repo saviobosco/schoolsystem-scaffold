@@ -2,6 +2,7 @@
 namespace App\Shell;
 
 use Cake\Console\Shell;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Datasource\ConnectionManager;
 use Migrations\Migrations;
@@ -128,5 +129,19 @@ class SetUpDatabaseShell extends Shell
             $this->out($exception->getMessage());
             return false;
         }
+    }
+
+    public function compressStudentPhotos($sub_domain)
+    {
+        if(is_null($sub_domain)) {
+            return false;
+        }
+        if (!$this->getDatabase($sub_domain)) {
+            return false;
+        }
+        Configure::write('sub_domain', $sub_domain);
+        $this->dispatchShell([
+            'command' => 'change_student_pictures'
+        ]);
     }
 }

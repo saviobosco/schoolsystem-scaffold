@@ -1,9 +1,11 @@
 <?php
 namespace StudentsManager\Model\Table;
 
+use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
+use Cake\Filesystem\File;
 use Cake\I18n\Date;
 use Cake\I18n\Time;
 use Cake\ORM\Entity;
@@ -11,6 +13,8 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
 use StudentsManager\Model\Entity\Student;
 use UsersManager\Exception\UserExistsException;
 use Cake\Database\Type;
@@ -73,10 +77,6 @@ class StudentsTable extends Table
             'foreignKey' => 'class_id',
             'joinType' => 'INNER',
             'className' => 'StudentsManager.Classes'
-        ]);
-        $this->belongsTo('ClassDemarcations', [
-            'foreignKey' => 'class_demarcation_id',
-            'className' => 'StudentsManager.ClassDemarcations'
         ]);
 
         $this->belongsTo('States',[
@@ -158,6 +158,7 @@ class StudentsTable extends Table
 
     public function beforeMarshal(Event $event, $data, $options)
     {
+        $data['year_of_graduation'] = $data['year_of_graduation']['year'];
 
     }
 
@@ -166,14 +167,26 @@ class StudentsTable extends Table
         /*if (is_array($entity['photo'])) {
             if (!empty($entity['photo']['name'])) {
                 $imageDetails = pathinfo($entity['photo']['name']);
-                if (!in_array( $imageDetails['extension'], ['png', 'jpg', 'jpeg'])) {
-                    $event->stopPropagation();
-                    return false;
-                }
-                $photo_name = Time::now()->timestamp.'.'.$imageDetails['extension'];
-                $destination = WWW_ROOT.'img/student-pictures/'.$photo_name;
-                if ( move_uploaded_file($entity['photo']['tmp_name'], $destination) ) {
-                    $entity->photo = $entity->url.'/img/student-pictures/'.$photo_name;
+                if (in_array( $imageDetails['extension'], ['png', 'jpg', 'jpeg'])) {
+                    $adapter = new Local(WWW_ROOT.'img/schools/'. Configure::read('sub_domain') .'/student-pictures/');
+                    $flysystem = new Filesystem($adapter);
+                    $photo_name = $entity->id.'.jpg';
+                    $destination = WWW_ROOT.'img/schools/'. Configure::read('sub_domain') .'/student-pictures/'.$photo_name;
+                    $photo = $flysystem->put($photo_name, file_get_contents($entity['photo']['tmp_name']));
+                    dd($photo);
+                    if ( move_uploaded_file($entity['photo']['tmp_name'], $destination) ) {
+                        $entity->photo = Configure::read('App.fullBaseUrl')
+                            .'/img/schools/'.
+                            Configure::read('sub_domain').'/student-pictures/'.$photo_name;
+                    } else {
+                        $previous_photo = $entity->getOriginal('photo');
+                        if ($previous_photo) {
+                            $file = new File($previous_photo);
+                            dd($file);
+                            $file->delete();
+                        }
+                        unset($entity->photo);
+                    }
                 }
             }
         }*/
@@ -307,5 +320,27 @@ class StudentsTable extends Table
             'UNCLE' => 'UNCLE',
             'WIFE' => 'WIFE'
         ];
+    }
+
+    public function uploadStudentPhoto($entity, $student_id)
+    {
+        if (empty($entity['name'])) {
+            return false;
+        }
+        $imageDetails = pathinfo($entity['name']);
+        if (!in_array( $imageDetails['extension'], ['png', 'jpg', 'jpeg'])) {
+          return false; // notify user that this is not a picture
+        }
+        // check for picture size
+        $fileSystem = new Filesystem(new Local(WWW_ROOT.'img/schools/'. Configure::read('sub_domain') .'/student-pictures/'));
+        $photo_name = $student_id.'.jpg';
+        $destination = Configure::read('App.fullBaseUrl').'/img/schools/'. Configure::read('sub_domain') .'/student-pictures/'.$photo_name;
+        // process picture
+        // save picture
+        $photo = $fileSystem->put($photo_name, file_get_contents($entity['tmp_name']));
+        if ($photo) {
+            return $destination;
+        }
+        return false;
     }
 }

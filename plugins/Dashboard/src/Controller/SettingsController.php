@@ -77,13 +77,13 @@ class SettingsController extends AppController
                 }
                 // check if folder is writable
                 if ($bannerImage) {
-                    $file = new File(WWW_ROOT.'img/'.$bannerImage['value']);
+                    $file = new File(WWW_ROOT.'img/schools/'.Configure::read('sub_domain').'/'.$bannerImage['value']);
                     if ( $file->exists() ) {
                         $file->delete();
                     }
                 }
                 $imageBannerName = 'image-banner.'. $imageDetails['extension'];
-                if ( move_uploaded_file($this->request->getData('banner')['tmp_name'], WWW_ROOT.'img/'.$imageBannerName) ) {
+                if ( move_uploaded_file($this->request->getData('banner')['tmp_name'], WWW_ROOT.'img/schools/'.Configure::read('sub_domain').'/'.$imageBannerName) ) {
                     if ($bannerImage) {
                         $bannerImage = $settingsTable->patchEntity($bannerImage, ['value' => $imageBannerName]);
                         $settingsTable->save($bannerImage);
@@ -102,8 +102,8 @@ class SettingsController extends AppController
 
     public function uploadSchoolLogo()
     {
-        $dir = new Folder(WWW_ROOT.'img');
-        $file = $dir->find('school-logo.png', true);
+        $dir = new Folder(WWW_ROOT.'img/schools/'.Configure::read('sub_domain').'/');
+        $file = $dir->find('school-logo.jpg', true);
         if ( $this->request->is(['patch', 'post', 'put'])) {
             try {
                 // check if upload
@@ -118,11 +118,11 @@ class SettingsController extends AppController
                     return $this->redirect($this->request->referer());
                 }
                 // check if folder is writable
-                $file = new File(WWW_ROOT.'img/school-logo.png');
+                $file = new File(WWW_ROOT.'img/schools/'. Configure::read('sub_domain').'school-logo.jpg');
                 if ( $file->exists() ) {
                     $file->delete();
                 }
-                if ( move_uploaded_file($this->request->getData('logo')['tmp_name'], WWW_ROOT.'img/school-logo.png') ) {
+                if ( move_uploaded_file($this->request->getData('logo')['tmp_name'], WWW_ROOT.'img/schools/'.Configure::read('sub_domain') .'/school-logo.jpg') ) {
                     $this->Flash->success(__('File was successfully uploaded'));
                 } else {
                     $this->Flash->error(__('An Error occurred uploading this image. Please try again.'));

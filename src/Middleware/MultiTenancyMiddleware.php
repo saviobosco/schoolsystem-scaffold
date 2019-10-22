@@ -57,7 +57,6 @@ class MultiTenancyMiddleware
                 // setup up config
                 //Configure::write('School_Name',$schoolAccountDetail['name']);
                 Configure::write('sub_domain',$schoolAccountDetail['sub_domain']);
-
             }
         }
         return $next($request,$response);

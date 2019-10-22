@@ -353,6 +353,12 @@ class InitializeApplication extends AbstractMigration
                 'null' => true,
             ])
 
+            ->addColumn('photo', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
+            ])
+
             ->addColumn('status', 'integer', [
                 'default' => '1',
                 'limit' => 3,

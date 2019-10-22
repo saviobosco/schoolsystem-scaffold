@@ -25,7 +25,7 @@ $this->Form->templates($edittemplates);
     <!-- begin brand -->
     <div class="login-header">
         <div class="brand text-center">
-            <?= $this->Html->image('school-logo.png', ['class' => 'img-responsive','style'=>'margin:auto']) ?>
+            <?= $this->Html->image('schools/'.Configure::read('sub_domain').'/school-logo.jpg', ['class' => 'img-responsive','style'=>'margin:auto']) ?>
         </div>
     </div>
     <!-- end brand -->
