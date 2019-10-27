@@ -75,7 +75,11 @@ class PagesController extends AppController
 
     public function homepage()
     {
-        $title = 'Welcome to '.Configure::read('Application.name');
-        $this->set(compact('title'));
+        if (Configure::read('sub_domain')) {
+            $this->render('school_homepage');
+        } else {
+            $this->render('homepage');
+        }
     }
+
 }

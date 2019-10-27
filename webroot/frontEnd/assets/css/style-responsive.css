@@ -1,0 +1,24 @@
+@media (min-width: 1920px) {
+    .content.has-bg .content-bg img {
+        width: 100%;
+    }
+}
+
+@media (max-width: 1200px) {
+    .content.has-bg .content-cover img {
+        max-height: 100%;
+        max-width: inherit;
+    }
+    .content .content-desc {
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 767px) {
+    .content  {
+       padding: 0;
+    }
+    .content.has-bg {
+        padding-bottom: 15px;
+    }
+}

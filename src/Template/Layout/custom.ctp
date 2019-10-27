@@ -30,7 +30,6 @@ use Settings\Core\Setting;
     );
     ?>
     <?php
-    //echo $this->Plugins->css('jquery-ui/themes/base/minified/jquery-ui.min.css');
     echo $this->Plugins->css('bootstrap/css/bootstrap.min.css');
     //echo $this->Html->css('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
     echo $this->Html->css('print.css');
@@ -442,7 +441,6 @@ use Settings\Core\Setting;
     <hr>
     <?= $this->Element('footer'); ?>
 </div>
-<?= $this->Site->script('select2/dist/js/select2.full.min.js') ?>
 <script type="text/javascript">
     var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
     (function(){

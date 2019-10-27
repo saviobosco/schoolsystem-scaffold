@@ -1,47 +1,179 @@
 <?php
-/**
- * file name check_result.ctp .
- */
-use Cake\Core\Configure;
-use Settings\Core\Setting;
-$this->assign('title','Homepage');
-$app_name = Setting::read('Application.school_name');
-$edittemplates = [
-    'input' => '<div class="col-sm-8"> <input class="form-control input-sm" type="{{type}}" name="{{name}}"{{attrs}}/> </div>',
-    'select' => '<div class="col-sm-8"> <select name="{{name}}"{{attrs}}>{{content}}</select> </div> ',
-];
-$this->Form->templates($edittemplates)
-?>
-<div class="row">
-    <div class="col-sm-12">
-        <?php /* $this->Html->image('image-banner.png',['width'=>'100%' , 'height' => '150px'])*/ ?>
-        <hr>
-<!--        <div>-->
-<!--            School Write up here.-->
-<!--        </div>-->
+$this->layout = 'ajax';
 
-        <p> Feel free to call or text us in case of any difficulty for swift support. For Support Call us on <i class="fa fa-phone"></i> 08068865957 or chat with our live customer support. </p>
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <title> Welcome to CheckResults.net</title>
+    <?= $this->Plugins->css('bootstrap/css/bootstrap.min.css'); ?>
+    <link href="frontEnd/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="frontEnd/assets/css/style.css" rel="stylesheet">
+    <link href="frontEnd/assets/css/style-responsive.css" rel="stylesheet">
+
+    <script src="frontEnd/assets/plugins/jquery/jquery-1.9.1.min.js"></script>
+    <script src="frontEnd/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<header class="navbar-static-top">
+    <nav class="navbar navbar-default m-b-0 ">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">CheckResults.net</a>
+            </div>
+
+        </div>
+    </nav>
+    <nav class="navbar navbar-inverse m-b-0">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+
+        </div>
+    </nav>
+</header>
+
+<!-- body content -->
+<div class=" content has-bg ">
+    <div class="content-cover">
+        <img src="img/hero-image.jpg">
     </div>
 </div>
 
-<div class="row ">
-    <div class="col-sm-7">
-        <div class="well">
-            <h2>
-                GUIDELINES
-            </h2>
-            <h5> To check your result, follow the simple steps listed below. After checking your result, you can save it or print immediately.
-            </h5>
-            <ol>
-                <li> Enter your Admission Number. This will be provided to you by your school as your "Admission Number", "Registration Number" or any other similar name.</li>
-                <li> Select the session in which you want to check your result. </li>
-                <li> Select the term. </li>
-                <li> Scratch the hidden area at the back of the scratch card and enter the revealed pin as your card pin number </li>
-                <li> Click the Check Result button.</li>
-            </ol>
+<!--services -->
+<div class="content " id="services">
+    <div class="container">
+        <h2 class="content-title"> Features </h2>
+
+        <div class="row">
+            <div class="work col-sm-4 m-b-30">
+<!--                <img src="assets/img/Website-Hosting.jpg">
+-->                <div class="work-desc">
+                    <h4> Student Information </h4>
+                    <div class="work-description">
+                        <p>
+
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="work col-sm-4 m-b-30">
+<!--                <img src="assets/img/website-design.jpg">
+-->                <div class="work-desc">
+                    <h4> Student Result Entry </h4>
+                    <div class="work-description">
+                        <p>We are committed to helping businesses succeed through exceptional digital services, focused on effective digital marketing campaigns that inspire customers, extend capabilities, and advance business...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="work col-sm-4 m-b-30">
+<!--                <img src="assets/img/computer-sales.jpg">
+-->                <div class="work-desc">
+                    <h4> Automatic Result Processing </h4>
+                    <div class="work-description">
+                        <p> We sale a wide range of computers and accessories. Ranging  from laptops to Desktops and other computer parts ...</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="work col-sm-4 m-b-30">
+                <div class="work-desc">
+                    <h4> Result Checking </h4>
+                    <div class="work-description">
+                        <p> Our professional Ict consultants offer </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="work col-sm-4 m-b-30">
+                <div class="work-desc">
+                    <h4> Transcript Generation </h4>
+                    <div class="work-description">
+                        <p> We also offer book and media publishing services </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="work col-sm-4 m-b-30">
+                <div class="work-desc">
+                    <h4> Graphic Design </h4>
+                    <div class="work-description">
+                        <p> Our in-house graphic designers, are always ready to take care of your graphic design projects at a reasonable amount ... </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- end of services ---->
+<!-- footer link -->
+<div class="footer">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-sm-3">
+                <h4 class="footer-title"> Website </h4>
+                <ul class="">
+                    <li><a>Website and Web-App design </a></li>
+                    <li><a>Website hosting</a></li>
+                    <li><a>Website design</a></li>
+
+                </ul>
+            </div>
+            <div class="col-sm-3">
+                <h4 class="footer-title">  consultancy </h4>
+                <ul class="">
+                    <li><a>Ict consultancy</a></li>
+                    <li><a>Entrepreneurship consultancy</a></li>
+                    <li><a>Entrepreneurship training</a></li>
+
+
+                </ul>
+            </div>
+            <div class="col-sm-3">
+                <h4 class="footer-title"> Sales </h4>
+                <ul class="">
+                    <li><a> Computer Sales</a></li>
+                    <li><a>Computer Repair</a></li>
+
+                </ul>
+
+            </div>
+            <div class="col-sm-3">
+                <address>
+                    <strong> The Griffon Technology </strong> <br>
+                    Abakaliki, Ebonyi state . <br>
+                    P : (+234) 806 886 5957
+                </address>
+            </div>
         </div>
     </div>
-    <div class="col-sm-5 m-b-20">
-        <?= $this->CheckResult->showCheckResultForm() ?>
-    </div>
 </div>
+<!-- end of footer link -->
+<footer class="footer-copyright">
+    <div class="container">
+        <span class="text-center">Copyright &copy; TheGriffonTechnology. All rights reserved. </span>
+        <ul class="social-media-list">
+            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+            <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+            <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+        </ul>
+    </div>
+</footer>
+</body>
+</html>

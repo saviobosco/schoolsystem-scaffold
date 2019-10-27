@@ -51,6 +51,7 @@ Router::scope('/', function (RouteBuilder $routes) {
      * to use (in this case, src/Template/Pages/home.ctp)...
      */
     $routes->connect('/', ['controller' => 'Pages', 'action' => 'homepage']);
+    $routes->connect('/check-result', ['controller' => 'Pages', 'action' => 'checkResult']);
     $routes->connect('/login',
         [
             'plugin'=>'UsersManager','controller'=>'Accounts','action'=>'login'

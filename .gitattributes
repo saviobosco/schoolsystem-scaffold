@@ -34,3 +34,4 @@
 *.mo binary
 *.pdf binary
 *.phar binary
+*.woff2 -text diff

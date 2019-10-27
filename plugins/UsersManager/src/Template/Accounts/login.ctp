@@ -38,7 +38,6 @@ $this->Form->templates($edittemplates);
             <div class="panel-body">
 
                 <?= $this->Form->create() ?>
-                <fieldset>
                     <?= $this->Form->control('username', ['required' => true]) ?>
                     <?= $this->Form->control('password', ['required' => true]) ?>
                     <?php
@@ -63,7 +62,6 @@ $this->Form->templates($edittemplates);
                         echo $this->Html->link('Go to Homepage','/',['class' => 'pull-right']);
                     }
                     ?>
-                </fieldset>
                 <?= $this->Form->button(__d('CakeDC/Users', 'Login'),['class'=>'btn btn-success btn-block btn-lg']); ?>
                 <?= $this->Form->end() ?>
             </div>
