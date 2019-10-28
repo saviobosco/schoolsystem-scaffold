@@ -41,7 +41,6 @@ $application_detail = Configure::read('Application');
     //echo $this->Html->css('animate.css');
     echo $this->Html->css('style.css');
     echo $this->Html->css('style-responsive.min.css');
-    //echo $this->Plugins->css('switchery/switchery.min.css');
 
     //echo $this->Plugins->css('DataTables/media/css/dataTables.bootstrap.min.css');
     //echo $this->Plugins->css('DataTables/extensions/Responsive/css/responsive.bootstrap.min.css');
@@ -54,6 +53,7 @@ $application_detail = Configure::read('Application');
             <?= $this->fetch('topScripts') ?>
     <!-- ================== END PAGE LEVEL CSS STYLE ================== -->
     <!-- ================== BEGIN BASE JS ================== -->
+    <?= $this->Site->script('pace/pace.min.js')  ?>
     <?php
     echo $this->Plugins->script('jquery/jquery-1.9.1.min.js');
     //echo $this->Plugins->script('jquery/jquery-migrate-1.1.0.min.js');
@@ -92,14 +92,14 @@ $application_detail = Configure::read('Application');
     ?>
 
     <!-- begin #content -->
-    <div id="content" class="content">
-        <!-- begin page-header -->
-        <div id="ajax-request-feedback">
-
+    <div class="content">
+        <div id="ajax-request-feedback"></div>
+        <div class="ajax-error"></div>
+        <div id="content">
+            <?= $this->Flash->render('auth') ?>
+            <?= $this->Flash->render() ?>
+            <?= $this->fetch('content') ?>
         </div>
-        <?= $this->Flash->render('auth') ?>
-        <?= $this->Flash->render() ?>
-        <?= $this->fetch('content') ?>
     </div>
     <!-- end #content -->
     <div class="footer">
@@ -118,6 +118,7 @@ $application_detail = Configure::read('Application');
 //echo $this->Site->script('jquery-ui/ui/minified/jquery-ui.min.js');
 echo $this->Site->script('bootstrap/js/bootstrap.min.js');
 ?>
+<?= $this->Html->script('jquery.form.min.js') ?>
 <!--[if lt IE 9]>
 <?php
 echo $this->Site->script('crossbrowserjs/html5shiv.js',['pathPrefix' => 'assets/']);
@@ -126,9 +127,8 @@ echo $this->Site->script('crossbrowserjs/excanvas.min.js',['pathPrefix' => 'asse
  ?>
 <![endif]-->
 <?php
-//echo $this->Site->script('slimscroll/jquery.slimscroll.min.js');
 //echo $this->Site->script('select2/dist/js/select2.full.min.js');
-//echo $this->Site->script('switchery/switchery.min.js');
+
 ?>
 <!-- ================== END BASE JS ================== -->
 

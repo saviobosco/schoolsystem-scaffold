@@ -299,7 +299,6 @@ var handleSelectall = function() {
 ------------------------------------------------ */
 var App = function () {
 	"use strict";
-	
 	return {
 		//main function
 		init: function () {
@@ -325,3 +324,162 @@ var App = function () {
 		}
   };
 }();
+
+var ajaxLink = function(link) {
+    // Will work only if in the onclick there is no error!
+
+    var href,target;
+    href = link.href;
+    target = 'content';
+    /*if ( typeof link == 'string' ) {
+        href = link;
+        target = 'body';
+        if ( href == 'Side.php' ) target = 'menu';
+        else if ( href == 'Side.php?sidefunc=update' ) target = 'menu-top';
+        else if ( href.indexOf('Bottom.php') === 0 ) target = 'footer';
+    } else {
+
+    }
+
+    if (href.indexOf('#') != -1 || target == '_blank' || target == '_top') // Internal/external/top anchor.
+        return true;
+
+    if (!target) {
+        if (href.indexOf('Modules.php') != -1) target = 'body';
+        else return true;
+    }*/
+    if (href.indexOf('logout') != -1) return true;
+    if (href === 'javascript:;') return true;
+    $.ajax(href, ajaxOptions(target, href, false));
+    return false;
+};
+
+var ajaxOptions = function(target, url, form) {
+    return {
+        beforeSend: function (data) {
+            // AJAX error hide.
+            $('.ajax-error').hide();
+
+            $('.loading').css('visibility', 'visible');
+        },
+        success: function (data, s, xhr) {
+            // See PHP RedirectURL().
+            var redirectUrl = xhr.getResponseHeader("X-Redirect-Url");
+            if (redirectUrl) {
+                url = redirectUrl;
+            }
+            else if (form && form.method == 'get') {
+                var getStr = [];
+
+                // Fix advanced search forms (student & user) URL > 2000 chars.
+                if (form.name == 'search') {
+                    var formArray = $(form).formToArray();
+
+                    $(formArray).each(function(i,el){
+                        // Only add not empty values.
+                        if (el.value !== '')
+                            getStr.push(el.name + '=' + el.value);
+                    });
+
+                    getStr = getStr.join('&');
+                } else {
+                    getStr = $(form).formSerialize();
+                }
+
+                url += (url.indexOf('?') != -1 ? '&' : '?') + getStr;
+            }
+            ajaxSuccess(data, target, url);
+        },
+        error: function(xhr, status, error){ ajaxError(xhr, status, error, url, target, form); },
+        complete: function () {
+            $('.loading').css('visibility', 'hidden');
+
+            //hideHelp();
+        }
+    };
+}
+
+var ajaxSuccess = function(data, target, url) {
+    // Change URL after AJAX.
+    //http://stackoverflow.com/questions/5525890/how-to-change-url-after-an-ajax-request#5527095
+    $('#' + target).html(data);
+
+    var doc = document;
+
+    if (history.pushState && target == 'content' && doc.URL != url) history.pushState(null, doc.title, url);
+
+    ajaxPrepare('#' + target);
+};
+
+var ajaxError = function(xhr, status, error, url, target, form) {
+    var code = xhr.status,
+        errorMsg = 'AJAX error. ' + code + ' ';
+
+    if ( typeof ajaxError.num === 'undefined' ) {
+        ajaxError.num = 0;
+    }
+
+    ajaxError.num++;
+
+    if (code === 0) {
+        errorMsg += 'Check your Network';
+
+        if ( url && ajaxError.num === 1 ) {
+            window.setTimeout(function () {
+                // Retry once on AJAX error 0, maybe a micro Wifi interruption.
+                $.ajax(url, ajaxOptions(target, url, form));
+            }, 1000);
+            return;
+        }
+    } else if (status == 'parsererror') {
+        errorMsg += 'JSON parse failed';
+    } else if (status == 'timeout') {
+        errorMsg += 'Request Timeout';
+    } else if (status == 'abort') {
+        errorMsg += 'Request Aborted';
+    } else {
+        errorMsg += error;
+    }
+
+    errorMsg += '. ' + url;
+
+    ajaxError.num = 0;
+
+    // AJAX error popup.
+    $('.ajax-error').html(errorMsg).fadeIn();
+}
+
+var ajaxPrepare = function(target) {
+    /*if (scrollTop == 'Y' && target == '#content')*/
+    //body.scrollIntoView();
+
+    $(target + ' form').each(function () {
+        ajaxPostForm(this, false);
+    });
+};
+
+var ajaxPostForm = function(form, submit) {
+    var target = form.target || 'content';
+
+    var options = ajaxOptions(target, form.action, form);
+    if (submit) $(form).ajaxSubmit(options);
+    else $(form).ajaxForm(options);
+    return false;
+};
+
+window.onload = function() {
+    // Cache <script> resources loaded in AJAX.
+    $.ajaxPrefilter('script', function(options) { options.cache = true; });
+
+    $(document).on('click', 'a', function (e) {
+        return $(this).css('pointer-events') == 'none' ? e.preventDefault() : ajaxLink(this);
+    });
+
+    ajaxPrepare('body');
+    // Load body after browser history.
+    if (history.pushState) window.setTimeout(function () {
+        window.addEventListener('popstate', function (e) {
+            ajaxLink(document.URL);
+        }, false);
+    }, 1);
+};
