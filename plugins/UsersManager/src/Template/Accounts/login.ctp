@@ -11,7 +11,6 @@
 //$this->layout = "SeanTheme.login";
 use Cake\Core\Configure;
 use Settings\Core\Setting;
-$app_name = Setting::read('Application.school_name');
 $this->assign('title','Login');
 $edittemplates = [
     'inputContainer' => '<div class="form-group m-b-20 ">{{content}}</div>',

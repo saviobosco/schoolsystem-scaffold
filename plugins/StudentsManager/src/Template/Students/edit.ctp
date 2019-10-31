@@ -38,10 +38,7 @@ $this->assign('title', 'Edit Student Profile: '. h($student->id));
                     </div>
                     <div class="form-group">
                         <label for="type_of_student">Type of Student</label>
-                        <select class="form-control" name="type_of_student" id="type_of_student">
-                            <option value="Boarding">Boarding</option>
-                            <option value="day">Day </option>
-                        </select>
+                        <?= $this->Form->select('student_type_id', $studentTypes, ['default' => $default_student_type]) ?>
                     </div>
                     <div class="form-group">
                         <label for="type_of_student"> Blood Group </label>
@@ -199,4 +196,4 @@ $this->assign('title', 'Edit Student Profile: '. h($student->id));
     </div>
 </div>
 <?= $this->Plugins->script('bootstrap-datepicker/js/bootstrap-datepicker.js',['block' => true]) ?>
-<?= $this->Plugins->script('custom/js/fileinput.min.js',['block' => true]) ?>
+<?= $this->Plugins->script('custom/js/fileinput.min.js') ?>

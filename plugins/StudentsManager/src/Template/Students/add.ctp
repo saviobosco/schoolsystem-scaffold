@@ -37,10 +37,7 @@ $this->assign('title', 'Student Registration Form');
                     </div>
                     <div class="form-group">
                         <label for="type_of_student">Type of Student</label>
-                        <select class="form-control" name="type_of_student" id="type_of_student">
-                            <option value="Boarding">Boarding</option>
-                            <option value="day">Day </option>
-                        </select>
+                        <?= $this->Form->select('student_type_id', $studentTypes, ['default' => $default_student_type]) ?>
                     </div>
                     <div class="form-group">
                         <label for="type_of_student"> Blood Group </label>
@@ -55,6 +52,7 @@ $this->assign('title', 'Student Registration Form');
                     <?= $this->Form->input('state_id',['options'=>$states,'label'=>['text'=>'State of Origin']]) ?>
                     <?= $this->Form->input('l_g_a', ['label' => 'L.G.A']) ?>
                     <?= $this->Form->input('home_town', ['label' => 'Home Town']) ?>
+                    <?= $this->Form->input('home_residence', ['label' => 'Permanent Home Address']) ?>
                     <?= $this->Form->input('nationality_id', [ 'empty' => 'select nationality', 'options' => $nationalities, 'default' => $default_nationality , 'label' => 'Nationality']) ?>
                     <?= $this->Form->input('religion',['empty' => 'select religion', 'options' => $religions, 'default' => $default_religion , 'label' => 'Religion']) ?>
                     <div class="form-group">

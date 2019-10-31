@@ -94,7 +94,7 @@ $application_detail = Configure::read('Application');
     <!-- begin #content -->
     <div class="content">
         <div id="ajax-request-feedback"></div>
-        <div class="ajax-error"></div>
+        <div class="alert alert-danger ajax-error" style="display:none;"></div>
         <div id="content">
             <?= $this->Flash->render('auth') ?>
             <?= $this->Flash->render() ?>

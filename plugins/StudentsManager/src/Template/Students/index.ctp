@@ -13,66 +13,66 @@ $this->append('sidebar',$this->element('Links/sidebar'));
             <div class="panel-body">
                 <div class="m-b-20">
                     <div class="row">
-                        <div class="col-sm-4">
-                            <?= $this->element('searchParametersClass'); ?>
-                        </div>
-                        <div class="col-sm-6">
-                            <?= $this->element('searchStudentWithName') ?>
+                        <div class="col-sm-12">
+
+                            <?= $this->element('studentsSearchCriteria') ?>
+
                         </div>
                     </div>
 
                 </div>
 
                 <?= $this->element('Links/mainLinks') ?>
-
-                <table id="data-table" class="table table-responsive table-bordered ">
-                    <thead>
-                    <tr>
-                        <th><?= h('Admission No.') ?></th>
-                        <th><?= Inflector::humanize('full_name') ?></th>
-                        <th><?= Inflector::humanize('gender') ?></th>
-                        <th><?= Inflector::humanize('class') ?></th>
-                        <th><?= Inflector::humanize('status') ?></th>
-                        <th class="actions"><?= __('Actions') ?></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($students as $student): ?>
+                <?php if (isset($students) && !empty($students)) : ?>
+                    <table id="data-table" class="table table-responsive table-bordered ">
+                        <thead>
                         <tr>
-                            <td><?= h($student->id) ?></td>
-                            <td><?= h($student->full_name) ?></td>
-                            <td><?= h($student->gender) ?></td>
-                            <td><?= $student->class->class ?></td>
-                            <td><?php
-                                switch($student->status):
-                                    case 1:
-                                        echo '<span class="label label-success"> active </span>';
-                                        break;
-                                    case 0:
-                                        echo '<span class="label label-danger"> unactive </span>';
-                                        break;
-                                    default:
-                                        echo '<span class="label label-success"> unknown </span>';
-                                endswitch
-                                ?> </td>
-                            <td class="actions-link">
-                                <?= $this->Html->link('<i class="fa fa-eye"></i>'.__('View profile'), ['action' => 'view', $student->id],['class'=>'text-primary','escape'=>false]) ?>
-                                <?= $this->Html->link('<i class="fa fa-edit"></i>'.__('Edit profile'), ['action' => 'edit', $student->id],['class'=>'text-primary','escape'=>false]) ?>
-                                <?= $this->Html->link(''.__('Deactivate'), ['action' => 'deactivate', $student->id],['class'=>'text-primary','escape'=>false]) ?>
-                                <?= $this->Form->postLink('<i class="fa fa-close"></i>'.__('Delete'), ['action' => 'delete', $student->id], ['confirm' => __('Are you sure you want to delete # {0}? . This action can not be reversed', $student->id),'class'=>'text-danger','escape' => false]) ?>
-                            </td>
+                            <th><?= h('Admission No.') ?></th>
+                            <th><?= Inflector::humanize('full_name') ?></th>
+                            <th><?= Inflector::humanize('gender') ?></th>
+                            <th><?= Inflector::humanize('class') ?></th>
+                            <th><?= Inflector::humanize('status') ?></th>
+                            <th class="actions"><?= __('Actions') ?></th>
                         </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
-                <div class="paginator">
-                    <ul class="pagination">
-                        <?= $this->Paginator->prev('< ' . __('previous')) ?>
-                        <?= $this->Paginator->numbers() ?>
-                        <?= $this->Paginator->next(__('next') . ' >') ?>
-                    </ul>
-                    <p><?= $this->Paginator->counter() ?></p>
-                </div>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($students as $student): ?>
+                            <tr>
+                                <td><?= h($student->id) ?></td>
+                                <td><?= h($student->full_name) ?></td>
+                                <td><?= h($student->gender) ?></td>
+                                <td><?= $student->class->class ?></td>
+                                <td><?php
+                                    switch($student->status):
+                                        case 1:
+                                            echo '<span class="label label-success"> active </span>';
+                                            break;
+                                        case 0:
+                                            echo '<span class="label label-danger"> unactive </span>';
+                                            break;
+                                        default:
+                                            echo '<span class="label label-success"> unknown </span>';
+                                    endswitch
+                                    ?> </td>
+                                <td class="actions-link">
+                                    <?= $this->Html->link('<i class="fa fa-eye"></i>'.__('View profile'), ['action' => 'view', $student->id],['class'=>'text-primary','escape'=>false]) ?>
+                                    <?= $this->Html->link('<i class="fa fa-edit"></i>'.__('Edit profile'), ['action' => 'edit', $student->id],['class'=>'text-primary','escape'=>false]) ?>
+                                    <?= $this->Html->link(''.__('Deactivate'), ['action' => 'deactivate', $student->id],['class'=>'text-primary','escape'=>false]) ?>
+                                    <?= $this->Form->postLink('<i class="fa fa-close"></i>'.__('Delete'), ['action' => 'delete', $student->id], ['confirm' => __('Are you sure you want to delete # {0}? . This action can not be reversed', $student->id),'class'=>'text-danger','escape' => false]) ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <div class="paginator">
+                        <ul class="pagination">
+                            <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                            <?= $this->Paginator->numbers() ?>
+                            <?= $this->Paginator->next(__('next') . ' >') ?>
+                        </ul>
+                        <p><?= $this->Paginator->counter() ?></p>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

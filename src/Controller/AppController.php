@@ -17,6 +17,9 @@ namespace App\Controller;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Http\Response;
+use Cake\Routing\Router;
+
 /**
  * Application Controller
  *
@@ -28,7 +31,7 @@ use Cake\Event\Event;
 class AppController extends Controller
 {
 
-    public $helpers = ['Cewi/Excel.Excel'];
+    public $helpers = ['Cewi/Excel.Excel', 'Url'];
     /**
      * Initialization hook method.
      *
@@ -80,5 +83,14 @@ class AppController extends Controller
             return $this->viewBuilder()->setLayout('admin');
         }
         return $this->viewBuilder()->setLayout('custom');
+    }
+
+    public function beforeRedirect(Event $event, $url, Response $response)
+    {
+        if ($this->request->is('ajax')) {
+            $url = Router::url($url, true);
+            // changed the response status back to 200 to prevent error;
+            return $response->withHeader('X-Redirect-Url', $url)->withStatus(200);
+        }
     }
 }

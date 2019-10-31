@@ -49,9 +49,11 @@ class StudentGeneralRemarksController extends AppController
         if ($this->request->is(['post', 'put'])) {
             $studentGeneralRemark = $this->StudentGeneralRemarks->patchEntity($studentGeneralRemark, $this->request->getData());
             if ($this->StudentGeneralRemarks->save($studentGeneralRemark)) {
-                $this->Flash->success(__('The student general remark has been saved.'));
+                $this->response = $this->response->withStatus(200);
+                //$this->Flash->success(__('The student general remark has been saved.'));
             } else {
-                $this->Flash->error(__('The student general remark could not be saved. Please, try again.'));
+                $this->response = $this->response->withStatus(500);
+                //$this->Flash->error(__('The student general remark could not be saved. Please, try again.'));
             }
         }
     }
@@ -71,27 +73,38 @@ class StudentGeneralRemarksController extends AppController
     {
         $queryData = $this->request->getQuery();
         if (isset($queryData['term_id']) && 4 === (int)$queryData['term_id']) {
-            $studentResults = $this->Students->StudentAnnualResults
-                ->query()
-                ->select(['first_term', 'second_term', 'third_term', 'average', 'subject_id', 'student_id',
-                    'session_id', 'class_id'])
-                ->contain(['Subjects' => ['fields' => ['id', 'name']]])
-                ->where([
-                    'session_id' => $queryData['session_id'],
-                    'class_id' => $queryData['class_id'],
-                    'student_id' => $queryData['student_id']
-                    ]);
+            $student = $this->Students->find()
+                ->select(['id', 'first_name', 'last_name'])
+                ->where(['id' => $queryData['student_id']])
+                ->contain([
+                    'StudentAnnualResults' => [
+                        'fields' => ['first_term', 'second_term', 'third_term', 'average', 'subject_id', 'student_id',
+                            'session_id', 'class_id'],
+                        'conditions' => [
+                            'StudentAnnualResults.session_id' => $queryData['session_id'],
+                            'StudentAnnualResults.class_id' => $queryData['class_id'],
+                        ],
+                        'Subjects' => ['fields' => ['id', 'name']]
+                    ],
+                ])
+                ->first();
         } else {
-            $studentResults = $this->Students->StudentTermlyResults
-                ->query()->select(['total', 'grade','subject_id', 'student_id',
-                    'session_id', 'class_id', 'term_id'])
-                ->contain(['Subjects' => ['fields' => ['id', 'name']]])
-                ->where([
-                    'session_id' => $queryData['session_id'],
-                    'class_id' => $queryData['class_id'],
-                    'term_id' => $queryData['term_id'],
-                    'student_id' => $queryData['student_id'],
-                ])->toArray();
+            $student = $this->Students->find()
+                ->select(['id', 'first_name', 'last_name'])
+                ->where(['id' => $queryData['student_id']])
+                ->contain([
+                    'StudentTermlyResults' => [
+                        'fields' => ['total', 'grade','subject_id', 'student_id',
+                            'session_id', 'class_id', 'term_id'],
+                        'conditions' => [
+                            'StudentTermlyResults.session_id' => $queryData['session_id'],
+                            'StudentTermlyResults.class_id' => $queryData['class_id'],
+                            'StudentTermlyResults.term_id' => $queryData['term_id'],
+                        ],
+                        'Subjects' => ['fields' => ['id', 'name']]
+                    ],
+                ])
+                ->first();
         }
 
         $remarkInputs = $this->ResultRemarkInputs->getValidRemarkInputs($queryData['session_id']);
@@ -103,6 +116,6 @@ class StudentGeneralRemarksController extends AppController
                 'term_id' => $queryData['term_id'],
                 'student_id' => $queryData['student_id'],
             ])->first();
-        $this->set(compact('studentResults', 'studentGeneralRemark', 'remarkInputs'));
+        $this->set(compact('studentResults', 'student', 'studentGeneralRemark', 'remarkInputs'));
     }
 }

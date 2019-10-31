@@ -56,6 +56,13 @@
                 'escape' => false
             ]) ?>
         </li>
+        <li>
+            <?= $this->html->link('Student Types',[
+                '_name' => 'student_types:index'
+            ],[
+                'escape' => false
+            ]) ?>
+        </li>
     </ul>
 </li>
 <li class="has-sub">

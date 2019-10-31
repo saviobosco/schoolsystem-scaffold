@@ -1,29 +1,29 @@
 <?php
 $this->extend('/Common/view');
-$this->assign('title','Nationalities');
+$this->assign('title','Student Types');
 ?>
 <table id="data-table" class="table table-responsive ">
     <thead>
     <tr>
-        <th><?= __('Nationality') ?></th>
+        <th><?= __('Name') ?></th>
         <th> Default Selection</th>
         <th class="actions"><?= __('Actions') ?></th>
     </tr>
     </thead>
     <tbody>
-    <?php foreach ($nationalities as $nationality): ?>
+    <?php foreach ($studentTypes as $studentType): ?>
         <tr>
-            <td><?= h($nationality->nationality) ?></td>
+            <td><?= h($studentType->name) ?></td>
             <td>
-                <?php if ($nationality->default_selection) : ?>
+                <?php if ($studentType->default_selection) : ?>
                     <i class="text-success text-center fa fa-check"></i>
                 <?php else: ?>
                     <i class="text-danger text-center fa fa-times"></i>
                 <?php endif; ?>
             </td>
             <td class="actions">
-                <?= $this->Html->link(__('Edit'), ['action' => 'edit', $nationality->id]) ?>
-                <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $nationality->id], [ 'confirm' => __('Are you sure you want to delete {0}?', $nationality->nationality)]) ?>
+                <?= $this->Html->link(__('Edit'), ['action' => 'edit', $studentType->id]) ?>
+                <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $studentType->id], [ 'confirm' => __('Are you sure you want to delete {0}?', $studentType->name)]) ?>
             </td>
         </tr>
     <?php endforeach; ?>
@@ -40,11 +40,11 @@ $this->assign('title','Nationalities');
 </div>
 
 <div>
-    <?= $this->Form->create(null,['_name' => 'nationalities:store']) ?>
+    <?= $this->Form->create(null,['_name' => 'student_types:store']) ?>
     <fieldset>
-        <legend><?= __('Add Nationality') ?></legend>
+        <legend><?= __('Add Student Type') ?></legend>
         <?php
-        echo $this->Form->input('nationality',['type'=>'text']);
+        echo $this->Form->input('name',['type'=>'text']);
         echo $this->Form->input('default_selection',['type'=>'checkbox', 'label' => 'Default (Selected By Default)']);
         ?>
     </fieldset>

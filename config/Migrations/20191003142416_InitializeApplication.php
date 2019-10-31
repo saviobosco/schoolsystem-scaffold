@@ -536,6 +536,18 @@ class InitializeApplication extends AbstractMigration
             ])
             ->addColumn('created', 'datetime')
             ->create();
-    }
 
+        $table = $this->table('student_types');
+        $table->addColumn('name', 'string', [
+        'default' => null,
+        'limit' => 100,
+        'null' => false,
+        ])
+        ->addColumn('default_selection', 'boolean', [
+            'default' => null,
+            'null' => true
+        ])
+        ->create();
+
+    }
 }

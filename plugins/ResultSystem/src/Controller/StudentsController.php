@@ -9,7 +9,7 @@ use Cake\Routing\Exception\MissingControllerException;
 use ResultSystem\Controller\Traits\SearchParameterTrait;
 use ResultSystem\Controller\AppController;
 use ResultSystem\Model\Entity\StudentResultPin;
-
+use Cake\ORM\Query;
 /**
  * Students Controller
  *
@@ -45,43 +45,15 @@ class StudentsController extends AppController
      */
     public function index()
     {
-        $StudentsQuery = $this->Students->query();
         $getQuery = $this->request->getQuery();
-        if (isset($getQuery['_name']) && !empty($getQuery['_name'])) {
-            @list($first_name, $last_name) = explode(' ', $getQuery['_name']);
-            if ($first_name) {
-                $StudentsQuery = $StudentsQuery
-                    ->where(['first_name LIKE ' => '%'.$first_name.'%'])
-                    ->orWhere(['last_name LIKE ' => '%'. $first_name.'%']);
-            }
-            if ($last_name) {
-                $StudentsQuery = $StudentsQuery
-                    ->orwhere(['first_name LIKE' => '%'.$last_name.'%'])
-                    ->orWhere(['last_name LIKE ' => '%'.$last_name.'%']);
-            }
+        $this->loadModel('StudentsManager.Students');
+        $StudentsQuery = $this->Students->searchStudentWithCriteria($getQuery);
+        if ($StudentsQuery instanceof Query) {
+            $students = $this->paginate($StudentsQuery);
+        } else {
+            $students = $StudentsQuery;
         }
-        $this->paginate = [
-            'fields' => ['id', 'first_name', 'last_name', 'gender','class_id','status'],
-            'limit' => 1000,
-            'maxLimit' => 1000,
-            'contain' => ['Classes'=>['fields' => ['id', 'class']]],
-            'conditions' => [
-                'Students.status'   => 1,
-            ],
-            // Place the result in ascending order according to the class.
-            'order' => [
-                'class_id' => 'asc'
-            ]
-        ];
-        if ( !empty($this->request->getQuery('class_id'))) {
-            $this->paginate = array_merge_recursive($this->paginate,[
-                'conditions' => [
-                    'Students.class_id' => $this->request->getQuery('class_id')
-                ]
-            ]);
-        }
-        $students = $this->paginate($StudentsQuery);
-        $classes = $this->Students->Classes->find('list',['limit' => 200]);
+        $classes = $this->Students->Classes->find('list');
         $this->set(compact('students','classes','sessions'));
         $this->set('_serialize', ['students']);
     }

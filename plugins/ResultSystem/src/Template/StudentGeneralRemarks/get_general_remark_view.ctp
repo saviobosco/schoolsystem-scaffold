@@ -3,6 +3,28 @@ $queryData = $this->request->getQuery();
 ?>
 
 <?php if ((int)$queryData['term_id'] === 4) : ?>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="profile-picture">
+                <?= $this->Html->image('student-pictures/students/photo/'.$student->photo_dir.'/'.$student->photo,['alt' => $student->id,'width' => '150px']) ?>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <table class="table table-bordered">
+                <tr>
+                    <th><?= __('Name') ?></th>
+                    <td><?= h($student->full_name) ?></td>
+                </tr>
+                <tr>
+                    <th><?= __('Admission No.') ?></th>
+                    <td><?= h($student->id) ?></td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -13,8 +35,8 @@ $queryData = $this->request->getQuery();
         </tr>
         </thead>
         <tbody>
-        <?php if(!empty($studentResults)): ?>
-            <?php foreach($studentResults as $result) : ?>
+        <?php if(!empty($student['student_annual_results'])): ?>
+            <?php foreach($student['student_annual_results'] as $result) : ?>
                 <tr>
                     <td> <?= $result['subject']['name'] ?> </td>
                     <td> <?= $result['first_term'] ?> </td>
@@ -26,6 +48,27 @@ $queryData = $this->request->getQuery();
         </tbody>
     </table>
 <?php else : ?>
+
+    <div class="row" id="general-remark">
+        <div class="col-sm-4">
+            <div class="profile-picture">
+                <?= $this->Html->image('student-pictures/students/photo/'.$student->photo_dir.'/'.$student->photo,['alt' => $student->id,'width' => '150px']) ?>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <table class="table table-bordered">
+                <tr>
+                    <th><?= __('Name') ?></th>
+                    <td><?= h($student->full_name) ?></td>
+                </tr>
+                <tr>
+                    <th><?= __('Admission No.') ?></th>
+                    <td><?= h($student->id) ?></td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -35,8 +78,8 @@ $queryData = $this->request->getQuery();
         </tr>
         </thead>
         <tbody>
-        <?php if(!empty($studentResults)): ?>
-            <?php foreach($studentResults as $result) : ?>
+        <?php if(!empty($student['student_termly_results'])): ?>
+            <?php foreach($student['student_termly_results'] as $result) : ?>
                 <tr>
                     <td> <?= $result['subject']['name'] ?> </td>
                     <td> <?= $result['total'] ?> </td>

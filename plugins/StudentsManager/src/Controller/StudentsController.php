@@ -3,6 +3,7 @@ namespace StudentsManager\Controller;
 
 use Cake\Event\Event;
 use Cake\Http\Client;
+use Cake\ORM\Query;
 use StudentsManager\Controller\AppController;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use UsersManager\Exception\UserExistsException;
@@ -16,6 +17,7 @@ use UsersManager\Exception\UserExistsException;
  * @property \App\Model\Table\ReligionsTable $Religions
  * @property \App\Model\Table\NationalitiesTable $Nationalities
  * @property \App\Model\Table\MedicalIssuesTable $MedicalIssues
+ * @property \App\Model\Table\StudentTypesTable $StudentTypes
  */
 class StudentsController extends AppController
 {
@@ -26,6 +28,7 @@ class StudentsController extends AppController
         $this->loadModel('App.Religions');
         $this->loadModel('App.MedicalIssues');
         $this->loadModel('App.Nationalities');
+        $this->loadModel('App.StudentTypes');
     }
 
     public function beforeFilter(Event $event)
@@ -40,41 +43,15 @@ class StudentsController extends AppController
      */
     public function index()
     {
-        $StudentsQuery = $this->Students->query();
         $getQuery = $this->request->getQuery();
-        if (isset($getQuery['_name']) && !empty($getQuery['_name'])) {
-            @list($first_name, $last_name) = explode(' ', $getQuery['_name']);
-            if ($first_name) {
-                $StudentsQuery = $StudentsQuery
-                    ->where(['first_name LIKE ' => '%'.$first_name.'%'])
-                    ->orWhere(['last_name LIKE ' => '%'. $first_name.'%']);
-            }
-            if ($last_name) {
-                $StudentsQuery = $StudentsQuery
-                    ->orwhere(['first_name LIKE' => '%'.$last_name.'%'])
-                    ->orWhere(['last_name LIKE ' => '%'.$last_name.'%']);
-            }
+        $StudentsQuery = $this->Students->searchStudentWithCriteria($getQuery);
+
+        if ($StudentsQuery instanceof Query) {
+            $students = $this->paginate($StudentsQuery);
+        } else {
+            $students = $StudentsQuery;
         }
-        $this->paginate = [
-            'fields' => ['id', 'first_name', 'last_name', 'gender','class_id','status'],
-            'limit' => 1000,
-            'maxLimit' => 1000,
-            'contain' => ['Classes'=>['fields' => ['id', 'class']]],
-            // Place the result in ascending order according to the class.
-            'order' => [
-                'class_id' => 'asc',
-                'status' => 'desc'
-            ]
-        ];
-        if ( !empty($this->request->getQuery('class_id'))) {
-            $this->paginate = array_merge_recursive($this->paginate,[
-                'conditions' => [
-                    'Students.class_id' => $this->request->getQuery('class_id')
-                ]
-            ]);
-        }
-        $students = $this->paginate($StudentsQuery);
-        $classes = $this->Students->Classes->find('list',['limit' => 200]);
+        $classes = $this->Students->Classes->find('list');
         $this->set(compact('students','sessions','classes'));
         $this->set('_serialize', ['students']);
     }
@@ -160,7 +137,9 @@ class StudentsController extends AppController
         $bloodGroups = $this->Students->getBloodGroups();
         $genotypes = $this->Students->getGenotypes();
         $sponsorRelationships = $this->Students->getSponsorRelations();
-        $this->set(compact('student', 'sessions', 'classes','states', 'religions',
+        $studentTypes = $this->StudentTypes->find('list');
+        $default_student_type = $this->StudentTypes->find()->select('id')->where('default_selection', 1)->first()['id'];
+        $this->set(compact('student', 'sessions', 'classes','states', 'religions', 'studentTypes', 'default_student_type',
             'nationalities','medicalIssues', 'bloodGroups', 'genotypes',
             'default_nationality', 'default_religion', 'sponsorRelationships'));
         $this->set('_serialize', ['student']);
@@ -211,7 +190,9 @@ class StudentsController extends AppController
             $bloodGroups = $this->Students->getBloodGroups();
             $genotypes = $this->Students->getGenotypes();
             $sponsorRelationships = $this->Students->getSponsorRelations();
-            $this->set(compact('student', 'sessions', 'classes','states', 'religions',
+            $studentTypes = $this->StudentTypes->find('list');
+            $default_student_type = $this->StudentTypes->find()->select('id')->where('default_selection', 1)->first()['id'];
+            $this->set(compact('student', 'sessions', 'classes','states', 'religions', 'studentTypes', 'default_student_type',
                 'nationalities','medicalIssues', 'bloodGroups', 'genotypes',
                 'default_nationality', 'default_religion', 'sponsorRelationships'));
             $this->set('_serialize', ['student']);

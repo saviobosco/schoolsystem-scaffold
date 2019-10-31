@@ -7,23 +7,21 @@ $this->assign('title','Students');
 ?>
 <div class="m-b-20">
     <div class="row">
-        <div class="col-sm-4">
-            <?= $this->element('searchParametersClass') ?>
-        </div>
-        <div class="col-sm-6">
-            <?= $this->element('searchStudentWithName') ?>
+        <div class="col-sm-12">
+            <?= $this->element('studentsSearchCriteria') ?>
         </div>
     </div>
 </div>
+
+<?php if(isset($students) && !empty($students)): ?>
 <table id="data-table" class="table table-bordered table-responsive ">
     <thead>
-    <tr>
-        <th><?= $this->Paginator->sort('id') ?></th>
-        <th><?= $this->Paginator->sort('first_name') ?></th>
-        <th><?= $this->Paginator->sort('last_name') ?></th>
-        <th><?= $this->Paginator->sort('class') ?></th>
-        <th><?= $this->Paginator->sort('status') ?></th>
 
+    <tr>
+        <th><?= __('Admission No.') ?></th>
+        <th><?= __('Full Name') ?></th>
+        <th><?= __('Class') ?></th>
+        <th><?= __('Status') ?></th>
         <th class="actions"><?= __('Actions') ?></th>
     </tr>
     </thead>
@@ -31,8 +29,7 @@ $this->assign('title','Students');
     <?php foreach ($students as $student): ?>
         <tr>
             <td><?= h($student['id']) ?></td>
-            <td><?= h($student['first_name']) ?></td>
-            <td><?= h($student['last_name']) ?></td>
+            <td><?= h($student['first_name']) .' '. h($student['last_name']) ?></td>
             <td><?= h($student['class']['class']) ?></td>
             <td><?php
                 switch($student->status):
@@ -57,11 +54,12 @@ $this->assign('title','Students');
     <?php endforeach; ?>
     </tbody>
 </table>
-<div class="paginator">
-    <ul class="pagination">
-        <?= $this->Paginator->prev('< ' . __('previous')) ?>
-        <?= $this->Paginator->numbers() ?>
-        <?= $this->Paginator->next(__('next') . ' >') ?>
-    </ul>
-    <p><?= $this->Paginator->counter() ?></p>
-</div>
+    <div class="paginator">
+        <ul class="pagination">
+            <?= $this->Paginator->prev('< ' . __('previous')) ?>
+            <?= $this->Paginator->numbers() ?>
+            <?= $this->Paginator->next(__('next') . ' >') ?>
+        </ul>
+        <p><?= $this->Paginator->counter() ?></p>
+    </div>
+<?php endif; ?>

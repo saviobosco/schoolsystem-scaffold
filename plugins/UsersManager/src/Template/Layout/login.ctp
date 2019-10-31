@@ -37,16 +37,13 @@ $serverName = $this->request->env('SERVER_NAME');
         ['type' => 'icon']
     );
     ?>
+    <?= $this->fetch('meta') ?>
 
-    <?= $this->Plugins->css('jquery-ui/themes/base/minified/jquery-ui.min.css') ?>
     <?= $this->Plugins->css('bootstrap/css/bootstrap.min.css') ?>
-    <?= $this->Plugins->css('font-awesome/css/font-awesome.min.css') ?>
     <?= $this->FrontEnd->css('animate.min.css') ?>
     <?= $this->Html->css('style.css') ?>
     <?= $this->Html->css('style-responsive.css') ?>
-    <?= $this->Html->css('theme/default.css') ?>
 
-    <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
 </head>
 <body class="">

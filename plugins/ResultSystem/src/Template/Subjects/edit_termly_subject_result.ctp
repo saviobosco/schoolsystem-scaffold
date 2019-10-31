@@ -1,4 +1,5 @@
 <?php
+$this->extend('/Common/view2');
 $edittemplates = [
     'label' => '',
     'submitContainer' => '{{content}}'

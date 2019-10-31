@@ -9,10 +9,10 @@ $this->assign('title','Students General Remarks');
 <div class="row">
     <div class="col-sm-3">
         <?= $this->Form->create() ?>
-        <?= $this->Form->input('session_id', ['options' => $sessions, 'empty' => 'Select Session', 'id' => 'session-input'])  ?>
+        <?= $this->Form->input('session_id', ['options' => $sessions, 'id' => 'session-input'])  ?>
         <?= $this->Form->input('class_id', ['options' => $classes, 'empty' => 'Select Class', 'id' => 'class-input'])  ?>
-        <?= $this->Form->input('term_id', ['options' => $terms, 'empty' => 'Select Term', 'id' => 'term-input'])  ?>
-        <?= $this->Form->input('student_id', ['options' => [], 'empty' => '', 'id' => 'student-input', 'size' => 5, 'label' => 'Students'])  ?>
+        <?= $this->Form->input('term_id', ['options' => $terms, 'id' => 'term-input'])  ?>
+        <?= $this->Form->input('student_id', ['options' => [], 'id' => 'student-input', 'size' => 5, 'label' => 'Students'])  ?>
     </div>
     <div id="general-remark-content" class="col-sm-9">
 
@@ -35,9 +35,7 @@ $this->assign('title','Students General Remarks');
             }
         }
 
-        ['#session-input', '#class-input', '#term-input'].forEach(function(selector){
-            $(selector).change(loadStudents);
-        });
+        $('#class-input').change(loadStudents);
 
         $('#student-input').change(function (event) {
             var selectedSession = $('#session-input').val();

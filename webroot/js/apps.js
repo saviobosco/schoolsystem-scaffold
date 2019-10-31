@@ -348,6 +348,7 @@ var ajaxLink = function(link) {
         if (href.indexOf('Modules.php') != -1) target = 'body';
         else return true;
     }*/
+    if (!link.href) return true;
     if (href.indexOf('logout') != -1) return true;
     if (href === 'javascript:;') return true;
     $.ajax(href, ajaxOptions(target, href, false));
@@ -414,6 +415,11 @@ var ajaxSuccess = function(data, target, url) {
 var ajaxError = function(xhr, status, error, url, target, form) {
     var code = xhr.status,
         errorMsg = 'AJAX error. ' + code + ' ';
+    if (code === 403) {
+        // access denied
+        // redirect to login page
+        window.location = window.location.origin + '/login';
+    }
 
     if ( typeof ajaxError.num === 'undefined' ) {
         ajaxError.num = 0;

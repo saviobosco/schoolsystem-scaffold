@@ -31,15 +31,25 @@ Router::plugin(
             'action' => 'index'
         ], 'religions:index');
 
-        $routes->post('/nationalities',[
+        $routes->get('/nationalities',[
             'controller' => 'Nationalities',
-            'action' => 'store'
+            'action' => 'index'
         ], 'nationalities:index');
 
         $routes->post('/nationalities',[
             'controller' => 'Nationalities',
             'action' => 'store'
         ], 'nationalities:store');
+
+        $routes->get('/student_types',[
+            'controller' => 'StudentTypes',
+            'action' => 'index'
+        ], 'student_types:index');
+
+        $routes->post('/student_types',[
+            'controller' => 'StudentTypes',
+            'action' => 'store'
+        ], 'student_types:store');
 
         $routes->fallbacks(DashedRoute::class);
     }

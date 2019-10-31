@@ -343,4 +343,44 @@ class StudentsTable extends Table
         }
         return false;
     }
+
+    public function searchStudentWithCriteria($getQuery)
+    {
+        $StudentsQuery = $this->query()
+            ->select(['id', 'first_name', 'last_name', 'gender','class_id','status'])
+            ->contain(['Classes' => ['fields' => ['id', 'class']]])
+            ->limit(20);
+
+        if (isset($getQuery['Include']['admission_number']) && $getQuery['Include']['admission_number']) {
+            $StudentsQuery->where(['Students.id' => $getQuery['admission_number']]);
+        }else {
+            if (isset($getQuery['Include']['first_name']) && $getQuery['Include']['first_name']) {
+                $StudentsQuery->where(['first_name LIKE' => '%'. $getQuery['first_name'].'%']);
+            }
+            if (isset($getQuery['Include']['last_name']) && $getQuery['Include']['last_name']) {
+                $StudentsQuery->where(['last_name LIKE' => '%'. $getQuery['last_name'].'%']);
+            }
+        }
+        if (isset($getQuery['Include']['class_id']) && $getQuery['Include']['class_id']) {
+            $StudentsQuery->where(['class_id' => $getQuery['class_id']]);
+        }
+
+        $isAdmissionNumber = ((isset($getQuery['Include']['admission_number']) && !empty($getQuery['Include']['admission_number']) )
+            && (isset($getQuery['admission_number']) && !empty($getQuery['admission_number'])));
+
+        $isFirstName = ( (isset($getQuery['Include']['first_name']) && !empty($getQuery['Include']['first_name']))
+            && (isset($getQuery['first_name']) && !empty($getQuery['first_name'])));
+
+        $isLastName = ( (isset($getQuery['Include']['last_name']) && !empty($getQuery['Include']['last_name'])) &&
+        (isset($getQuery['last_name']) && !empty($getQuery['last_name'])));
+
+        $isClass = ( (isset($getQuery['Include']['class_id']) && !empty($getQuery['Include']['class_id'])) &&
+        (isset($getQuery['class_id']) && !empty($getQuery['class_id'])));
+
+        if ($isAdmissionNumber || $isFirstName || $isLastName || $isClass ) {
+            return $StudentsQuery;
+        } else {
+            return [];
+        }
+    }
 }
