@@ -86,7 +86,7 @@ class StudentsResultsController extends AppController
 
                 $subject = TableRegistry::get('SubjectsManager.Subjects')->get($queryData['subject_id'],['contain'=>'Blocks']);
                 $resultGradeInputsTable = TableRegistry::get('ResultSystem.ResultGradeInputs');
-                $gradeInputs = $resultGradeInputsTable->getValidGradeInputs($resultGradeInputsTable->getResultGradeInputs());
+                $gradeInputs = $resultGradeInputsTable->getValidGradeInputs($resultGradeInputsTable->getResultGradeInputs($queryData['session_id']));
                 // check if subject has existing value for the records
                 $studentResultExists = TableRegistry::get('ResultSystem.StudentTermlyResults')->find('all')
                     ->select(['student_id','subject_id','session_id','class_id','term_id'])
@@ -114,8 +114,9 @@ class StudentsResultsController extends AppController
 
     public function store()
     {
+        $queryData = $this->request->getQuery();
         try {
-            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
+            $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs($queryData['session_id']));
             if ( $this->request->is(['post'])) {
                 $processedResults = $this->ResultSystem->processSubmittedResults($this->request->getData('student_termly_results'),$gradeInputs);
                 $subjectResults = $this->Subjects->StudentTermlyResults->newEntities($processedResults);
@@ -197,7 +198,7 @@ class StudentsResultsController extends AppController
                     $this->render('edit_annual_subject_result');
                 } else {
                     $subject = $this->Subjects->getTermlyResultWithHydration($subject['id'],$queryData);
-                    $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
+                    $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs($queryData['session_id']));
                     $this->set(compact('gradeInputs','subject'));
                     $this->set('_serialize', ['subject']);
                     $this->render('edit_termly_subject_result');
@@ -308,7 +309,7 @@ class StudentsResultsController extends AppController
                     $subjectTermlyResults = $this->Subjects->getTermlyResults($subject->id,$queryData);
                     // gets the student subject positions
                     $subjectStudentPositions = $this->Subjects->getTermlySubjectPositions($subject->id,$queryData);
-                    $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs());
+                    $gradeInputs = $this->ResultGradeInputs->getValidGradeInputs($this->ResultGradeInputs->getResultGradeInputs($queryData['session_id']));
                     $this->set(compact('gradeInputs','subjectStudentPositions','subjectTermlyResults','subject'));
                     $this->set('_serialize', ['subject']);
                     $this->render('view_termly_subject_result');

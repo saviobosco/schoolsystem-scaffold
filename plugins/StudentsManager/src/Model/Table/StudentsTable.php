@@ -348,8 +348,7 @@ class StudentsTable extends Table
     {
         $StudentsQuery = $this->query()
             ->select(['id', 'first_name', 'last_name', 'gender','class_id','status'])
-            ->contain(['Classes' => ['fields' => ['id', 'class']]])
-            ->limit(20);
+            ->contain(['Classes' => ['fields' => ['id', 'class']]]);
 
         if (isset($getQuery['Include']['admission_number']) && $getQuery['Include']['admission_number']) {
             $StudentsQuery->where(['Students.id' => $getQuery['admission_number']]);
@@ -379,8 +378,7 @@ class StudentsTable extends Table
 
         if ($isAdmissionNumber || $isFirstName || $isLastName || $isClass ) {
             return $StudentsQuery;
-        } else {
-            return [];
         }
+        return [];
     }
 }

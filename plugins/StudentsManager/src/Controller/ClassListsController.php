@@ -34,8 +34,14 @@ class ClassListsController extends AppController
             $postData = $this->request->getData();
             $students = $this->Students->query()
                 ->enableHydration(false)
-                ->select(['Admission Number' => 'id', 'Name' => "concat(first_name,' ', last_name)"])
-                ->where(['class_id' => $postData['class_id']])
+                ->select([
+                    'Admission Number' => 'id',
+                    'Name' => "concat(first_name,' ', last_name)"
+                ])
+                ->where([
+                    'class_id' => $postData['class_id'],
+                    'status' => 1
+                ])
                 ->toArray();
             if (empty($students)) {
                 $this->Flash->error('No student(s) found!');

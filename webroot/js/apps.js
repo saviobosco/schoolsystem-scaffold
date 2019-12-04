@@ -357,6 +357,7 @@ var ajaxLink = function(link) {
 
 var ajaxOptions = function(target, url, form) {
     return {
+        dataType: 'html',
         beforeSend: function (data) {
             // AJAX error hide.
             $('.ajax-error').hide();
@@ -365,6 +366,7 @@ var ajaxOptions = function(target, url, form) {
         },
         success: function (data, s, xhr) {
             // See PHP RedirectURL().
+
             var redirectUrl = xhr.getResponseHeader("X-Redirect-Url");
             if (redirectUrl) {
                 url = redirectUrl;
@@ -391,8 +393,10 @@ var ajaxOptions = function(target, url, form) {
             }
             ajaxSuccess(data, target, url);
         },
-        error: function(xhr, status, error){ ajaxError(xhr, status, error, url, target, form); },
-        complete: function () {
+        error: function(xhr, status, error){
+            ajaxError(xhr, status, error, url, target, form);
+        },
+        complete: function (xhr, status) {
             $('.loading').css('visibility', 'hidden');
 
             //hideHelp();

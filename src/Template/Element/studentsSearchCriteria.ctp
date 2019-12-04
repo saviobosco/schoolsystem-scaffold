@@ -3,6 +3,7 @@ $getQuery = $this->request->getQuery();
 ?>
 <div>
     <?= $this->Form->create('',['type'=>'GET']) ?>
+    <input type="hidden" name="page" value="">
     <fieldset>
         <legend> Search Criteria </legend>
         <div class="row">

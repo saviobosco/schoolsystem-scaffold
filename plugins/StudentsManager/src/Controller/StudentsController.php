@@ -46,6 +46,12 @@ class StudentsController extends AppController
         $getQuery = $this->request->getQuery();
         $StudentsQuery = $this->Students->searchStudentWithCriteria($getQuery);
 
+        $this->paginate = [
+            'limit' => 50,
+            'order' => [
+                'Students.status' => 'desc'
+            ]
+        ];
         if ($StudentsQuery instanceof Query) {
             $students = $this->paginate($StudentsQuery);
         } else {

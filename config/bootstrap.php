@@ -282,7 +282,7 @@ Plugin::load('Saviobosco/Excel', ['bootstrap' => true, 'routes' => true]);
 Plugin::load('StudentsManager', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('SubjectsManager', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('ClassManager', ['bootstrap' => false, 'routes' => true]);
-//Plugin::load('FinanceManager', ['bootstrap' => true, 'routes' => true]);
+Plugin::load('FinanceManager', ['bootstrap' => true, 'routes' => true]);
 Plugin::load('Muffin/Footprint');
 Plugin::load('BankSystem', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('Saviobosco/Core', ['bootstrap' => false, 'routes' => true]);
@@ -293,9 +293,9 @@ if (Configure::read('debug') === false) {
 }
 /*Plugin::load('StudentAccount', ['bootstrap' => false, 'routes' => true]);
 
-Plugin::load('ParentAccount', ['bootstrap' => true, 'routes' => true]);
+Plugin::load('ParentAccount', ['bootstrap' => true, 'routes' => true]);*/
 
-Plugin::load('TeacherAccount', ['bootstrap' => true, 'routes' => true]);*/
+Plugin::load('TeacherAccount', ['bootstrap' => true, 'routes' => true]);
 
 // This is placed here to override the CakeDC/User default configurations
 collection((array)Configure::read('Users.config'))->each(function ($file) {
