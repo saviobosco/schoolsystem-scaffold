@@ -19,12 +19,18 @@ $this->assign('title', ( !empty($this->request->getQuery()) ) ? $sessions[$this-
         <div class="col-sm-12">
             <?= $this->Form->create('',['class'=>'form-inline','type'=>'GET']) ?>
             <div class="form-group">
-                <?= $this->Form->input('id',[ 'type' => 'hidden', 'value'=>(isset($queryData['id']) && !empty($queryData['id'])) ? $queryData['id'] : '']); ?>
-                <?= $this->Form->input('ts',[ 'type' => 'hidden', 'value'=>(isset($queryData['ts']) && !empty($queryData['ts'])) ? $queryData['ts'] : '']); ?>
-                <?= $this->Form->input('session_id',[ 'type' => 'hidden', 'value'=>(isset($queryData['session_id']) && !empty($queryData['session_id'])) ? $queryData['session_id'] : '']); ?>
-                <?= $this->Form->input('class_id',[ 'type' => 'hidden', 'value'=>(isset($queryData['class_id']) && !empty($queryData['class_id'])) ? $queryData['class_id'] : '']); ?>
-                <?= $this->Form->input('term_id',['options' => [3 => 'Third Term', 4 => 'Annual'],'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Term'],'value'=>(isset($queryData['term_id']) && !empty($queryData['term_id'])) ? $queryData['term_id'] : 1]); ?>
-                <?= $this->Form->submit(__('change'),['class'=>'btn btn-primary']) ?>
+                <?php
+                if ($this->request->session()->read('Student.term_id') == 3 ) {
+                echo $this->Form->input('id',[ 'type' => 'hidden', 'value'=>(isset($queryData['id']) && !empty($queryData['id'])) ? $queryData['id'] : '']);
+                echo $this->Form->input('ts',[ 'type' => 'hidden', 'value'=>(isset($queryData['ts']) && !empty($queryData['ts'])) ? $queryData['ts'] : '']);
+                echo $this->Form->input('session_id',[ 'type' => 'hidden', 'value'=>(isset($queryData['session_id']) && !empty($queryData['session_id'])) ? $queryData['session_id'] : '']);
+                echo $this->Form->input('class_id',[ 'type' => 'hidden', 'value'=>(isset($queryData['class_id']) && !empty($queryData['class_id'])) ? $queryData['class_id'] : '']);
+                echo $this->Form->input('term_id',['options' => [3 => 'Third Term', 4 => 'Annual'],'class'=>'form-control','data-select-id'=>'term_id','label'=>['text'=>'Term'],'value'=>(isset($queryData['term_id']) && !empty($queryData['term_id'])) ? $queryData['term_id'] : '']);
+                echo $this->Form->submit(__('change'),['class'=>'btn btn-primary']);
+                }
+
+                ?>
+
             </div>
             <?= $this->Form->end() ?>
         </div>

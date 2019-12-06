@@ -188,7 +188,7 @@ class CheckResultController extends AppController
                 $student = $this->Students
                     ->find()
                     ->enableHydration(false)
-                    ->select(['id','first_name','last_name','class_id','photo','photo_dir'])
+                    ->select(['id','first_name','last_name','class_id','photo'])
                     ->where(['id' => $session['id'] ])
                     ->first();
                 $studentAnnualResults = $this->Students->getStudentAnnualResultOnly($student['id'],$session);
@@ -216,7 +216,7 @@ class CheckResultController extends AppController
                 $student = $this->Students
                     ->find()
                     ->enableHydration(false)
-                    ->select(['id','first_name','last_name','class_id','photo','photo_dir'])
+                    ->select(['id','first_name','last_name','class_id','photo'])
                     ->where(['id' => $session['id'] ])
                     ->first();
                 $studentTermlyResults = $this->Students->getStudentTermlyResultOnly($student['id'], $session);
@@ -295,7 +295,7 @@ class CheckResultController extends AppController
                     ->withStringBody(json_encode($student));
             } else {
                 return $this->response->withStatus(404)
-                    ->withStringBody(json_encode(['Error' => 'Student Record Not Found!']));
+                    ->withStringBody('Student Record Not Found!');
             }
         } else {
             return $this->response->withStatus(400)
@@ -326,17 +326,21 @@ class CheckResultController extends AppController
                     'class_id' => $queryData['class_id'],
                     'status' => 1
                 ])
-                //->orderDesc('StudentPublishResults.created')
+                ->enableHydration(false)
                 ->all()
                 ->map(function($value) use ($currentSession) {
-                    if ($value->session->id === (int) $currentSession) {
-                        $value->session->session .= ' - Current Session';
+                    if ($value['session']['id'] == $currentSession) {
+                        $value['session']['session'] .= ' - Current Session';
                     }
-                    return $value->session;
+                    return $value['session'];
                 });
             if ($studentPublishedResultSessions) {
+                $sessionOptions = '<option value="">--Select Session-- </option>';
+                foreach($studentPublishedResultSessions as $session) {
+                    $sessionOptions .= "<option value='{$session['id']}'> {$session['session']} </option>";
+                }
                 return $this->response->withStatus(200)
-                    ->withStringBody(json_encode($studentPublishedResultSessions));
+                    ->withStringBody($sessionOptions);
             } else {
                 return $this->response->withStatus(404)
                     ->withStringBody(json_encode(['Error' => 'Student Result Sessions Not Found!']));
@@ -347,6 +351,43 @@ class CheckResultController extends AppController
         }
     }
 
+    public function getStudentResultClasses()
+    {
+        $this->response = $this->response->withType('application/json');
+        $queryData = $this->request->getQuery();
+        if (!$this->request->is('get')) {
+            return $this->response->withStatus(405)->withStringBody(json_encode(['Error' => 'Method not allowed']));
+        }
+        if ((isset($queryData['student_id']) && !empty($queryData['student_id']) ) ) {
+            $studentPublishedResultClasses = $this->StudentPublishResults->query()
+                ->select(['class_id'])
+                ->distinct(['class_id'])
+                ->contain(['Classes' => function($query) {
+                    $query->select(['id', 'class']);
+                    return $query;
+                }])
+                ->where([
+                    'student_id' => $queryData['student_id'],
+                    'status' => 1
+                ])
+                //->orderDesc('StudentPublishResults.created')
+                ->all();
+            if ($studentPublishedResultClasses) {
+                $classOptions = '<option value="">--Select Class-- </option>';
+                foreach($studentPublishedResultClasses as $class) {
+                    $classOptions .= "<option value='{$class->class->id}'> {$class->class->class} </option>";
+                }
+                return $this->response->withStatus(200)
+                    ->withStringBody($classOptions);
+            } else {
+                return $this->response->withStatus(404)
+                    ->withStringBody("<option>--No Class--</option>");
+            }
+        } else {
+            return $this->response->withStatus(400)
+                ->withStringBody(json_encode(['Error' => 'Missing required detail']));
+        }
+    }
 
     public function getStudentResultTerms()
     {
@@ -357,9 +398,10 @@ class CheckResultController extends AppController
         }
 
         if ((isset($queryData['student_id']) && !empty($queryData['student_id'])) &&
+            (isset($queryData['class_id']) && !empty($queryData['class_id'])) &&
             (isset($queryData['session_id']) && !empty($queryData['session_id']) )
         ) {
-            $studentPublishedResultSessions = $this->StudentPublishResults->query()
+            $studentPublishedResultTerms = $this->StudentPublishResults->query()
                 ->select(['term_id'])
                 ->contain(['Terms' => function($query) {
                     $query->select(['id', 'name']);
@@ -371,20 +413,23 @@ class CheckResultController extends AppController
                     'session_id' => $queryData['session_id'],
                     'status' => 1
                 ])
+                ->enableHydration(false)
                 ->all()
-                ->map(function($value) {
-                    return $value->term;
-                });
-            if ($studentPublishedResultSessions) {
+                ->toArray();
+            if ($studentPublishedResultTerms) {
+                $termOptions = '<option value="">--Select Term-- </option>';
+                foreach($studentPublishedResultTerms as $term) {
+                    $termOptions .= "<option value='{$term['term']['id']}'> {$term['term']['name']} </option>";
+                }
                 return $this->response->withStatus(200)
-                    ->withStringBody(json_encode($studentPublishedResultSessions));
+                    ->withStringBody($termOptions);
             } else {
                 return $this->response->withStatus(404)
-                    ->withStringBody(json_encode(['Error' => 'Student Result Sessions Not Found!']));
+                    ->withStringBody("No Term Found");
             }
         } else {
             return $this->response->withStatus(400)
-                ->withStringBody(json_encode(['Error' => 'Missing required detail']));
+                ->withStringBody('Missing required detail');
         }
     }
 
