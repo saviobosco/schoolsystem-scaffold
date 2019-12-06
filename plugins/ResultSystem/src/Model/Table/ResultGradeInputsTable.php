@@ -78,10 +78,16 @@ class ResultGradeInputsTable extends Table
      */
     public function getValidGradeInputs($query)
     {
+        $percentSum = 0;
         $data = $query
-            ->map(function($row){ $row->details = $row->replacement.' ('.$row->percentage.'%)'; return $row;})
+            ->map(function($row) use (&$percentSum) { // percentage passed as a reference variable to compute the accurate percentage total.
+                $percentSum = $percentSum + $row->percentage;
+                $row->details = "{$row->replacement} ({$row->percentage}%)";
+                return $row;
+            })
             ->combine('main_value','details')->toArray();
-        $data['exam'] = 'Examination';
+        $examPercentage = 100 - $percentSum;
+        $data['exam'] = "Examination ($examPercentage%)";
         return $data;
     }
 
@@ -93,6 +99,16 @@ class ResultGradeInputsTable extends Table
     {
         $data = $query
             ->toArray();
+        $percentSum = 0;
+        for($num = 0; $num < count($data); $num++) {
+            $percentSum = $percentSum + $data[$num]['percentage'];
+        }
+        $examPercentage = 100 - $percentSum;
+        array_push($data, [
+            'main_value' => 'exam',
+            'replacement' => 'Examination',
+            'percentage' => $examPercentage
+        ]);
         return $data;
     }
 

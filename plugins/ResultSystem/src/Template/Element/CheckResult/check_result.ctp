@@ -151,7 +151,61 @@
                     states.student_id = reg_number;
                     var queryStringObject = { 'student_id' : states.student_id };
                     CheckResultView.showLoading();
-                    app.client.request(undefined, "<?= $this->Url->build(['plugin'=>'ResultSystem','controller'=>'CheckResult','action'=>'get-student']) ?>" , 'GET', queryStringObject, undefined, function(statusCode, responsePayload){
+                    $.get("<?= $this->Url->build(['plugin'=>'ResultSystem','controller'=>'CheckResult','action'=>'get-student']) ?>", queryStringObject, function(data) {
+
+                        CheckResultView.clearDisplay();
+                        CheckResultView.clearErrorMessage();
+                        CheckResultView.clearLoading();
+                        states.studentDetails = data;
+                        states.class_id = data.class_id;
+                        CheckResultView.displayStudentDetails(data);
+                        // get the classes
+                        // load the classes..
+                        $('#result-checker-class').load("<?= $this->Url->build(['plugin'=>'ResultSystem','controller'=>'CheckResult','action'=>'get-student-result-classes']) ?>?student_id=" + queryStringObject.student_id)
+                        elements.resultCheckerClassSelector.addEventListener("change", function(event) {
+
+                            states.class_id = ( typeof(event.target.value) === "string") ? event.target.value : false ;
+                            if (states.student_id && states.class_id) {
+                                // get the sessions
+                                var queryStringObject = {
+                                    student_id : states.student_id,
+                                    class_id: states.class_id,
+                                };
+                                CheckResultView.showLoading();
+                                $('#result-checker-session').load("<?= $this->Url->build(['plugin'=>'ResultSystem','controller'=>'CheckResult','action'=>'get-student-result-sessions']) ?>?student_id="+queryStringObject.student_id+"&class_id="+queryStringObject.class_id);
+                                CheckResultView.clearLoading();
+                            }
+                        });
+
+                        elements.resultCheckerSessionSelector.addEventListener("change", function(event) {
+                            states.session_id = ( typeof(event.target.value) === "string") ? event.target.value : false ;
+                            if (states.student_id && states.class_id && states.session_id) {
+                                // get the term
+                                var queryStringObject = {
+                                    student_id : states.student_id,
+                                    class_id: states.class_id,
+                                    session_id : states.session_id
+                                };
+                                CheckResultView.showLoading();
+                                $('#result-checker-term').load("<?= $this->Url->build(['plugin'=>'ResultSystem','controller'=>'CheckResult','action'=>'get-student-result-terms']) ?>?student_id="+queryStringObject.student_id + "&class_id=" + queryStringObject.class_id + "&session_id=" + queryStringObject.session_id);
+                                CheckResultView.clearLoading();
+                            }
+                        });
+                    }, 'json')
+                        .fail(function(xhr, statusText, x) {
+                            var errorMessage = '';
+                            if (xhr.status === 404) {
+
+                                errorMessage = xhr.responseText
+                            }
+                            CheckResultView.clearLoading();
+                            CheckResultView.clearErrorMessage();
+                            CheckResultView.clearDisplay();
+                            // Set the formError field with the error text
+                            CheckResultView.displayErrorMessage(errorMessage);
+                        });
+
+                    /*app.client.request(undefined, "<?= $this->Url->build(['plugin'=>'ResultSystem','controller'=>'CheckResult','action'=>'get-student']) ?>" , 'GET', queryStringObject, undefined, function(statusCode, responsePayload){
                         if (statusCode !== 200) {
                             // Try to get the error from the api, or set a default error message
                             var error = typeof(responsePayload.Error) == 'string' ? responsePayload.Error : 'An error has occurred, please try again';
@@ -202,9 +256,9 @@
                             }
                         }
                     });
-                });
+*/                });
 
-                elements.resultCheckerSessionSelector.addEventListener("change", function(event) {
+                /*elements.resultCheckerSessionSelector.addEventListener("change", function(event) {
                     states.session_id = ( typeof(event.target.value) === "string") ? event.target.value : false ;
                     if (states.student_id && states.class_id && states.session_id) {
                         // get the term
@@ -240,70 +294,6 @@
                            }
                         });
                     }
-                });
-
-                /*elements.resultCheckerForm.addEventListener("submit", function(event) {
-                    // prevent form from submitting
-                    event.preventDefault();
-                    // get all form inputs
-                    var formId = this.id;
-                    var path = this.action;
-                    var method = this.method.toUpperCase();
-                    // Turn the inputs into a payload
-                    var payload = {};
-                    var elements = this.elements;
-                    for(var i = 0; i < elements.length; i++){
-                        if(elements[i].type !== 'submit'){
-                            // Determine class of element and set value accordingly
-                            var classOfElement = typeof(elements[i].classList.value) == 'string' && elements[i].classList.value.length > 0 ? elements[i].classList.value : '';
-                            var valueOfElement = elements[i].type == 'checkbox' && classOfElement.indexOf('multiselect') == -1 ? elements[i].checked : classOfElement.indexOf('intval') == -1 ? elements[i].value : parseInt(elements[i].value);
-                            var elementIsChecked = elements[i].checked;
-                            // Override the method of the form if the input's name is _method
-                            var nameOfElement = elements[i].name;
-                            if(nameOfElement == '_method'){
-                                method = valueOfElement;
-                            } else {
-                                // Create an payload field named "method" if the elements name is actually httpmethod
-                                if(nameOfElement == 'httpmethod'){
-                                    nameOfElement = 'method';
-                                }
-                                // Create an payload field named "id" if the elements name is actually uid
-                                if(nameOfElement == 'uid'){
-                                    nameOfElement = 'id';
-                                }
-                                // If the element has the class "multiselect" add its value(s) as array elements
-                                if(classOfElement.indexOf('multiselect') > -1){
-                                    if(elementIsChecked){
-                                        payload[nameOfElement] = typeof(payload[nameOfElement]) == 'object' && payload[nameOfElement] instanceof Array ? payload[nameOfElement] : [];
-                                        payload[nameOfElement].push(valueOfElement);
-                                    }
-                                } else {
-                                    payload[nameOfElement] = valueOfElement;
-                                }
-
-                            }
-                        }
-                    }
-                    // Call the API
-                    app.client.request(undefined,path,method,undefined,payload,function(statusCode,responsePayload){
-                        // Display an error on the form if needed
-                        if(statusCode !== 200){
-
-                            if(statusCode == 403){
-                                // log the user out
-                                //app.logUserOut();
-
-                            } else {
-                                // Try to get the error from the api, or set a default error message
-                                var error = typeof(responsePayload.Error) == 'string' ? responsePayload.Error : 'An error has occured, please try again';
-                                CheckResultView.displayErrorMessage(error);
-                            }
-                        } else {
-                            // If successful, send to form response processor
-                            var proceed = confirm('Are you sure you want to proceed ?');
-                        }
-
-                    });
                 });*/
             }
         }

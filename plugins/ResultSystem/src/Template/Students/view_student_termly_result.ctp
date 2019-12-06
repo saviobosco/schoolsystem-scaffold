@@ -20,7 +20,7 @@ $this->assign('title',$sessions[$this->request->session()->read('Student.session
 
     <?php
     // including the search parameter element if the Student.term_id session is 3
-    if ($this->request->session()->read('Student.term_id') == 3 ) {
+    if ($this->request->session()->read('Student.term_id') === 3 ) {
         echo $this->element('resultParameterTerm');
     }
     ?>
