@@ -360,8 +360,10 @@ class StudentsTable extends Table
         $StudentsQuery = $this->query()
             ->select(['id', 'first_name', 'last_name', 'gender','class_id','status'])
             ->contain(['Classes' => ['fields' => ['id', 'class']]]);
-        if (isset($getQuery['status']) && !empty($getQuery['status'])) {
-            $StudentsQuery->where(['status' => $getQuery['status']]);
+        if (isset($getQuery['status'])) {
+            if ($getQuery['status'] !== "") {
+                $StudentsQuery->where(['status' => $getQuery['status']]);
+            }
         }
 
         if (isset($getQuery['Include']['admission_number']) && $getQuery['Include']['admission_number']) {
@@ -390,7 +392,9 @@ class StudentsTable extends Table
         $isClass = ( (isset($getQuery['Include']['class_id']) && !empty($getQuery['Include']['class_id'])) &&
         (isset($getQuery['class_id']) && !empty($getQuery['class_id'])));
 
-        if ($isAdmissionNumber || $isFirstName || $isLastName || $isClass ) {
+        $isStatus = isset($getQuery['status']);
+
+        if ($isAdmissionNumber || $isFirstName || $isLastName || $isClass || $isStatus ) {
             return $StudentsQuery;
         }
         return [];
