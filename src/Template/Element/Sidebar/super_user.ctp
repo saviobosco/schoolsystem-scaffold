@@ -83,6 +83,7 @@
         </li>
     </ul>
 </li>
+<?php if ($this->request->session()->read('Auth.User.is_superuser')) : ?>
 <?= $this->element('UsersManager.Links/sidebar') ?>
 <li class="has-sub">
     <?= $this->Html->link('<b class="caret pull-right"></b><span> Pin Management </span>','javascript:;',['escape'=>false]) ?>
@@ -96,3 +97,4 @@
         </li>
     </ul>
 </li>
+<?php endif; ?>
