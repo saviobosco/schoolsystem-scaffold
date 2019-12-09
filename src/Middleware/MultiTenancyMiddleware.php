@@ -15,8 +15,10 @@ use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Settings\Core\Setting;
 use Zend\Diactoros\Response\RedirectResponse;
 use Cake\Routing\Router;
+use Cake\Core\Plugin;
 
 class MultiTenancyMiddleware
 {
@@ -55,8 +57,10 @@ class MultiTenancyMiddleware
 
                 }
                 // setup up config
-                //Configure::write('School_Name',$schoolAccountDetail['name']);
                 Configure::write('sub_domain',$schoolAccountDetail['sub_domain']);
+                if (Setting::read('Account_Type_Settings.allow_student_account')) {
+                    Plugin::load('StudentAccount', ['bootstrap' => false, 'routes' => true]);
+                }
             }
         }
         return $next($request,$response);

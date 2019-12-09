@@ -330,7 +330,10 @@ var ajaxLink = function(link) {
 
     var href,target;
     href = link.href;
-    target = 'content';
+    target = link.target;
+    if (!target) {
+        target = 'content';
+    }
     /*if ( typeof link == 'string' ) {
         href = link;
         target = 'body';
@@ -351,13 +354,14 @@ var ajaxLink = function(link) {
     if (!link.href) return true;
     if (href.indexOf('logout') != -1) return true;
     if (href === 'javascript:;') return true;
+    if (link.hash) return true;
     $.ajax(href, ajaxOptions(target, href, false));
     return false;
 };
 
 var ajaxOptions = function(target, url, form) {
     return {
-        dataType: 'html',
+        dataType: (target === 'inline') ? 'json' :'html',
         beforeSend: function (data) {
             // AJAX error hide.
             $('.ajax-error').hide();
@@ -366,32 +370,36 @@ var ajaxOptions = function(target, url, form) {
         },
         success: function (data, s, xhr) {
             // See PHP RedirectURL().
-
-            var redirectUrl = xhr.getResponseHeader("X-Redirect-Url");
-            if (redirectUrl) {
-                url = redirectUrl;
-            }
-            else if (form && form.method == 'get') {
-                var getStr = [];
-
-                // Fix advanced search forms (student & user) URL > 2000 chars.
-                if (form.name == 'search') {
-                    var formArray = $(form).formToArray();
-
-                    $(formArray).each(function(i,el){
-                        // Only add not empty values.
-                        if (el.value !== '')
-                            getStr.push(el.name + '=' + el.value);
-                    });
-
-                    getStr = getStr.join('&');
-                } else {
-                    getStr = $(form).formSerialize();
+            if (target === "in-line") {
+                // display the message in-line in the system
+                alert(xhr.responseText);
+            } else {
+                var redirectUrl = xhr.getResponseHeader("X-Redirect-Url");
+                if (redirectUrl) {
+                    url = redirectUrl;
                 }
+                else if (form && form.method == 'get') {
+                    var getStr = [];
 
-                url += (url.indexOf('?') != -1 ? '&' : '?') + getStr;
+                    // Fix advanced search forms (student & user) URL > 2000 chars.
+                    if (form.name == 'search') {
+                        var formArray = $(form).formToArray();
+
+                        $(formArray).each(function(i,el){
+                            // Only add not empty values.
+                            if (el.value !== '')
+                                getStr.push(el.name + '=' + el.value);
+                        });
+
+                        getStr = getStr.join('&');
+                    } else {
+                        getStr = $(form).formSerialize();
+                    }
+
+                    url += (url.indexOf('?') != -1 ? '&' : '?') + getStr;
+                }
+                ajaxSuccess(data, target, url);
             }
-            ajaxSuccess(data, target, url);
         },
         error: function(xhr, status, error){
             ajaxError(xhr, status, error, url, target, form);

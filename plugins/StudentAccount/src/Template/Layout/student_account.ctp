@@ -100,7 +100,7 @@ $application_detail = Configure::read('Application');
         ?>
         <!-- end breadcrumb -->
         <!-- begin page-header -->
-        <h1 class="page-header"> Student Account <small>...</small></h1>
+        <h1 class="page-header">Welcome, <?= $this->request->session()->read('Auth.User.student.first_name') ?> <small> last seen: <?= (new \Cake\I18n\Time($this->request->session()->read('Auth.User.last_seen')))->format('M j, Y \a\t g:i a')  ?> </small></h1>
         <div id="ajax-request-feedback">
 
         </div>
@@ -110,7 +110,7 @@ $application_detail = Configure::read('Application');
     </div>
     <!-- end #content -->
     <div class="footer">
-        <p class="pull-right"><?= $application_detail['Name'] ?> <?= $application_detail['Version'] ?> Powered by &copy; <a class="text-orange" href="<?= $application_detail['href_link'] ?>" title="Visit <?= $application_detail['Company'] ?>" data-toggle='tooltip' trigger="focus" ><?= Configure::read('Application.Company') ?></a> All copyright reserved.</p>
+        <p class="pull-right"><?= $application_detail['Name'] ?> <?= $application_detail['Version'] ?> Powered by &copy; <a class="text-orange" href="<?= $application_detail['Href_link'] ?>" title="Visit <?= $application_detail['Company'] ?>" data-toggle='tooltip' trigger="focus" ><?= Configure::read('Application.Company') ?></a> All copyright reserved.</p>
     </div>
 
 
@@ -132,36 +132,22 @@ echo $this->Site->script('crossbrowserjs/respond.min.js',['pathPrefix' => 'asset
 echo $this->Site->script('crossbrowserjs/excanvas.min.js',['pathPrefix' => 'assets/']);
 ?>
 <![endif]-->
-<?php
-echo $this->Site->script('slimscroll/jquery.slimscroll.min.js');
-echo $this->Site->script('select2/dist/js/select2.full.min.js');
-echo $this->Site->script('switchery/switchery.min.js');
-?>
+<?= $this->Html->script('jquery.form.min.js') ?>
 <!-- ================== END BASE JS ================== -->
 
 <!-- ================== BEGIN PAGE LEVEL JS ================== -->
 <?php
-echo $this->Site->script('DataTables/media/js/jquery.dataTables.js');
-echo $this->Site->script('DataTables/media/js/dataTables.bootstrap.min.js');
-echo $this->fetch('tableCombineJs');
-echo $this->Site->script('DataTables/extensions/Responsive/js/dataTables.responsive.min.js');
 echo $this->Site->script('bootstrap-datepicker/js/bootstrap-datepicker.js');
 echo $this->Html->script('table-manage-default.demo.js');
 ?>
 <?= $this->fetch('script') ?>
 <?= $this->fetch('bottomScripts') ?>
 <?= $this->Html->script('apps.js'); ?>
-
 <!-- ================== END PAGE LEVEL JS ================== -->
 <script>
     $(document).ready(function() {
         App.init();
-        <?php if ($this->request->params['controller'] === 'Dashboard' and $this->request->params['action'] === 'index') : /*echo 'DashboardV2.init();';*/ endif; ?>
-        TableManageDefault.init();
-        $('[data-toggle="tooltip"]').tooltip();
-        $('select').select2();
-        $("#multiple-select2").select2({ placeholder: "Select a student" });
-
+        //$('[data-toggle="tooltip"]').tooltip();
     });
 </script>
 </body>

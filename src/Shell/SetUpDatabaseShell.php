@@ -109,7 +109,7 @@ class SetUpDatabaseShell extends Shell
             ->first();
     }
 
-    public function migrate($sub_domain)
+    public function migrate($sub_domain, $target = null)
     {
         if(is_null($sub_domain)) {
             return false;
@@ -120,7 +120,11 @@ class SetUpDatabaseShell extends Shell
         try {
             $migrations = new Migrations();
             $this->out('Beginning migration');
-            $migrate = $migrations->migrate();
+            if (!is_null($target)) {
+                $migrate = $migrations->migrate(['target' => $target]);
+            } else {
+                $migrate = $migrations->migrate();
+            }
             if ($migrate) {
                 $this->out('Successfully migrated files');
                 return true;

@@ -274,7 +274,6 @@ Plugin::load('UsersManager', ['bootstrap' => true, 'routes' => true]);
 Plugin::load('Settings', ['bootstrap' => true, 'routes' => true]);
 Plugin::load('SkillsGradingSystem', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('ResultSystem', ['bootstrap' => false, 'routes' => true]);
-//Plugin::load('Proffer');
 Plugin::load('CakeDC/Users', ['routes' => true, 'bootstrap' => false]);
 Plugin::load('FrontEnd', ['bootstrap' => false, 'routes' => true]);
 Plugin::load('GradingSystem', ['bootstrap' => false, 'routes' => true]);
@@ -291,9 +290,7 @@ Plugin::load('TimesTable', ['bootstrap' => false, 'routes' => true]);
 if (Configure::read('debug') === false) {
     Plugin::load('Connehito/CakeSentry', ['bootstrap' => true]);
 }
-/*Plugin::load('StudentAccount', ['bootstrap' => false, 'routes' => true]);
-
-Plugin::load('ParentAccount', ['bootstrap' => true, 'routes' => true]);*/
+/*Plugin::load('ParentAccount', ['bootstrap' => true, 'routes' => true]);*/
 
 Plugin::load('TeacherAccount', ['bootstrap' => true, 'routes' => true]);
 

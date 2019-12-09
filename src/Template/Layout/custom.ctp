@@ -423,14 +423,25 @@ use Settings\Core\Setting;
         <nav class=" navbar-inverse m-b-10">
             <?php if(empty($this->request->session()->read('Auth.User.id'))): ?>
                 <ul class="nav navbar-nav navbar-right ">
+                    <?php if (\Settings\Core\Setting::read('Account_Type_Settings.allow_student_account')): ?>
+                    <li><?= $this->Html->link(__('Student Login'),'/student-account/login') ?></li>
+                    <?php endif; ?>
                     <li><?= $this->Html->link(__('Administrative Login'),'/login') ?></li>
                 </ul>
             <?php endif; ?>
-            <?php if(!empty($this->request->session()->read('Auth.User.id'))): ?>
+            <?php if(!empty($this->request->session()->read('Auth.User.id') && !empty($this->request->session()->read('Auth.User.role')))): ?>
                 <ul class="nav navbar-nav navbar-right" style="margin-right: 0;">
                     <li><?= $this->Html->link(__('Dashboard'),['plugin'=>null,'controller'=>'Dashboard','action'=>'index']) ?></li>
                     <li><?= $this->Html->link(__('logout'),['plugin'=>null,'controller'=>'MyUsers','action'=>'logout']) ?></li>
                 </ul>
+            <?php endif; ?>
+            <?php if (\Settings\Core\Setting::read('Account_Type_Settings.allow_student_account')) : ?>
+                <?php if (!empty($this->request->session()->read('Auth.User.id')) && !empty($this->request->session()->read('Auth.User.student'))) : ?>
+                    <ul class="nav navbar-nav navbar-right" style="margin-right: 0;">
+                        <li><?= $this->Html->link(__('Student Dashboard'),['plugin'=>'StudentAccount','controller'=>'Dashboard','action'=>'index']) ?></li>
+                        <li><?= $this->Html->link(__('logout'),['plugin'=>'StudentAccount','controller'=>'Logout','action'=>'index']) ?></li>
+                    </ul>
+                <?php endif; ?>
             <?php endif; ?>
         </nav>
     </header>

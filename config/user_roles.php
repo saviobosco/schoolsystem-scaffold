@@ -6,8 +6,8 @@ $userRole = [
         'admin' => 'Dean',
         'bursar' => 'Bursar',
         'user' => 'Admission Officer',
-        /*'student' => 'student',
-        'parent' => 'Parent',*/
+        'student' => 'student',
+        /*'parent' => 'Parent',*/
         'teacher' => 'Teacher'
     ]
 ];

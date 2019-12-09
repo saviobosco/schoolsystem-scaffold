@@ -89,7 +89,18 @@ class StudentsTable extends Table
             'className' => 'StudentsManager.Religions',
             'foreignKey' => 'religion_id',
             'joinType' => 'INNER',
-            'propertyName' => 'student_religion_id'
+        ]);
+
+        $this->belongsTo('StudentTypes',[
+            'className' => 'App.StudentTypes',
+            'foreignKey' => 'student_type_id',
+            'joinType' => 'INNER',
+        ]);
+
+        $this->belongsTo('Nationalities',[
+            'className' => 'App.Nationalities',
+            'foreignKey' => 'nationality_id',
+            'joinType' => 'INNER',
         ]);
 
         $this->hasMany('StudentTermlyResults', [

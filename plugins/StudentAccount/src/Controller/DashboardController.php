@@ -30,7 +30,7 @@ class DashboardController extends AppController
         $studentDetail = $this->Students->query()
             ->select(['first_name', 'last_name', 'class_id'])
             ->contain(['Classes'])
-            ->where(['Students.id'=> $this->Auth->user('id')])
+            ->where(['Students.id'=> $this->Auth->user('student_id')])
             ->first();
 
         // get the current session
@@ -42,7 +42,7 @@ class DashboardController extends AppController
             $studentResults = $studentPublishResultsTable->query()
                 ->contain(['Classes', 'Terms', 'Sessions'])
                 ->where([
-                    'student_id' => $this->Auth->user('id'),
+                    'student_id' => $this->Auth->user('student_id'),
                     'status' => 1
                 ])
                 ->orderDesc('StudentPublishResults.created');

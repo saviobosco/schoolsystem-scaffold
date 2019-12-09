@@ -56,6 +56,7 @@ $application_detail = Configure::read('Application');
     <?= $this->Site->script('pace/pace.min.js')  ?>
     <?php
     echo $this->Plugins->script('jquery/jquery-1.9.1.min.js');
+    echo $this->Site->script('bootstrap/js/bootstrap.min.js');
     //echo $this->Plugins->script('jquery/jquery-migrate-1.1.0.min.js');
     ?>
     <!-- ================== END BASE JS ================== -->
@@ -116,7 +117,6 @@ $application_detail = Configure::read('Application');
 <!-- ================== BEGIN BASE JS ================== -->
 <?php
 //echo $this->Site->script('jquery-ui/ui/minified/jquery-ui.min.js');
-echo $this->Site->script('bootstrap/js/bootstrap.min.js');
 ?>
 <?= $this->Html->script('jquery.form.min.js') ?>
 <!--[if lt IE 9]>

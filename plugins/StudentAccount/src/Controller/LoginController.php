@@ -2,6 +2,7 @@
 namespace StudentAccount\Controller;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\I18n\Time;
 use StudentAccount\Controller\AppController;
 
 /**
@@ -9,17 +10,20 @@ use StudentAccount\Controller\AppController;
  *
  *
  * @method \StudentAccount\Model\Entity\Student[] paginate($object = null, array $settings = [])
- * @property \ResultSystem\Model\Table\StudentsTable $Students
+ * @property \StudentAccount\Model\Table\StudentLoginsTable $StudentLogins
  */
 class LoginController extends AppController
 {
 
     public function initialize()
     {
+
         parent::initialize();
-        $this->loadModel('StudentAccount.Students');
+        $this->loadModel('StudentAccount.StudentLogins');
         $this->Auth->allow();
     }
+
+
 
     /**
      * Index method
@@ -28,23 +32,35 @@ class LoginController extends AppController
      */
     public function index()
     {
+        $this->viewBuilder()->setLayout('login');
 
     }
 
     public function login()
     {
-        $postData = $this->request->getData();
-
         if ($this->request->is('post')) {
-            // find the user with that admission number
-            try {
-                $student = $this->Students->find('all')->where(['id' => $postData['admission_number']])->enableHydration(false)->firstOrFail();
-                $this->Auth->setUser($student);
+            $user = $this->Auth->identify();
+            if ($user) {
+                if (!$user['status']) {
+                    $this->Flash->error(__('Account is Unactive. Please contact the School Authority'));
+                    return $this->redirect($this->referer());
+                }
+                // Updating the last seen
+                $authUser = $this->StudentLogins->get($user['id'],
+                    ['contain' => [
+                        'Students' => [
+                            'fields' => [
+                            'id', 'first_name', 'last_name', 'photo',
+                        ]
+                        ]
+                    ]
+                    ]);
+                $authUser->last_seen = Time::now();
+                $this->StudentLogins->save($authUser);
+                $this->Auth->setUser($authUser->toArray());
                 return $this->redirect($this->Auth->redirectUrl());
-            } catch ( RecordNotFoundException $exception) {
-                $this->Flash->error('Student not found!');
-                return $this->redirect($this->referer());
             }
+            $this->Flash->error(__('Invalid username or password, try again'));
         }
         return $this->redirect($this->referer());
     }

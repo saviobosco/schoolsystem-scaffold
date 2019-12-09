@@ -13,17 +13,30 @@ use Settings\Core\Setting;
  */
 class SettingsController extends AppController
 {
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadModel('Settings.Configurations');
+    }
+
+
     public function index()
     {
         $selectOptions = []; // Initialised the form select options
         //Setting::write('Application.school_motto', '');
-        $this->loadModel('Settings.Configurations');
-        $this->prefixes = Configure::read('Settings.Prefixes');
+
         $key = 'Application';
         $settings = $this->Configurations->find('all')->where([
             'name LIKE' => $key . '%',
             'editable' => 1,
         ])->order(['weight', 'id'])->toArray();
+
+        // Getting the account types
+        $accountTypeSettings = $this->Configurations->find('all')->where([
+            'name LIKE' => 'Account_Type_Settings%',
+            'editable' => 1,
+        ])->order(['weight', 'id'])->toArray();
+
         $sessions = TableRegistry::get('ResultSystem.Sessions')->query()->find('list')->toArray();
         $terms = TableRegistry::get('ResultSystem.Terms')->query()->find('list',['limit' => 3])->toArray();
         foreach ($settings as $setting) {
@@ -51,9 +64,27 @@ class SettingsController extends AppController
             Setting::clear(true);
             Setting::autoLoad();
         }
-        $this->set(compact('prefix', 'settings', 'sessions', 'terms','selectOptions'));
+        $this->set(compact('prefix', 'settings', 'sessions', 'terms','selectOptions', 'accountTypeSettings'));
     }
 
+    public function updateAccountTypeSettings()
+    {
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $accountTypeSettings = $this->Configurations->find('all')->where([
+                'name LIKE' => 'Account_Type_Settings%',
+                'editable' => 1,
+            ])->order(['weight', 'id'])->toArray();
+            $settings = $this->Configurations->patchEntities($accountTypeSettings, $this->request->getData());
+            if (!$this->Configurations->saveMany($settings)) {
+                 $responseMessage = __('The settings could not be saved. Please, try again.');
+            } else {
+                $responseMessage = __('The settings has been saved.');
+            }
+            Setting::clear(true);
+            Setting::autoLoad();
+            return $this->response->withStatus(200)->withStringBody($responseMessage);
+        }
+    }
 
     public function uploadBannerImage()
     {

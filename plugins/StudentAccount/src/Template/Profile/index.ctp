@@ -42,6 +42,10 @@ use Cake\I18n\Time;
                                             <td><?= h($student->first_name) ?></td>
                                         </tr>
                                         <tr>
+                                            <th><?= __('Middle Name') ?></th>
+                                            <td><?= h($student->middle_name) ?></td>
+                                        </tr>
+                                        <tr>
                                             <th><?= __('Last Name') ?></th>
                                             <td><?= h($student->last_name) ?></td>
                                         </tr>
@@ -55,11 +59,23 @@ use Cake\I18n\Time;
                                         </tr>
                                         <tr>
                                             <th><?= __('State Of Origin') ?></th>
-                                            <td><?= h($student->state_of_origin) ?></td>
+                                            <td><?= h($student->state->state) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('L.G.A') ?></th>
+                                            <td><?= h($student->l_g_a) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Home Town') ?></th>
+                                            <td><?= h($student->home_town) ?></td>
                                         </tr>
                                         <tr>
                                             <th><?= __('Religion') ?></th>
-                                            <td><?= h(@$religions[$student->religion_id]) ?></td>
+                                            <td><?= h($student->religion->religion) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('More information about religion') ?></th>
+                                            <td><?= h($student->more_information_about_religion) ?></td>
                                         </tr>
                                         <tr>
                                             <th><?= __('Home Residence') ?></th>
@@ -69,27 +85,96 @@ use Cake\I18n\Time;
                                             <th><?= __('Class') ?></th>
                                             <td><?= $student->class->class ?></td>
                                         </tr>
+                                        <tr>
+                                            <th><?= __('Student Type') ?></th>
+                                            <td><?= $student->student_type->name ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Blood Group') ?></th>
+                                            <td><?= $student->blood_group ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Genotype') ?></th>
+                                            <td><?= $student->genotype ?></td>
+                                        </tr>
                                     </table>
 
                                     <div class="m-t-40">
-                                        <h2> Guardian Information</h2>
+                                        <h2> Admission Information </h2>
                                         <table class="table table-user-information table-bordered">
                                             <tr>
-                                                <th><?= __('Guardian') ?></th>
-                                                <td><?= h($student->guardian) ?></td>
+                                                <th><?= __('Admission Number') ?></th>
+                                                <td><?= h($student->id) ?></td>
                                             </tr>
                                             <tr>
-                                                <th><?= __('Relationship To Guardian') ?></th>
-                                                <td><?= h($student->relationship_to_guardian) ?></td>
+                                                <th><?= __('Date Admitted') ?></th>
+                                                <td><?= h($student->date_admitted) ?></td>
                                             </tr>
                                             <tr>
-                                                <th><?= __('Occupation Of Guardian') ?></th>
-                                                <td><?= h($student->occupation_of_guardian) ?></td>
+                                                <th><?= __('Session Admitted') ?></th>
+                                                <td><?= h($student->session_admitted) ?></td>
                                             </tr>
                                             <tr>
-                                                <th><?= __('Guardian Phone Number') ?></th>
-                                                <td><?= h($student->guardian_phone_number) ?></td>
+                                                <th><?= __('Year of Graduation') ?></th>
+                                                <td><?= h($student->year_of_graduation) ?></td>
                                             </tr>
+                                            <tr>
+                                                <th><?= __('Mode of Admission') ?></th>
+                                                <td><?= h($student->mode_of_admission) ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th><?= __('State CEE Score') ?></th>
+                                                <td><?= h($student->state_cee_score) ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th><?= __('Former School') ?></th>
+                                                <td><?= h($student->former_school) ?></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                    <div class="m-t-40">
+                                        <h2> Sponsor Information</h2>
+                                        <table class="table table-user-information table-bordered">
+                                            <tr>
+                                                <th><?= __('Sponsor Full name') ?></th>
+                                                <td><?= h($student->sponsor_full_name) ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th><?= __('Sponsor Phone Number') ?></th>
+                                                <td><?= h($student->sponsor_phone_number) ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th><?= __('Sponsor Email') ?></th>
+                                                <td><?= h($student->sponsor_email) ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th><?= __('Sponsor Contact Address') ?></th>
+                                                <td><?= h($student->sponsor_contact_address) ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th><?= __('Sponsor Relationship') ?></th>
+                                                <td><?= h($student->sponsor_relationship) ?></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                    <div class="m-t-40">
+                                        <h2> Medical Record </h2>
+                                        <table class="table table-user-information table-bordered">
+                                            <tr>
+                                                <th><?= __('Medical Issues') ?></th>
+                                                <td>
+                                                    <?php foreach($medicalIssues as $id => $issue) : ?>
+                                                        <?= @(in_array($id, $student->medical_issues)) ? $issue.',' : '' ?>
+                                                    <?php endforeach; ?>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><?= __('More medical information') ?></th>
+                                                <td><?= h($student->more_medical_information) ?></td>
+                                            </tr>
+
                                         </table>
                                     </div>
                                 </div>

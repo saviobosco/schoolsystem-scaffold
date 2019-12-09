@@ -144,18 +144,6 @@ $this->assign('title', 'Edit Student Profile: '. h($student->id));
         </div>
     </div>
 </fieldset>
-
-<fieldset>
-    <legend> Login Information </legend>
-    <div class="row">
-        <div class="col-sm-6">
-            <?= $this->Form->input('username');  ?>
-        </div>
-        <div class="col-sm-6">
-            <?= $this->Form->input('password'); ?>
-        </div>
-    </div>
-</fieldset>
 <div class="pull-right m-t-30">
     <button type="submit" class="btn btn-success m-r-20"> <i class="fa fa-save"></i> Save </button>
 
@@ -195,5 +183,42 @@ $this->assign('title', 'Edit Student Profile: '. h($student->id));
         </div>
     </div>
 </div>
+
+<?php /** Click button for this modal is at StudentsManager/Element/header_links.ctp  */ ?>
+<?php if (\Settings\Core\Setting::read('Account_Type_Settings.allow_student_account')) : ?>
+<!-- Student Login Detail Change Modal -->
+<div class="modal fade" id="changeStudentLoginDetailModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title text-danger"> Change Student Login Detail</h4>
+            </div>
+            <div class="modal-body">
+                <?= $this->Html->link('', ['controller' => 'StudentLoginDetails', 'action' => 'index', $student->id],['style' => 'hidden;',
+                    'id'=>'loadChangeForm', 'target' => 'change-student-login-detail-view']) ?>
+                <div id="change-student-login-detail-view">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <script>
+        (function(){
+            $('#changeStudentLoginDetailModal').on('show.bs.modal', function(e) {
+                $('#loadChangeForm').click();
+            })
+        })($);
+    </script>
+<?php endif; ?>
+
+
+
 <?= $this->Plugins->script('bootstrap-datepicker/js/bootstrap-datepicker.js',['block' => true]) ?>
 <?= $this->Plugins->script('custom/js/fileinput.min.js') ?>

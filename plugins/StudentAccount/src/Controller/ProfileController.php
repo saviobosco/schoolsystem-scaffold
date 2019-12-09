@@ -12,13 +12,15 @@ use StudentAccount\Model\Entity\Student;
  * @method \StudentAccount\Model\Entity\Student[] paginate($object = null, array $settings = [])
  * @property \ResultSystem\Model\Table\StudentsTable $Students
  * @property \ResultSystem\Model\Table\ClassesTable $Classes
+ * @property \App\Model\Table\MedicalIssuesTable $MedicalIssues
+ *
  */
 class ProfileController extends AppController
 {
     public function initialize()
     {
         parent::initialize();
-        $this->loadModel('StudentAccount.Classes');
+        $this->loadModel('App.MedicalIssues');
     }
 
     /**
@@ -31,9 +33,15 @@ class ProfileController extends AppController
         // check if studentManager is loaded
         if (Plugin::loaded('StudentsManager')) {
             $studentsTable = TableRegistry::get('StudentsManager.Students');
-            $student = $studentsTable->get($this->Auth->user('username'),
-                ['contain' => 'Classes']);
+            $student = $studentsTable->get($this->Auth->user('student_id'),
+                [
+                    'contain' => [
+                        'Classes', 'States','Religions', 'StudentTypes',
+                        'Nationalities'
+                    ]
+                ]);
         }
-        $this->set(compact('student'));
+        $medicalIssues = $this->MedicalIssues->find('list');
+        $this->set(compact('student', 'medicalIssues'));
     }
 }
