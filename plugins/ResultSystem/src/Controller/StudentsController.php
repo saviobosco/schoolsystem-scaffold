@@ -52,7 +52,8 @@ class StudentsController extends AppController
             'limit' => 50,
             'maxLimit' => 50,
             'order' => [
-                'Students.status' => 'desc'
+                'Students.status' => 'desc',
+                'Students.first_name' => 'asc',
             ]
         ];
         if ($StudentsQuery instanceof Query) {
