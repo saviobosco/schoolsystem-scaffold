@@ -47,6 +47,19 @@ $getQuery = $this->request->getQuery();
             </div>
         </div>
         <div class="row">
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Status
+                    </div>
+                    <div class="col-sm-6">
+                        <?= $this->Form->select('status',[1 => 'Active', 0 => 'Unactive', '' => 'All'],['default' => (isset($getQuery['status'])) ? $getQuery['status'] : '']); ?>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary pull-right" > Search </button>
