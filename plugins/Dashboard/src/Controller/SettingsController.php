@@ -114,7 +114,7 @@ class SettingsController extends AppController
                     $destination = WWW_ROOT.'img/schools/'.Configure::read('sub_domain').'/'.$uploadedImage->getClientFilename();
                     $uploadedImage->moveTo($destination);
                     $bannerImage = $settingsTable->patchEntity($bannerImage, [
-                        'value' => $this->request->scheme().'://'.$this->request->host().'/img/schools/'.
+                        'value' => 'http://'.$this->request->host().'/img/schools/'.
                             Configure::read('sub_domain').'/'. $uploadedImage->getClientFilename()
                     ]);
                     $settingsTable->save($bannerImage);
@@ -158,7 +158,7 @@ class SettingsController extends AppController
 
                 if ( move_uploaded_file($this->request->getData('logo')['tmp_name'], WWW_ROOT.'img/schools/'.Configure::read('sub_domain') .'/school-logo.jpg') ) {
                     $schoolLogo = $settingsTable->patchEntity($schoolLogo, [
-                        'value' => $this->request->scheme().'://'.$this->request->host().'/img/schools/'.
+                        'value' => 'http://'.$this->request->host().'/img/schools/'.
                             Configure::read('sub_domain').'/school-logo.jpg'
                     ]);
                     $settingsTable->save($schoolLogo);
