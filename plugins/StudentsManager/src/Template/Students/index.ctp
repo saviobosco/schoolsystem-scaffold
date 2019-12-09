@@ -57,7 +57,6 @@ $this->append('sidebar',$this->element('Links/sidebar'));
                                 <td class="actions-link">
                                     <?= $this->Html->link('<i class="fa fa-eye"></i>'.__('View profile'), ['action' => 'view', $student->id],['class'=>'text-primary','escape'=>false]) ?>
                                     <?= $this->Html->link('<i class="fa fa-edit"></i>'.__('Edit profile'), ['action' => 'edit', $student->id],['class'=>'text-primary','escape'=>false]) ?>
-                                    <?= $this->Html->link(''.__('Deactivate'), ['action' => 'deactivate', $student->id],['class'=>'text-primary','escape'=>false]) ?>
                                     <?= $this->Form->postLink('<i class="fa fa-close"></i>'.__('Delete'), ['action' => 'delete', $student->id], ['confirm' => __('Are you sure you want to delete # {0}? . This action can not be reversed', $student->id),'class'=>'text-danger','escape' => false]) ?>
                                 </td>
                             </tr>
