@@ -413,8 +413,8 @@ use Settings\Core\Setting;
         <nav class="navbar navbar-inverse m-b-0 p-20">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <?= $this->Html->link($this->Html->image('school-logo.png', ['class' => 'img-responsive']) ,'/',['class'=>'navbar-brand','escape'=>false]) ?>
-                    <h2>
+                    <?= $this->SchoolAsset->getSchoolLogo() ?>
+                    <h2 style="display: inline">
                         <?= Setting::read('Application.school_name'); ?>
                     </h2>
                 </div>

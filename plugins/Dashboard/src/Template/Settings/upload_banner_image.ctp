@@ -4,7 +4,7 @@ $this->extend('/Common/view');
 $this->assign('title','Upload Banner Image');
 ?>
 <?php
-$imageBanner = Setting::read('Application.image_banner')
+$imageBanner = Setting::read('Application.image_banner');
 ?>
 <?php if ($imageBanner) : ?>
     <div>

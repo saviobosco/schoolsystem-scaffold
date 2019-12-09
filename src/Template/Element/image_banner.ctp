@@ -1,6 +1,6 @@
 <?php
 use Settings\Core\Setting;
+use Cake\Core\Configure;
 
-$image_banner = Setting::read('Application.image_banner');
 ?>
-<?= ($image_banner) ?  $this->Html->image($image_banner) : '' ?>
+<?= $this->SchoolAsset->getSchoolBanner() ?>

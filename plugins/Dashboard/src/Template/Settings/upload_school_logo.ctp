@@ -1,12 +1,12 @@
 <?php
+use Settings\Core\Setting;
+
 $this->extend('/Common/view');
 $this->assign('title','Upload School Logo');
 ?>
-<?php if(!empty($file)) : ?>
-    <div>
-        <?=  $this->Html->image('schools/'.Cake\Core\Configure::read('sub_domain').'/'.$file[0],['class'=>'img-responsive']) ?>
-    </div>
-<?php endif; ?>
+
+<?=  @$this->Html->image($schoolLogo['value'],['class'=>'img-responsive']) ?>
+
     <p> Upload the school Logo</p>
 <?= $this->Form->create(null, [
     'url'=>[

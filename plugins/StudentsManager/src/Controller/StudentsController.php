@@ -48,6 +48,7 @@ class StudentsController extends AppController
 
         $this->paginate = [
             'limit' => 50,
+            'maxLimit' => 50,
             'order' => [
                 'Students.status' => 'desc'
             ]

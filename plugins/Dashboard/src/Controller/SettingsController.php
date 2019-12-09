@@ -3,8 +3,6 @@ namespace Dashboard\Controller;
 use Cake\ORM\TableRegistry;
 use Dashboard\Controller\AppController;
 use Cake\Core\Configure;
-use Cake\Filesystem\File;
-use Cake\Filesystem\Folder;
 use Settings\Core\Setting;
 /**
  * Settings Controller
@@ -95,36 +93,39 @@ class SettingsController extends AppController
             $settingsTable = Setting::model();
             $bannerImage = $settingsTable->findByName('Application.image_banner')->first();
             try {
-                // check if upload
-                //debug($this->request->data); exit;
-                if (empty($this->request->getData('banner')['name'])) {
+                $uploadedImage = $this->request->getUploadedFile('banner');
+                if (empty($uploadedImage)) {
                     $this->Flash->error(__('No file selected.'));
                     return $this->redirect($this->request->referer());
                 }
-                $imageDetails = pathinfo($this->request->getData('banner')['name']);
-                if ( !in_array($imageDetails['extension'], ['png', 'jpg', 'jpeg'])) {
+                if (!in_array($uploadedImage->getClientMediaType(), ['image/png', 'image/jpg', 'image/jpeg'])) {
                     $this->Flash->error(__('banner must be a valid image.'));
                     return $this->redirect($this->request->referer());
                 }
-                // check if folder is writable
                 if ($bannerImage) {
-                    $file = new File(WWW_ROOT.'img/schools/'.Configure::read('sub_domain').'/'.$bannerImage['value']);
-                    if ( $file->exists() ) {
-                        $file->delete();
+                    if (!empty($bannerImage['value'])) {
+                        $real_file_path = WWW_ROOT. substr(parse_url($bannerImage['value'])['path'], 1);
+                        if (file_exists($real_file_path)) {
+                            unlink($real_file_path);
+                        }
                     }
                 }
-                $imageBannerName = 'image-banner.'. $imageDetails['extension'];
-                if ( move_uploaded_file($this->request->getData('banner')['tmp_name'], WWW_ROOT.'img/schools/'.Configure::read('sub_domain').'/'.$imageBannerName) ) {
-                    if ($bannerImage) {
-                        $bannerImage = $settingsTable->patchEntity($bannerImage, ['value' => $imageBannerName]);
-                        $settingsTable->save($bannerImage);
-                    }
+                try {
+                    $destination = WWW_ROOT.'img/schools/'.Configure::read('sub_domain').'/'.$uploadedImage->getClientFilename();
+                    $uploadedImage->moveTo($destination);
+                    $bannerImage = $settingsTable->patchEntity($bannerImage, [
+                        'value' => $this->request->scheme().'://'.$this->request->host().'/img/schools/'.
+                            Configure::read('sub_domain').'/'. $uploadedImage->getClientFilename()
+                    ]);
+                    $settingsTable->save($bannerImage);
                     $this->Flash->success(__('File was successfully uploaded'));
-                } else {
-                    $this->Flash->error(__('An Error occurred uploading this image. Please try again.'));
+                } catch (\InvalidArgumentException $invalidArgument) {
+                    $this->Flash->error($invalidArgument->getMessage());
+                } catch (\RuntimeException $runtime) {
+                    $this->Flash->error($runtime->getMessage());
                 }
             } catch (\Exception $e ) {
-                $this->Flash->success(__('An Error occurred uploading this image. Please try again.'));
+                $this->Flash->error(__('An Error occurred uploading this image. Please try again.'));
             }
             return $this->redirect($this->referer());
         }
@@ -133,27 +134,34 @@ class SettingsController extends AppController
 
     public function uploadSchoolLogo()
     {
-        $dir = new Folder(WWW_ROOT.'img/schools/'.Configure::read('sub_domain').'/');
-        $file = $dir->find('school-logo.jpg', true);
+        if (!Setting::check('Application.school_logo')) {
+            Setting::register('Application.school_logo', '',[
+                'editable' => 0, 'type' => 'file',
+                'description' => 'School Logo'
+            ]);
+        }
+        $settingsTable = Setting::model();
+        $schoolLogo = $settingsTable->findByName('Application.school_logo')->first();
         if ( $this->request->is(['patch', 'post', 'put'])) {
             try {
                 // check if upload
-                //debug($this->request->data); exit;
                 if (empty($this->request->getData('logo')['name'])) {
                     $this->Flash->error(__('No file selected.'));
                     return $this->redirect($this->request->referer());
                 }
                 $imageDetails = pathinfo($this->request->getData('logo')['name']);
-                if ($imageDetails['extension'] !== 'png') {
+                if (!in_array($imageDetails['extension'], ['png', 'jpg', 'jpeg'])) {
                     $this->Flash->error(__('Image must be a .png file .'));
                     return $this->redirect($this->request->referer());
                 }
                 // check if folder is writable
-                $file = new File(WWW_ROOT.'img/schools/'. Configure::read('sub_domain').'school-logo.jpg');
-                if ( $file->exists() ) {
-                    $file->delete();
-                }
+
                 if ( move_uploaded_file($this->request->getData('logo')['tmp_name'], WWW_ROOT.'img/schools/'.Configure::read('sub_domain') .'/school-logo.jpg') ) {
+                    $schoolLogo = $settingsTable->patchEntity($schoolLogo, [
+                        'value' => $this->request->scheme().'://'.$this->request->host().'/img/schools/'.
+                            Configure::read('sub_domain').'/school-logo.jpg'
+                    ]);
+                    $settingsTable->save($schoolLogo);
                     $this->Flash->success(__('File was successfully uploaded'));
                 } else {
                     $this->Flash->error(__('An Error occurred uploading this image. Please try again.'));
@@ -163,6 +171,6 @@ class SettingsController extends AppController
             }
             return $this->redirect($this->referer());
         }
-        $this->set(compact('file'));
+        $this->set(compact('schoolLogo'));
     }
 }

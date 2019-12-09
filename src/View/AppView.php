@@ -46,5 +46,6 @@ class AppView extends View
         $this->loadHelper('FinanceManager.Currency');
         $this->loadHelper('FinanceManager.Payment');
         $this->loadHelper('ResultSystem.CheckResult');
+        $this->loadHelper('SchoolAsset');
     }
 }

@@ -70,7 +70,11 @@ $this->append('sidebar',$this->element('Links/sidebar'));
                             <?= $this->Paginator->numbers() ?>
                             <?= $this->Paginator->next(__('next') . ' >') ?>
                         </ul>
-                        <p><?= $this->Paginator->counter() ?></p>
+                        <p><?= $this->Paginator->counter(
+                                'Page {{page}} of {{pages}}, showing {{current}} records out of
+                                {{count}} total, starting on record {{start}}, ending on {{end}}'
+                            ); ?>
+                        </p>
                     </div>
                 <?php endif; ?>
             </div>

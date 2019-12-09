@@ -48,6 +48,13 @@ class StudentsController extends AppController
         $getQuery = $this->request->getQuery();
         $this->loadModel('StudentsManager.Students');
         $StudentsQuery = $this->Students->searchStudentWithCriteria($getQuery);
+        $this->paginate = [
+            'limit' => 50,
+            'maxLimit' => 50,
+            'order' => [
+                'Students.status' => 'desc'
+            ]
+        ];
         if ($StudentsQuery instanceof Query) {
             $students = $this->paginate($StudentsQuery);
         } else {
@@ -334,7 +341,7 @@ class StudentsController extends AppController
                 $student = $this->Students
                     ->find()
                     ->enableHydration(false)
-                    ->select(['id','first_name','last_name','class_id','photo','photo_dir'])
+                    ->select(['id','first_name','last_name','class_id','photo'])
                     ->where(['id' => $id])
                     ->first();
                 $studentAnnualResults = $this->Students->getStudentAnnualResultOnly($student['id'],$queryData);
@@ -362,7 +369,7 @@ class StudentsController extends AppController
                 $student = $this->Students
                     ->find()
                     ->enableHydration(false)
-                    ->select(['id','first_name','last_name','class_id','photo','photo_dir'])
+                    ->select(['id','first_name','last_name','class_id','photo'])
                     ->where(['id' => $id])
                     ->first();
                 $studentTermlyResults = $this->Students->getStudentTermlyResultOnly($student['id'],$queryData);
