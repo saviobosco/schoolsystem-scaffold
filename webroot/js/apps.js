@@ -353,7 +353,7 @@ var ajaxLink = function(link) {
     }*/
     if (!link.href) return true;
     if (href.indexOf('logout') != -1) return true;
-    if (href === 'javascript:;') return true;
+    if (href.indexOf('javascript:') != -1) return true;
     if (link.hash) return true;
     $.ajax(href, ajaxOptions(target, href, false));
     return false;

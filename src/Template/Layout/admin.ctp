@@ -60,6 +60,7 @@ $application_detail = Configure::read('Application');
     //echo $this->Plugins->script('jquery/jquery-migrate-1.1.0.min.js');
     ?>
     <?= $this->Site->script('bootstrap-wysihtml5/dist/bootstrap3-wysihtml5.all.min.js') ?>
+    <?= $this->Site->script('ckeditor/ckeditor.js') ?>
     <!-- ================== END BASE JS ================== -->
 </head>
 
