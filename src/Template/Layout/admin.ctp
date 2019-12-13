@@ -41,7 +41,7 @@ $application_detail = Configure::read('Application');
     //echo $this->Html->css('animate.css');
     echo $this->Html->css('style.css');
     echo $this->Html->css('style-responsive.min.css');
-
+    echo $this->Plugins->css('bootstrap-wysihtml5/dist/bootstrap3-wysihtml5.min.css');
     //echo $this->Plugins->css('DataTables/media/css/dataTables.bootstrap.min.css');
     //echo $this->Plugins->css('DataTables/extensions/Responsive/css/responsive.bootstrap.min.css');
     echo $this->Html->css('print.css');
@@ -59,6 +59,7 @@ $application_detail = Configure::read('Application');
     echo $this->Site->script('bootstrap/js/bootstrap.min.js');
     //echo $this->Plugins->script('jquery/jquery-migrate-1.1.0.min.js');
     ?>
+    <?= $this->Site->script('bootstrap-wysihtml5/dist/bootstrap3-wysihtml5.all.min.js') ?>
     <!-- ================== END BASE JS ================== -->
 </head>
 

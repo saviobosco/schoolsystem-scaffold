@@ -56,6 +56,4 @@ class SiteHelper extends HtmlHelper
             $this->Form->label($name) . // Joining both of them
             $this->Form->control($name,$options);
     }
-
-
 }

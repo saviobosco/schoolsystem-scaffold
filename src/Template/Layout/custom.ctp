@@ -31,9 +31,11 @@ use Settings\Core\Setting;
     ?>
     <?php
     echo $this->Plugins->css('bootstrap/css/bootstrap.min.css');
-    //echo $this->Html->css('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+    echo $this->Plugins->css('font-awesome/css/font-awesome.min.css');
+    echo $this->Plugins->css('jquery-news-ticker/css/ticker-style.css');
     echo $this->Html->css('print.css');
     echo $this->Plugins->script('jquery/jquery-1.9.1.min.js');
+    echo $this->Plugins->script('jquery-news-ticker/js/jquery.ticker.js');
     ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
@@ -82,10 +84,28 @@ use Settings\Core\Setting;
                 width: 100%;
                 margin-bottom: 35px;
             }
+            .ticker-wrapper.has-js {
+                width: 600px;
+            }
+            .ticker {
+                width: 600px;
+            }
+            .nav>li {
+                display: inline;
+            }
+            .nav>li>a {
+                display: inline-block;
+            }
         }
         @media screen and (max-width: 480px) {
             .logo {
                 font-size: 150px;
+            }
+            .ticker-wrapper.has-js {
+                width: 300px;
+            }
+            .ticker {
+                width: 300px;
             }
         }
 
@@ -409,43 +429,50 @@ use Settings\Core\Setting;
 <body>
 
 <div class="container body">
-    <header>
-        <nav class="navbar navbar-inverse m-b-0 p-20">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <?= $this->SchoolAsset->getSchoolLogo() ?>
-                    <h2 style="display: inline">
-                        <?= Setting::read('Application.school_name'); ?>
-                    </h2>
-                </div>
-            </div>
-        </nav>
-        <nav class=" navbar-inverse m-b-10">
-            <?php if(empty($this->request->session()->read('Auth.User.id'))): ?>
-                <ul class="nav navbar-nav navbar-right ">
-                    <?php if (\Settings\Core\Setting::read('Account_Type_Settings.allow_student_account')): ?>
-                    <li><?= $this->Html->link(__('Student Login'),'/student-account/login') ?></li>
+    <div class="row">
+        <div class="col-sm-12">
+            <header>
+                <nav class="navbar navbar-inverse m-b-0 p-20">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <?= $this->SchoolAsset->getSchoolLogo() ?>
+                            <h2 style="display: inline">
+                                <?= Setting::read('Application.school_name'); ?>
+                            </h2>
+                        </div>
+                    </div>
+                </nav>
+                <nav class=" navbar-inverse m-b-10">
+                    <?php if(empty($this->request->session()->read('Auth.User.id'))): ?>
+                        <ul class="nav navbar-nav">
+                            <li> <?= $this->Html->link('Home', '/') ?> </li>
+                            <li><?= $this->Html->link(__('News Updates <i class="fa fa-flash text-danger"></i> '),'/news-updates', ['escape' => false]) ?></li>
+                            <?php if (\Settings\Core\Setting::read('Account_Type_Settings.allow_student_account')): ?>
+                                <li><?= $this->Html->link(__('Student Login'),'/student-account/login') ?></li>
+                            <?php endif; ?>
+                            <li><?= $this->Html->link(__('Administrative Login'),'/login') ?></li>
+                        </ul>
                     <?php endif; ?>
-                    <li><?= $this->Html->link(__('Administrative Login'),'/login') ?></li>
-                </ul>
-            <?php endif; ?>
-            <?php if(!empty($this->request->session()->read('Auth.User.id') && !empty($this->request->session()->read('Auth.User.role')))): ?>
-                <ul class="nav navbar-nav navbar-right" style="margin-right: 0;">
-                    <li><?= $this->Html->link(__('Dashboard'),['plugin'=>null,'controller'=>'Dashboard','action'=>'index']) ?></li>
-                    <li><?= $this->Html->link(__('logout'),['plugin'=>null,'controller'=>'MyUsers','action'=>'logout']) ?></li>
-                </ul>
-            <?php endif; ?>
-            <?php if (\Settings\Core\Setting::read('Account_Type_Settings.allow_student_account')) : ?>
-                <?php if (!empty($this->request->session()->read('Auth.User.id')) && !empty($this->request->session()->read('Auth.User.student'))) : ?>
-                    <ul class="nav navbar-nav navbar-right" style="margin-right: 0;">
-                        <li><?= $this->Html->link(__('Student Dashboard'),['plugin'=>'StudentAccount','controller'=>'Dashboard','action'=>'index']) ?></li>
-                        <li><?= $this->Html->link(__('logout'),['plugin'=>'StudentAccount','controller'=>'Logout','action'=>'index']) ?></li>
-                    </ul>
-                <?php endif; ?>
-            <?php endif; ?>
-        </nav>
-    </header>
+                    <?php if(!empty($this->request->session()->read('Auth.User.id') && !empty($this->request->session()->read('Auth.User.role')))): ?>
+                        <ul class="nav navbar-nav navbar-right" style="margin-right: 0;">
+                            <li><?= $this->Html->link(__('Dashboard'),['plugin'=>null,'controller'=>'Dashboard','action'=>'index']) ?></li>
+                            <li><?= $this->Html->link(__('logout'),['plugin'=>null,'controller'=>'MyUsers','action'=>'logout']) ?></li>
+                        </ul>
+                    <?php endif; ?>
+                    <?php if (\Settings\Core\Setting::read('Account_Type_Settings.allow_student_account')) : ?>
+                        <?php if (!empty($this->request->session()->read('Auth.User.id')) && !empty($this->request->session()->read('Auth.User.student'))) : ?>
+                            <ul class="nav navbar-nav navbar-right" style="margin-right: 0;">
+                                <li><?= $this->Html->link(__('Student Dashboard'),['plugin'=>'StudentAccount','controller'=>'Dashboard','action'=>'index']) ?></li>
+                                <li><?= $this->Html->link(__('logout'),['plugin'=>'StudentAccount','controller'=>'Logout','action'=>'index']) ?></li>
+                            </ul>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </nav>
+            </header>
+        </div>
+    </div>
     <div>
+        <?= $this->cell('NewsUpdates'); ?>
         <?= $this->Flash->render() ?>
         <?= $this->fetch('content') ?>
     </div>

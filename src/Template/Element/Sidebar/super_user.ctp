@@ -69,7 +69,7 @@
     <a href="javascript:;">
         <b class="caret pull-right"></b>
         <i class="fa fa-institution"></i>
-        <span>School Administration</span>
+        <span>Administration</span>
     </a>
     <ul class="sub-menu">
         <li class="">
@@ -80,6 +80,28 @@
         <?= $this->element('ClassManager.sidebar') ?>
         <li>
             <?= $this->Html->link(__('TermTimeTable'),['plugin'=>'TimesTable','controller'=>'TermTimeTables','action'=>'index'],['title'=>'TermTimeTable']) ?>
+        </li>
+    </ul>
+</li>
+<li class="has-sub">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-flash"></i>
+        <span> New Updates </span>
+        <span class="label label-danger">new</span>
+    </a>
+    <ul class="sub-menu">
+        <li class="">
+            <?= $this->Html->link(__('All News Update'),
+                ['plugin'=> 'Dashboard','controller'=>'NewsUpdates','action'=>'index'],
+                ['title'=>'news updates']) ?>
+        </li>
+        <li>
+            <?= $this->Html->link(__('New news update'),[
+                'plugin'=>'Dashboard',
+                'controller'=>'NewsUpdates',
+                'action'=>'add'
+            ],['title'=>'create new news update']) ?>
         </li>
     </ul>
 </li>
