@@ -20,8 +20,8 @@ $this->assign('title', 'Edit Student Profile: '. h($student->id));
             <legend>Personal Information</legend>
             <div class="row">
                 <div class="col-sm-6">
-                    <?= $this->Form->input('last_name', ['label' => 'Surname', 'required' => true]);  ?>
                     <?= $this->Form->input('first_name', ['label' => 'First Name', 'required' => true]);  ?>
+                    <?= $this->Form->input('last_name', ['label' => 'Last Name', 'required' => true]);  ?>
                     <?= $this->Form->input('middle_name', ['label' => 'Middle Name']);  ?>
                     <div class="form-group">
                         <label for="gender"> Sex </label>
