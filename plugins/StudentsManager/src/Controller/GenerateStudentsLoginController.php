@@ -45,7 +45,7 @@ class GenerateStudentsLoginController extends AppController
                             ]);
                             $this->StudentLogins->save($studentLoginDetail);
                         } else {
-                            if (isset($postData['overwrite_credentials']) ) {
+                            if (isset($postData['overwrite_credentials']) && !empty($postData['overwrite_credentials'])) {
                                 $studentLoginDetail = $this->StudentLogins->patchEntity($studentLoginDetail,[
                                     'username' => $student[$postData['username_field']],
                                     'password' => $student[$postData['password_field']],

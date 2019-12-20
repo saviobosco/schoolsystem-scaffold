@@ -122,8 +122,7 @@ class StudentLoginsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->isUnique(['username']));
-        $rules->add($rules->existsIn(['student_id'], 'Students'));
+        //$rules->add($rules->existsIn(['student_id'], 'Students'));
 
         return $rules;
     }
