@@ -41,7 +41,7 @@ class LoginController extends AppController
         if ($this->request->is('post')) {
             $user = $this->Auth->identify();
             if ($user) {
-                if (!$user['status']) {
+                if ($user['status'] == 0) {
                     $this->Flash->error(__('Account is Unactive. Please contact the School Authority'));
                     return $this->redirect($this->referer());
                 }
@@ -59,8 +59,9 @@ class LoginController extends AppController
                 $this->StudentLogins->save($authUser);
                 $this->Auth->setUser($authUser->toArray());
                 return $this->redirect($this->Auth->redirectUrl());
+            } else {
+                $this->Flash->error(__('Invalid username or password, try again'));
             }
-            $this->Flash->error(__('Invalid username or password, try again'));
         }
         return $this->redirect($this->referer());
     }

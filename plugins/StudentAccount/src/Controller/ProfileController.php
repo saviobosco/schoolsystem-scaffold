@@ -30,8 +30,7 @@ class ProfileController extends AppController
      */
     public function index()
     {
-        // check if studentManager is loaded
-        if (Plugin::loaded('StudentsManager')) {
+        try {
             $studentsTable = TableRegistry::get('StudentsManager.Students');
             $student = $studentsTable->get($this->Auth->user('student_id'),
                 [
@@ -40,8 +39,11 @@ class ProfileController extends AppController
                         'Nationalities'
                     ]
                 ]);
+            $medicalIssues = $this->MedicalIssues->find('list');
+        } catch (\Exception $exception) {
+            $this->Flash->error('An error occurred fetching your profile');
+            $this->Flash->error($exception->getMessage());
         }
-        $medicalIssues = $this->MedicalIssues->find('list');
         $this->set(compact('student', 'medicalIssues'));
     }
 }

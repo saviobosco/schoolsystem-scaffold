@@ -73,9 +73,47 @@ $application_detail = Configure::read('Application');
 <!-- begin #page-container -->
 <div id="page-container" class=" page-sidebar-fixed page-header-fixed">
 
-    <?php if(!empty($this->request->session()->read('Auth.User.id'))): ?>
-        <?= $this->element('loggedInHeader'); ?>
-    <?php endif; ?>
+    <!-- begin #header -->
+    <div id="header" class="header navbar navbar-default navbar-fixed-top">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin mobile sidebar expand / collapse button -->
+            <div class="navbar-header">
+                <?= $this->Html->link(Setting::read('Application.school_name'), '/', ['class' => 'navbar-brand']) ?>
+                <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <!-- end mobile sidebar expand / collapse button -->
+
+            <!-- begin header navigation right -->
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown navbar-user">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                        <!--<img src="assets/img/user-13.jpg" alt="" /> -->
+                        <span class="hidden-xs"><?= $this->request->session()->read('Auth.User.student.first_name').' '.$this->request->session()->read('Auth.User.student.last_name') ?></span> <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInLeft">
+                        <li class="arrow"></li>
+                        <li>
+                            <?= $this->html->link('<i class="fa fa-power-off"></i> <span>Log Out</span>',[
+                                'plugin'=>'StudentAccount',
+                                'controller'=>'Logout',
+                                'action' => 'index'
+                            ],[
+                                'escape' => false
+                            ]) ?>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- end header navigation right -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end #header -->
 
     <?php $renderPluginSidebar = false; ( $this->request->session()->read('Auth.User.role') === 'superuser' ) ?: $renderPluginSidebar = true;  ?>
 

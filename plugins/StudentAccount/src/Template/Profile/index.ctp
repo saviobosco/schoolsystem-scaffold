@@ -1,6 +1,8 @@
 <?php
 use Cake\I18n\Time;
 ?>
+
+<?if (isset($student)) : ?>
 <div class="row">
     <div class="col-sm-12">
         <div class="panel panel-inverse">
@@ -190,3 +192,4 @@ use Cake\I18n\Time;
         </div>
     </div>
 </div>
+<?php endif; ?>

@@ -39,6 +39,8 @@ class StudentLoginsTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
+        $this->addBehavior('Timestamp');
+
         $this->belongsTo('Students', [
             'foreignKey' => 'student_id',
             'joinType' => 'INNER',
