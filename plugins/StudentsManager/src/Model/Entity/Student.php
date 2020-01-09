@@ -12,7 +12,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\Time $date_of_birth
  * @property string $gender
  * @property string $state_of_origin
- * @property string $religion
+ * @property string $religion_id
  * @property string $home_residence
  * @property string $guardian
  * @property string $relationship_to_guardian
@@ -35,7 +35,6 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Session $session_admitted
  * @property \App\Model\Entity\Classe $class
  * @property \App\Model\Entity\ClassDemarcation $class_demarcation
- * @property \App\Model\Entity\Session $session_graduated
  */
 class Student extends Entity
 {

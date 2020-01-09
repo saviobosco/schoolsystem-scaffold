@@ -10,7 +10,7 @@ use StudentAccount\Model\Entity\Student;
  * Profile Controller
  *
  * @method \StudentAccount\Model\Entity\Student[] paginate($object = null, array $settings = [])
- * @property \ResultSystem\Model\Table\StudentsTable $Students
+ * @property \StudentsManager\Model\Table\StudentsTable $Students
  * @property \ResultSystem\Model\Table\ClassesTable $Classes
  * @property \App\Model\Table\MedicalIssuesTable $MedicalIssues
  *
