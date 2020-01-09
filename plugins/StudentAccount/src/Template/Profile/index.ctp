@@ -2,7 +2,7 @@
 use Cake\I18n\Time;
 ?>
 
-<?if (isset($student)) : ?>
+<?php if (isset($student)) : ?>
 <div class="row">
     <div class="col-sm-12">
         <div class="panel panel-inverse">
