@@ -16,6 +16,9 @@ class CreateNewsUpdates extends AbstractMigration
         $table->addColumn('title', 'string', [
             'null' => false
         ]);
+        $table->addColumn('title_slug', 'string', [
+            'null' => false
+        ]);
         $table->addColumn('post', 'text');
         $table->addColumn('default_post', 'boolean', [
             'default' => 0

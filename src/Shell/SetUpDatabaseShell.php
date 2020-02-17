@@ -53,21 +53,17 @@ class SetUpDatabaseShell extends Shell
         if (!$this->getDatabase($sub_domain)) {
             return false;
         }
-        try {
-            $migrations = new Migrations();
-            $this->out('Beginning migration');
-            $migrate = $migrations->migrate();
-            if ($migrate) {
-                $this->out('Successfully migrated files');
-                $this->out('Executing seed operation...');
-                $migrations->seed();
-                $this->out('Successfully ran the seed operation.');
-                return true;
-            }
-        } catch (\Exception $exception) {
-            $this->out($exception->getMessage());
-            return false;
+        $migrations = new Migrations();
+        $this->out('Beginning migration');
+        $migrate = $migrations->migrate();
+        if ($migrate) {
+            $this->out('Successfully migrated files');
+            $this->out('Executing seed operation...');
+            $migrations->seed();
+            $this->out('Successfully ran the seed operation.');
+            return true;
         }
+
         return false;
     }
 
