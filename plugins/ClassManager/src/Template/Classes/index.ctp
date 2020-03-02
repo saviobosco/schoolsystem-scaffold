@@ -6,6 +6,12 @@
 $this->extend('/Common/view');
 $this->assign('title','Classes');
 ?>
+<?= $this->Html->link('Add Class', [
+    'plugin' => 'ClassManager',
+    'controller' => 'Classes',
+    'action' => 'add'
+], ['class' => 'btn btn-primary']) ?>
+
 <table id="data-table" class="table table-responsive ">
     <thead>
     <tr>

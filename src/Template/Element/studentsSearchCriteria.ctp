@@ -2,7 +2,7 @@
 $getQuery = $this->request->getQuery();
 ?>
 <div>
-    <?= $this->Form->create('',['type'=>'GET']) ?>
+    <?= $this->Form->create('',['type'=>'GET', 'id' => 'search-form']) ?>
     <input type="hidden" name="page" value="">
     <fieldset>
         <legend> Search Criteria </legend>

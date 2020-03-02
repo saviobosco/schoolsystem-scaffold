@@ -21,14 +21,14 @@ use Settings\Core\Setting;
 
         <!-- begin header navigation right -->
         <ul class="nav navbar-nav navbar-right">
-            <li>
+            <!--<li>
                 <form class="navbar-form full-width">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Enter keyword" />
                         <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
                     </div>
                 </form>
-            </li>
+            </li>-->
             <li class="dropdown navbar-user">
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                     <!--<img src="assets/img/user-13.jpg" alt="" /> -->
@@ -49,3 +49,6 @@ use Settings\Core\Setting;
     <!-- end container-fluid -->
 </div>
 <!-- end #header -->
+<div>
+
+</div>

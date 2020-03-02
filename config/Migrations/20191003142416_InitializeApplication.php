@@ -229,9 +229,9 @@ class InitializeApplication extends AbstractMigration
                 'null' => false,
             ])
 
-            ->addColumn('type_of_student', 'string', [
+            ->addColumn('student_type_id', 'string', [
                 'default' => null,
-                'limit' => 50,
+                'limit' => 3,
                 'null' => true,
             ])
 
@@ -326,28 +326,33 @@ class InitializeApplication extends AbstractMigration
             ->addColumn('sponsor_full_name', 'string', [
                 'default' => null,
                 'limit' => 255,
-                'null' => false,
+                'null' => true,
             ])
 
             ->addColumn('sponsor_contact_address', 'string', [
                 'default' => null,
                 'limit' => 255,
-                'null' => false,
+                'null' => true,
             ])
 
             ->addColumn('sponsor_phone_number', 'string', [
                 'default' => null,
                 'limit' => 20,
-                'null' => false,
+                'null' => true,
             ])
 
             ->addColumn('sponsor_email_address', 'string', [
                 'default' => null,
-                'limit' => 20,
-                'null' => false,
+                'limit' => 50,
+                'null' => true,
             ])
 
             ->addColumn('sponsor_relationship', 'string', [
+                'default' => null,
+                'limit' => 50,
+                'null' => true,
+            ])
+            ->addColumn('sponsor_occupation', 'string', [
                 'default' => null,
                 'limit' => 50,
                 'null' => true,
@@ -364,19 +369,7 @@ class InitializeApplication extends AbstractMigration
                 'limit' => 3,
                 'null' => false,
             ])
-
-            ->addColumn('created', 'datetime', [
-                'default' => null,
-                'limit' => null,
-                'null' => false,
-            ])
-
-            ->addColumn('modified', 'datetime', [
-                'default' => null,
-                'limit' => null,
-                'null' => false,
-            ])
-
+            ->addTimestamps('created', 'modified')
             ->addIndex(
                 ['class_id', 'religion_id', 'nationality_id']
             )

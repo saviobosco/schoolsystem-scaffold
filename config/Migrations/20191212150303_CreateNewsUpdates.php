@@ -27,7 +27,7 @@ class CreateNewsUpdates extends AbstractMigration
             'default' => 1,
             'limit' => 3,
         ]);
-        $table->addTimestamps();
+        $table->addTimestamps('created', 'modified');
         $table->create();
     }
 }

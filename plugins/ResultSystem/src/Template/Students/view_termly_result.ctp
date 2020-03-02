@@ -73,9 +73,9 @@ echo $this->element('searchParametersSessionClassTerm');
                     <!-- end of second col-sm-6 -->
                 </div>
 
-                <div class="related">
+                <div class="related table-responsive">
                     <?php if (!empty($student->student_termly_results)): ?>
-                        <table class="table table-responsive table-bordered">
+                        <table style="font-size: 12px;" class="table table-responsive table-bordered">
                             <tr>
                                 <th><?= __('Subject') ?></th>
                                 <?php foreach( $gradeInputs as $gradeInput ): ?>

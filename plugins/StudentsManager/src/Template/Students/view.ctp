@@ -42,6 +42,10 @@ use Cake\I18n\Time;
                                             <td><?= h($student->first_name) ?></td>
                                         </tr>
                                         <tr>
+                                            <th><?= __('Middle Name') ?></th>
+                                            <td><?= h($student->middle_name) ?></td>
+                                        </tr>
+                                        <tr>
                                             <th><?= __('Last Name') ?></th>
                                             <td><?= h($student->last_name) ?></td>
                                         </tr>
@@ -55,47 +59,106 @@ use Cake\I18n\Time;
                                         </tr>
                                         <tr>
                                             <th><?= __('State Of Origin') ?></th>
-                                            <td><?= h($student->state_of_origin) ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th><?= __('Religion') ?></th>
-                                            <td><?= h(@$religions[$student->religion_id]) ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th><?= __('Home Residence') ?></th>
-                                            <td><?= h($student->home_residence) ?></td>
+                                            <td><?= h(@$student->state->name) ?></td>
                                         </tr>
                                         <tr>
                                             <th><?= __('Class') ?></th>
                                             <td><?= $student->class->class ?></td>
                                         </tr>
                                         <tr>
-                                            <th><?= __('Class Demarcation') ?></th>
-                                            <td><?= @$student->class_demarcation->name ?></td>
+                                            <th><?= __('Home town') ?></th>
+                                            <td><?= h($student->hometown) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Religion') ?></th>
+                                            <td><?= h(@$student->religion->name) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('More Information About Religion') ?></th>
+                                            <td><?= h($student->more_information_about_religion) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Nationality') ?></th>
+                                            <td>
+                                                <?php if ($student->nationality) : ?>
+                                                <?= h($student->nationality->nationality) ?>
+                                                <?php endif ?>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th><?= __('Session Admitted') ?></th>
+                                            <td><?= $student->session_admitted ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Date Admitted') ?></th>
+                                            <td><?= h($student->date_admitted) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('State Cee Score') ?></th>
+                                            <td><?= h($student->state_cee_score) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Former School') ?></th>
+                                            <td><?= h($student->former_school) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Year Of Graduation') ?></th>
+                                            <td><?= h($student->year_of_graduation) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Blood Group') ?></th>
+                                            <td><?= h($student->blood_group) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Genotype') ?></th>
+                                            <td><?= h($student->genotype) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Medical Issues') ?></th>
+                                            <?php if (is_array($student->medical_issues)) : ?>
+                                            <td><?= $this->Text->toList($student->medical_issues) ?></td>
+                                            <?php endif ?>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('More Medical Information') ?></th>
+                                            <td>
+                                                <?=  ($student->more_medical_information) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Home Residence') ?></th>
+                                            <td><?= h($student->home_residence) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Sponsor Full Name') ?></th>
+                                            <td><?= h($student->sponsor_full_name) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Sponsor Phone Number') ?></th>
+                                            <td><?= h($student->sponsor_phone_number) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Sponsor Contact Address') ?></th>
+                                            <td><?= h($student->sponsor_contact_address) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Sponsor Email Address') ?></th>
+                                            <td><?= h($student->sponsor_email_address) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Sponsor Relationship') ?></th>
+                                            <td><?= h($student->sponsor_relationship) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Sponsor Occupation') ?></th>
+                                            <td><?= h($student->sponsor_occupation) ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th><?= __('Active') ?></th>
+                                            <td><?= ($student->status) ? 'Yes' : 'No' ?></td>
                                         </tr>
                                     </table>
 
-                                    <div class="m-t-40">
-                                        <h2> Guardian Information</h2>
-                                        <table class="table table-user-information table-bordered">
-                                            <tr>
-                                                <th><?= __('Guardian') ?></th>
-                                                <td><?= h($student->guardian) ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th><?= __('Relationship To Guardian') ?></th>
-                                                <td><?= h($student->relationship_to_guardian) ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th><?= __('Occupation Of Guardian') ?></th>
-                                                <td><?= h($student->occupation_of_guardian) ?></td>
-                                            </tr>
-                                            <tr>
-                                                <th><?= __('Guardian Phone Number') ?></th>
-                                                <td><?= h($student->guardian_phone_number) ?></td>
-                                            </tr>
-                                        </table>
-                                    </div>
                                 </div>
                                 <!-- end table -->
                             </div>

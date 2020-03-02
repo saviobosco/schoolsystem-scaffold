@@ -30,7 +30,7 @@ $this->assign('title','Edit Termly Results');
             </tr>
             <tr>
                 <th><?= __('Class') ?></th>
-                <td><?= h($student->class->class) ?></td>
+                <td><?= h($classes[$this->request->query['class_id']]) ?></td>
             </tr>
             <tr>
                 <th><?= __('Term') ?></th>

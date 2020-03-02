@@ -1,4 +1,4 @@
-/*   
+/*
 Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.5
 Version: 1.9.0
 Author: Sean Ngu
@@ -6,10 +6,10 @@ Website: http://www.seantheme.com/color-admin-v1.9/admin/
     ----------------------------
         APPS CONTENT TABLE
     ----------------------------
-    
+
     <!-- ======== GLOBAL SCRIPT SETTING ======== -->
     01. Handle Scrollbar
-    
+
     02. Handle Sidebar - Menu
     03. Handle Sidebar - Mobile View Toggle
     04. Handle Sidebar - Minify / Expand
@@ -18,31 +18,31 @@ Website: http://www.seantheme.com/color-admin-v1.9/admin/
     07. Handle Panel - Draggable
     08. Handle Tooltip & Popover Activation
     09. Handle Scroll to Top Button Activation
-    
+
     <!-- ======== Added in V1.2 ======== -->
     10. Handle Theme & Page Structure Configuration
     11. Handle Theme Panel Expand
     12. Handle After Page Load Add Class Function - added in V1.2
-    
+
     <!-- ======== Added in V1.5 ======== -->
     13. Handle Save Panel Position Function - added in V1.5
     14. Handle Draggable Panel Local Storage Function - added in V1.5
     15. Handle Reset Local Storage - added in V1.5
-    
+
     <!-- ======== Added in V1.6 ======== -->
     16. Handle IE Full Height Page Compatibility - added in V1.6
     17. Handle Unlimited Nav Tabs - added in V1.6
-    
+
     <!-- ======== Added in V1.7 ======== -->
     18. Handle Mobile Sidebar Scrolling Feature - added in V1.7
-    
+
     <!-- ======== Added in V1.9 ======== -->
     19. Handle Top Menu - Unlimited Top Menu Render - added in V1.9
     20. Handle Top Menu - Sub Menu Toggle - added in V1.9
     21. Handle Top Menu - Mobile Sub Menu Toggle - added in V1.9
     22. Handle Top Menu - Mobile Top Menu Toggle - added in V1.9
     23. Handle Clear Sidebar Selection & Hide Mobile Menu - added in V1.9
-	
+
     <!-- ======== APPLICATION SETTING ======== -->
     Application Controller
 */
@@ -63,9 +63,9 @@ var generateSlimScroll = function(element) {
     }
     var dataHeight = $(element).attr('data-height');
         dataHeight = (!dataHeight) ? $(element).height() : dataHeight;
-    
+
     var scrollBarOption = {
-        height: dataHeight, 
+        height: dataHeight,
         alwaysVisible: true
     };
     if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -85,7 +85,7 @@ var handleSidebarMenu = function() {
     $('.sidebar .nav > .has-sub > a').click(function() {
         var target = $(this).next('.sub-menu');
         var otherMenu = '.sidebar .nav > li.has-sub > .sub-menu';
-    
+
         if ($('.page-sidebar-minified').length === 0) {
             $(otherMenu).not(target).slideUp(250, function() {
                 $(this).closest('li').removeClass('expand');
@@ -121,7 +121,7 @@ var handleMobileSidebarToggle = function() {
             e.stopPropagation();
         }
     });
-    
+
     $(document).bind('click touchstart', function(e) {
         if ($(e.target).closest('.sidebar').length === 0) {
             sidebarProgress = false;
@@ -139,7 +139,7 @@ var handleMobileSidebarToggle = function() {
             }
         }
     });
-    
+
     $('[data-click=right-sidebar-toggled]').click(function(e) {
         e.stopPropagation();
         var targetContainer = '#page-container';
@@ -156,7 +156,7 @@ var handleMobileSidebarToggle = function() {
             $('#page-container').removeClass('page-sidebar-toggled');
         }
     });
-    
+
     $('[data-click=sidebar-toggled]').click(function(e) {
         e.stopPropagation();
         var sidebarClass = 'page-sidebar-toggled';
@@ -240,7 +240,7 @@ var handleMobileSidebar = function() {
             var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
             var touchVertical = touch.pageY;
             var elementTop = touchVertical - oriTouch;
-            
+
             $(this).closest('[data-scrollbar=true]').css('margin-top', elementTop + 'px');
         }
     });
@@ -334,13 +334,13 @@ var ajaxLink = function(link) {
     if (!target) {
         target = 'content';
     }
-    /*if ( typeof link == 'string' ) {
+    if ( typeof link == 'string' ) {
         href = link;
-        target = 'body';
-        if ( href == 'Side.php' ) target = 'menu';
+        target = 'content';
+        /*if ( href == 'Side.php' ) target = 'menu';
         else if ( href == 'Side.php?sidefunc=update' ) target = 'menu-top';
-        else if ( href.indexOf('Bottom.php') === 0 ) target = 'footer';
-    } else {
+        else if ( href.indexOf('Bottom.php') === 0 ) target = 'footer';*/
+    } /*else {
 
     }
 
@@ -351,7 +351,6 @@ var ajaxLink = function(link) {
         if (href.indexOf('Modules.php') != -1) target = 'body';
         else return true;
     }*/
-    if (!link.href) return true;
     if (href.indexOf('logout') != -1) return true;
     if (href.indexOf('javascript:') != -1) return true;
     if (link.hash) return true;
@@ -364,9 +363,9 @@ var ajaxOptions = function(target, url, form) {
         dataType: (target === 'inline') ? 'json' :'html',
         beforeSend: function (data) {
             // AJAX error hide.
-            $('.ajax-error').hide();
+            //$('.ajax-error').hide();
 
-            $('.loading').css('visibility', 'visible');
+            //$('.loading').css('visibility', 'visible');
         },
         success: function (data, s, xhr) {
             // See PHP RedirectURL().
@@ -395,8 +394,12 @@ var ajaxOptions = function(target, url, form) {
                     } else {
                         getStr = $(form).formSerialize();
                     }
-
+                    var indexOfGet = url.indexOf('?')
+                    if (  indexOfGet != -1) {
+                        url = url.slice(0, indexOfGet)
+                    }
                     url += (url.indexOf('?') != -1 ? '&' : '?') + getStr;
+
                 }
                 ajaxSuccess(data, target, url);
             }
@@ -405,7 +408,7 @@ var ajaxOptions = function(target, url, form) {
             ajaxError(xhr, status, error, url, target, form);
         },
         complete: function (xhr, status) {
-            $('.loading').css('visibility', 'hidden');
+            //$('.loading').css('visibility', 'hidden');
 
             //hideHelp();
         }
@@ -416,7 +419,7 @@ var ajaxSuccess = function(data, target, url) {
     // Change URL after AJAX.
     //http://stackoverflow.com/questions/5525890/how-to-change-url-after-an-ajax-request#5527095
     $('#' + target).html(data);
-
+    document.getElementsByTagName('body')[0].scrollIntoView(true);
     var doc = document;
 
     if (history.pushState && target == 'content' && doc.URL != url) history.pushState(null, doc.title, url);
@@ -494,6 +497,8 @@ window.onload = function() {
     });
 
     ajaxPrepare('body');
+
+
     // Load body after browser history.
     if (history.pushState) window.setTimeout(function () {
         window.addEventListener('popstate', function (e) {

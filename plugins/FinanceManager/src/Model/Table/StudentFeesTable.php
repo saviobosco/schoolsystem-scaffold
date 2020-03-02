@@ -40,14 +40,14 @@ class StudentFeesTable extends Table
     {
         parent::initialize($config);
         $this->addBehavior('Timestamp');
-        $this->addBehavior('Muffin/Footprint.Footprint', [
+        /*$this->addBehavior('Muffin/Footprint.Footprint', [
             'events' => [
                 'Model.beforeSave' => [
                     'created_by' => 'new',
                     'modified_by' => 'always'
                 ]
             ],
-        ]);
+        ]);*/
 
         $this->setTable('student_fees');
         $this->setDisplayField('id');

@@ -14,6 +14,11 @@ use FinanceManager\Controller\AppController;
  */
 class FeesController extends AppController
 {
+    protected function valueIsSafe($value)
+    {
+        return ( (isset($value) && !empty($value)
+            && filter_var($value, FILTER_VALIDATE_INT) ) );
+    }
 
     /**
      * Index method
@@ -22,14 +27,58 @@ class FeesController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['FeeCategories', 'Terms', 'Classes', 'Sessions'],
-            'limit' => 1000,
-            'maxLimit' => 1000
-        ];
-        $fees = $this->paginate($this->Fees);
+        $queryData = $this->request->getQuery();
+        $query = $this->Fees->query()
+            ->contain(['FeeCategories', 'Terms', 'Classes', 'Sessions']);
+        if ($this->valueIsSafe(@$queryData['fee_category_id'])) {
+            $query->where(['Fees.fee_category_id' =>  $queryData['fee_category_id']]);
+        }
 
-        $feeCategories = $this->Fees->FeeCategories->find('list', ['limit' => 200]);
+        if (isset($queryData['session_id']) && !empty($queryData['session_id'])) {
+            $query->where(['Fees.session_id' => $queryData['session_id']]);
+        }
+
+        if (isset($queryData['class_id']) && !empty($queryData['class_id'])) {
+            $query->where(['Fees.class_id' => $queryData['class_id']]);
+        }
+
+        if (isset($queryData['term_id']) && !empty($queryData['term_id'])) {
+            $query->where(['Fees.term_id' => $queryData['term_id']]);
+        }
+
+        $this->paginate = [
+            //'contain' => ['FeeCategories', 'Terms', 'Classes', 'Sessions'],
+            'limit' => 20,
+            'maxLimit' => 20
+        ];
+        $fees = $this->paginate($query);
+
+        /*$fees = $this->Fees->find()
+            ->contain(['Sessions', 'Classes', 'Terms', 'FeeCategories'])
+            ->enableHydration(false)
+            ->all()
+            ->groupBy('session.session')
+            ->map(function ($sessionGroup, $key) {
+                $children = collection($sessionGroup)->groupBy('class.class')
+                    ->map(function($classGroup, $key){
+                        $children = collection($classGroup)
+                            ->groupBy('term.name')
+                            ->toArray();
+                        return [
+                            'text' => $key,
+                            'children' => $children
+                        ];
+                    })
+                    ->toArray();
+                return [
+                    'text' => $key,
+                    'children' => $children
+                ] ;
+            })
+            ->toArray();
+        dd($fees);*/
+
+        $feeCategories = $this->Fees->FeeCategories->find('list');
         $terms = $this->Fees->Terms->find('list', ['limit' => 200]);
         $classes = $this->Fees->Classes->find('list', ['limit' => 200]);
         $sessions = $this->Fees->Sessions->find('list', ['limit' => 200]);

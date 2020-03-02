@@ -13,7 +13,7 @@ $this->assign('title', ( !empty($this->request->getQuery()) ) ? $sessions[$this-
     margin-bottom: 20px;
     padding-top: 20px;
     padding-bottom: 20px;" class="container-fluid m-t-20">
-    <?= $this->element('searchParametersSessionClassTerm') ?>
+    <?php /* $this->element('searchParametersSessionClassTerm')*/ ?>
 
     <?php if ( isset($student) ) : ?>
         <?= $this->element('ResultSystem.StudentResult/Shared/is_published') ?>

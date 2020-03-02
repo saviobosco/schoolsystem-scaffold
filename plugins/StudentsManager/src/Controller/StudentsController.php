@@ -80,10 +80,21 @@ class StudentsController extends AppController
             if (empty($id)) {
                 $this->redirect(['action' => 'index']);
             }
-            $student = $this->Students->get($id, [
-                'contain' => ['Classes' => ['fields' => ['id','class']]
-                ]
-            ]);
+            $student = $this->Students->find()->where(['Students.id' => $id])
+                ->contain([
+                    'Nationalities',
+                    'Classes' => ['fields' => ['id','class']]
+                ])->first();
+
+            if ($student && is_array($student->medical_issues)) {
+                $student->medical_issues = $this->MedicalIssues->find()
+                    ->enableHydration(false)
+                    ->where(function($exp, $q) use ($student) {
+                        return $exp->in('id', $student->medical_issues);
+                    })->extract('issue')
+                    ->toList();
+            }
+
             if ($this->request->accepts('application/json')) {
                 return $this->response->withStringBody(json_encode($student));
             }

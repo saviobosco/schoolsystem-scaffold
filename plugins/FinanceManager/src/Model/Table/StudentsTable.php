@@ -171,8 +171,20 @@ class StudentsTable extends Table
     {
         $studentFees = $this->StudentFees->find('all')
             ->enableHydration(false)
-            ->contain(['Fees.FeeCategories'=> function ($q) use ($queryData) {
-                    $q->select(['FeeCategories.id','FeeCategories.type']);
+            ->select(['id','student_id','fee_id', 'fee_category_id', 'amount',
+                'paid', 'amount_remaining', 'purpose'])
+            ->contain([
+                'Fees.FeeCategories'=> function ($q) {
+                    $q->select([
+                        'FeeCategories.id','FeeCategories.type'
+                    ]);
+                return $q;
+            },
+                'Fees' => function($q) use ($queryData) {
+                    $q->select([
+                        'Fees.session_id','Fees.class_id', 'Fees.term_id',
+                        'Fees.fee_category_id', 'Fees.amount',
+                    ]);
                     if ( isset($queryData['session_id']) && !empty($queryData['session_id'])) {
                         $q->where(['Fees.session_id'=>$queryData['session_id']]);
                     }
@@ -183,16 +195,22 @@ class StudentsTable extends Table
                         $q->where(['Fees.term_id'=>$queryData['term_id']]);
                     }
                     $q->orderDesc('Fees.created');
-                return $q;
-            },
-                'Fees.Classes',
-                'Fees.Terms',
-                'Fees.Sessions'
-            ])->where(['student_id'=>$student_id,'paid'=>0])
+                    return $q;
+                },
+                'Fees.Classes' => ['fields' => [ 'id', 'class']],
+                'Fees.Terms' => ['fields' => ['id', 'name']],
+                'Fees.Sessions' => ['fields' => ['id', 'session']]
+            ])->where([
+                'student_id'=>$student_id,
+                'paid'=> 0
+            ])
             ->orderDesc('session_id')
             ->orderDesc('class_id')
             ->orderDesc('term_id');
+
             $collection = collection($studentFees->toArray()); // make fee a collection
+
+
             $mergedFees = $collection->append($this->getStudentSpecialFees($student_id)); // gets student special fee if any.
         return $mergedFees->toList();
     }

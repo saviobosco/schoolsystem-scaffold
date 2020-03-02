@@ -24,7 +24,7 @@ class MultiTenancyMiddleware
 {
     public function __invoke(ServerRequestInterface $request,ResponseInterface $response, $next)
     {
-        // check if request has subdomain
+        // check if request has sub domains
         $subDomain = $request->subdomains();
         if (count($subDomain) >= 1 && strtolower($subDomain[0]) !== 'www' ) { // check if sub domain is not in the array
             $schoolAccountDetail = $this->getSchoolAccountDetails($subDomain[0]);
@@ -50,6 +50,32 @@ class MultiTenancyMiddleware
                 ];
                 ConnectionManager::drop('default');
                 ConnectionManager::setConfig($dataSource);
+
+                // for the cache
+                if (Cache::drop('_cake_model_') && Cache::drop('default')) {
+                    $cache = [
+                        'default' => [
+                            'className' => 'File',
+                            'prefix' => 'myapp_default_'.$schoolAccountDetail['sub_domain'].'_',
+                            'path' => CACHE,
+                            'url' => env('CACHE_DEFAULT_URL', null),
+                        ],
+                        '_cake_model_' => [
+                            'className' => 'File',
+                            'prefix' => 'myapp_cake_model_'.$schoolAccountDetail['sub_domain'].'_',
+                            'path' => CACHE . 'models/',
+                            'serialize' => true,
+                            'duration' => '+2 minutes',
+                            'url' => env('CACHE_CAKEMODEL_URL', null),
+                        ],
+                    ];
+                    if (!Configure::read('debug')) {
+                        $cache['default']['duration'] = '+1 years';
+                        $cache['_cake_model_']['duration'] = '+1 years';
+                    }
+                    Cache::setConfig($cache);
+                }
+
                 try {
                     // test if database exists and take account now.
 

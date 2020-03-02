@@ -11,7 +11,7 @@ $this->extend('/Common/view');
 $this->assign('title','Fees Defaulters');
 ?>
     <div class="m-b-15">
-        <?= $this->Form->create('',['class'=>'form-inline','type'=>'GET']) ?>
+        <?= $this->Form->create('',['class'=>'form-inline','type'=>'GET', 'id' => 'search-form']) ?>
         <div class="form-group">
             <?= $this->Form->control('session_id',['empty' => 'All','options' => $sessions,'class'=>'form-control','data-select-id'=>'school','label'=>['text'=>' Change Session '],'value'=>($this->request->getQuery('session_id')) ? $this->request->getQuery('session_id') : '']); ?>
             <?= $this->Form->control('class_id',['empty' => 'All','options' => $classes,'class'=>'form-control','data-select-id'=>'level','label'=>['text'=>'Change Class'],'value'=>($this->request->getQuery('class_id') ? $this->request->getQuery('class_id') : '')]); ?>
@@ -71,3 +71,12 @@ $getQuery = $this->request->getQuery();
         </tbody>
     </table>
 <?php endif; ?>
+<script>
+    $('select').change(function(event) {
+        loadData();
+    });
+
+    function loadData() {
+        $('#search-form').submit();
+    }
+</script>

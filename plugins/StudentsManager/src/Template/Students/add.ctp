@@ -70,7 +70,8 @@ $this->assign('title', 'Student Registration Form');
             <div class="fileinput fileinput-new" data-provides="fileinput"><input type="hidden" value="" name="...">
                 <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px; line-height: 150px;"></div>
                 <div>
-                    <span class="btn btn-default btn-file"><span class="fileinput-new">Load Image</span><span class="fileinput-exists">Change</span><?= $this->Form->file('photo',['type' => 'file']) ?></span>
+                    <span class="btn btn-default btn-file">
+                        <span class="fileinput-new">Load Image</span><span class="fileinput-exists">Change</span><?= $this->Form->file('photo',['type' => 'file']) ?></span>
                     <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
                 </div>
             </div>
@@ -118,6 +119,7 @@ $this->assign('title', 'Student Registration Form');
         <div class="col-sm-6">
             <?= $this->Form->input('sponsor_phone_number' ) ?>
             <?= $this->Form->input('sponsor_relationship', [ 'empty' => 'Select Sponsor Relationship', 'options' => $sponsorRelationships]) ?>
+            <?= $this->Form->input('sponsor_occupation') ?>
         </div>
     </div>
 </fieldset>

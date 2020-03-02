@@ -100,7 +100,7 @@ class StudentsTable extends Table
         $this->belongsTo('Nationalities',[
             'className' => 'App.Nationalities',
             'foreignKey' => 'nationality_id',
-            'joinType' => 'INNER',
+            'joinType' => 'LEFT',
         ]);
 
         $this->hasMany('StudentTermlyResults', [

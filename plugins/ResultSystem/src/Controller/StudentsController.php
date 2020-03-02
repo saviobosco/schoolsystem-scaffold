@@ -311,7 +311,7 @@ class StudentsController extends AppController
             $classes = $this->Students->Classes->find('list')->toArray();
             $this->set(compact('sessions','terms','classes'));
             if ( empty($queryData)) {
-                $this->render('view_student_termly_result_for_admin');
+                $this->render('view_student_result_format');
                 return;
             }
             $subjects = $this->Subjects->find('list')->toArray();

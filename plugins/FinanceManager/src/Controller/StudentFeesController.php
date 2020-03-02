@@ -36,7 +36,8 @@ class StudentFeesController extends AppController
         $classes = $this->Students->Classes->find('list', ['limit' => 200])->toArray();
         $paymentTypes = $this->PaymentTypes->find('list', ['limit' => 200]);
         $terms = $this->Terms->find('list', ['limit' => 200])->toArray();
-        $this->set(compact('student','studentFees','sessions','classes','terms','paymentTypes'));
+        $this->set(compact('student','studentFees','sessions','classes','terms','paymentTypes', 'receipts'));
+        //$this->render('get_student_fees2');
     }
 
     public function getStudentBill($id = null)
@@ -105,5 +106,11 @@ class StudentFeesController extends AppController
             $this->Flash->error(__($e->getMessage()));
         }
         return $this->redirect($this->request->referer());
+    }
+
+
+    public function processPayment()
+    {
+        dd($this->request->getData());
     }
 }

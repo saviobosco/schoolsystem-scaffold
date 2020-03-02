@@ -123,6 +123,7 @@ $this->assign('title', 'Edit Student Profile: '. h($student->id));
         <div class="col-sm-6">
             <?= $this->Form->input('sponsor_phone_number' ) ?>
             <?= $this->Form->input('sponsor_relationship', [ 'empty' => 'Select Sponsor Relationship', 'options' => $sponsorRelationships]) ?>
+            <?= $this->Form->input('sponsor_occupation') ?>
         </div>
     </div>
 </fieldset>

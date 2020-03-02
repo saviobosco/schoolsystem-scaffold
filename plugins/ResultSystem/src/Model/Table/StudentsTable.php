@@ -197,8 +197,8 @@ class StudentsTable extends Table
     public function getStudentTermlyResult($id,$queryData)
     {
         return $this->get($id, [
+            'fields' => ['id','first_name', 'last_name', 'class_id'],
             'contain' => [
-                'Classes',
                 'StudentTermlyResults' => [
                     'conditions' => [
                         'StudentTermlyResults.session_id' => ($queryData['session_id']) ? $queryData['session_id'] : 1,

@@ -5,7 +5,7 @@ $formTemplates = [
 $this->Form->templates($formTemplates);
 
 $this->extend('/Common/view');
-$this->assign('title','Pay Fees');
+$this->assign('title','Generate Invoice for payment');
 $queryData = $this->request->getQuery();
 ?>
 <div class="profile-container">
@@ -91,13 +91,14 @@ $queryData = $this->request->getQuery();
 
 <h2 class=""> Student Fees </h2>
 <?php if ( $studentFees ) : ?>
-    <?= $this->Form->create(null) ?>
+    <?= $this->Form->create(null, ['url' => ['action' => 'processPayment']]) ?>
     <table class="table table-responsive table-bordered" >
         <tr>
+            <th> </th>
             <th scope="col"><?= __('Fees') ?></th>
             <th scope="col"><?= __('Amount') ?></th>
-            <th scope="col"><?= __('Amount Paid') ?></th>
-            <th scope="col"><?= __('Class') ?></th>
+<!--            <th scope="col"><?/*= __('Amount Paid') */?></th>
+-->            <th scope="col"><?= __('Class') ?></th>
             <th scope="col"><?= __('Session') ?></th>
             <th scope="col"> <?= __('Term') ?> </th>
         </tr>
@@ -105,6 +106,16 @@ $queryData = $this->request->getQuery();
         <?php $count = count($studentFees); ?>
         <?php for ($num = 0; $num < $count; $num++ ): ?>
             <tr>
+                <td>
+                    <?php if (isset($studentFees[$num]['fee']['fee_category']['id']) &&
+                        in_array($studentFees[$num]['fee']['fee_category']['id'], [1, 13]) ) : ?>
+                        <input type="checkbox" checked disabled>
+                        <input type="hidden" name="feesToPaid[]" value="<?= $studentFees[$num]['id'] ?>">
+                    <?php else : ?>
+                        <input type="checkbox" name="feesToPaid[]" value="<?= $studentFees[$num]['id'] ?>
+">
+                    <?php endif ?>
+                </td>
                 <td>
                     <?php
                     if( !is_null($studentFees[$num]['purpose'])) {
@@ -118,13 +129,13 @@ $queryData = $this->request->getQuery();
                 </td>
                 <td>
                     <?php
-                        if( $studentFees[$num]['amount_remaining'] ) {
-                            echo $this->Currency->displayCurrency(($studentFees[$num]['amount_remaining']));
-                        }elseif ( $studentFees[$num]['amount'] ) {
-                            echo $this->Currency->displayCurrency(($studentFees[$num]['amount']));
-                        } else {
-                            echo $this->Currency->displayCurrency(($studentFees[$num]['fee']['amount']));
-                        }
+                    if( $studentFees[$num]['amount_remaining'] ) {
+                        echo $this->Currency->displayCurrency(($studentFees[$num]['amount_remaining']));
+                    }elseif ( $studentFees[$num]['amount'] ) {
+                        echo $this->Currency->displayCurrency(($studentFees[$num]['amount']));
+                    } else {
+                        echo $this->Currency->displayCurrency(($studentFees[$num]['fee']['amount']));
+                    }
                     ?>
                 </td>
                 <?php
@@ -136,18 +147,14 @@ $queryData = $this->request->getQuery();
                     $amountValue = $studentFees[$num]['fee']['amount'];
                 }
                 ?>
-                <td style="display: none"><?= $this->Form->hidden('student_fees.'.$num.'.amount_to_pay',['value'=>$amountValue]) ?></td>
-                <td style="display: none"><?= $this->Form->hidden('student_fees.'.$num.'.fee_id',['value'=>@$studentFees[$num]['fee']['id']]) ?></td>
-                <td style="display: none"><?= $this->Form->hidden('student_fees.'.$num.'.fee_category_id',['value'=>@$feeCategory]) ?></td>
-                <td><?= $this->Form->control('student_fees.'.$num.'.amount_paid',[
+                <!--<td><?/*= $this->Form->control('student_fees.'.$num.'.amount_paid',[
                         'id' => 'amount-paid',
                         'data-amount-to-pay' =>$amountValue,
                         'templates' => [
                             'label' => '',
                             'inputContainer' => '<div class=" col-12-6 m-b-15 input-group {{type}}{{required}}"> <span class="input-group-addon"> &#8358;  </span>  {{content}} <span class="input-group-addon">.00</span>  </div>',
                         ]
-                    ]) ?></td>
-                <td style="display: none"><?= $this->Form->hidden('student_fees.'.$num.'.student_fee_id',['value'=>$studentFees[$num]['id']]) ?></td>
+                    ]) */?></td>-->
                 <td><?= h(@$classes[$studentFees[$num]['fee']['class_id']]) ?></td>
                 <td><?= h(@$sessions[$studentFees[$num]['fee']['session_id']] ) ?></td>
                 <td> <?= ' - ('. ( @$studentFees[$num]['fee']['term_id'] ) ? @$terms[$studentFees[$num]['fee']['term_id']] : 'All Terms' .')' ?> </td>
@@ -162,36 +169,8 @@ $queryData = $this->request->getQuery();
             </td>
         </tr>
     </table>
-    <div class="row m-b-15">
-        <div class="col-sm-12">
-            <div class="pull-right">
-                <button id="pay-all" class="btn btn-primary"> Pay All </button>
-                <button id="clear-all" class="btn btn-danger"> Clear All </button>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-4">
-            <?= $this->Form->control('payment.payment_made_by',['label' => 'Payment Made By', 'required'=>true]) ?>
-        </div>
-        <div class="col-sm-4">
-            <?= $this->Form->control('payment.payment_received_by',['label' => 'Payment Received By', 'value'=>$this->request->session()->read('Auth.User.first_name') . ' '.$this->request->session()->read('Auth.User.last_name'),'disabled'=>true]) ?>
-        </div>
-        <div class="col-sm-4">
-            <?= $this->Form->control('payment.payment_type_id',['label' => 'Payment Type','options'=>$paymentTypes,'required'=>true]) ?>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <?php
-            $formTemplates = [
-                'label' => '<label{{attrs}}>{{text}}</label>',
-            ];
-            $this->Form->templates($formTemplates);
-            $options = ['one'=>'Single Copy','two'=>'Two Copies'];
-            echo $this->Form->control('generate_receipt',['options'=>$options,'type'=>'radio','default'=>'two']) ?>
-        </div>
-    </div>
+
+
 
     <?= $this->Form->submit(__('Pay Fees'),['class'=>'btn btn-primary']) ?>
 
