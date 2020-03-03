@@ -46,6 +46,7 @@ class Application extends BaseApplication
 
             // chained the multitenancy middleware.
             ->add(MultiTenancyMiddleware::class)
+
             // Apply routing
             ->add(RoutingMiddleware::class);
 

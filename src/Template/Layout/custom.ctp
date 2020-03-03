@@ -417,6 +417,9 @@ use Settings\Core\Setting;
             display: table;
             clear: both;
         }
+        .navbar-header img {
+            height: 100px;
+        }
 
         @media (max-width: 767px) {
             .navbar-default .navbar-brand {
