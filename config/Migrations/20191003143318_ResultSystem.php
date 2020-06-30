@@ -397,6 +397,7 @@ class ResultSystem extends AbstractMigration
                 'limit' => 3,
                 'null' => false,
             ])
+            ->addTimestamps('created', 'modified')
             ->addIndex(['student_id', 'session_id', 'class_id', 'term_id'])
             ->addForeignKey(
                 'student_id',

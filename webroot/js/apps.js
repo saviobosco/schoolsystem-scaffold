@@ -351,9 +351,11 @@ var ajaxLink = function(link) {
         if (href.indexOf('Modules.php') != -1) target = 'body';
         else return true;
     }*/
+    console.log(href);
     if (href.indexOf('logout') != -1) return true;
     if (href.indexOf('javascript:') != -1) return true;
     if (link.hash) return true;
+
     $.ajax(href, ajaxOptions(target, href, false));
     return false;
 };

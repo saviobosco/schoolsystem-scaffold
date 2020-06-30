@@ -298,3 +298,5 @@ Plugin::load('TeacherAccount', ['bootstrap' => true, 'routes' => true]);
 collection((array)Configure::read('Users.config'))->each(function ($file) {
     Configure::load($file);
 });
+
+Plugin::load('ELearning', ['bootstrap' => false, 'routes' => true]);

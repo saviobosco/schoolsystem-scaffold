@@ -16,8 +16,14 @@ class CreateStudentLogins extends AbstractMigration
         $table->addColumn('username', 'string')
             ->addColumn('password', 'string')
             ->addColumn('student_id', 'integer')
-            ->addColumn('last_seen', 'datetime')
-            ->addColumn('status', 'integer', ['limit' => 1])
+            ->addColumn('last_seen', 'datetime', [
+                'default' => null,
+                'null' => true
+            ])
+            ->addColumn('status', 'boolean', [
+                'default' => 1,
+                'limit' => 2
+                ])
             ->addTimestamps()
             ->addIndex(['student_id']);
 

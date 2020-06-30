@@ -37,7 +37,7 @@ class StudentFeesController extends AppController
         $paymentTypes = $this->PaymentTypes->find('list', ['limit' => 200]);
         $terms = $this->Terms->find('list', ['limit' => 200])->toArray();
         $this->set(compact('student','studentFees','sessions','classes','terms','paymentTypes', 'receipts'));
-        //$this->render('get_student_fees2');
+        $this->render('get_student_fees2');
     }
 
     public function getStudentBill($id = null)

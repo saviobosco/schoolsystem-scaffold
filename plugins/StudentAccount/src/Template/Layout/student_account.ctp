@@ -120,7 +120,7 @@ $application_detail = Configure::read('Application');
     <?= $this->element('sidebar',[],['plugin'=>$renderPluginSidebar]) ?>
 
     <!-- begin #content -->
-    <div id="content" class="content">
+    <div class="content">
 
         <!-- begin breadcrumb -->
         <?php
@@ -138,14 +138,22 @@ $application_detail = Configure::read('Application');
         ?>
         <!-- end breadcrumb -->
         <!-- begin page-header -->
-        <h1 class="page-header">Welcome, <?= $this->request->session()->read('Auth.User.student.first_name') ?> <small> last seen: <?= (new \Cake\I18n\Time($this->request->session()->read('Auth.User.last_seen')))->format('M j, Y \a\t g:i a')  ?> </small></h1>
+        <h1 class="page-header">Welcome, <?= $this->request->session()->read('Auth.User.student.first_name') ?>
+            <small>
+                last seen: <?= (new \Cake\I18n\Time($this->request->session()->read('Auth.User.last_seen')))->format('M j, Y \a\t g:i a')  ?>
+            </small>
+        </h1>
         <div id="ajax-request-feedback">
 
         </div>
-        <?= $this->Flash->render('auth') ?>
-        <?= $this->Flash->render() ?>
-        <?= $this->fetch('content') ?>
+        <div id="content">
+            <?= $this->Flash->render('auth') ?>
+            <?= $this->Flash->render() ?>
+            <?= $this->fetch('content') ?>
+        </div>
+
     </div>
+
     <!-- end #content -->
     <div class="footer">
         <p class="pull-right"><?= $application_detail['Name'] ?> <?= $application_detail['Version'] ?> Powered by &copy; <a class="text-orange" href="<?= $application_detail['Href_link'] ?>" title="Visit <?= $application_detail['Company'] ?>" data-toggle='tooltip' trigger="focus" ><?= Configure::read('Application.Company') ?></a> All copyright reserved.</p>

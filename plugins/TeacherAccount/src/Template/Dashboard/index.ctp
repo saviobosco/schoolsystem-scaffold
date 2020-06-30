@@ -86,7 +86,8 @@ $this->assign('title', 'Teacher Dashboard')
                                     <p>
                                         <?= $this->Html->link('Add Results',['_name' => 'teacher:students_results:add','?' => ['class_id' => $permission['class_id']]]) ?> |
                                         <?= $this->Html->link('Edit Results',['_name' => 'teacher:students_results:edit','?' => ['class_id' => $permission['class_id']]]) ?>|
-                                        <?= $this->Html->link('View Results',['_name' => 'teacher:students_results:view','?' => ['class_id' => $permission['class_id']]]) ?>
+                                        <?= $this->Html->link('View Results',['_name' => 'teacher:students_results:view','?' => ['class_id' => $permission['class_id']]]) ?> |
+                                        <?= $this->Html->link('Lectures',['_name' => 'teacher:students_results:view','?' => ['class_id' => $permission['class_id']]]) ?>
                                     </p>
                                 </td>
                                 <td>

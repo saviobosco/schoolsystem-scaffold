@@ -31,6 +31,29 @@ $studentSessionData = $this->request->session()->read('Auth.User');
         'escape' => false
     ]) ?>
 </li>
+<li class="has-sub">
+    <a href="javascript:;">
+        <b class="caret pull-right"></b>
+        <i class="fa fa-book"></i>
+        <span> E-Learning </span>
+        <span class="label label-danger">new</span>
+    </a>
+    <ul class="sub-menu">
+        <li class="">
+            <?= $this->Html->link(__('Lecture Notes'),
+                ['plugin'=> 'ELearning','controller'=>'Lectures','action'=>'index'],
+                ['title'=>'lecture notes']) ?>
+        </li>
+        <li>
+            <?= $this->Html->link(__('New Lecture Note'),[
+                'plugin'=>'Dashboard',
+                'controller'=>'NewsUpdates',
+                'action'=>'add'
+            ],['title'=>'create new news update']) ?>
+        </li>
+    </ul>
+</li>
+
 <li>
     <?= $this->html->link('<i class="fa fa-power-off"></i> <span>Log Out</span>',
         $this->Url->build(['_name' => 'users:logout']),[

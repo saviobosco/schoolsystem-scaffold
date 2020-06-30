@@ -29,6 +29,38 @@ $teacherSessionData = $this->request->session()->read('Auth.User');
         'escape' => false
     ]) ?>
 </li>
+
+<?php if (\Settings\Core\Setting::read('Account_Type_Settings.allow_e_learning')) : ?>
+    <li class="has-sub">
+        <?= $this->Html->link('<i class="fa fa-book">
+ </i> <span><b class="caret pull-right">
+</b>'.__('E-Learning').' </span>
+<span class="label label-danger">new</span>
+','javascript:;',['escape'=>false]) ?>
+        <ul class="sub-menu">
+            <li>
+                <?= $this->html->link('
+                    <span>Lecture Notes</span>
+                    ',[
+                    'controller'=>'Lectures',
+                    'action' => 'index'
+                ],[
+                    'escape' => false
+                ]) ?>
+            </li>
+            <!--<li>
+            <?/*= $this->html->link('<span>Assignments</span>',[
+                'controller'=>'Lectures',
+                'action' => 'index'
+            ],[
+                'escape' => false
+            ]) */?>
+        </li>-->
+        </ul>
+    </li>
+<?php endif; ?>
+
+
 <li>
     <?= $this->html->link('<i class="fa fa-power-off"></i> <span>Log Out</span>',[
         'plugin'=>'UsersManager',

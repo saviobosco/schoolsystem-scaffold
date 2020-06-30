@@ -64,6 +64,7 @@
     }
     .content {
         margin: 0;
+        padding: 0;
     }
     .student_result {
         page-break-after: always;

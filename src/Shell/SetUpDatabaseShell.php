@@ -131,6 +131,33 @@ class SetUpDatabaseShell extends Shell
         }
     }
 
+    public function rollbackMigration($sub_domain, $target = null)
+    {
+        if(is_null($sub_domain)) {
+            return false;
+        }
+        if (!$this->getDatabase($sub_domain)) {
+            return false;
+        }
+        try {
+            $migrations = new Migrations();
+            $this->out('Beginning migration rollback');
+            if (!is_null($target)) {
+                $migrate = $migrations->rollback(['target' => $target]);
+            } else {
+                $migrate = $migrations->rollback();
+            }
+            if ($migrate) {
+                $this->out('Successfully rollback migration files');
+                return true;
+            }
+        } catch (\Exception $exception) {
+            $this->out($exception->getMessage());
+            return false;
+        }
+    }
+
+
     public function compressStudentPhotos($sub_domain)
     {
         if(is_null($sub_domain)) {

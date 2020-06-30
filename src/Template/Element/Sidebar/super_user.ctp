@@ -83,12 +83,36 @@
         </li>
     </ul>
 </li>
+<?php if (\Settings\Core\Setting::read('Account_Type_Settings.allow_e_learning')) : ?>
+    <li class="has-sub">
+        <a href="javascript:;">
+            <b class="caret pull-right"></b>
+            <i class="fa fa-book"></i>
+            <span> E-Learning </span>
+            <span class="label label-danger">new</span>
+        </a>
+        <ul class="sub-menu">
+            <li class="">
+                <?= $this->Html->link(__('Lecture Notes'),
+                    ['plugin'=> 'ELearning','controller'=>'Lectures','action'=>'index'],
+                    ['title'=>'lecture notes']) ?>
+            </li>
+            <!--<li>
+            <?/*= $this->Html->link(__('New Lecture Note'),[
+                'plugin'=>'Dashboard',
+                'controller'=>'NewsUpdates',
+                'action'=>'add'
+            ],['title'=>'create new news update']) */?>
+        </li>-->
+        </ul>
+    </li>
+<?php endif; ?>
+
 <li class="has-sub">
     <a href="javascript:;">
         <b class="caret pull-right"></b>
         <i class="fa fa-flash"></i>
         <span> New Updates </span>
-        <span class="label label-danger">new</span>
     </a>
     <ul class="sub-menu">
         <li class="">

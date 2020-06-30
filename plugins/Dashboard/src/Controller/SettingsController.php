@@ -21,7 +21,7 @@ class SettingsController extends AppController
     public function index()
     {
         $selectOptions = []; // Initialised the form select options
-        //Setting::write('Application.school_motto', '');
+        //Setting::write('Account_Type_Settings.allow_e_learning', '');
 
         $key = 'Application';
         $settings = $this->Configurations->find('all')->where([

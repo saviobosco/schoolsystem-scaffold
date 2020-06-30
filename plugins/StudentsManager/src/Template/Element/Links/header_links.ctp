@@ -7,7 +7,7 @@
 
     <?php
     if (\Settings\Core\Setting::read('Account_Type_Settings.allow_student_account')) { ?>
-        <a class="p-l-15" data-toggle="modal" data-target="#changeStudentLoginDetailModal"  title="Change Student Login Detail">Change Student Login Detail. <i class="fa fa-info-circle text-primary" data-toggle="tooltip" title="Change the student login detail"></i></a>
+        <a href="javascript:;" class="p-l-15" data-toggle="modal" data-target="#changeStudentLoginDetailModal"  title="Change Student Login Detail">Change Student Login Detail. <i class="fa fa-info-circle text-primary" data-toggle="tooltip" title="Change the student login detail"></i></a>
     <?php }
     ?>
 </div>

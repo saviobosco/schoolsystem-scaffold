@@ -42,6 +42,22 @@ use Cake\Core\Configure;
                 ]) ?>
             </li>
 
+            <li class="has-sub">
+                <a href="javascript:;">
+                    <b class="caret pull-right"></b>
+                    <i class="fa fa-book"></i>
+                    <span> E-Learning </span>
+                    <span class="label label-danger">new</span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="">
+                        <?= $this->Html->link(__('Lecture Notes'),
+                            ['controller'=>'Lectures','action'=>'index'],
+                            ['title'=>'lecture notes']) ?>
+                    </li>
+                </ul>
+            </li>
+
             <li>
                 <?= $this->html->link('<i class="fa fa-key"></i> <span>Change Password</span>',[
                     'plugin'=>'StudentAccount',

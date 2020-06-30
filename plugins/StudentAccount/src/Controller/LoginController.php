@@ -50,7 +50,7 @@ class LoginController extends AppController
                     ['contain' => [
                         'Students' => [
                             'fields' => [
-                            'id', 'first_name', 'last_name', 'photo',
+                            'id', 'first_name', 'last_name', 'photo','class_id'
                         ]
                         ]
                     ]
