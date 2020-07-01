@@ -72,3 +72,14 @@ if (isset($queryData['lecture'])) {
     </ul>
     <p><?= $this->Paginator->counter() ?></p>
 </div>
+
+<script>
+    $('#lecture-class-id').change(function(event) {
+        var lecture_subjects = document.getElementById('lecture-subject-id');
+        if (event.target.value && lecture_subjects) {
+            $('#lecture-subject-id').load('<?= $this->Url->build(['action' => 'getSubjectsByClassId'], true) ?>',
+                {'class_id': event.target.value})
+        }
+
+    });
+</script>

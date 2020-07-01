@@ -4,7 +4,7 @@
 namespace TeacherAccount\Controller;
 
 use Cake\Datasource\EntityInterface;
-use Cake\Datasource\Exception\MissingModelException;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Settings\Core\Setting;
 
@@ -159,7 +159,7 @@ class LecturesController extends AppController
         $lecture = null;
         try {
             $lecture = $this->Lectures->get($id);
-        } catch (MissingModelException $missingModelException) {
+        } catch (RecordNotFoundException $missingModelException) {
             $this->Flash->error('No record found');
             return $this->redirect(['action' => 'index']);
         }
@@ -191,7 +191,10 @@ class LecturesController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $lecture = $this->Lectures->get($id);
+        try {
+            $lecture = $this->Lectures->get($id);
+        } catch (RecordNotFoundException $recordNotFoundException){}
+
         if ($this->Lectures->delete($lecture)) {
             $this->Flash->success(__('The Lecture has been deleted.'));
         } else {
@@ -246,6 +249,43 @@ class LecturesController extends AppController
                 }
             }
             $this->set(compact('sessions', 'terms', 'subjects'));
+        }
+    }
+
+
+    public function getSubjectsByClassId()
+    {
+        $postData = $this->request->getData();
+        try {
+            $class = $this->Lectures->Classes->get($postData['class_id']);
+        } catch (RecordNotFoundException $recordNotFoundException) {
+        }
+        if (isset($class)) {
+            $permissions = TableRegistry::get('UsersManager.TeachersSubjectsClassesPermissions')->query()
+                ->enableHydration(false)
+                ->contain(['Classes' => [
+                    'fields' => ['id', 'block_id']
+                ]])
+                ->select(['subjects', 'class_id'])
+                ->where([
+                    'teacher_id' => $this->Auth->user('id'),
+                    'class_id' => $postData['class_id']
+                ])
+                ->first();
+
+            if (!empty($permissions['subjects'])) {
+                if (in_array(0, $permissions['subjects'])) {
+                    $subjects = TableRegistry::get('SubjectsManager.Subjects')->find('list')
+                        ->where(['block_id' => $permissions['class']['block_id']]);
+                } else {
+                    $subjects = TableRegistry::get('SubjectsManager.Subjects')->find('list')
+                        ->where([
+                            'id IN' => $permissions['subjects'],
+                        ]);
+                }
+            }
+
+            $this->set(compact('subjects'));
         }
     }
 

@@ -171,4 +171,24 @@ class SetUpDatabaseShell extends Shell
             'command' => 'change_student_pictures'
         ]);
     }
+
+    public function migration_status($sub_domain)
+    {
+        if(is_null($sub_domain)) {
+            $this->abort('Sub domain argument missing.');
+            return false;
+        }
+        if (!$this->getDatabase($sub_domain)) {
+            $this->abort('sub domain does not exists.');
+            return false;
+        }
+        try {
+            $migrations = new Migrations();
+
+            $this->out($migrations->status(['format' => 'json']));
+        } catch (\Exception $exception) {
+            $this->out($exception->getMessage());
+            return false;
+        }
+    }
 }
