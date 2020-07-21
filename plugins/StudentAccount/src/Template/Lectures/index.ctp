@@ -27,7 +27,7 @@ use Cake\I18n\Time;
                         <ul>
                             <?php foreach ($subjects as $subject): ?>
                                 <li style="margin-bottom: 10px;">
-                                    <a target="show-lecture-notes" href="<?= $this->Url->build([
+                                    <a href="<?= $this->Url->build([
                                         'action' => 'getLectureNotes',
                                         '?' => ['subject_id' => $subject->id
                                         ]

@@ -37,8 +37,8 @@ if (isset($queryData['lecture'])) {
         <th><?= '#' ?></th>
         <th><?= __('subject') ?></th>
         <th><?= __('topic') ?></th>
+        <th><?= __('week') ?></th>
         <th><?= __('created at') ?></th>
-        <th><?= __('updated at') ?></th>
         <th><?= __('created_by') ?></th>
         <th class="actions"><?= __('Actions') ?></th>
     </tr>
@@ -51,8 +51,8 @@ if (isset($queryData['lecture'])) {
                 <td><?= $num ?></td>
                 <td> <?= ($lecture->subject) ? h($lecture->subject->name) : '' ?> </td>
                 <td><?= h($lecture->topic) ?></td>
+                <td><?= h($lecture->week) ?></td>
                 <td><?= h($lecture->created_at) ?></td>
-                <td><?= h($lecture->updated_at) ?></td>
                 <td><?= h($lecture->created_by) ?></td>
 
                 <td class="actions">

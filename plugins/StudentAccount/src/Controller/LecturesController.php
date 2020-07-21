@@ -75,6 +75,16 @@ class LecturesController extends AppController
         $current_session_id = Setting::read('Application.current_session');
         $current_class_id = $this->Auth->user()['student']['class_id'];
 
+        try {
+            $current_term = $this->Lectures->Terms->get($current_term_id)->name;
+            $current_session = $this->Lectures->Sessions->get($current_session_id)->session;
+            $current_class = $this->Lectures->Classes->get($current_class_id)->class;
+
+            $this->set(compact('current_term', 'current_session', 'current_class'));
+        } catch (RecordNotFoundException $recordNotFoundException) {
+            // sub due the error message
+        }
+
         $lectures = $this->Lectures->find('all')
             ->where([
                 'subject_id' => $getQuery['subject_id'],

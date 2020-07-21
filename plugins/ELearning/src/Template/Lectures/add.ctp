@@ -19,6 +19,7 @@ $this->assign('title', 'Create Lecture');
     <?php
     echo $this->Form->control('session_id', ['options' => $sessions]);
     echo $this->Form->control('term_id', ['options' => $terms]);
+    echo $this->Form->control('week');
     echo $this->Form->control('topic');
     echo $this->Form->control('introduction', ['label' => 'Lecture Introduction' ,'type' => 'textarea', 'class' => 'form-control tinymce_editor']);
     echo $this->Form->control('content', ['label' => 'Lecture Content', 'type' => 'textarea', 'class' => 'form-control tinymce_editor', 'rows' => 10]);
