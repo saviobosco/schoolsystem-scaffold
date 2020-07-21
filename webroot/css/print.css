@@ -62,6 +62,9 @@
     .table-bordered > thead > tr > th {
         border: 1px solid #000 !important;
     }
+    td, th {
+        padding: 3px !important;
+    }
     .content {
         margin: 0;
         padding: 0;

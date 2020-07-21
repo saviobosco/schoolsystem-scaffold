@@ -12,20 +12,13 @@ $this->assign('title', $lecture->topic);
             <thead>
             <tr>
                 <th>Subject</th> <td> <?= $lecture->subject->name ?> </td>
-            </tr>
-            <tr>
                 <th>Class</th> <td> <?=  $lecture->class->class ?> </td>
-            </tr>
-            <tr>
                 <th> Session </th> <td> <?= $lecture->session->session ?> </td>
-            </tr>
-            <tr>
                 <th> Term </th> <td> <?= $lecture->term->name ?> </td>
             </tr>
             <tr>
+                <th> Week </th> <td> <?= $lecture->week ?> </td>
                 <th> Created At </th> <td> <?= $lecture->created_at ?> </td>
-            </tr>
-            <tr>
                 <th> Last Modified At</th>
                 <td>
                     <?= $lecture->updated_at ?>
